@@ -1,0 +1,25 @@
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ItemsMenuComponent } from './items-menu/items-menu.component';
+import { ItemMenuFormComponent } from './item-menu-form/item-menu-form.component';
+import { ItemMenuDetailsComponent } from './item-menu-details/item-menu-details.component';
+import { PrimeNgCrudModule } from '../../../prime-ng-crud/prime-ng-crud.module';
+import { ReactiveFormsModule } from '@angular/forms';
+import { ItemsMenuRoutingModule } from './items-menu-routing.module';
+
+
+
+@NgModule({
+  declarations: [
+    ItemsMenuComponent,
+    ItemMenuFormComponent,
+    ItemMenuDetailsComponent
+  ],
+  imports: [
+    CommonModule,
+    ItemsMenuRoutingModule,
+    PrimeNgCrudModule,
+    ReactiveFormsModule,
+  ]
+})
+export class ItemsMenuModule { }

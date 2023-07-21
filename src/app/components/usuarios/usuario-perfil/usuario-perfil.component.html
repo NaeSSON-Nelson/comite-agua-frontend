@@ -1,0 +1,95 @@
+<div class="grid">
+    <div class="col-12">
+        <div class="card">
+            <h5>Perfil de Usuario</h5>
+            <div class="grid" *ngIf="usuario">
+                <div class="col-12 grid">
+                    <div class="col-12 md:col-4">
+                        <img src="../../../../assets/img/default_client.jpg" class="" alt="User profile" [style]="{'max-width':'248px'}">
+                    </div>
+                    <div class="col-12 md:col-8">
+                        <h5 class="flex justify-content-center">Afiliado Vinculado</h5>
+                        <div class="grid p-fluid">
+                            <div class="field col-12 md:col-6">
+                                <label htmlFor="afiliado">Nombre Completo</label>
+                                <input pInputText id="afiliado" type="text" [disabled]="true" value="{{usuario.afiliado!.nombrePrimero | titlecase}} {{usuario.afiliado!.nombreSegundo ||'' |titlecase}} {{usuario.afiliado!.apellidoPrimero | titlecase}} {{usuario.afiliado!.apellidoSegundo ||'' | titlecase}}" class="appearance-none text-color text-base" />
+                            </div>
+                            <div class="field col-12 md:col-6">
+                                <label htmlFor="CI">Cedula de Identidad</label>
+                                <input pInputText id="CI" type="text" [disabled]="true" [value]="usuario.afiliado!.CI" class="appearance-none text-color text-base" />
+                            </div>
+                            <div class="field col-12 md:col-6">
+                                <label htmlFor="contacto">Contacto</label>
+                                <input pInputText id="contacto" type="text" [disabled]="true" value="SIN CONTACTOS" class="appearance-none text-color text-base" />
+                            </div>
+                            <div class="field col-12 md:col-6">
+                                <label htmlFor="estado">Estado</label>
+                                <input pInputText id="estado" type="text" [disabled]="true" [value]="usuario.afiliado!.estado?'ACTIVO':'INACTIVO'" class="appearance-none text-color text-base" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <p-divider ></p-divider>
+                    <h5>Perfil de Usuario</h5>
+                    <div class="grid p-fluid mt-3" *ngIf="usuario.perfil; else noPerfil">
+                        <div class="field col-12 md:col-6">
+                            <label htmlFor="username">Username</label>
+                            <input pInputText id="username" type="text" [disabled]="true" [value]="usuario.userName" class="appearance-none text-color text-base" />
+                        </div>
+                        <div class="field col-12 md:col-6">
+                            <label htmlFor="nombreUsuario">nombre de Usuario de perfil</label>
+                            <input pInputText id="nombreUsuario" type="text" [disabled]="true" [value]="usuario.perfil.nombreUsuario" class="appearance-none text-color text-base" />
+                        </div>
+                        <div class="field col-12 md:col-6">
+                            <label htmlFor="correo">Correo Electronico</label>
+                            <input pInputText id="correo" type="text" [disabled]="true" [value]="usuario.perfil.correo" class="appearance-none text-color text-base" />
+                        </div>
+                        <div class="field col-12 md:col-6">
+                            <label htmlFor="codigoPostal">Codigo Postal</label>
+                            <input pInputText id="codigoPostal" type="text" [disabled]="true" [value]="usuario.perfil.codigoPostal" class="appearance-none text-color text-base" />
+                        </div>
+                        <div class="field col-12 md:col-6">
+                            <label htmlFor="contactos">Contactos</label>
+                            <input pInputText id="contactos" type="text" [disabled]="true" [value]="usuario.perfil!.contactos!.length" class="appearance-none text-color text-base" />
+                        </div>
+                        <div class="field col-12 md:col-6">
+                            <label htmlFor="direccion">direccion</label>
+                            <input pInputText id="direccion" type="text" [disabled]="true" [value]="usuario.perfil.direccion" class="appearance-none text-color text-base" />
+                        </div>
+                    </div>
+                    <ng-template #noPerfil>
+                        <p>NO CONTIENE UN PERFIL</p>
+                    </ng-template>
+                    
+                </div>
+            </div>
+
+        </div>
+        <div class="card">
+            <h5>Localizacion</h5>
+            <p>En construccion</p>
+        </div>
+        <div class="card">
+            <h5>Opciones</h5>
+			<div class="grid p-fluid md:justify-content-center" *ngIf="usuario">
+				<div class="col-12 md:col-3 md:flex md:justify-content-center">
+					<button pButton pRipple label="Modificar Perfil" class="p-button-success" (click)="actionData('MODIFICAR')"></button>
+				</div>
+				<div class="col-12 md:col-3 md:flex md:justify-content-center">
+					<button pButton pRipple label="Reasignar Roles" class="p-button-info" (click)="rolesAsign()"></button>
+				</div>
+				<div class="col-12 md:col-3 md:flex md:justify-content-center" *ngIf="usuario.estado; else inhabilitado">
+					<button pButton pRipple label="Deshabilitar Cuenta" class="p-button-warning" (click)="actionData('DESHABILITAR')"></button>
+				</div>
+				<ng-template #inhabilitado>
+					<div class="col-12 md:col-3 md:flex md:justify-content-center">
+						<button pButton pRipple label="Habilitar Cuenta" class="p-button-info" (click)="actionData('HABILITAR')"></button>
+					</div>
+				</ng-template>
+				
+			</div>
+        </div>
+    </div>
+    
+</div>

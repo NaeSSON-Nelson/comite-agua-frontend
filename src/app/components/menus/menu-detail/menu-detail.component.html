@@ -1,0 +1,109 @@
+<div class="grid">
+  <div class="col-12">
+    <div class="card">
+      <h5>Datos de Menu</h5>
+      <p-divider></p-divider>
+      <div class="grid p-fluid md:flex md:justify-content-center" *ngIf="menu">
+        <div class="field col-12">
+          <label htmlFor="nombre">Nombe del Menu</label>
+          <input
+            pInputText
+            id="nombre"
+            type="text"
+            [disabled]="true"
+            [value]="menu.nombre"
+            class="appearance-none text-color text-base"
+          />
+        </div>
+        <div class="field col-12">
+          <label htmlFor="linkMenu">Link de Acceso</label>
+          <input
+            pInputText
+            id="linkMenu"
+            type="text"
+            [disabled]="true"
+            [value]="menu.linkMenu"
+            class="appearance-none text-color text-base"
+          />
+        </div>
+        <div class="field col-12">
+          <label htmlFor="estado">Estado</label>
+          <input
+            pInputText
+            id="estado"
+            type="text"
+            [disabled]="true"
+            [value]="menu.estado ? 'ACTIVO' : 'INACTIVO'"
+            class="appearance-none text-color text-base"
+          />
+        </div>
+      </div>
+    </div>
+    <div class="card" *ngIf="menu.itemsMenu">
+      <div class="col-12">
+        <h5>Items vinculados al menu</h5>
+        <p-divider></p-divider>
+        <div class="mt-3">
+          <p-table
+            [value]="menu.itemsMenu"
+            [tableStyle]="{ 'min-width': '50rem' }"
+          >
+            <ng-template pTemplate="header">
+              <tr>
+                <th>Code</th>
+                <th>Nombre de Item</th>
+                <th>Enlace de Item</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-customer let-index>
+              <tr>
+                <td>{{ customer.id }}</td>
+                <td>{{ customer.nombre }}</td>
+                <td>{{ customer.linkMenu }}</td>
+              </tr>
+            </ng-template>
+          </p-table>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h5>Opciones</h5>
+      <p-divider></p-divider>
+      <div class="grid p-fluid md:justify-content-center" *ngIf="menu">
+        <div class="col-12 md:col-3 md:flex md:justify-content-center">
+          <button
+            pButton
+            pRipple
+            label="Modificar"
+            class="p-button-success"
+            (click)="actionData('MODIFICAR')"
+          ></button>
+        </div>
+        <div
+          class="col-12 md:col-3 md:flex md:justify-content-center"
+          *ngIf="menu.estado; else inhabilitado"
+        >
+          <button
+            pButton
+            pRipple
+            label="Deshabilitar"
+            class="p-button-warning"
+            (click)="actionData('DESHABILITAR')"
+          ></button>
+        </div>
+        <ng-template #inhabilitado>
+          <div class="col-12 md:col-3 md:flex md:justify-content-center">
+            <button
+              pButton
+              pRipple
+              label="Habilitar"
+              class="p-button-info"
+              (click)="actionData('HABILITAR')"
+            ></button>
+          </div>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+</div>

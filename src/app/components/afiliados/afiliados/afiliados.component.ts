@@ -1,0 +1,146 @@
+import { Component } from '@angular/core';
+import { Afiliado } from 'src/app/interfaces/afiliado.interface';
+import { AfiliadosService } from '../afiliados.service';
+import { MessageService } from 'primeng/api';
+import { ActivatedRoute, Router } from '@angular/router';
+import { PaginatorState } from 'primeng/paginator';
+import { PaginatorFind } from 'src/app/interfaces/Paginator.interface';
+import { Subject, debounceTime } from 'rxjs';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { patternSpanishInline } from 'src/app/patterns/forms-patterns';
+
+@Component({
+  selector: 'app-afiliados',
+  templateUrl: './afiliados.component.html',
+  styles: [],
+})
+export class AfiliadosComponent {
+  data: Afiliado[] = [];
+  titleTable = 'Afiliados';
+  debouncer: Subject<string> = new Subject<string>();
+  constructor(
+    private readonly afiliadoService: AfiliadosService,
+    private readonly messageService: MessageService,
+    private fb: FormBuilder,
+    private router: Router,
+    private routerAct: ActivatedRoute
+  ) {}
+
+  ngOnInit(): void {
+    //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
+    //Add 'implements OnInit' to the class.
+    this.afiliadoService.afiliados.subscribe((res) => {
+      this.afiliadoPaginator.limit=res.limit;
+      this.afiliadoPaginator.offset=res.offset;
+      this.afiliadoPaginator.order=res.order;
+      this.afiliadoPaginator.size=res.size;
+      this.data = res.data;
+    });
+    
+    this.routerAct.queryParams.subscribe((res) => {
+      if (res) {
+        this.afiliadoPaginator = { ...res };
+        if(res['q']) {
+          this.searchForm.get('termino')?.setValue(res['q']);
+          this.debouncer.next(res['q'])}
+      }
+    });
+    this.debouncer.pipe(debounceTime(300)).subscribe((res) => {
+      // console.log(res);
+      if (res) {
+        this.afiliadoPaginator = { q: res,offset:0,
+          limit:10 };
+        this.router.navigate(['.'],{queryParams:{q:res},relativeTo:this.routerAct})
+      } else {
+        this.afiliadoPaginator = {offset:0,
+          limit:10};
+        this.router.navigate(['.'],{queryParams:{},relativeTo:this.routerAct})
+      }
+      this.findAll();
+    });
+    this.findAll();
+  }
+  searchForm:FormGroup= this.fb.group({
+    termino:[,[Validators.pattern(patternSpanishInline),Validators.minLength(1)]]
+  },{updateOn:'change'});
+
+  afiliadoPaginator: PaginatorFind = {
+    offset:0,
+    limit:50,
+  };
+  findAll() {
+    this.afiliadoService.findAll(this.afiliadoPaginator).subscribe({
+      next: (res) => {
+        if (!res) {
+          this.messageService.add({
+            severity: 'warn',
+            summary: 'Warn Message',
+            detail: 'CURRIO UN ERROR AL OBTENER LA DATA',
+            life: 5000,
+          });
+        }else{
+
+        }
+      },
+      error: (err) => {
+        console.log(err);
+        this.messageService.add({
+          severity: 'warn',
+          summary: 'Warn Message',
+          detail: 'CURRIO UN ERROR AL OBTENER LA DATA',
+          life: 5000,
+        });
+      },
+    });
+  }
+  dataDetail(id: number) {
+    this.router.navigate(['afiliados', 'detail'], { queryParams: { id } });
+  }
+  campoValido(nombre: string) {
+    return (
+      this.searchForm.controls[nombre].errors &&
+      this.searchForm.controls[nombre].touched
+    );
+  }
+  inputValid(nombre: string) {
+    return this.searchForm.controls[nombre].errors &&
+      this.searchForm.controls[nombre].touched
+      ? 'ng-invalid ng-dirty'
+      : this.searchForm.controls[nombre].valid &&
+        this.searchForm.controls[nombre].touched
+      ? 'ng-valid ng-dirty'
+      : '';
+  }
+  limpiarCampo(campo: string) {
+    if (
+      !this.searchForm.get(campo)?.pristine &&
+      this.searchForm.get(campo)?.value?.length === 0
+    ) {
+      this.searchForm.get(campo)?.reset();
+    }
+  }
+  search($event: any) {
+    // console.log($event.target.value);
+    this.searchForm.markAllAsTouched();
+    if(this.searchForm.invalid) return;
+
+    this.debouncer.next($event.target.value);
+  }
+  onPageChange($event: PaginatorState) {
+    console.log($event);
+    this.afiliadoPaginator.offset = $event.first;
+    this.afiliadoPaginator.limit = $event.rows;
+    this.findAll();
+  }
+
+  getTerminoErrors(campo:string){
+    const errors = this.searchForm.get(campo)?.errors;
+
+    if(errors?.['pattern']){
+      return 'El buscador contiene caracteres no validos'
+    }else if(errors?.['minlength']){
+      return 'El tamaño minimo es 1'
+    }
+    return '';
+  }
+}

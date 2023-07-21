@@ -1,0 +1,91 @@
+<p-dialog
+  [header]="titleTable"
+  [(visible)]="displayModalTable"
+  [baseZIndex]="1000"
+  [modal]="true"
+  [style]="{ width: '70vw' }"
+  [draggable]="false"
+  [resizable]="false"
+  (onHide)="closeModal()"
+>
+  <ng-template pTemplate="content">
+    <div class="grid">
+      <div class="col-12">
+        <p-table
+          [value]="data"
+          [(selection)]="dataSelected"
+          selectionMode="single"
+          dataKey="id"
+          [metaKeySelection]="false"
+          [tableStyle]="{ 'min-width': '50rem' }"
+        >
+          <ng-template pTemplate="caption">
+            <form
+              class="flex flex-column md:flex-row md:justify-content-between md:align-items-center"
+              [formGroup]="searchForm"
+            >
+              <h5 class="m-0">{{ titleTable }}</h5>
+              <span class="block mt-2 md:mt-0 p-input-icon-left">
+                <i class="pi pi-search"></i>
+                <input
+                  pInputText
+                  type="text"
+                  inputId="termino"
+                  placeholder="Search..."
+                  formControlName="termino"
+                  class="w-full sm:w-auto"
+                  (input)="search($event)"
+                />
+                <small
+                  id="termino-help"
+                  class="p-error block"
+                  *ngIf="campoValido('termino')"
+                  >{{ getTerminoErrors("termino") }}
+                </small>
+              </span>
+            </form>
+          </ng-template>
+          <ng-template pTemplate="header">
+            <tr>
+              <!-- <th style="width: 4rem">
+            </th> -->
+
+            <th style="min-width: 200px">ID</th>
+              <th style="min-width: 200px">AFILIADO</th>
+              <th style="min-width: 200px">Cedula de Identidad</th>
+              <th style="min-width: 200px">CONTACTOS</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-employee let-rowIndex="rowIndex">
+            <tr [pSelectableRow]="employee" [pSelectableRowIndex]="rowIndex">
+              <!-- <td>
+                    <p-tableRadioButton  [value]="employee" ></p-tableRadioButton >
+                    </td> -->
+
+              <td>{{ employee.id }}</td>
+              <td>{{employee.nombrePrimero | titlecase}} {{employee.nombreSegundo ||"" |titlecase}} {{employee.apellidoPrimero | titlecase}} {{employee.apellidoSegundo ||"" | titlecase}}</td>
+              <td>{{ employee.CI }}</td>
+              <td>{{ 'SIN CONTACTOS' }}</td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+      <div class="col-12 md:col-3 md:col-offset-4">
+        <p-button
+          label="Asignar afiliado a la cuenta"
+          (onClick)="selectData()"
+          [disabled]="dataSelected===undefined || dataSelected === null"
+        ></p-button>
+      </div>
+      <div class="col-12 card flex justify-content-center" *ngIf="data.length>0">
+        <p-paginator
+          (onPageChange)="onPageChange($event)"
+          [first]="dataPaginator.offset || 0"
+          [totalRecords]="dataPaginator.size!"
+          [rows]="dataPaginator.limit || 5"
+          [rowsPerPageOptions]="[5, 10]"
+        ></p-paginator>
+      </div>
+    </div>
+  </ng-template>
+</p-dialog>

@@ -1,0 +1,88 @@
+<div class="grid">
+  <form class="col-12" [formGroup]="usuarioForm">
+    <div class="card">
+        <h4>Asignacion de una cuenta de Acceso al sistema a un Afiliado</h4>
+        <p-divider></p-divider>
+        <div class="p-fluid grid grid mt-5">
+            <div class="col-12 flex justify-content-around">
+                <div class="flex justify-content-center flex-wrap card-container">
+                    <h5 >Datos del afiliado</h5>
+                </div>
+                <div class="flex justify-content-center flex-wrap card-container" [style]="{'max-width':'128px'}">
+                    <app-afiliado-user-select-table
+                    *ngIf="showTableAsignAfiliadoModalForm"
+                    [displayModalTable]="showTableAsignAfiliadoModalForm"
+                    (closeDisplayModalTable)="closeTableAfiliadoModalForm($event)"
+                    (onDataSelected)="afiliadoSelectable($event)"
+                    >
+                    </app-afiliado-user-select-table>
+                    
+                    <button pButton pRipple label="Buscar Afiliado"(click)="showModalTableAfiliados()" class="p-button-primary"></button>
+                </div>
+            </div>
+            <div class="field col-12 md:col-8">
+                <label htmlFor="afiliado">Afiliado</label>
+                <input pInputText id="afiliado" type="text" [disabled]="true" value="{{afiliadoSelected?.nombrePrimero||'' | uppercase}} {{afiliadoSelected?.nombreSegundo||'' | uppercase}} {{afiliadoSelected?.apellidoPrimero||'' | uppercase}} {{afiliadoSelected?.apellidoSegundo||'' | uppercase}}" class="appearance-none text-color text-base" />
+            </div> 
+            <div class="field col-12 md:col-6">
+                <label htmlFor="CI">Cedula de Identidad</label>
+                <input pInputText id="CI" type="text" [disabled]="true" [value]="afiliadoSelected?.CI || ''"  class="appearance-none text-color text-base" />
+            </div>  
+            <div class="field col-12 md:col-6">
+                <label htmlFor="barrio">Barrio</label>
+                <input pInputText id="barrio" type="text" [disabled]="true" [value]="afiliadoSelected?.barrio || ''"  class="appearance-none text-color text-base" />
+            </div>  
+            <div class="field col-12 md:col-6">
+                <label htmlFor="contactos">Contactos</label>
+                <input pInputText id="contactos" type="text" [disabled]="true" [value]="afiliadoSelected?'SIN CONTACTOS':''"  class="appearance-none text-color text-base" />
+            </div>  
+
+            <div class="col-12">
+                <h5>Roles para El usuario</h5>
+                <p-divider></p-divider>
+                <div class="mt-3">
+                    <p-table [value]="listRolesSelected" [tableStyle]="{ 'min-width': '50rem' }">
+                      <ng-template pTemplate="header">
+                          <tr>
+                              <th>Code</th>
+                              <th>Nombre</th>
+                              <th style="width: 5rem"></th>
+                          </tr>
+                      </ng-template>
+                      <ng-template pTemplate="body" let-customer let-index>
+                          <tr>
+                              <td>{{ customer.id }}</td>
+                              <td>{{ customer.nombre }}</td>
+                              <td>
+                                  <button type="button" pButton pRipple icon="pi pi-times" class="p-button-danger p-button-rounded" (click)="deleteItemMenu(customer.id)"></button>
+                              </td>
+                          </tr>
+                      </ng-template>
+                  </p-table>
+                  <div [style]="{'max-width':'110px'}" class="m-3">
+                    <app-roles-select-table
+                    *ngIf="showTableAsignRoleModalForm"
+                    [displayModalTable]="showTableAsignRoleModalForm"
+                    (closeDisplayModalTable)="closeTableRoleModalForm($event)"
+                    (onDataSelected)="ListItemMenuSelected($event)"
+                    >
+                    </app-roles-select-table>
+                    <button pButton pRipple label="Añadir Item" icon="pi pi-plus" class="p-button-info p-button-rounded" (click)="showModalTableRoles()"></button>
+                  </div>
+                </div>
+            </div>
+            <div class="col-12 md:flex md:justify-content-center ">
+                <button
+                  type="button"
+                  pButton
+                  pRipple
+                  class="p-button-primary"
+                  label="Asignar Cuenta"
+                  [disabled]="usuarioForm.pending"
+                  (click)="validForm()"
+                ></button>
+              </div>
+        </div>
+    </div>
+  </form>
+</div>

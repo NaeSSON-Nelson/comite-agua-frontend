@@ -1,0 +1,70 @@
+<div
+  class="surface-ground flex align-items-center justify-content-center overflow-hidden"
+>
+  <div class="flex flex-column align-items-center justify-content-center">
+    <div
+      style="
+        border-radius: 56px;
+        padding: 0.3rem;
+        background: linear-gradient(
+          180deg,
+          var(--primary-color) 10%,
+          rgba(33, 150, 243, 0) 30%
+        );
+      "
+    >
+      <div
+        class="w-full surface-card py-8 px-5 sm:px-8"
+        style="border-radius: 53px"
+      >
+        <div class="text-center mb-5">
+          <div class="text-900 text-3xl font-medium mb-3">Welcome</div>
+          <span class="text-600 font-medium">Sign in to continue</span>
+        </div>
+
+        <form [formGroup]="loginForm" class="grid p-fluid mt-3">
+          <div class="field col-12">
+            <span class="p-float-label">
+              <input
+                type="text"
+                id="userName"
+                pInputText
+                formControlName="userName"
+                [ngClass]="inputValid('userName')"
+              />
+              <label for="userName">Username</label>
+            </span>
+            <small
+              id="userName-help"
+              class="p-error block"
+              *ngIf="campoValido('userName')"
+              >{{ getUsernameErrors("userName") }}</small
+            >
+          </div>
+          <div class="field col-12">
+            <span class="p-float-label">
+              <p-password
+                formControlName="password"
+                id="password"
+                [toggleMask]="true"
+                [feedback]="false"
+                [ngClass]="inputValid('password')"
+              ></p-password>
+              <label for="password">password</label>
+            </span>
+            <small
+            id="password-help"
+            class="p-error block"
+            *ngIf="campoValido('password')"
+            >{{ getPasswordErrors("password") }}</small
+          >
+          </div>
+          <div class="col-12">
+            <p-button [label]="buttonSign" (onClick)="validForm()"></p-button>
+          </div>
+          <p-messages [value]="msgs" class="col-12 z-3" [ngClass]=""></p-messages>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

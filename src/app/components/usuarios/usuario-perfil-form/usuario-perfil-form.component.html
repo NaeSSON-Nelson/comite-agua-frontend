@@ -1,0 +1,186 @@
+<div class="grid">
+  <form class="col-12" [formGroup]="perfilForm">
+    <div class="card">
+      <h4>Usuario Actual</h4>
+      <p-divider></p-divider>
+      <div class="p-fluid grid mt-5" *ngIf="usuarioActual">
+        <div class="field col-12 md:col-8">
+          <label htmlFor="afiliado">username</label>
+          <input
+            pInputText
+            id="afiliado"
+            type="text"
+            [disabled]="true"
+            [value]="usuarioActual.userName"
+            class="appearance-none text-color text-base"
+          />
+        </div>
+        <div class="field col-12 md:col-6">
+          <label htmlFor="CI">Estado</label>
+          <input
+            pInputText
+            id="CI"
+            type="text"
+            [disabled]="true"
+            [value]="usuarioActual.estado ? 'ACTIVO' : 'INACTIVO'"
+            class="appearance-none text-color text-base"
+          />
+        </div>
+      </div>
+      <h5>Perfil de Usuario</h5>
+      <p-divider></p-divider>
+      <div class="p-fluid grid mt-5">
+        <div class="field col-12 md:col-6">
+          <span class="p-float-label">
+            <input
+              type="text"
+              id="nombreUsuario"
+              pInputText
+              formControlName="nombreUsuario"
+              [ngClass]="inputValid('nombreUsuario')"
+            />
+            <label for="nombreUsuario">Nombre de Usuario</label>
+          </span>
+          <small
+            id="nombreUsuario-help"
+            class="p-error block"
+            *ngIf="campoValido('nombreUsuario')"
+            >{{ getNombreUsuarioErrors("nombreUsuario") }}
+          </small>
+        </div>
+        <div class="field col-12 md:col-6">
+          <span class="p-float-label">
+            <input
+              type="text"
+              id="correo"
+              pInputText
+              formControlName="correo"
+              [ngClass]="inputValid('correo')"
+            />
+            <label for="correo">Correo electronico</label>
+          </span>
+          <small
+            id="correo-help"
+            class="p-error block"
+            *ngIf="campoValido('correo')"
+            >{{ getCorreoErrors("correo") }}
+          </small>
+        </div>
+        <div class="field col-12 md:col-6">
+          <span class="p-float-label">
+            <p-inputMask
+              id="codigoPostal"
+              mask="99999"
+              formControlName="codigoPostal"
+              [ngClass]="inputValid('codigoPostal')"
+            ></p-inputMask>
+            <label for="codigoPostal">CODIGO POSTAL</label>
+          </span>
+          <small
+            id="codigoPostal-help"
+            class="p-error block"
+            *ngIf="campoValido('codigoPostal')"
+            >{{ getCodigoPostalErrors("codigoPostal") }}
+          </small>
+        </div>
+        <div class="field col-12 md:col-6">
+          <span class="p-float-label">
+            <input
+              type="text"
+              id="direccion"
+              pInputText
+              formControlName="direccion"
+              [ngClass]="inputValid('direccion')"
+            />
+            <label for="direccion">Direccion</label>
+          </span>
+          <small
+            id="direccion-help"
+            class="p-error block"
+            *ngIf="campoValido('direccion')"
+            >{{ getDireccionErrors("direccion") }}
+          </small>
+        </div>
+        <div class="field col-12 md:col-3">
+          <span class="p-float-label">
+            <p-dropdown
+              inputId="estado"
+              [autoDisplayFirst]="false"
+              [options]="estados"
+              formControlName="estado"
+              optionLabel="name"
+              optionValue="value"
+              placeholder="Select Estado"
+              [ngClass]="inputValid('estado')"
+            ></p-dropdown>
+
+            <label for="estado">estado (*)</label>
+          </span>
+          <small
+            id="estado-help"
+            class="p-error block"
+            *ngIf="campoValido('estado')"
+            >{{ getEstadoErrors("estado") }}
+          </small>
+        </div>
+        <form class="grid col-12 md:col-6 p-fluid" [formGroup]="inputContactForm">
+          <div class="field col-8">
+            <span class="p-float-label">
+              <p-inputMask
+                inputId="data"
+                mask="+999 99999999"
+                placeholder="Numero telefonico"
+                formControlName="data"
+                [ngClass]="inputValidInputNumeroForm('data')"
+              >
+              </p-inputMask>
+              <label for="data">Numero Telefonico</label>
+            </span>
+            <small
+            id="data-help"
+            class="p-error block"
+            *ngIf="campoValidoInputNumeroForm('data')"
+            >{{ getInputNumeroErrors("data") }}
+          </small>
+          </div>
+          <div class="col">
+            <button
+              class="col-4"
+              type="button"
+              pButton
+              icon="pi pi-plus"
+              styleClass="p-button-primary"
+              (click)="addContactForm()"
+            ></button>
+          </div>
+        </form>
+        <div class="col-4" >
+          <h5>Numeros telefónicos Añadidos</h5>
+          <p-table [value]="contactos" *ngIf="contactos.length>0; else sinContactos">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th>Numero</th>
+                    <th></th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-product let-index="index">
+                <tr>
+                    <td>{{ product}}</td>
+                    <td>
+                      <button pButton pRipple class="p-button-danger p-button-rounded" icon=" pi pi-times" (click)="deleteContact(product)"></button>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+        <ng-template #sinContactos>
+          <p>No hay contactos</p>
+        </ng-template>
+        
+        </div>
+      </div>
+      <div class="col">
+        <button pButton pRipple class="p-button-primary" label="Aplicar cambios" (click)="validForm()"></button>
+      </div>
+    </div>
+  </form>
+</div>

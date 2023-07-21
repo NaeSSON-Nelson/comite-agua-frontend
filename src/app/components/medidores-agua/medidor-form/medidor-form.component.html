@@ -1,0 +1,169 @@
+<div class="grid">
+    <form class="col-12" [formGroup]="medidorForm">
+      <div class="card">
+          <h4>Registro de un nuevo medidor para afiliado</h4>
+          <p-divider></p-divider>
+          <div class="p-fluid grid grid mt-5">
+              <div class="col-12 flex justify-content-around">
+                  <div class="flex justify-content-center flex-wrap card-container">
+                      <h5 >Datos del afiliado</h5>
+                  </div>
+              </div>
+              <div class="field col-12 md:col-8">
+                  <label htmlFor="afiliado">Afiliado</label>
+                  <input pInputText id="afiliado" type="text" [disabled]="true" value="{{afiliadoActual?.nombrePrimero||'' | uppercase}} {{afiliadoActual?.nombreSegundo||'' | uppercase}} {{afiliadoActual?.apellidoPrimero||'' | uppercase}} {{afiliadoActual?.apellidoSegundo||'' | uppercase}}" class="appearance-none text-color text-base" />
+              </div> 
+              <div class="field col-12 md:col-6">
+                  <label htmlFor="CI">Cedula de Identidad</label>
+                  <input pInputText id="CI" type="text" [disabled]="true" [value]="afiliadoActual?.CI || ''"  class="appearance-none text-color text-base" />
+              </div>  
+              <div class="field col-12 md:col-6">
+                  <label htmlFor="barrio">Barrio</label>
+                  <input pInputText id="barrio" type="text" [disabled]="true" [value]="afiliadoActual?.barrio || ''"  class="appearance-none text-color text-base" />
+              </div>  
+              <div class="field col-12 md:col-6">
+                  <label htmlFor="contactos">Contactos</label>
+                  <input pInputText id="contactos" type="text" [disabled]="true" [value]="afiliadoActual?'SIN CONTACTOS':''"  class="appearance-none text-color text-base" />
+              </div>  
+  
+              <div class="col-12" >
+                  <h5>Datos del Medidor de Agua Potable</h5>
+                  <p-divider></p-divider>
+                  <div class="grid mt-5 p-fluid">
+                    
+                  <div class="field col-12 md:col-6 m-3">
+                    <span class="p-float-label p-input-icon-right">
+                      <input
+                        type="text"
+                        id="nroMedidor"
+                        pInputText
+                        formControlName="nroMedidor"
+                        [ngClass]="inputValid('nroMedidor')"
+                      />
+                      <label for="nroMedidor">Numero de Registro del Medidor (*)</label>
+                      <i class="pi pi-spin pi-spinner" *ngIf="medidorForm.pending"></i>
+                    </span>
+                    <small
+                      id="nroMedidor-help"
+                      class="p-error block"
+                      *ngIf="campoValido('nroMedidor')"
+                      >{{ getNroMedidorErrors("nroMedidor") }}
+                    </small>
+                  </div>
+                  <div class="field col-12 md:col-4 m-3">
+                    <span class="p-float-label">
+                      <p-calendar
+                        formControlName="fechaInstalacion"
+                        [showIcon]="true"
+                        dateFormat="dd/mm/yy"
+                        [readonlyInput]="true"
+                        dataType="date"
+                        [ngClass]="inputValid('fechaInstalacion')"
+                      >
+                      </p-calendar>
+                      <label for="fechaInstalacion">Fecha de Instalacion del medidor</label>
+                    </span>
+                    <small
+                      id="fechaInstalacion-help"
+                      class="p-error block"
+                      *ngIf="campoValido('fechaInstalacion')"
+                      >{{ getFechaInstalacionErrors("fechaInstalacion") }}
+                    </small>
+                  </div>
+                  <div class="field col-12 md:col-6 m-3">
+                    <span class="p-float-label">
+                      <input
+                        type="number"
+                        id="lecturaInicial"
+                        pInputText
+                        formControlName="lecturaInicial"
+                        pKeyFilter="int"
+                        [ngClass]="inputValid('lecturaInicial')"
+                      />
+                      <label for="lecturaInicial">Lectura Inicial en la instalacion (*)</label>
+                    </span>
+                    <small
+                      id="lecturaInicial-help"
+                      class="p-error block"
+                      *ngIf="campoValido('lecturaInicial')"
+                      >{{ getLecturaInicialErrors("lecturaInicial") }}
+                    </small>
+                  </div>
+                  <div class="field col-12 md:col-6 m-3">
+                    <span class="p-float-label">
+                      <input
+                        type="text"
+                        id="marca"
+                        pInputText
+                        formControlName="marca"
+                        [ngClass]="inputValid('marca')"
+                      />
+                      <label for="marca">Marca del Medidor de Agua (*)</label>
+                    </span>
+                    <small
+                      id="marca-help"
+                      class="p-error block"
+                      *ngIf="campoValido('marca')"
+                      >{{ getMarcaErrors("marca") }}
+                    </small>
+                  </div>
+                  <div class="field col-12 md:col-6 m-3">
+                    <span class="p-float-label">
+                        <p-dropdown
+                        formControlName="ubicacionBarrio"
+                        [options]="barrios"
+                        [ngClass]="inputValid('ubicacionBarrio')"
+                        optionValue="value"
+                        optionLabel="name"
+                        
+                        placeholder="Select ubicacion del medidor"
+                      ></p-dropdown>
+                      <label for="ubicacionBarrio">Barrio como ubicacion de instalacion(*)</label>
+                    </span>
+                    <small
+                      id="ubicacionBarrio-help"
+                      class="p-error block"
+                      *ngIf="campoValido('ubicacionBarrio')"
+                      >{{ getUbicacionBarrioErrors("ubicacionBarrio") }}
+                    </small>
+                  </div>
+                  <div class="field col-12 md:col-3 m-3">
+                    <span class="p-float-label">
+                      <p-dropdown
+                        inputId="estado"
+                        [autoDisplayFirst]="false"
+                        [options]="estados"
+                        formControlName="estado"
+                        optionLabel="name"
+                        optionValue="value"
+                        placeholder="Select Estado"
+                        [ngClass]="inputValid('estado')"
+                      ></p-dropdown>
+          
+                      <label for="estado">estado (*)</label>
+                    </span>
+                    <small
+                      id="estado-help"
+                      class="p-error block"
+                      *ngIf="campoValido('estado')"
+                      >{{ getEstadoErrors("estado") }}
+                    </small>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12 md:flex md:justify-content-center ">
+                  <button
+                    type="button"
+                    pButton
+                    pRipple
+                    class="p-button-primary"
+                    [label]="medidorActual?'Modificar Medidor de Agua':'Registrar Nuevo medidor'"
+                    [disabled]="medidorForm.pending"
+                    (click)="validForm()"
+                  ></button>
+                </div>
+          </div>
+      </div>
+    </form>
+  </div>
+  

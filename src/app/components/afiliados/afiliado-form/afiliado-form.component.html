@@ -1,0 +1,212 @@
+<div class="grid">
+  <form class="col-12" [formGroup]="afiliadoForm">
+    <div class="card">
+      <h5>{{ afiliadoActual?.id?'Datos de Afiliado Seleccionado':'Registro de Nuevo Afiliado'}}</h5>
+      <div class="p-fluid p-formgrid grid mt-5">
+        <div class="field col-12 md:col-6">
+          <span class="p-float-label">
+            <input
+              type="text"
+              id="nombrePrimero"
+              pInputText
+              formControlName="nombrePrimero"
+              [ngClass]="inputValid('nombrePrimero')"
+            />
+            <label for="nombrePrimero">Primer Nombre (*)</label>
+          </span>
+          <small
+            id="nombrePrimero-help"
+            class="p-error block"
+            *ngIf="campoValido('nombrePrimero')"
+            >{{ getNombrePrimeroErrors("nombrePrimero") }}
+          </small>
+        </div>
+        <div class="field col-12 md:col-6">
+          <span class="p-float-label">
+            <input
+              type="text"
+              id="nombreSegundo"
+              pInputText
+              formControlName="nombreSegundo"
+              [ngClass]="inputValid('nombreSegundo')"
+            />
+            <label for="nombreSegundo">Segundo Nombre (opcional)</label>
+          </span>
+          <small
+            id="nombreSegundo-help"
+            class="p-error block"
+            *ngIf="campoValido('nombreSegundo')"
+            >{{ getNombreSegundoErrors("nombreSegundo") }}
+          </small>
+        </div>
+        <div class="field col-12 md:col-6">
+          <span class="p-float-label">
+            <input
+              type="text"
+              id="apellidoPrimero"
+              pInputText
+              formControlName="apellidoPrimero"
+              [ngClass]="inputValid('apellidoPrimero')"
+            />
+            <label for="apellidoPrimero">Primer Apellido (*)</label>
+          </span>
+          <small
+            id="apellidoPrimero-help"
+            class="p-error block"
+            *ngIf="campoValido('apellidoPrimero')"
+            >{{ getPrimerApellidoErrors("apellidoPrimero") }}
+          </small>
+        </div>
+        <div class="field col-12 md:col-6">
+          <span class="p-float-label">
+            <input
+              type="text"
+              id="apellidoSegundo"
+              pInputText
+              formControlName="apellidoSegundo"
+              [ngClass]="inputValid('apellidoSegundo')"
+            />
+            <label for="apellidoSegundo">Segundo Apellido (opcional)</label>
+          </span>
+          <small
+            id="apellidoSegundo-help"
+            class="p-error block"
+            *ngIf="campoValido('apellidoSegundo')"
+            >{{ getSegundoApellidoErrors("apellidoSegundo") }}
+          </small>
+        </div>
+        <div class="field col-12 md:col-3">
+          <span class="p-float-label p-input-icon-right">
+            <input
+              type="text"
+              id="CI"
+              pInputText
+              formControlName="CI"
+              [ngClass]="inputValid('CI')"
+            />
+            <label for="CI">Cedula de Identidad (*)</label>
+            <i class="pi pi-spin pi-spinner" *ngIf="afiliadoForm.pending"></i>
+          </span>
+          <small id="CI-help" class="p-error block" *ngIf="campoValido('CI')"
+            >{{ getCiErrors("CI") }}
+          </small>
+        </div>
+        <div class="field col-12 md:col-3">
+          <span class="p-float-label">
+            <p-dropdown
+              inputId="genero"
+              [autoDisplayFirst]="false"
+              [options]="generos"
+              formControlName="genero"
+              optionLabel="name"
+              optionValue="value"
+              placeholder="Select Genero"
+              [ngClass]="inputValid('genero')"
+            ></p-dropdown>
+
+            <label for="genero">Genero (*)</label>
+          </span>
+          <small
+            id="genero-help"
+            class="p-error block"
+            *ngIf="campoValido('genero')"
+            >{{ getGeneroErrors("genero") }}
+          </small>
+        </div>
+        <div class="field col-12 md:col-3">
+          <span class="p-float-label">
+            <p-dropdown
+              inputId="barrio"
+              [autoDisplayFirst]="false"
+              [options]="barrios"
+              formControlName="barrio"
+              optionLabel="name"
+              optionValue="value"
+              placeholder="Select Barrio"
+              [ngClass]="inputValid('barrio')"
+            ></p-dropdown>
+
+            <label for="barrio">Barrio (*)</label>
+          </span>
+          <small
+            id="barrio-help"
+            class="p-error block"
+            *ngIf="campoValido('barrio')"
+            >{{ getBarrioErrors("barrio") }}
+          </small>
+        </div>
+        <div class="field col-12 md:col-3">
+          <span class="p-float-label">
+            <input
+              type="text"
+              id="profesion"
+              pInputText
+              formControlName="profesion"
+              [ngClass]="inputValid('profesion')"
+            />
+            <label for="profesion">Profesion (Opcional)</label>
+          </span>
+          <small
+            id="profesion-help"
+            class="p-error block"
+            *ngIf="campoValido('profesion')"
+            >{{ getProfesionErrors("profesion") }}
+          </small>
+        </div>
+        <div class="field col-12 md:col-4">
+          <span class="p-float-label">
+            <p-calendar
+              formControlName="fechaNacimiento"
+              [showIcon]="true"
+              dateFormat="dd/mm/yy"
+              [readonlyInput]="true"
+              dataType="date"
+              [ngClass]="inputValid('fechaNacimiento')"
+            >
+            </p-calendar>
+            <label for="fechaNacimiento">Fecha de Nacimiento</label>
+          </span>
+          <small
+            id="fechaNacimiento-help"
+            class="p-error block"
+            *ngIf="campoValido('fechaNacimiento')"
+            >{{ getFechaNacimientoErrors("fechaNacimiento") }}
+          </small>
+        </div>
+        <div class="field col-12 md:col-3">
+          <span class="p-float-label">
+            <p-dropdown
+              inputId="estado"
+              [autoDisplayFirst]="false"
+              [options]="estados"
+              formControlName="estado"
+              optionLabel="name"
+              optionValue="value"
+              placeholder="Select Estado"
+              [ngClass]="inputValid('estado')"
+            ></p-dropdown>
+
+            <label for="estado">estado (*)</label>
+          </span>
+          <small
+            id="estado-help"
+            class="p-error block"
+            *ngIf="campoValido('estado')"
+            >{{ getEstadoErrors("estado") }}
+          </small>
+        </div>
+        <div class="col-12 md:flex md:justify-content-center ">
+          <button
+            type="button"
+            pButton
+            pRipple
+            class="p-button-primary"
+            [label]="afiliadoActual?.id?'Modificar Afiliado':'Registrar Afiliado'"
+            [disabled]="afiliadoForm.pending"
+            (click)="validForm()"
+          ></button>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
