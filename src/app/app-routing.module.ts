@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { LayoutComponent } from './layout/layout.component';
+import { ForbiddenComponent } from './common/forbidden/forbidden.component';
 import { validarTokenGuard } from './guards/validar-token.guard';
 
 const routes: Routes = [
@@ -42,11 +43,14 @@ const routes: Routes = [
         canActivate:[validarTokenGuard]
       },
     ]
+  },{
+    path:'forbidden',
+    component:ForbiddenComponent,
   },
   {
-        path: '**',
-        redirectTo: '',
-      },
+    path: '**',
+    redirectTo: '',
+  },
 ];
 
 @NgModule({

@@ -31,13 +31,13 @@ export class AuthService {
   login(usuario: Usuario) {
     return this.http.post<AuthResponse>(`${this.URL_Auth}/login`, usuario).pipe(
       tap((resp) => {
-        if (resp.ok) {
+        if (resp.OK) {
           // console.log(resp);
           localStorage.setItem('token', resp.token!);
           this._usuario$.next(resp.usuario);
         }
       }),
-      map((resp) => resp.ok),
+      map((resp) => resp.OK),
       catchError((err) => of(false))
     );
   }
@@ -50,14 +50,39 @@ export class AuthService {
       .get<AuthResponse>(`${this.URL_Auth}/refresh`, { headers })
       .pipe(
         tap((resp) => {
-          if (resp.ok) {
+          // console.log(resp);
+          if (resp.OK) {
             this._usuario$.next(resp.usuario);
           }
         }),
         map((resp) => {
           localStorage.setItem('token', resp.token!);
           this._usuario$.next(resp.usuario);
-          return resp.ok;
+          // console.log('map: ',resp);
+          return resp.OK;
+        }),
+        catchError((err) => {
+          console.log(err);
+          return of(false);
+        })
+      );
+  }
+
+  validarAcceso(){
+    const headers = new HttpHeaders().set(
+      'authorization',
+      `Bearer ${localStorage.getItem('token') || ''}`
+    );
+    return this.http
+      .get<any>(`${this.URL_Auth}/access-valid`, { headers })
+      .pipe(
+        tap((resp) => {
+          console.log(resp);
+        }),
+        map((resp) => {
+          // localStorage.setItem('token', resp.token!);
+          // this._usuario$.next(resp.usuario);
+          return false;
         }),
         catchError((err) => {
           console.log(err);

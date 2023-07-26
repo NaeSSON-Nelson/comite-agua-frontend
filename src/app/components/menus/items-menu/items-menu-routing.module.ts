@@ -4,11 +4,13 @@ import { RouterModule, Routes } from '@angular/router';
 import { ItemsMenuComponent } from './items-menu/items-menu.component';
 import { ItemMenuDetailsComponent } from './item-menu-details/item-menu-details.component';
 import { ItemMenuFormComponent } from './item-menu-form/item-menu-form.component';
+import { accessResourceGuard } from '../../../guards/access-resource.guard';
 
 const routes: Routes = [
   {
     path: '',
     component: ItemsMenuComponent,
+    // canActivate:[accessResourceGuard]
   },
   {
     path:'details',

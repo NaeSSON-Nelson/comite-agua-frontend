@@ -1,10 +1,11 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Subject, catchError, map, of, tap } from 'rxjs';
 import { PaginatorFind } from 'src/app/interfaces/Paginator.interface';
 import { DataResult, HttpResponseApi, HttpResponseApiArray } from 'src/app/interfaces/http-respones.interface';
 import { Menu, MenuForm } from 'src/app/interfaces/menu.interface';
 import { environment } from 'src/environments/environment';
+import { ResponseResult } from '../../interfaces/http-respones.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -39,11 +40,14 @@ export class MenusService {
           }
         }),
         map((resp) => {
-          return {OK: resp.OK, msg: resp.msg,};
+          // console.log('map',resp);
+          const respuesta:ResponseResult={OK:resp.OK,message:resp.message,statusCode:200}
+          return respuesta;
         }),
-        catchError((err) => {
-          console.log(err);
-          return of({ OK: false, msg: 'Error recibido' });
+        catchError((err:HttpErrorResponse) => {
+          const errors = err.error as ResponseResult;
+          errors.OK=false;
+          return of(errors);
         })
       );
   }
@@ -58,11 +62,14 @@ export class MenusService {
           }
         }),
         map((resp) => {
-          return {OK: resp.OK, msg: resp.msg,};
+          // console.log('map',resp);
+          const respuesta:ResponseResult={OK:resp.OK,message:resp.message,statusCode:200}
+          return respuesta;
         }),
-        catchError((err) => {
-          console.log(err);
-          return of({ OK: false, msg: 'Error recibido' });
+        catchError((err:HttpErrorResponse) => {
+          const errors = err.error as ResponseResult;
+          errors.OK=false;
+          return of(errors);
         })
       );
   }
@@ -71,11 +78,14 @@ export class MenusService {
       .post<HttpResponseApi<Menu>>(`${this.URL_Menus}`, form,{headers:this.headers})
       .pipe(
         map((resp) => {
-          return {OK: resp.OK, msg: resp.msg,};
+          // console.log('map',resp);
+          const respuesta:ResponseResult={OK:resp.OK,message:resp.message,statusCode:201}
+          return respuesta;
         }),
-        catchError((err) => {
-          console.log(err);
-          return of({ OK: false, msg: 'Error recibido' });
+        catchError((err:HttpErrorResponse) => {
+          const errors = err.error as ResponseResult;
+          errors.OK=false;
+          return of(errors);
         })
       );
   }
@@ -89,11 +99,14 @@ export class MenusService {
           }
         }),
         map((resp) => {
-          return {OK: resp.OK, msg: resp.msg,};
+          // console.log('map',resp);
+          const respuesta:ResponseResult={OK:resp.OK,message:resp.message,statusCode:200}
+          return respuesta;
         }),
-        catchError((err) => {
-          console.log(err);
-          return of({ OK: false, msg: 'Error recibido' });
+        catchError((err:HttpErrorResponse) => {
+          const errors = err.error as ResponseResult;
+          errors.OK=false;
+          return of(errors);
         })
       );
   }
@@ -107,11 +120,14 @@ export class MenusService {
           }
         }),
         map((resp) => {
-          return {OK: resp.OK, msg: resp.msg,};
+          // console.log('map',resp);
+          const respuesta:ResponseResult={OK:resp.OK,message:resp.message,statusCode:200}
+          return respuesta;
         }),
-        catchError((err) => {
-          console.log(err);
-          return of({ OK: false, msg: 'Error recibido' });
+        catchError((err:HttpErrorResponse) => {
+          const errors = err.error as ResponseResult;
+          errors.OK=false;
+          return of(errors);
         })
       );
   }

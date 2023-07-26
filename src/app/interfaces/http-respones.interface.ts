@@ -1,12 +1,18 @@
 export interface HttpResponseApi<T>{
     OK: boolean;
-    msg:    string;
+    message:    string;
     data?:  T;
 }
 export interface HttpResponseApiArray<T>{
     OK: boolean;
-    msg:    string;
+    message:    string;
     data: DataResult<T>;
+}
+export interface ResponseResult{
+    OK: boolean;
+    message:    string;
+    statusCode:number;
+    error?:  string;
 }
 
 export interface DataResult<G>{

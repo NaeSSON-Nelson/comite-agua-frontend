@@ -87,7 +87,7 @@ export class UsuarioFormComponent {
     let usuarioSend: Usuario = {};
     usuarioSend = Object.assign({}, this.usuarioForm.value);
     Object.entries(usuarioSend).forEach(([key, value]) => {
-      if (!value) delete usuarioSend[key as keyof Usuario];
+      if (value === null || value ===undefined) delete usuarioSend[key as keyof Usuario];
     });
     const { roles: dataroles, ...dataSend } = usuarioSend;
     this.registrarFormulario({
@@ -111,7 +111,7 @@ export class UsuarioFormComponent {
             this.messageService.add({
               severity: 'success',
               summary: 'Registro Exitoso!',
-              detail: res.msg,
+              detail: res.message,
               icon: 'pi pi-check',
             });
             

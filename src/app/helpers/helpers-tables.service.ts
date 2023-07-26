@@ -56,11 +56,11 @@ export class HelpersTablesService {
           }
         }),
         map((resp) => {
-          return {OK: resp.OK, msg: resp.msg,};
+          return {OK: resp.OK, message: resp.message,};
         }),
         catchError((err) => {
           console.log(err);
-          return of({ OK: false, msg: 'Error recibido' });
+          return of({ OK: false, message: 'Error recibido' });
         })
       );
   }
@@ -75,11 +75,11 @@ export class HelpersTablesService {
           }
         }),
         map((resp) => {
-          return {OK: resp.OK, msg: resp.msg,};
+          return {OK: resp.OK, message: resp.message,};
         }),
         catchError((err) => {
           console.log(err);
-          return of({ OK: false, msg: 'Error recibido' });
+          return of({ OK: false, message: 'Error recibido' });
         })
       );
   }
@@ -96,11 +96,11 @@ export class HelpersTablesService {
           }
         }),
         map((resp) => {
-          return {OK: resp.OK, msg: resp.msg,};
+          return {OK: resp.OK, message: resp.message,};
         }),
         catchError((err) => {
           console.log(err);
-          return of({ OK: false, msg: 'Error recibido' });
+          return of({ OK: false, message: 'Error recibido' });
         })
       );
   }
@@ -115,11 +115,11 @@ export class HelpersTablesService {
           }
         }),
         map((resp) => {
-          return {OK: resp.OK, msg: resp.msg,};
+          return {OK: resp.OK, message: resp.message,};
         }),
         catchError((err) => {
           console.log(err);
-          return of({ OK: false, msg: 'Error recibido' });
+          return of({ OK: false, message: 'Error recibido' });
         })
       );
   }

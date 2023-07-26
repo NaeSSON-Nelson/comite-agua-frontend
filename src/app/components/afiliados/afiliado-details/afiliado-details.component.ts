@@ -30,7 +30,7 @@ export class AfiliadoDetailsComponent {
       this.messageService.add({
         severity: 'warn',
         summary: 'Warn Message',
-        detail: 'CURRIO UN ERROR AL OBTENER LA DATA',
+        detail: 'SE DEBE MANDAR UNA REFERENCIA',
         life: 5000,
       });
       this.router.navigate(['afiliados']);
@@ -40,25 +40,46 @@ export class AfiliadoDetailsComponent {
         .pipe(switchMap(({ id }) => this.afiliadoService.findOne(id)))
         .subscribe({
           next: (res) => {
-            if (!res.OK) {
-              this.messageService.add({
-                severity: 'warn',
-                summary: 'Warn Message',
-                detail: `OCURRIO UN ERROR AL OBTENER LA DATA: ${res.msg}`,
-                life: 5000,
-              });
-              this.router.navigate(['afiliados']);
+            if (res.OK === false) {
+              switch (res.statusCode) {
+                case 401:
+                  this.messageService.add({
+                    severity: 'info',
+                    summary: `OCURRIO UN ERROR AL OBTENER LA DATA:${res.error}`,
+                    detail: `${res.message},code: ${res.statusCode}`,
+                    life: 3000,
+                  });
+                  this.router.navigate(['auth', 'login']);
+                  break;
+                case 403:
+                  this.messageService.add({
+                    severity: 'warn',
+                    summary: `OCURRIO UN ERROR AL OBTENER LA DATA:${res.error}`,
+                    detail: `${res.message},code: ${res.statusCode}`,
+                    life: 5000,
+                  });
+                  this.router.navigate(['forbidden']);
+                  break;
+                case 404:
+                  this.messageService.add({
+                    severity: 'warn',
+                    summary: `OCURRIO UN ERROR AL OBTENER LA DATA:${res.error}`,
+                    detail: `${res.message},code: ${res.statusCode}`,
+                    life: 5000,
+                  });
+                  this.router.navigate(['afiliados'])
+                  break;
+                default:
+                  console.log(res);
+                  this.messageService.add({
+                    severity: 'error',
+                    summary: 'Error no controlado',
+                    detail: 'revise la consola',
+                    life: 5000,
+                  });
+                  break;
+              }
             }
-          },
-          error: (err) => {
-            console.log('error', err);
-            this.messageService.add({
-              severity: 'warn',
-              summary: 'Warn Message',
-              detail: `OCURRIO UN ERROR AL OBTENER LA DATA`,
-              life: 5000,
-            });
-            this.router.navigate(['afiliados']);
           },
         });
     }
@@ -85,7 +106,7 @@ export class AfiliadoDetailsComponent {
                   this.messageService.add({
                     severity: 'info',
                     summary: 'Se cambio con exito!',
-                    detail: `${res.msg}`,
+                    detail: `${res.message}`,
                     icon: 'pi pi-check',
                   });
                 },
@@ -98,7 +119,7 @@ export class AfiliadoDetailsComponent {
                     life: 5000,
                     icon: 'pi pi-times',
                   });
-                }
+                },
               });
           },
         });
@@ -117,7 +138,7 @@ export class AfiliadoDetailsComponent {
                   this.messageService.add({
                     severity: 'info',
                     summary: 'Se cambio con exito!',
-                    detail: `${res.msg}`,
+                    detail: `${res.message}`,
                     icon: 'pi pi-check',
                   });
                 },
@@ -130,7 +151,7 @@ export class AfiliadoDetailsComponent {
                     life: 5000,
                     icon: 'pi pi-times',
                   });
-                }
+                },
               });
           },
         });

@@ -29,7 +29,7 @@ export class MenuSelectTableComponent {
   ngOnInit(): void {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
-    this.helperService.itemsMenus.subscribe((res) => {
+    this.helperService.menus.subscribe((res) => {
       this.dataPaginator.limit = res.limit;
       this.dataPaginator.offset = res.offset;
       this.dataPaginator.order = res.order;

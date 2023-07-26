@@ -20,12 +20,14 @@ import { ItemsMenuModule } from './components/menus/items-menu/items-menu.module
 import { MenusModule } from './components/menus/menus.module';
 import { RolesModule } from './components/roles/roles.module';
 import { MedidoresAguaModule } from './components/medidores-agua/medidores-agua.module';
+import { ForbiddenComponent } from './common/forbidden/forbidden.component';
 
 
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    ForbiddenComponent
   ],
   imports: [
     BrowserModule,
@@ -37,13 +39,13 @@ import { MedidoresAguaModule } from './components/medidores-agua/medidores-agua.
     ConfirmDialogModule,
 
     //UNA SOLUCION AL ERROR: NOW?
-    AuthModule,
-    AfiliadosModule,
-    UsuariosModule,
-    ItemsMenuModule,
-    MenusModule,
-    RolesModule,
-    MedidoresAguaModule,
+    // AuthModule,
+    // AfiliadosModule,
+    // UsuariosModule,
+    // ItemsMenuModule,
+    // MenusModule,
+    // RolesModule,
+    // MedidoresAguaModule,
   ],
   providers: [
     MessageService,

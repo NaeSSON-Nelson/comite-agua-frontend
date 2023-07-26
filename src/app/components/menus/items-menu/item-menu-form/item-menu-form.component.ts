@@ -43,21 +43,45 @@ export class ItemMenuFormComponent {
     this.routerAct.queryParams
       .pipe(switchMap(({ id }) => this.itemsMenuService.findOne(id)))
       .subscribe(res => {
-        if(res.OK)
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Cargado con exito',
-          detail: `${res.msg}`,
-          icon: 'pi pi-check',
-        });
-        else{
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Data no encontrada',
-            detail: `${res.msg}`,
-            icon: 'pi pi-times',
-          });
-          this.router.navigate(['menus','items']);
+        if (res.OK === false) {
+          switch (res.statusCode) {
+            case 401:
+              this.messageService.add({
+                severity: 'info',
+                summary: `OCURRIO UN ERROR AL OBTENER LA DATA:${res.error}`,
+                detail: `${res.message},code: ${res.statusCode}`,
+                life: 3000,
+              });
+              this.router.navigate(['auth', 'login']);
+              break;
+            case 403:
+              this.messageService.add({
+                severity: 'warn',
+                summary: `OCURRIO UN ERROR AL OBTENER LA DATA:${res.error}`,
+                detail: `${res.message},code: ${res.statusCode}`,
+                life: 5000,
+              });
+              this.router.navigate(['forbidden']);
+              break;
+            case 404:
+              this.messageService.add({
+                severity: 'warn',
+                summary: `OCURRIO UN ERROR AL OBTENER LA DATA:${res.error}`,
+                detail: `${res.message},code: ${res.statusCode}`,
+                life: 5000,
+              });
+              this.router.navigate(['menus','items'])
+              break;
+            default:
+              console.log(res);
+              this.messageService.add({
+                severity: 'error',
+                summary: 'Error no controlado',
+                detail: 'revise la consola',
+                life: 5000,
+              });
+              break;
+          }
         }
       });
   }
@@ -85,7 +109,7 @@ export class ItemMenuFormComponent {
     }else{
       itemMenuSend=Object.assign({}, this.itemMenuForm.value);
       Object.entries(itemMenuSend).forEach(([key, value]) => {
-        if (!value) delete itemMenuSend[key as keyof ItemMenu];
+        if (value === null || value ===undefined) delete itemMenuSend[key as keyof ItemMenu];
       });
     }
     this.registrarFormulario(itemMenuSend);
@@ -103,7 +127,7 @@ export class ItemMenuFormComponent {
               this.itemsMenuService.update(this.itemMenuActual.id,form).subscribe({
                 next:(res)=>{
 
-                  this.messageService.add({severity:'info',summary:'Se cambio con exito!', detail:`${res.msg}`,icon:'pi pi-check'})
+                  this.messageService.add({severity:'info',summary:'Se cambio con exito!', detail:`${res.message}`,icon:'pi pi-check'})
                   this.router.navigate(['menus','items','details'],{queryParams:{id:this.itemMenuActual?.id}});
                 },
                 error:err=>{
@@ -119,7 +143,7 @@ export class ItemMenuFormComponent {
             this.itemsMenuService.create(form).subscribe({
               next: res=>{
                 console.log(res);            
-                this.messageService.add({severity:'success',summary:'Registro Exitoso!', detail:res.msg,icon:'pi pi-check'})
+                this.messageService.add({severity:'success',summary:'Registro Exitoso!', detail:res.message,icon:'pi pi-check'})
                 this.router.navigate(['menus','items'],);
               },
               error: err=>{

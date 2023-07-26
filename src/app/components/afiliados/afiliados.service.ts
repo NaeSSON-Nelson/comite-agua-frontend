@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { PaginatorState } from 'primeng/paginator';
 import { Subject, catchError, map, of, tap } from 'rxjs';
@@ -10,6 +10,7 @@ import {
   HttpResponseApiArray,
 } from 'src/app/interfaces/http-respones.interface';
 import { environment } from 'src/environments/environment';
+import { ResponseResult } from '../../interfaces/http-respones.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -49,11 +50,14 @@ export class AfiliadosService {
           }
         }),
         map((resp) => {
-          return {OK: resp.OK, msg: resp.msg,};
+          // console.log('map',resp);
+          const respuesta:ResponseResult={OK:resp.OK,message:resp.message,statusCode:200}
+          return respuesta;
         }),
-        catchError((err) => {
-          console.log(err);
-          return of({ OK: false, msg: 'Error recibido' });
+        catchError((err:HttpErrorResponse) => {
+          const errors = err.error as ResponseResult;
+          errors.OK=false;
+          return of(errors);
         })
       );
   }
@@ -70,11 +74,14 @@ export class AfiliadosService {
           }
         }),
         map((resp) => {
-          return {OK: resp.OK, msg: resp.msg,};
+          // console.log('map',resp);
+          const respuesta:ResponseResult={OK:resp.OK,message:resp.message,statusCode:200}
+          return respuesta;
         }),
-        catchError((err) => {
-          console.log(err);
-          return of({ OK: false, msg: 'Error recibido' });
+        catchError((err:HttpErrorResponse) => {
+          const errors = err.error as ResponseResult;
+          errors.OK=false;
+          return of(errors);
         })
       );
   }
@@ -85,11 +92,14 @@ export class AfiliadosService {
       })
       .pipe(
         map((resp) => {
-          return {OK: resp.OK, msg: resp.msg,};
+          // console.log('map',resp);
+          const respuesta:ResponseResult={OK:resp.OK,message:resp.message,statusCode:201}
+          return respuesta;
         }),
-        catchError((err) => {
-          console.log(err);
-          return of({ OK: false, msg: 'Error recibido' });
+        catchError((err:HttpErrorResponse) => {
+          const errors = err.error as ResponseResult;
+          errors.OK=false;
+          return of(errors);
         })
       );
   }
@@ -107,11 +117,14 @@ export class AfiliadosService {
           }
         }),
         map((resp) => {
-          return {OK: resp.OK, msg: resp.msg,};
+          // console.log('map',resp);
+          const respuesta:ResponseResult={OK:resp.OK,message:resp.message,statusCode:200}
+          return respuesta;
         }),
-        catchError((err) => {
-          console.log(err);
-          return of({ OK: false, msg: 'Error recibido' });
+        catchError((err:HttpErrorResponse) => {
+          const errors = err.error as ResponseResult;
+          errors.OK=false;
+          return of(errors);
         })
       );
   }
@@ -129,11 +142,14 @@ export class AfiliadosService {
           }
         }),
         map((resp) => {
-          return { msg: resp.msg, OK: resp.OK };
+          // console.log('map',resp);
+          const respuesta:ResponseResult={OK:resp.OK,message:resp.message,statusCode:200}
+          return respuesta;
         }),
-        catchError((err) => {
-          console.log(err);
-          return of({ OK: false, msg: 'Error recibido' });
+        catchError((err:HttpErrorResponse) => {
+          const errors = err.error as ResponseResult;
+          errors.OK=false;
+          return of(errors);
         })
       );
   }

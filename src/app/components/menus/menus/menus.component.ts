@@ -72,26 +72,38 @@ export class MenusComponent {
   findAll() {
     this.menusService.findAll(this.dataPaginator).subscribe({
       next: (res) => {
-        if (!res) {
-          this.messageService.add({
-            severity: 'warn',
-            summary: 'Warn Message',
-            detail: 'OCURRIO UN ERROR AL OBTENER LA DATA',
-            life: 5000,
-          });
-        }else{
-
+        if (res.OK === false) {
+          switch (res.statusCode) {
+            case 401:
+              this.messageService.add({
+                severity: 'info',
+                summary: `OCURRIO UN ERROR AL OBTENER LA DATA:${res.error}`,
+                detail: `${res.message},code: ${res.statusCode}`,
+                life: 3000,
+              });
+              this.router.navigate(['auth', 'login']);
+              break;
+            case 403:
+              this.messageService.add({
+                severity: 'warn',
+                summary: `OCURRIO UN ERROR AL OBTENER LA DATA:${res.error}`,
+                detail: `${res.message},code: ${res.statusCode}`,
+                life: 5000,
+              });
+              this.router.navigate(['forbidden']);
+              break;
+            default:
+              console.log(res);
+              this.messageService.add({
+                severity: 'error',
+                summary: 'Error no controlado',
+                detail: 'revise la consola',
+                life: 5000,
+              });
+              break;
+          }
         }
-      },
-      error: (err) => {
-        console.log(err);
-        this.messageService.add({
-          severity: 'warn',
-          summary: 'Warn Message',
-          detail: 'OCURRIO UN ERROR AL OBTENER LA DATA',
-          life: 5000,
-        });
-      },
+      }
     });
   }
   dataDetail(id: number) {

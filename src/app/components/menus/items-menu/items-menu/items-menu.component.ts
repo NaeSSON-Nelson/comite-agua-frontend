@@ -12,8 +12,7 @@ import { PaginatorState } from 'primeng/paginator';
 @Component({
   selector: 'app-items-menu',
   templateUrl: './items-menu.component.html',
-  styles: [
-  ]
+  styles: [],
 })
 export class ItemsMenuComponent {
   data: ItemMenu[] = [];
@@ -31,71 +30,96 @@ export class ItemsMenuComponent {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
     this.itemsMenuService.itemsMenus.subscribe((res) => {
-      this.dataPaginator.limit=res.limit;
-      this.dataPaginator.offset=res.offset;
-      this.dataPaginator.order=res.order;
-      this.dataPaginator.size=res.size;
+      this.dataPaginator.limit = res.limit;
+      this.dataPaginator.offset = res.offset;
+      this.dataPaginator.order = res.order;
+      this.dataPaginator.size = res.size;
       this.data = res.data;
     });
-    
+
     this.routerAct.queryParams.subscribe((res) => {
       if (res) {
         this.dataPaginator = { ...res };
-        if(res['q']) {
+        if (res['q']) {
           this.searchForm.get('termino')?.setValue(res['q']);
-          this.debouncer.next(res['q'])}
+          this.debouncer.next(res['q']);
+        }
       }
     });
     this.debouncer.pipe(debounceTime(300)).subscribe((res) => {
       // console.log(res);
       if (res) {
-        this.dataPaginator = { q: res,offset:0,
-          limit:10 };
-        this.router.navigate(['.'],{queryParams:{q:res},relativeTo:this.routerAct})
+        this.dataPaginator = { q: res, offset: 0, limit: 10 };
+        this.router.navigate(['.'], {
+          queryParams: { q: res },
+          relativeTo: this.routerAct,
+        });
       } else {
-        this.dataPaginator = {offset:0,
-          limit:10};
-        this.router.navigate(['.'],{queryParams:{},relativeTo:this.routerAct})
+        this.dataPaginator = { offset: 0, limit: 10 };
+        this.router.navigate(['.'], {
+          queryParams: {},
+          relativeTo: this.routerAct,
+        });
       }
       this.findAll();
     });
     this.findAll();
   }
-  searchForm:FormGroup= this.fb.group({
-    termino:[,[Validators.pattern(patternSpanishInline),Validators.minLength(1)]]
-  },{updateOn:'change'});
+  searchForm: FormGroup = this.fb.group(
+    {
+      termino: [
+        ,
+        [Validators.pattern(patternSpanishInline), Validators.minLength(1)],
+      ],
+    },
+    { updateOn: 'change' }
+  );
 
   dataPaginator: PaginatorFind = {
-    offset:0,
-    limit:10,
+    offset: 0,
+    limit: 10,
   };
   findAll() {
     this.itemsMenuService.findAll(this.dataPaginator).subscribe({
       next: (res) => {
-        if (!res) {
-          this.messageService.add({
-            severity: 'warn',
-            summary: 'Warn Message',
-            detail: 'OCURRIO UN ERROR AL OBTENER LA DATA',
-            life: 5000,
-          });
-        }else{
-
+        if (res.OK === false) {
+          switch (res.statusCode) {
+            case 401:
+              this.messageService.add({
+                severity: 'info',
+                summary: `OCURRIO UN ERROR AL OBTENER LA DATA:${res.error}`,
+                detail: `${res.message},code: ${res.statusCode}`,
+                life: 3000,
+              });
+              this.router.navigate(['auth', 'login']);
+              break;
+            case 403:
+              this.messageService.add({
+                severity: 'warn',
+                summary: `OCURRIO UN ERROR AL OBTENER LA DATA:${res.error}`,
+                detail: `${res.message},code: ${res.statusCode}`,
+                life: 5000,
+              });
+              this.router.navigate(['forbidden']);
+              break;
+            default:
+              console.log(res);
+              this.messageService.add({
+                severity: 'error',
+                summary: 'Error no controlado',
+                detail: 'revise la consola',
+                life: 5000,
+              });
+              break;
+          }
         }
-      },
-      error: (err) => {
-        console.log(err);
-        this.messageService.add({
-          severity: 'warn',
-          summary: 'Warn Message',
-          detail: 'OCURRIO UN ERROR AL OBTENER LA DATA',
-          life: 5000,
-        });
       },
     });
   }
   dataDetail(id: number) {
-    this.router.navigate(['menus','items', 'details'], { queryParams: { id } });
+    this.router.navigate(['menus', 'items', 'details'], {
+      queryParams: { id },
+    });
   }
   campoValido(nombre: string) {
     return (
@@ -123,7 +147,7 @@ export class ItemsMenuComponent {
   search($event: any) {
     // console.log($event.target.value);
     this.searchForm.markAllAsTouched();
-    if(this.searchForm.invalid) return;
+    if (this.searchForm.invalid) return;
 
     this.debouncer.next($event.target.value);
   }
@@ -134,13 +158,13 @@ export class ItemsMenuComponent {
     this.findAll();
   }
 
-  getTerminoErrors(campo:string){
+  getTerminoErrors(campo: string) {
     const errors = this.searchForm.get(campo)?.errors;
 
-    if(errors?.['pattern']){
-      return 'El buscador contiene caracteres no validos'
-    }else if(errors?.['minlength']){
-      return 'El tamaño minimo es 1'
+    if (errors?.['pattern']) {
+      return 'El buscador contiene caracteres no validos';
+    } else if (errors?.['minlength']) {
+      return 'El tamaño minimo es 1';
     }
     return '';
   }
