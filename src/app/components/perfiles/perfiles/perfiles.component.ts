@@ -1,25 +1,25 @@
 import { Component } from '@angular/core';
-import { Afiliado } from 'src/app/interfaces/afiliado.interface';
-import { AfiliadosService } from '../afiliados.service';
-import { MessageService } from 'primeng/api';
-import { ActivatedRoute, Router } from '@angular/router';
-import { PaginatorState } from 'primeng/paginator';
-import { PaginatorFind } from 'src/app/interfaces/Paginator.interface';
 import { Subject, debounceTime } from 'rxjs';
+import { PaginatorFind, Perfil } from 'src/app/interfaces';
+import { PerfilService } from '../perfil.service';
+import { MessageService } from 'primeng/api';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 import { patternSpanishInline } from 'src/app/patterns/forms-patterns';
+import { PaginatorState } from 'primeng/paginator';
 
 @Component({
-  selector: 'app-afiliados',
-  templateUrl: './afiliados.component.html',
-  styles: [],
+  selector: 'app-perfiles',
+  templateUrl: './perfiles.component.html',
+  styles: [
+  ]
 })
-export class AfiliadosComponent {
-  data: Afiliado[] = [];
-  titleTable = 'Afiliados';
+export class PerfilesComponent {
+  data: Perfil[] = [];
+  titleTable = 'Perfiles registrados';
   debouncer: Subject<string> = new Subject<string>();
   constructor(
-    private readonly afiliadoService: AfiliadosService,
+    private readonly perfilService: PerfilService,
     private readonly messageService: MessageService,
     private fb: FormBuilder,
     private router: Router,
@@ -29,17 +29,17 @@ export class AfiliadosComponent {
   ngOnInit(): void {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
-    this.afiliadoService.afiliados.subscribe((res) => {
-      this.afiliadoPaginator.limit=res.limit;
-      this.afiliadoPaginator.offset=res.offset;
-      this.afiliadoPaginator.order=res.order;
-      this.afiliadoPaginator.size=res.size;
+    this.perfilService.perfiles.subscribe((res) => {
+      this.dataPaginator.limit=res.limit;
+      this.dataPaginator.offset=res.offset;
+      this.dataPaginator.order=res.order;
+      this.dataPaginator.size=res.size;
       this.data = res.data;
     });
     
     this.routerAct.queryParams.subscribe((res) => {
       if (res) {
-        this.afiliadoPaginator = { ...res };
+        this.dataPaginator = { ...res };
         if(res['q']) {
           this.searchForm.get('termino')?.setValue(res['q']);
           this.debouncer.next(res['q'])}
@@ -48,11 +48,11 @@ export class AfiliadosComponent {
     this.debouncer.pipe(debounceTime(300)).subscribe((res) => {
       // console.log(res);
       if (res) {
-        this.afiliadoPaginator = { q: res,offset:0,
+        this.dataPaginator = { q: res,offset:0,
           limit:10 };
         this.router.navigate(['.'],{queryParams:{q:res},relativeTo:this.routerAct})
       } else {
-        this.afiliadoPaginator = {offset:0,
+        this.dataPaginator = {offset:0,
           limit:10};
         this.router.navigate(['.'],{queryParams:{},relativeTo:this.routerAct})
       }
@@ -64,12 +64,12 @@ export class AfiliadosComponent {
     termino:[,[Validators.pattern(patternSpanishInline),Validators.minLength(1)]]
   },{updateOn:'change'});
 
-  afiliadoPaginator: PaginatorFind = {
+  dataPaginator: PaginatorFind = {
     offset:0,
     limit:50,
   };
   findAll() {
-    this.afiliadoService.findAll(this.afiliadoPaginator).subscribe({
+    this.perfilService.findAll(this.dataPaginator).subscribe({
       next: (res) => {
         if (res.OK === false) {
           switch (res.statusCode) {
@@ -107,7 +107,7 @@ export class AfiliadosComponent {
     });
   }
   dataDetail(id: number) {
-    this.router.navigate(['afiliados', 'detail'], { queryParams: { id } });
+    this.router.navigate(['perfiles', 'details'], { queryParams: { id } });
   }
   campoValido(nombre: string) {
     return (
@@ -141,8 +141,8 @@ export class AfiliadosComponent {
   }
   onPageChange($event: PaginatorState) {
     console.log($event);
-    this.afiliadoPaginator.offset = $event.first;
-    this.afiliadoPaginator.limit = $event.rows;
+    this.dataPaginator.offset = $event.first;
+    this.dataPaginator.limit = $event.rows;
     this.findAll();
   }
 

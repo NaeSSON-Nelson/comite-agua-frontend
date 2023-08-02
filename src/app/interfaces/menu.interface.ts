@@ -1,4 +1,4 @@
-import { Estado } from "./afiliado.interface";
+import { Estado } from "./atributes.enum";
 
 export interface Menu {
   id?:          number;

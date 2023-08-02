@@ -1,24 +1,25 @@
+import { Barrio, Estado } from "./atributes.enum";
 import { Medidor } from "./medidor.interface";
 
 export interface Afiliado {
-    id?:                number;
-    nombrePrimero?:     string;
-    nombreSegundo?:     string;
-    apellidoPrimero?:   string;
-    apellidoSegundo?:   string;
-    CI?:                string;
-    genero?:            string;
-    profesion?:         string;
-    barrio?:            string;
-    fechaNacimiento?:   Date;
-    estado?:            Estado;
-    medidores?:         Medidor[];
+    id?             :number;
+    isActive?       :boolean;
+    ubicacion?      :Ubicacion;
+    medidores?      :Medidor[];
+    estado?         :Estado;
+}
+export interface AfiliadoForm{
+    id?             :number;
+    estado?         :Estado;
+    barrio?          :Barrio
+    numeroVivienda?  :string;
+    longitud?        :string;
+    latitud?         :string;
 }
 
-export enum Estado{
-
-    ACTIVO=1,
-    INACTIVO=0,
-    SUSPENDIDO=2,
-    
+export interface Ubicacion{
+    barrio?          :Barrio
+    numeroVivienda?  :string;
+    longitud?        :string;
+    latitud?         :string;
 }

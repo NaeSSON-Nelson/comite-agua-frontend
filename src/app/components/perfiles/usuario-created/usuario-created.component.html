@@ -1,0 +1,46 @@
+<p-dialog
+  header="CREACION DE USUARIO EXITOSA!!"
+  [visible]="displayModal"
+  [baseZIndex]="999"
+  [modal]="true"
+  [style]="{ width: '50vw' }"
+  [draggable]="false"
+  [resizable]="false"
+
+  [blockScroll]="true"
+>
+<div class="card">
+    <h5>CUENTA CREADA CON EXITO!</h5>
+    <p-divider></p-divider>
+    <div class="grid">
+        <div class="col-12"> <h5>Perfil Asociado</h5></div>
+        <div class="field col-12 md:col-6">
+            <label htmlFor="afiliado">Nombre Completo</label>
+            <input pInputText id="afiliado" type="text" [disabled]="true" value="{{dataSelected.perfil.nombrePrimero | titlecase}} {{dataSelected.perfil.nombreSegundo ||'' |titlecase}} {{dataSelected.perfil.apellidoPrimero | titlecase}} {{dataSelected.perfil.apellidoSegundo ||'' | titlecase}}" class="appearance-none text-color text-base" />
+        </div>
+        <div class="field col-12 md:col-6">
+            <label htmlFor="CI">Cedula de Identidad</label>
+            <input pInputText id="CI" type="text" [disabled]="true" [value]="dataSelected.perfil.CI" class="appearance-none text-color text-base" />
+        </div>
+    </div>
+    <h5>Cuenta de Acceso al sistema</h5>
+    <p-divider></p-divider>
+    <div class="grid">
+        <div class="field col-12 md:col-6">
+            <label htmlFor="username">Username</label>
+            <input pInputText id="username" type="text" [disabled]="true" [value]="dataSelected.perfil.usuario?.username" class="appearance-none text-color text-base" />
+        </div>
+        <div class="field col-12 md:col-6">
+            <label htmlFor="password">Password</label>
+            <input pInputText id="password" type="text" [disabled]="true" [value]="dataSelected.dataUser.passwordImplict" class="appearance-none text-color text-base" />
+        </div>
+    </div>
+</div>
+<ng-template pTemplate="footer">
+    <div class="flex justify-content-center flex-wrap">
+        <button pButton pRipple type="button" label="Cerrar Ventana" class="p-button-primary mx-3 " (click)="closeModal()"
+     ></button>
+    </div>
+</ng-template>
+
+</p-dialog>

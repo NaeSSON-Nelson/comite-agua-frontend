@@ -17,7 +17,9 @@ import { DividerModule } from 'primeng/divider';
 import { InputMaskModule } from 'primeng/inputmask';
 import { ListboxModule } from 'primeng/listbox';
 import { ScrollerModule } from 'primeng/scroller';
-
+import { CheckboxModule} from 'primeng/checkbox'
+import { SelectButtonModule } from 'primeng/selectbutton';
+import { MultiSelectModule} from 'primeng/multiselect'
 @NgModule({
   imports: [
   
@@ -39,6 +41,9 @@ import { ScrollerModule } from 'primeng/scroller';
     ListboxModule,
     ScrollerModule,
     ScrollerModule,
+    CheckboxModule,
+    SelectButtonModule,
+    MultiSelectModule,
   ],
   exports:[
     
@@ -59,6 +64,9 @@ import { ScrollerModule } from 'primeng/scroller';
     InputMaskModule,
     ListboxModule,
     ScrollerModule,
+    CheckboxModule,
+    SelectButtonModule,
+    MultiSelectModule,
   ]
 })
 export class PrimeNgCrudModule { }

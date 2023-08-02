@@ -8,6 +8,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { switchMap } from 'rxjs';
 import { patternCI, patternDateFormat, patternText } from 'src/app/patterns/forms-patterns';
 import { Afiliado } from 'src/app/interfaces/afiliado.interface';
+import { Perfil } from 'src/app/interfaces';
 
 @Component({
   selector: 'app-medidor-form',
@@ -16,7 +17,7 @@ import { Afiliado } from 'src/app/interfaces/afiliado.interface';
   ]
 })
 export class MedidorFormComponent {
-  afiliadoActual?: Afiliado;
+  perfilActual?: Perfil;
   medidorActual?:Medidor;
   constructor(
     private fb: FormBuilder,
@@ -40,7 +41,7 @@ export class MedidorFormComponent {
       // const {medidores} =res;
       // this.medidorActual=res;
       // this.medidorForm.setValue({...dataMedidorForm,afiliado:{id:afiliado!.id}});
-      this.afiliadoActual=res;
+      this.perfilActual=res;
       // console.log('afiliado',res);
       this.routerAct.queryParams
                     .subscribe(params=>{
@@ -49,10 +50,10 @@ export class MedidorFormComponent {
                         // console.log(params?.['idMedidor']);
                         if(Number.isInteger(Number.parseInt(params?.['idMedidor'])))
                         // console.log(params?.['idMedidor']);
-                        this.medidorActual = this.afiliadoActual?.medidores?.find(val=>val.id===Number.parseInt(params?.['idMedidor']))
+                        this.medidorActual = this.perfilActual?.afiliado?.medidores?.find(val=>val.id===Number.parseInt(params?.['idMedidor']))
                         // console.log(this.medidorActual);
                         const {afiliado,lecturas,ultimaLectura,...dataMedidor} = this.medidorActual!;
-                        this.medidorForm.setValue({...dataMedidor,afiliado:{id:this.afiliadoActual!.id}});
+                        this.medidorForm.setValue({...dataMedidor,afiliado:{id:this.perfilActual?.afiliado!.id}});
                       }
                     })
     });
@@ -168,7 +169,7 @@ export class MedidorFormComponent {
                 icon: 'pi pi-check',
               });
               this.router.navigate(['medidores-agua', 'details'], {
-                queryParams: { id: this.afiliadoActual?.id },
+                queryParams: { id: this.perfilActual?.afiliado?.id },
               });
             },
             error: (err) => {
@@ -194,7 +195,7 @@ export class MedidorFormComponent {
                 icon: 'pi pi-check',
               });
               this.router.navigate(['medidores-agua','details'],
-              {queryParams:{id:this.afiliadoActual?.id}});
+              {queryParams:{id:this.perfilActual?.afiliado?.id}});
             },
             error: (err) => {
               this.messageService.add({

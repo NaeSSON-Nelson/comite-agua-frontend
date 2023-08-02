@@ -14,13 +14,12 @@ import { AppComponent } from './app.component';
 import { LayoutModule } from './layout/layout.module';
 
 import { AuthModule } from './auth/auth.module';
-import { AfiliadosModule } from './components/afiliados/afiliados.module';
-import { UsuariosModule } from './components/usuarios/usuarios.module';
 import { ItemsMenuModule } from './components/menus/items-menu/items-menu.module';
 import { MenusModule } from './components/menus/menus.module';
 import { RolesModule } from './components/roles/roles.module';
 import { MedidoresAguaModule } from './components/medidores-agua/medidores-agua.module';
 import { ForbiddenComponent } from './common/forbidden/forbidden.component';
+import { PerfilesModule } from './components/perfiles/perfiles.module';
 
 
 
@@ -40,12 +39,11 @@ import { ForbiddenComponent } from './common/forbidden/forbidden.component';
 
     //UNA SOLUCION AL ERROR: NOW?
     // AuthModule,
-    // AfiliadosModule,
-    // UsuariosModule,
     // ItemsMenuModule,
     // MenusModule,
     // RolesModule,
     // MedidoresAguaModule,
+    // PerfilesModule,
   ],
   providers: [
     MessageService,

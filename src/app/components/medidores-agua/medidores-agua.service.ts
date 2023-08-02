@@ -7,6 +7,7 @@ import { DataResult, HttpResponseApi, HttpResponseApiArray } from 'src/app/inter
 import { Medidor } from 'src/app/interfaces/medidor.interface';
 import { environment } from 'src/environments/environment';
 import { ResponseResult } from '../../interfaces/http-respones.interface';
+import { Perfil } from 'src/app/interfaces';
 
 @Injectable({
   providedIn: 'root'
@@ -18,12 +19,12 @@ export class MedidoresAguaService {
     'authorization',
     `Bearer ${localStorage.getItem('token') || ''}`
   );
-  private _AfiliadosWidthMedidores$:Subject<DataResult<Afiliado>>;
-  private _afiliadoWithMedidores$:Subject<Afiliado>;
+  private _AfiliadosWidthMedidores$:Subject<DataResult<Perfil>>;
+  private _afiliadoWithMedidores$:Subject<Perfil>;
   private _medidor$:Subject<Medidor>
   constructor(private http: HttpClient) {
-    this._AfiliadosWidthMedidores$= new Subject<DataResult<Afiliado>>();
-    this._afiliadoWithMedidores$ = new Subject<Afiliado>();
+    this._AfiliadosWidthMedidores$= new Subject<DataResult<Perfil>>();
+    this._afiliadoWithMedidores$ = new Subject<Perfil>();
     this._medidor$ = new Subject<Medidor>();
   }
 
@@ -40,7 +41,7 @@ export class MedidoresAguaService {
   //  console.log(paginator);
    let {size,...dataPaginator } = paginator;
     return this.http
-      .get<HttpResponseApiArray<Afiliado>>(`${this.URL_medidores}/afiliados`, {
+      .get<HttpResponseApiArray<Perfil>>(`${this.URL_medidores}/afiliados`, {
         headers:this.headers,
         params:{...dataPaginator}
       })
@@ -66,7 +67,7 @@ export class MedidoresAguaService {
 
   findOne(id: number) {
     return this.http
-      .get<HttpResponseApi<Afiliado>>(`${this.URL_medidores}/afiliado/${id}`, {
+      .get<HttpResponseApi<Perfil>>(`${this.URL_medidores}/afiliado/${id}`, {
         headers: this.headers,
       })
       .pipe(

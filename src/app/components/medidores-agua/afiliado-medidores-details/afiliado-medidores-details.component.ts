@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Afiliado } from 'src/app/interfaces/afiliado.interface';
 import { switchMap } from 'rxjs';
 import { Medidor } from 'src/app/interfaces/medidor.interface';
+import { Estado, Perfil } from 'src/app/interfaces';
 
 @Component({
   selector: 'app-afiliado-medidores-details',
@@ -21,13 +22,13 @@ export class AfiliadoMedidoresDetailsComponent {
     private routerAct: ActivatedRoute
   ) {}
 
-  afiliado!: Afiliado;
+  perfil!: Perfil;
   medidorSelected!: Medidor;
   ngOnInit(): void {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
     this.medidoresService.afiliadoWithMedidores.subscribe((res) => {
-      this.afiliado = res;
+      this.perfil = res;
     });
     if (!this.router.url.includes('id')) {
       this.messageService.add({
@@ -101,7 +102,7 @@ export class AfiliadoMedidoresDetailsComponent {
       case 'MODIFICAR':
         this.router.navigate(['medidores-agua','form'], {
           //TODO: DEBE SER EL ID DEL MEDIDOR
-          queryParams: { idAfiliado: this.afiliado.id!,idMedidor:this.medidorSelected.id },
+          queryParams: { idAfiliado: this.perfil.id!,idMedidor:this.medidorSelected.id },
         });
         break;
 
@@ -112,7 +113,7 @@ export class AfiliadoMedidoresDetailsComponent {
           icon: 'pi pi-info-circle',
           accept: () => {
             this.medidoresService
-              .updateStatus(this.medidorSelected.id!, { estado: 0 })
+              .updateStatus(this.medidorSelected.id!, { estado:Estado.INACTIVO })
               .subscribe({
                 next: (res) => {
                   this.messageService.add({
@@ -144,7 +145,7 @@ export class AfiliadoMedidoresDetailsComponent {
           icon: 'pi pi-info-circle',
           accept: () => {
             this.medidoresService
-              .updateStatus(this.medidorSelected.id!, { estado: 1 })
+              .updateStatus(this.medidorSelected.id!, { estado: Estado.ACTIVO })
               .subscribe({
                 next: (res) => {
                   this.messageService.add({
@@ -178,6 +179,6 @@ export class AfiliadoMedidoresDetailsComponent {
     this.medidorSelected=data.value;
   }
   registrarMedidor(){
-    this.router.navigate(['medidores-agua','form'],{queryParams:{idAfiliado:this.afiliado.id}})
+    this.router.navigate(['medidores-agua','form'],{queryParams:{idAfiliado:this.perfil.id}})
   }
 }

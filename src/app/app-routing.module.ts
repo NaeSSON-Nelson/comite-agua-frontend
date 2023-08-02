@@ -18,14 +18,9 @@ const routes: Routes = [
         canActivate:[validarTokenGuard]
       },
       {
-        path:'afiliados',
-        loadChildren:()=>import('./components/afiliados/afiliados-routing.module').then(m=>m.AfiliadosRoutingModule),
-        canActivate:[validarTokenGuard]
-      },
-      {
-        path:'usuarios',
-        loadChildren:()=>import('./components/usuarios/usuarios-routing.module').then(m=>m.UsuariosRoutingModule),
-        canActivate:[validarTokenGuard]
+        path:'perfiles',
+        loadChildren:()=>import('./components/perfiles/perfiles-routing.module').then(m=>m.PerfilesRoutingModule),
+        // canActivate:[validarTokenGuard]
       },
       {
         path:'menus',

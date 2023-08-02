@@ -4,6 +4,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ItemMenu } from 'src/app/interfaces/menu.interface';
 import { switchMap } from 'rxjs';
+import { Estado } from 'src/app/interfaces';
 
 @Component({
   selector: 'app-item-menu-details',
@@ -101,7 +102,7 @@ export class ItemMenuDetailsComponent {
           icon: 'pi pi-info-circle',
           accept: () => {
             this.itemsMenuService
-              .updateStatus(this.itemMenu.id!, { estado: 0 })
+              .updateStatus(this.itemMenu.id!, { estado: Estado.INACTIVO })
               .subscribe({
                 next: (res) => {
                   this.messageService.add({
@@ -133,7 +134,7 @@ export class ItemMenuDetailsComponent {
           icon: 'pi pi-info-circle',
           accept: () => {
             this.itemsMenuService
-              .updateStatus(this.itemMenu.id!, { estado: 1 })
+              .updateStatus(this.itemMenu.id!, { estado: Estado.ACTIVO })
               .subscribe({
                 next: (res) => {
                   this.messageService.add({

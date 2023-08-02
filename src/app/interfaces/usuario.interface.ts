@@ -1,39 +1,19 @@
-import { Afiliado, Estado } from "./afiliado.interface";
+import { Estado } from './atributes.enum';
 import { Role } from './role.interface';
 
 export interface Usuario{
     id?:     number;
-    userName?:   string;
+    username?:   string;
     password?:   string;
-    estado?:     Estado;
-    afiliado?:   Afiliado;
     roles?:      Role[];
-    perfil?:     Perfil;
-}
-export interface UsuarioCreateResponse{
-    usuario:        Usuario;
-    realPassword:   string;
-    msg?:           string;
+    correo?:      string;
+    correoVerify?:boolean;
+    isActive?:   boolean;
+    estado?:     Estado;
+
 }
 export interface UsuarioForm{
     id?:     number;
-    userName?:   string;
-    password?:   string;
     estado?:     Estado;
-    afiliado?:   Afiliado;
     roles?:      number[];
-    perfil?:     Perfil;
-}
-
-export interface Perfil{
-    id?:    number;
-    nombreUsuario?: string;
-    correo?:        string;
-    codigoPostal?:  string;
-    contactos?:     string[];
-    profileImage?:  string;
-    direccion?:     string;
-    estado?:        Estado;
-    longitud?:      string;
-    latitud?:       string;
 }

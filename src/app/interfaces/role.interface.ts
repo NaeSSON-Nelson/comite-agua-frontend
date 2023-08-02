@@ -1,4 +1,5 @@
-import { Estado } from './afiliado.interface';
+
+import { Estado } from './atributes.enum';
 import { Menu } from './menu.interface';
 export interface Role{
     id?:       number;

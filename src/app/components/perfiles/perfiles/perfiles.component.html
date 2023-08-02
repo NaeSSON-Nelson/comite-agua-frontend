@@ -23,7 +23,7 @@
                     <tr>
                         
                         <th >Code</th>
-                        <th >Afiliado</th>
+                        <th >Nombres</th>
                         <th>Cedula de Identidad</th>
                         <th >Contacto</th>
                         <th >Barrio</th>
@@ -37,7 +37,7 @@
                             {{customer.id}}
                         </td>
                         <td style="width:14%; min-width:10rem;">
-                            <span class="p-column-title">Afiliado</span>
+                            <span class="p-column-title">Nombres</span>
                             {{customer.nombrePrimero | titlecase}} {{customer.nombreSegundo ||"" |titlecase}} {{customer.apellidoPrimero | titlecase}} {{customer.apellidoSegundo ||"" | titlecase}} 
                         </td>
                         <td style="width:14%; min-width:10rem;"><span class="p-column-title">Ci</span>
@@ -53,7 +53,7 @@
                             {{customer.barrio}}
                         </td>
                         <td style="width:14%; min-width: 10rem;"><span class="p-column-title">ESTADO</span>
-                            <span [class]="'product-badge status-' + (customer.estado ?'instock' : 'outofstock')">{{(customer.estado===1?'ACTIVO':customer.estado===0?'INACTIVO':customer.estado)}}</span>
+                            <span [class]="'product-badge'">{{customer.estado}}</span>
                         </td>
                         <td  style="width:14%; min-width: 10rem;">
                             <div class="flex p-fluid">
@@ -69,6 +69,6 @@
         </div>
     </div>
     <div class="col-12 card flex justify-content-center" *ngIf="data.length>0" >
-        <p-paginator (onPageChange)="onPageChange($event)" [first]="afiliadoPaginator.offset ||0" [totalRecords]="afiliadoPaginator.size!" [rows]="afiliadoPaginator.limit||10" [rowsPerPageOptions]="[10, 20, 50]"></p-paginator>
+        <p-paginator (onPageChange)="onPageChange($event)" [first]="dataPaginator.offset ||0" [totalRecords]="dataPaginator.size!" [rows]="dataPaginator.limit||10" [rowsPerPageOptions]="[10, 20, 50]"></p-paginator>
     </div>
 </div>

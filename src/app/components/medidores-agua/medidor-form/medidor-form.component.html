@@ -11,19 +11,19 @@
               </div>
               <div class="field col-12 md:col-8">
                   <label htmlFor="afiliado">Afiliado</label>
-                  <input pInputText id="afiliado" type="text" [disabled]="true" value="{{afiliadoActual?.nombrePrimero||'' | uppercase}} {{afiliadoActual?.nombreSegundo||'' | uppercase}} {{afiliadoActual?.apellidoPrimero||'' | uppercase}} {{afiliadoActual?.apellidoSegundo||'' | uppercase}}" class="appearance-none text-color text-base" />
+                  <input pInputText id="afiliado" type="text" [disabled]="true" value="{{perfilActual?.nombrePrimero||'' | uppercase}} {{perfilActual?.nombreSegundo||'' | uppercase}} {{perfilActual?.apellidoPrimero||'' | uppercase}} {{perfilActual?.apellidoSegundo||'' | uppercase}}" class="appearance-none text-color text-base" />
               </div> 
               <div class="field col-12 md:col-6">
                   <label htmlFor="CI">Cedula de Identidad</label>
-                  <input pInputText id="CI" type="text" [disabled]="true" [value]="afiliadoActual?.CI || ''"  class="appearance-none text-color text-base" />
+                  <input pInputText id="CI" type="text" [disabled]="true" [value]="perfilActual?.CI || ''"  class="appearance-none text-color text-base" />
               </div>  
               <div class="field col-12 md:col-6">
                   <label htmlFor="barrio">Barrio</label>
-                  <input pInputText id="barrio" type="text" [disabled]="true" [value]="afiliadoActual?.barrio || ''"  class="appearance-none text-color text-base" />
+                  <input pInputText id="barrio" type="text" [disabled]="true" [value]="perfilActual?.afiliado?.ubicacion?.barrio"  class="appearance-none text-color text-base" />
               </div>  
               <div class="field col-12 md:col-6">
                   <label htmlFor="contactos">Contactos</label>
-                  <input pInputText id="contactos" type="text" [disabled]="true" [value]="afiliadoActual?'SIN CONTACTOS':''"  class="appearance-none text-color text-base" />
+                  <input pInputText id="contactos" type="text" [disabled]="true" [value]="perfilActual?'SIN CONTACTOS':''"  class="appearance-none text-color text-base" />
               </div>  
   
               <div class="col-12" >

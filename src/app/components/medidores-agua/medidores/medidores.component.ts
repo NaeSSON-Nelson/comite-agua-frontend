@@ -8,6 +8,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { patternSpanishInline } from 'src/app/patterns/forms-patterns';
 import { PaginatorFind } from 'src/app/interfaces/Paginator.interface';
 import { PaginatorState } from 'primeng/paginator';
+import { Perfil } from 'src/app/interfaces';
 
 @Component({
   selector: 'app-medidores',
@@ -16,7 +17,7 @@ import { PaginatorState } from 'primeng/paginator';
   ]
 })
 export class MedidoresComponent {
-  data: Medidor[] = [];
+  data: Perfil[] = [];
   titleTable = 'Lista de afiliados con sus medidores de agua';
   debouncer: Subject<string> = new Subject<string>();
   constructor(

@@ -4,6 +4,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Role } from 'src/app/interfaces/role.interface';
 import { switchMap } from 'rxjs';
+import { Estado } from 'src/app/interfaces';
 
 @Component({
   selector: 'app-role-details',
@@ -101,7 +102,7 @@ export class RoleDetailsComponent {
           icon: 'pi pi-info-circle',
           accept: () => {
             this.rolesService
-              .updateStatus(this.role.id!, { estado: 0 })
+              .updateStatus(this.role.id!, { estado: Estado.INACTIVO })
               .subscribe({
                 next: (res) => {
                   this.messageService.add({
@@ -133,7 +134,7 @@ export class RoleDetailsComponent {
           icon: 'pi pi-info-circle',
           accept: () => {
             this.rolesService
-              .updateStatus(this.role.id!, { estado: 1 })
+              .updateStatus(this.role.id!, { estado: Estado.ACTIVO })
               .subscribe({
                 next: (res) => {
                   this.messageService.add({

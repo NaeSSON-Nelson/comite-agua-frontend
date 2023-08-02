@@ -2,7 +2,7 @@
     <div class="col-12">
         <div class="card">
             <h5>Afiliado</h5>
-            <div class="grid" *ngIf="afiliado">
+            <div class="grid" *ngIf="perfil">
                 <div class="col-12 grid">
                     <div class="col-12 md:col-4">
                         <img src="../../../../assets/img/default_client.jpg" class="" alt="User profile" [style]="{'max-width':'248px'}">
@@ -12,11 +12,11 @@
                         <div class="grid p-fluid">
                             <div class="field col-12 md:col-6">
                                 <label htmlFor="afiliado">Nombre Completo</label>
-                                <input pInputText id="afiliado" type="text" [disabled]="true" value="{{afiliado.nombrePrimero | titlecase}} {{afiliado.nombreSegundo ||'' |titlecase}} {{afiliado.apellidoPrimero | titlecase}} {{afiliado.apellidoSegundo ||'' | titlecase}}" class="appearance-none text-color text-base" />
+                                <input pInputText id="afiliado" type="text" [disabled]="true" value="{{perfil.nombrePrimero | titlecase}} {{perfil.nombreSegundo ||'' |titlecase}} {{perfil.apellidoPrimero | titlecase}} {{perfil.apellidoSegundo ||'' | titlecase}}" class="appearance-none text-color text-base" />
                             </div>
                             <div class="field col-12 md:col-6">
                                 <label htmlFor="CI">Cedula de Identidad</label>
-                                <input pInputText id="CI" type="text" [disabled]="true" [value]="afiliado.CI" class="appearance-none text-color text-base" />
+                                <input pInputText id="CI" type="text" [disabled]="true" [value]="perfil.CI" class="appearance-none text-color text-base" />
                             </div>
                             <div class="field col-12 md:col-6">
                                 <label htmlFor="contacto">Contacto</label>
@@ -24,7 +24,7 @@
                             </div>
                             <div class="field col-12 md:col-6">
                                 <label htmlFor="estado">Estado</label>
-                                <input pInputText id="estado" type="text" [disabled]="true" [value]="afiliado.estado?'ACTIVO':'INACTIVO'" class="appearance-none text-color text-base" />
+                                <input pInputText id="estado" type="text" [disabled]="true" [value]="perfil.estado" class="appearance-none text-color text-base" />
                             </div>
                         </div>
                     </div>
@@ -34,7 +34,7 @@
                         <div class="col-3">
                             <span class="p-float-label">
                                 <p-dropdown
-                                [options]="afiliado.medidores"
+                                [options]="perfil.afiliado?.medidores"
                                 placeholder="Seleccione un medidor"
                                 optionLabel="nroMedidor"
                                 inputId="float-label"

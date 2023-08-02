@@ -1,44 +1,44 @@
 import { Component } from '@angular/core';
-import { UsuariosService } from '../usuarios.service';
+import { PerfilService } from '../perfil.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Usuario } from 'src/app/interfaces/usuario.interface';
+import { Estado, Perfil } from 'src/app/interfaces';
 import { switchMap } from 'rxjs';
 
 @Component({
-  selector: 'app-usuario-perfil',
-  templateUrl: './usuario-perfil.component.html',
+  selector: 'app-perfil-details',
+  templateUrl: './perfil-details.component.html',
   styles: [
   ]
 })
-export class UsuarioPerfilComponent {
+export class PerfilDetailsComponent {
   constructor(
-    private readonly usuarioService: UsuariosService,
+    private readonly perfilService: PerfilService,
     private readonly messageService: MessageService,
     private readonly confirmationService: ConfirmationService,
     private router: Router,
     private routerAct: ActivatedRoute
   ) {}
 
-  usuario!: Usuario;
+  perfil!: Perfil;
   ngOnInit(): void {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
-    this.usuarioService.usuario.subscribe((res) => {
-      this.usuario = res;
+    this.perfilService.perfil.subscribe((res) => {
+      this.perfil = res;
     });
     if (!this.router.url.includes('id')) {
       this.messageService.add({
         severity: 'warn',
         summary: 'Warn Message',
-        detail: 'OCURRIO UN ERROR AL OBTENER LA DATA',
+        detail: 'SE DEBE MANDAR UNA REFERENCIA',
         life: 5000,
       });
-      this.router.navigate(['usuarios']);
+      this.router.navigate(['afiliados']);
       return;
     } else {
       this.routerAct.queryParams
-        .pipe(switchMap(({ id }) => this.usuarioService.findOne(id)))
+        .pipe(switchMap(({ id }) => this.perfilService.findOne(id)))
         .subscribe({
           next: (res) => {
             if (res.OK === false) {
@@ -68,7 +68,7 @@ export class UsuarioPerfilComponent {
                     detail: `${res.message},code: ${res.statusCode}`,
                     life: 5000,
                   });
-                  this.router.navigate(['usuarios'])
+                  this.router.navigate(['perfiles'])
                   break;
                 default:
                   console.log(res);
@@ -89,8 +89,8 @@ export class UsuarioPerfilComponent {
   actionData(action: string) {
     switch (action) {
       case 'MODIFICAR':
-        this.router.navigate(['usuarios','perfil','form'], {
-          queryParams: { id: this.usuario.id },
+        this.router.navigate(['/perfiles/form'], {
+          queryParams: { id: this.perfil.id },
         });
         break;
 
@@ -100,8 +100,8 @@ export class UsuarioPerfilComponent {
           header: 'Confirmar Acción',
           icon: 'pi pi-info-circle',
           accept: () => {
-            this.usuarioService
-              .updateStatus(this.usuario.id!, { estado: 0 })
+            this.perfilService
+              .updateStatus(this.perfil.id!, { estado: Estado.INACTIVO })
               .subscribe({
                 next: (res) => {
                   this.messageService.add({
@@ -115,12 +115,12 @@ export class UsuarioPerfilComponent {
                   console.log(err);
                   this.messageService.add({
                     severity: 'error',
-                    summary: 'Ocurrió un error al modificar el Empleado!!',
+                    summary: 'Ocurrió un error al modificar!!',
                     detail: `Detalles del error: ???console`,
                     life: 5000,
                     icon: 'pi pi-times',
                   });
-                }
+                },
               });
           },
         });
@@ -132,8 +132,8 @@ export class UsuarioPerfilComponent {
           header: 'Confirmar Acción',
           icon: 'pi pi-info-circle',
           accept: () => {
-            this.usuarioService
-              .updateStatus(this.usuario.id!, { estado: 1 })
+            this.perfilService
+              .updateStatus(this.perfil.id!, { estado: Estado.ACTIVO })
               .subscribe({
                 next: (res) => {
                   this.messageService.add({
@@ -147,12 +147,12 @@ export class UsuarioPerfilComponent {
                   console.log(err);
                   this.messageService.add({
                     severity: 'error',
-                    summary: 'Ocurrió un error al modificar el Empleado!!',
+                    summary: 'Ocurrió un error al modificar!!',
                     detail: `Detalles del error: ???console`,
                     life: 5000,
                     icon: 'pi pi-times',
                   });
-                }
+                },
               });
           },
         });
@@ -162,8 +162,5 @@ export class UsuarioPerfilComponent {
         console.log('Opcion invalida');
         break;
     }
-  }
-  rolesAsign(){
-    this.router.navigate(['usuarios','roles','form'],{queryParams:{id:this.usuario.id}});
   }
 }

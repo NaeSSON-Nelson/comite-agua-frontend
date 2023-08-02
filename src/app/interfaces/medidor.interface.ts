@@ -1,4 +1,6 @@
-import { Afiliado, Estado } from './afiliado.interface';
+import { Afiliado } from "./afiliado.interface";
+import { Estado } from "./atributes.enum";
+
 
 export interface Medidor {
   id?: number;
