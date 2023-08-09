@@ -107,7 +107,7 @@ export class RolesComponent {
     });
   }
   dataDetail(id: number) {
-    this.router.navigate(['roles', 'details'], { queryParams: { id } });
+    this.router.navigate(['roles', 'rol-details'], { queryParams: { id } });
   }
   campoValido(nombre: string) {
     return (

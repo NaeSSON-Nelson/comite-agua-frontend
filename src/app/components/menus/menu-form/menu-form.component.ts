@@ -35,7 +35,7 @@ export class MenuFormComponent {
     // })
     this.menusService.menu.subscribe((res) => {
       // console.log(res);
-      const { itemsMenu, ...dataMenu } = res;
+      const { itemsMenu,created_at,updated_at,isActive, ...dataMenu } = res;
       this.listItemsSelected=itemsMenu!;
       this.ListItemMenuSelected(itemsMenu!);
 
@@ -165,7 +165,7 @@ export class MenuFormComponent {
                 detail: `${res.message}`,
                 icon: 'pi pi-check',
               });
-              this.router.navigate(['menus', 'details'], {
+              this.router.navigate(['menus', 'menu-details'], {
                 queryParams: { id: this.menuActual?.id },
               });
             },

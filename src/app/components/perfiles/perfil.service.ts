@@ -1,22 +1,40 @@
-import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import {
+  HttpClient,
+  HttpErrorResponse,
+  HttpHeaders,
+} from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Subject, catchError, map, of, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { PaginatorFind, Perfil,Afiliado,AfiliadoForm,UsuarioForm,Usuario, DataResult, HttpResponseApiArray, ResponseResult, HttpResponseApi, PerfilForm, ResponseCreatePerfil, ResponseResultData, } from 'src/app/interfaces';
+import {
+  PaginatorFind,
+  Perfil,
+  Afiliado,
+  AfiliadoForm,
+  UsuarioForm,
+  Usuario,
+  DataResult,
+  HttpResponseApiArray,
+  ResponseResult,
+  HttpResponseApi,
+  PerfilForm,
+  ResponseCreatePerfil,
+  ResponseResultData,
+} from 'src/app/interfaces';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class PerfilService {
-  URL_perfil:string = environment.apiURrl+'/perfiles'
-  URL_afiliado: string = this.URL_perfil+'/afiliado';
-  URL_usuario: string = this.URL_perfil+'/usuario';
+  URL_perfil: string = environment.apiURrl + '/perfiles';
+  URL_afiliado: string = this.URL_perfil + '/afiliado';
+  URL_usuario: string = this.URL_perfil + '/usuario';
   private headers = new HttpHeaders().set(
     'authorization',
     `Bearer ${localStorage.getItem('token') || ''}`
   );
   private _perfiles$: Subject<DataResult<Perfil>>;
-  private _perfil$:Subject<Perfil>;
+  private _perfil$: Subject<Perfil>;
   private _afiliadoSelected$: Subject<Afiliado>;
 
   constructor(private http: HttpClient) {
@@ -28,8 +46,7 @@ export class PerfilService {
   get perfiles() {
     return this._perfiles$.asObservable();
   }
-  get perfil(){
-    
+  get perfil() {
     return this._perfil$.asObservable();
   }
 
@@ -52,12 +69,16 @@ export class PerfilService {
         }),
         map((resp) => {
           // console.log('map',resp);
-          const respuesta:ResponseResult={OK:resp.OK,message:resp.message,statusCode:200}
+          const respuesta: ResponseResult = {
+            OK: resp.OK,
+            message: resp.message,
+            statusCode: 200,
+          };
           return respuesta;
         }),
-        catchError((err:HttpErrorResponse) => {
+        catchError((err: HttpErrorResponse) => {
           const errors = err.error as ResponseResult;
-          errors.OK=false;
+          errors.OK = false;
           return of(errors);
         })
       );
@@ -76,16 +97,75 @@ export class PerfilService {
         }),
         map((resp) => {
           // console.log('map',resp);
-          const respuesta:ResponseResult={OK:resp.OK,message:resp.message,statusCode:200}
+          const respuesta: ResponseResult = {
+            OK: resp.OK,
+            message: resp.message,
+            statusCode: 200,
+          };
           return respuesta;
         }),
-        catchError((err:HttpErrorResponse) => {
+        catchError((err: HttpErrorResponse) => {
           const errors = err.error as ResponseResult;
-          errors.OK=false;
+          errors.OK = false;
           return of(errors);
         })
       );
   }
+  findOnePerfilUsuario(idPerfil: number) {
+    return this.http
+      .get<HttpResponseApi<Perfil>>(`${this.URL_usuario}/${idPerfil}`, {
+        headers: this.headers,
+      })
+      .pipe(
+        tap((resp) => {
+          if (resp.OK) {
+            this._perfil$.next(resp.data!);
+          }
+        }),
+        map((resp) => {
+          // console.log('map',resp);
+          const respuesta: ResponseResult = {
+            OK: resp.OK,
+            message: resp.message,
+            statusCode: 200,
+          };
+          return respuesta;
+        }),
+        catchError((err: HttpErrorResponse) => {
+          const errors = err.error as ResponseResult;
+          errors.OK = false;
+          return of(errors);
+        })
+      );
+  }
+  findOnePerfilAfiliado(idPerfil: number) {
+    return this.http
+      .get<HttpResponseApi<Perfil>>(`${this.URL_afiliado}/${idPerfil}`, {
+        headers: this.headers,
+      })
+      .pipe(
+        tap((resp) => {
+          if (resp.OK) {
+            this._perfil$.next(resp.data!);
+          }
+        }),
+        map((resp) => {
+          // console.log('map',resp);
+          const respuesta: ResponseResult = {
+            OK: resp.OK,
+            message: resp.message,
+            statusCode: 200,
+          };
+          return respuesta;
+        }),
+        catchError((err: HttpErrorResponse) => {
+          const errors = err.error as ResponseResult;
+          errors.OK = false;
+          return of(errors);
+        })
+      );
+  }
+
   create(form: PerfilForm) {
     return this.http
       .post<HttpResponseApi<ResponseCreatePerfil>>(`${this.URL_perfil}`, form, {
@@ -94,17 +174,22 @@ export class PerfilService {
       .pipe(
         map((resp) => {
           // console.log('map',resp);
-          const respuesta:ResponseResultData<ResponseCreatePerfil>={OK:resp.OK,message:resp.message,statusCode:201,data:resp.data}
+          const respuesta: ResponseResultData<ResponseCreatePerfil> = {
+            OK: resp.OK,
+            message: resp.message,
+            statusCode: 201,
+            data: resp.data,
+          };
           return respuesta;
         }),
-        catchError((err:HttpErrorResponse) => {
+        catchError((err: HttpErrorResponse) => {
           const errors = err.error as ResponseResultData<ResponseCreatePerfil>;
-          errors.OK=false;
+          errors.OK = false;
           return of(errors);
         })
       );
   }
-  createUsuario(idPerfil:number,form:UsuarioForm){
+  createUsuario(idPerfil: number, form: UsuarioForm) {
     return this.http
       .post<HttpResponseApi<Perfil>>(`${this.URL_usuario}/${idPerfil}`, form, {
         headers: this.headers,
@@ -112,17 +197,21 @@ export class PerfilService {
       .pipe(
         map((resp) => {
           // console.log('map',resp);
-          const respuesta:ResponseResult={OK:resp.OK,message:resp.message,statusCode:201}
+          const respuesta: ResponseResult = {
+            OK: resp.OK,
+            message: resp.message,
+            statusCode: 201,
+          };
           return respuesta;
         }),
-        catchError((err:HttpErrorResponse) => {
+        catchError((err: HttpErrorResponse) => {
           const errors = err.error as ResponseResult;
-          errors.OK=false;
+          errors.OK = false;
           return of(errors);
         })
       );
   }
-  createAfiliado(idPerfil:number,form:AfiliadoForm){
+  createAfiliado(idPerfil: number, form: AfiliadoForm) {
     return this.http
       .post<HttpResponseApi<Perfil>>(`${this.URL_afiliado}/${idPerfil}`, form, {
         headers: this.headers,
@@ -130,89 +219,175 @@ export class PerfilService {
       .pipe(
         map((resp) => {
           // console.log('map',resp);
-          const respuesta:ResponseResult={OK:resp.OK,message:resp.message,statusCode:201}
+          const respuesta: ResponseResult = {
+            OK: resp.OK,
+            message: resp.message,
+            statusCode: 201,
+          };
           return respuesta;
         }),
-        catchError((err:HttpErrorResponse) => {
+        catchError((err: HttpErrorResponse) => {
           const errors = err.error as ResponseResult;
-          errors.OK=false;
+          errors.OK = false;
           return of(errors);
         })
       );
   }
-  updateAfiliado(id: number, form: AfiliadoForm) {
+  update(id: number, form: PerfilForm) {
     return this.http
-      .patch<HttpResponseApi<Afiliado>>(
-        `${this.URL_afiliado}/${id}`,
-        form,
-        { headers: this.headers }
-      )
-      .pipe(
-        tap((resp) => {
-          if (resp.OK) {
-            this._afiliadoSelected$.next(resp.data!);
-          }
-        }),
-        map((resp) => {
-          // console.log('map',resp);
-          const respuesta:ResponseResult={OK:resp.OK,message:resp.message,statusCode:200}
-          return respuesta;
-        }),
-        catchError((err:HttpErrorResponse) => {
-          const errors = err.error as ResponseResult;
-          errors.OK=false;
-          return of(errors);
-        })
-      );
-  }
-  updateAfiliadoStatus(id: number, form: Afiliado) {
-    return this.http
-      .patch<HttpResponseApi<Afiliado>>(
-        `${this.URL_afiliado}/status/${id}`,
-        form,
-        { headers: this.headers }
-      )
-      .pipe(
-        tap((resp) => {
-          if (resp.OK) {
-            this._afiliadoSelected$.next(resp.data!);
-          }
-        }),
-        map((resp) => {
-          // console.log('map',resp);
-          const respuesta:ResponseResult={OK:resp.OK,message:resp.message,statusCode:200}
-          return respuesta;
-        }),
-        catchError((err:HttpErrorResponse) => {
-          const errors = err.error as ResponseResult;
-          errors.OK=false;
-          return of(errors);
-        })
-      );
-  }
-  updateStatus(idPerfil:number,form:AfiliadoForm){
-    return this.http
-    .patch<HttpResponseApi<Perfil>>(
-      `${this.URL_perfil}/status/${idPerfil}`,
-      form,
-      { headers: this.headers }
-    )
-    .pipe(
-      tap((resp) => {
-        if (resp.OK) {
-          this._perfil$.next(resp.data!);
-        }
-      }),
-      map((resp) => {
-        // console.log('map',resp);
-        const respuesta:ResponseResult={OK:resp.OK,message:resp.message,statusCode:200}
-        return respuesta;
-      }),
-      catchError((err:HttpErrorResponse) => {
-        const errors = err.error as ResponseResult;
-        errors.OK=false;
-        return of(errors);
+      .patch<HttpResponseApi<Perfil>>(`${this.URL_perfil}/${id}`, form, {
+        headers: this.headers,
       })
-    );
+      .pipe(
+        map((resp) => {
+          // console.log('map',resp);
+          const respuesta: ResponseResult = {
+            OK: resp.OK,
+            message: resp.message,
+            statusCode: 200,
+          };
+          return respuesta;
+        }),
+        catchError((err: HttpErrorResponse) => {
+          const errors = err.error as ResponseResult;
+          errors.OK = false;
+          return of(errors);
+        })
+      );
+  }
+  updateAfiliado(idPerfil: number, form: AfiliadoForm) {
+    return this.http
+      .patch<HttpResponseApi<Afiliado>>(
+        `${this.URL_afiliado}/${idPerfil}`,
+        form,
+        { headers: this.headers }
+      )
+      .pipe(
+        map((resp) => {
+          // console.log('map',resp);
+          const respuesta: ResponseResult = {
+            OK: resp.OK,
+            message: resp.message,
+            statusCode: 200,
+          };
+          return respuesta;
+        }),
+        catchError((err: HttpErrorResponse) => {
+          const errors = err.error as ResponseResult;
+          errors.OK = false;
+          return of(errors);
+        })
+      );
+  }
+  updateAfiliadoStatus(idPerfil: number, form: Afiliado) {
+    return this.http
+      .patch<HttpResponseApi<Afiliado>>(
+        `${this.URL_afiliado}/status/${idPerfil}`,
+        form,
+        { headers: this.headers }
+      )
+      .pipe(
+        tap((resp) => {
+          if (resp.OK) {
+            this._perfil$.next(resp.data!);
+          }
+        }),
+        map((resp) => {
+          // console.log('map',resp);
+          const respuesta: ResponseResult = {
+            OK: resp.OK,
+            message: resp.message,
+            statusCode: 200,
+          };
+          return respuesta;
+        }),
+        catchError((err: HttpErrorResponse) => {
+          const errors = err.error as ResponseResult;
+          errors.OK = false;
+          return of(errors);
+        })
+      );
+  }
+  updateStatus(idPerfil: number, form: AfiliadoForm) {
+    return this.http
+      .patch<HttpResponseApi<Perfil>>(
+        `${this.URL_perfil}/status/${idPerfil}`,
+        form,
+        { headers: this.headers }
+      )
+      .pipe(
+        tap((resp) => {
+          if (resp.OK) {
+            this._perfil$.next(resp.data!);
+          }
+        }),
+        map((resp) => {
+          // console.log('map',resp);
+          const respuesta: ResponseResult = {
+            OK: resp.OK,
+            message: resp.message,
+            statusCode: 200,
+          };
+          return respuesta;
+        }),
+        catchError((err: HttpErrorResponse) => {
+          const errors = err.error as ResponseResult;
+          errors.OK = false;
+          return of(errors);
+        })
+      );
+  }
+  updateUsuario(idPerfil: number, form: UsuarioForm) {
+    return this.http
+      .patch<HttpResponseApi<Afiliado>>(
+        `${this.URL_usuario}/${idPerfil}`,
+        form,
+        { headers: this.headers }
+      )
+      .pipe(
+        map((resp) => {
+          // console.log('map',resp);
+          const respuesta: ResponseResult = {
+            OK: resp.OK,
+            message: resp.message,
+            statusCode: 200,
+          };
+          return respuesta;
+        }),
+        catchError((err: HttpErrorResponse) => {
+          const errors = err.error as ResponseResult;
+          errors.OK = false;
+          return of(errors);
+        })
+      );
+  }
+  updateUsuarioStatus(idPerfil: number, form: UsuarioForm) {
+    return this.http
+      .patch<HttpResponseApi<Usuario>>(
+        `${this.URL_usuario}/status/${idPerfil}`,
+        form,
+        { headers: this.headers }
+      )
+      .pipe(
+        tap((resp) => {
+          if (resp.OK) {
+            this._perfil$.next(resp.data!);
+          }
+        }),
+        map((resp) => {
+          // console.log('map',resp);
+          const respuesta: ResponseResult = {
+            OK: resp.OK,
+            message: resp.message,
+            statusCode: 200,
+          };
+          return respuesta;
+        }),
+        catchError((err: HttpErrorResponse) => {
+          const errors = err.error as ResponseResult;
+          errors.OK = false;
+          return of(errors);
+        })
+      );
   }
 }

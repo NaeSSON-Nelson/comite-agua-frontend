@@ -1,10 +1,15 @@
 import { Injectable } from '@angular/core';
 import { Barrio, Estado, Genero, TipoPerfil } from '../interfaces';
+import { Nivel } from '../interfaces/atributes.enum';
 
 
 export interface Values<T>{
   name:   string;
   value:  T;
+}
+export interface MenuIcon{
+  name: string;
+  icon:  string;
 }
 @Injectable({
   providedIn: 'root'
@@ -34,6 +39,14 @@ export class CommonAppService {
     {name:'AFILIADO',value:TipoPerfil.AFILIADO},
     {name:'ADMINISTRATIVO',value:TipoPerfil.ADMINISTRATIVO},
   ];
+  private _iconsMenus:MenuIcon[]=[
+    { name:'',icon:''}
+  ];
+  private _nivelesRoles:Values<Nivel>[]=[
+    {name:'STANDAR',value:Nivel.afiliado},
+    {name:'RESPONSABILITY',value:Nivel.contador},
+    {name:'SUPERIOR',value:Nivel.administrativo},
+  ]
   get estados(){
     return [...this._estados];
   }
@@ -45,5 +58,8 @@ export class CommonAppService {
   }
   get tipoPerfiles(){
     return [...this._tipoPerfil];
+  }
+  get niveles(){
+    return [...this._nivelesRoles]
   }
 }

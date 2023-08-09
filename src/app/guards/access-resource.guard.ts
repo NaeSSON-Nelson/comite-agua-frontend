@@ -7,10 +7,5 @@ import { tap } from 'rxjs';
 export const accessResourceGuard: CanActivateFn = (route, state) => {
   const authService = inject(AuthService);
   const router = inject(Router);
-  return authService.validarAcceso()
-          .pipe(
-            tap(valid=>{
-              if(!valid) router.navigateByUrl('forbidden')
-            })
-          );
+  return true
   };

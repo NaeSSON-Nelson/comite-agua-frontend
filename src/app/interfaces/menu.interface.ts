@@ -1,10 +1,10 @@
+import { ColumnsAlways } from "./always.interface";
 import { Estado } from "./atributes.enum";
 
-export interface Menu {
+export interface Menu extends ColumnsAlways{
   id?:          number;
   nombre?:      string;
   linkMenu?:    string;
-  estado?:      Estado;
   itemsMenu?:    ItemMenu[];
 }
 export interface MenuForm {
@@ -14,9 +14,9 @@ export interface MenuForm {
   estado?:      Estado;
   itemsMenu?:    number[];
 }
-export interface ItemMenu {
+export interface ItemMenu extends ColumnsAlways{
   id?:          number;
   nombre?:      string;
   linkMenu?:    string;
-  estado?:      Estado;
+  visible?:     boolean;
 }

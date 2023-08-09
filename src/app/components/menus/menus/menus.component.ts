@@ -107,7 +107,7 @@ export class MenusComponent {
     });
   }
   dataDetail(id: number) {
-    this.router.navigate(['menus', 'details'], { queryParams: { id } });
+    this.router.navigate(['menus', 'menu-details'], { queryParams: { id } });
   }
   campoValido(nombre: string) {
     return (

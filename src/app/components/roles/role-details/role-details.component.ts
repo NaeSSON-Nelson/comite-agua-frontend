@@ -90,7 +90,7 @@ export class RoleDetailsComponent {
   actionData(action: string) {
     switch (action) {
       case 'MODIFICAR':
-        this.router.navigate(['roles','form'], {
+        this.router.navigate(['roles','rol-register'], {
           queryParams: { id: this.role.id },
         });
         break;

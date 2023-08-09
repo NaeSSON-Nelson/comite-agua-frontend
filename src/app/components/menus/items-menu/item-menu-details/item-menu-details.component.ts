@@ -35,7 +35,7 @@ export class ItemMenuDetailsComponent {
         detail: 'OCURRIO UN ERROR AL OBTENER LA DATA',
         life: 5000,
       });
-      this.router.navigate(['menus','items']);
+      this.router.navigate(['items-menu','items-menu-list']);
       return;
     } else {
       this.routerAct.queryParams
@@ -69,7 +69,7 @@ export class ItemMenuDetailsComponent {
                     detail: `${res.message},code: ${res.statusCode}`,
                     life: 5000,
                   });
-                  this.router.navigate(['menus','items'])
+                  this.router.navigate(['items-menu','item-menu-list'])
                   break;
                 default:
                   console.log(res);
@@ -90,7 +90,7 @@ export class ItemMenuDetailsComponent {
   actionData(action: string) {
     switch (action) {
       case 'MODIFICAR':
-        this.router.navigate(['menus','items','form'], {
+        this.router.navigate(['items-menu','item-menu-register'], {
           queryParams: { id: this.itemMenu.id },
         });
         break;

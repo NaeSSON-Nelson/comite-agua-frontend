@@ -7,15 +7,15 @@ import { MedidorFormComponent } from './medidor-form/medidor-form.component';
 
 const routes: Routes = [
   {
-    path: '',
+    path: 'medidores-list',
     component: MedidoresComponent,
   },
   {
-    path:'details',
+    path:'medidor-details',
     component:AfiliadoMedidoresDetailsComponent,
   },
   {
-    path:'form',
+    path:'medidor-register',
     component:MedidorFormComponent,
   },
   {

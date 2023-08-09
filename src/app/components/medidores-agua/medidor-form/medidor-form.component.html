@@ -111,7 +111,7 @@
                     <span class="p-float-label">
                         <p-dropdown
                         formControlName="ubicacionBarrio"
-                        [options]="barrios"
+                        [options]="commonAppService.barrios"
                         [ngClass]="inputValid('ubicacionBarrio')"
                         optionValue="value"
                         optionLabel="name"
@@ -132,7 +132,7 @@
                       <p-dropdown
                         inputId="estado"
                         [autoDisplayFirst]="false"
-                        [options]="estados"
+                        [options]="commonAppService.estados"
                         formControlName="estado"
                         optionLabel="name"
                         optionValue="value"

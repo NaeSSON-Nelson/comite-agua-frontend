@@ -4,23 +4,33 @@ import { RouterModule, Routes } from '@angular/router';
 import { PerfilesComponent } from './perfiles/perfiles.component';
 import { PerfilDetailsComponent } from './perfil-details/perfil-details.component';
 import { PerfilFormComponent } from './perfil-form/perfil-form.component';
+import { PerfilUsuarioFormComponent } from './perfil-usuario-form/perfil-usuario-form.component';
+import { PerfilAfiliadoFormComponent } from './perfil-afiliado-form/perfil-afiliado-form.component';
 
 const routes: Routes = [
   {
-    path: '',
+    path: 'perfil-list',
     component: PerfilesComponent,
   },
   {
-    path:'details',
+    path:'perfil-details',
     component:PerfilDetailsComponent,
   },
   {
-    path:'form',
+    path:'perfil-register',
     component:PerfilFormComponent,
   },
   {
+    path:'perfil-user-register',
+    component:PerfilUsuarioFormComponent,
+  },
+  {
+    path:'perfil-afiliado-register',
+    component:PerfilAfiliadoFormComponent,
+  },
+  {
     path: '**',
-    redirectTo: '',
+    redirectTo: 'perfil-list',
   },
 ];
 

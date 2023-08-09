@@ -24,7 +24,7 @@ export class LoginComponent {
   ) {}
 
   loginForm: FormGroup = this.fb.group({
-    userName: [
+    username: [
       ,
       [
         Validators.required,

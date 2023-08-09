@@ -7,6 +7,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { switchMap } from 'rxjs';
 import { patternText } from 'src/app/patterns/forms-patterns';
 import { AsyncValidatorLinkService } from '../validators/async-validator-link.service';
+import { CommonAppService } from 'src/app/common/common-app.service';
 
 @Component({
   selector: 'app-item-menu-form',
@@ -23,6 +24,7 @@ export class ItemMenuFormComponent {
     private asyncValidators: AsyncValidatorLinkService,
     private confirmationService: ConfirmationService,
     private messageService: MessageService,
+    public commonService:CommonAppService,
     private router: Router,
     private routerAct: ActivatedRoute,
   ) {}
@@ -35,8 +37,9 @@ export class ItemMenuFormComponent {
     //   console.log(params);
     // })
     this.itemsMenuService.itemMenu.subscribe(res=>{
-      this.itemMenuForm.setValue(res);
+      const {created_at,isActive,updated_at,...dataItem} = res;
       this.itemMenuActual = res;
+      this.itemMenuForm.setValue({...dataItem});
     })
     if (!this.router.url.includes('id')) return;
 
@@ -70,7 +73,7 @@ export class ItemMenuFormComponent {
                 detail: `${res.message},code: ${res.statusCode}`,
                 life: 5000,
               });
-              this.router.navigate(['menus','items'])
+              this.router.navigate(['items-menu','item-menu-list'])
               break;
             default:
               console.log(res);
@@ -89,7 +92,8 @@ export class ItemMenuFormComponent {
     id: [],
     nombre: [,[Validators.required,Validators.minLength(3),Validators.pattern(patternText)]],
     linkMenu: [,[Validators.minLength(3),Validators.required,Validators.pattern(patternText)]],
-    estado: [1, [Validators.required]],
+    visible:[true,Validators.required],
+    estado: [, [Validators.required]],
   },{
     asyncValidators:[this.asyncValidators.validarLink('linkMenu','id')],
     updateOn: 'blur',
@@ -128,10 +132,10 @@ export class ItemMenuFormComponent {
                 next:(res)=>{
 
                   this.messageService.add({severity:'info',summary:'Se cambio con exito!', detail:`${res.message}`,icon:'pi pi-check'})
-                  this.router.navigate(['menus','items','details'],{queryParams:{id:this.itemMenuActual?.id}});
+                  this.router.navigate(['items-menu','item-menu-details'],{queryParams:{id:this.itemMenuActual?.id}});
                 },
                 error:err=>{
-                  this.messageService.add({severity:'error',summary:'Ocurrió un error al modificar el Empleado!!', detail:`Detalles del error: ???console`,life:5000, icon:'pi pi-times'})
+                  this.messageService.add({severity:'error',summary:'Ocurrió un error al modificar!!', detail:`Detalles del error: ???console`,life:5000, icon:'pi pi-times'})
                   console.log(err);
                 },
                 complete:()=>{
@@ -144,7 +148,7 @@ export class ItemMenuFormComponent {
               next: res=>{
                 console.log(res);            
                 this.messageService.add({severity:'success',summary:'Registro Exitoso!', detail:res.message,icon:'pi pi-check'})
-                this.router.navigate(['menus','items'],);
+                this.router.navigate(['items-menu','item-menu-list'],);
               },
               error: err=>{
                 this.messageService.add({severity:'error',summary:'Ocurrió un error al registrar el Empleado!!', detail:`Detalles del error: console`,life:5000, icon:'pi pi-times'})
@@ -182,9 +186,9 @@ export class ItemMenuFormComponent {
       : '';
   }
 
-  estados = [
-    { name: 'Activo', value: 1 },
-    { name: 'Inactivo', value: 0 },
+  estadoVisible = [
+    { name: 'VISIBLE', value: true },
+    { name: 'NO VISIBLE', value: false },
   ];
   getNombreErrors(campo: string) {
     const errors = this.itemMenuForm.get(campo)?.errors;
@@ -215,6 +219,13 @@ export class ItemMenuFormComponent {
   }
 
   getEstadoErrors(campo: string) {
+    const errors = this.itemMenuForm.get(campo)?.errors;
+    if (errors?.['required']) {
+      return 'El campo es requerido';
+    }
+    return '';
+  }
+  getVisibleErrors(campo: string) {
     const errors = this.itemMenuForm.get(campo)?.errors;
     if (errors?.['required']) {
       return 'El campo es requerido';

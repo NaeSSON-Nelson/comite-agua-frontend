@@ -117,7 +117,7 @@ export class ItemsMenuComponent {
     });
   }
   dataDetail(id: number) {
-    this.router.navigate(['menus', 'items', 'details'], {
+    this.router.navigate(['items-menu', 'item-menu-details'], {
       queryParams: { id },
     });
   }

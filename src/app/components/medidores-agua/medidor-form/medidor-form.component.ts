@@ -9,6 +9,7 @@ import { switchMap } from 'rxjs';
 import { patternCI, patternDateFormat, patternText } from 'src/app/patterns/forms-patterns';
 import { Afiliado } from 'src/app/interfaces/afiliado.interface';
 import { Perfil } from 'src/app/interfaces';
+import { CommonAppService } from 'src/app/common/common-app.service';
 
 @Component({
   selector: 'app-medidor-form',
@@ -25,6 +26,7 @@ export class MedidorFormComponent {
     private asyncValidators: AsyncValidatorsMedidorService,
     private confirmationService: ConfirmationService,
     private messageService: MessageService,
+    public commonAppService:CommonAppService,
     private router: Router,
     private routerAct: ActivatedRoute
   ) {}
@@ -112,7 +114,7 @@ export class MedidorFormComponent {
       fechaInstalacion:[,[Validators.required]],
       lecturaInicial:[0,[Validators.required,Validators.min(0)]],
       ubicacionBarrio:[,[Validators.required,Validators.minLength(3),Validators.pattern(patternText)]],
-      estado:[1,[Validators.min(0)]],
+      estado:[,[Validators.min(0)]],
       marca:[,[Validators.required,Validators.pattern(patternText),Validators.minLength(1)]],
       afiliado: this.fb.group({
         id:[,[Validators.required,Validators.min(0)]]
@@ -238,17 +240,7 @@ export class MedidorFormComponent {
       : '';
   }
 
-  estados = [
-    { name: 'Activo', value: 1 },
-    { name: 'Inactivo', value: 0 },
-  ];
-  barrios = [
-    { name: '20 de marzo', value: '20 de marzo' },
-    { name: 'San Antonio', value: 'san antonio' },
-    { name: 'Mendez Fortaleza', value: 'mendez fortaleza' },
-    { name: 'Verde Olivo', value: 'verde olivo' },
-    { name: 'Primavera', value: 'primavera' },
-  ];
+  
   //MESSAGES ERRORS TYPE
 
   getNroMedidorErrors(campo: string) {

@@ -27,18 +27,18 @@
             <span class="p-float-label">
               <input
                 type="text"
-                id="userName"
+                id="username"
                 pInputText
-                formControlName="userName"
-                [ngClass]="inputValid('userName')"
+                formControlName="username"
+                [ngClass]="inputValid('username')"
               />
-              <label for="userName">Username</label>
+              <label for="username">Username</label>
             </span>
             <small
-              id="userName-help"
+              id="username-help"
               class="p-error block"
-              *ngIf="campoValido('userName')"
-              >{{ getUsernameErrors("userName") }}</small
+              *ngIf="campoValido('username')"
+              >{{ getUsernameErrors("username") }}</small
             >
           </div>
           <div class="field col-12">

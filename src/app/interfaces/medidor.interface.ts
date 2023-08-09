@@ -1,27 +1,23 @@
 import { Afiliado } from "./afiliado.interface";
-import { Estado } from "./atributes.enum";
+import { ColumnsAlways } from "./always.interface";
 
 
-export interface Medidor {
+export interface Medidor extends ColumnsAlways{
   id?: number;
   nroMedidor?: string;
   fechaInstalacion?: Date;
   lecturaInicial?: number;
   ultimaLectura?: number;
   ubicacionBarrio?:  string;
-  estado?: Estado;
   marca?: string;
   lecturas?: LecturaMedidor[];
   afiliado?: Afiliado;
 }
 
-export interface LecturaMedidor {
+export interface LecturaMedidor extends ColumnsAlways{
   id?: number;
   lectura?: number;
   total?: number;
   estadoMedidor?: string;
-  estado?: Estado;
-  created_at?: Date;
-  updated_at?: Date;
   medidor?: Medidor;
 }

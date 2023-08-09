@@ -1,1 +1,121 @@
-<p>perfil-afiliado-form works!</p>
+<div class="grid">
+  <form class="col-12" [formGroup]="afiliadoForm">
+    <div class="card">
+        <h5>
+            {{ perfilActual?.afiliado?.id ? "Datos de Afiliacion Actuales" : "Asignar afiliacion al perfil" }}
+          </h5>
+        <p-divider></p-divider>
+      <div class="grid p-fluid mt-5">
+        <div class="field col-12 md:col-3">
+          <span class="p-float-label">
+            <p-dropdown
+              inputId="barrio"
+              [autoDisplayFirst]="false"
+              [options]="commonServiceApp.barrios"
+              formControlName="barrio"
+              optionLabel="name"
+              optionValue="value"
+              placeholder="Select Barrio"
+              [ngClass]="inputValid('barrio')"
+            ></p-dropdown>
+
+            <label for="barrio">Barrio (*)</label>
+          </span>
+          <small
+            id="barrio-help"
+            class="p-error block"
+            *ngIf="campoValido('barrio')"
+            >{{ getAfiliadoBarrioErrors("barrio") }}
+          </small>
+        </div>
+        <div class="field col-12 md:col-4">
+          <span class="p-float-label">
+            <input
+              type="text"
+              id="numeroVivienda"
+              pInputText
+              formControlName="numeroVivienda"
+              [ngClass]="inputValid('numeroVivienda')"
+            />
+            <label for="numeroVivienda">Numero de Vivienda del afiliado</label>
+          </span>
+          <small
+            id="apellidoPrimero-help"
+            class="p-error block"
+            *ngIf="campoValido('numeroVivienda')"
+            >{{ getAfiliadoNumeroViviendaErrors("numeroVivienda") }}
+          </small>
+        </div>
+        <div class="field col-12 md:col-6">
+          <span class="p-float-label">
+            <input
+              type="text"
+              id="longitud"
+              pInputText
+              formControlName="longitud"
+              [ngClass]="inputValid('longitud')"
+            />
+            <label for="longitud">Longitud</label>
+          </span>
+          <small
+            id="longitud-help"
+            class="p-error block"
+            *ngIf="campoValido('longitud')"
+            >{{ getAfiliadoLongitudErrors("longitud") }}
+          </small>
+        </div>
+        <div class="field col-12 md:col-6">
+          <span class="p-float-label">
+            <input
+              type="text"
+              id="latitud"
+              pInputText
+              formControlName="latitud"
+              [ngClass]="inputValid('latitud')"
+            />
+            <label for="latitud">Longitud</label>
+          </span>
+          <small
+            id="latitud-help"
+            class="p-error block"
+            *ngIf="campoValido('latitud')"
+            >{{ getAfiliadoLatitudErrors("latitud") }}
+          </small>
+        </div>
+        <div class="field col-12 md:col-3">
+          <span class="p-float-label">
+            <p-dropdown
+              inputId="estado"
+              [autoDisplayFirst]="false"
+              [options]="commonServiceApp.estados"
+              formControlName="estado"
+              optionLabel="name"
+              optionValue="value"
+              placeholder="Select Estado"
+              [ngClass]="inputValid('estado')"
+            ></p-dropdown>
+
+            <label for="estado">estado (*)</label>
+          </span>
+          <small
+            id="estado-help"
+            class="p-error block"
+            *ngIf="campoValido('estado')"
+            >{{ getAfiliadoEstadoErrors("estado") }}
+          </small>
+        </div>
+        <div class="col-12 md:flex md:justify-content-center">
+            <button
+              type="button"
+              pButton
+              pRipple
+              class="p-button-primary"
+              [label]="perfilActual?.afiliado?.id ? 'Modificar Afiliacion' : 'Asignar afiliacion'"
+              [disabled]="afiliadoForm.pending"
+              (click)="validForm()"
+            ></button>
+          </div>
+      </div>
+    </div>
+  </form>
+</div>

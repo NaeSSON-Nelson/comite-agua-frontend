@@ -107,7 +107,7 @@ export class PerfilesComponent {
     });
   }
   dataDetail(id: number) {
-    this.router.navigate(['perfiles', 'details'], { queryParams: { id } });
+    this.router.navigate(['perfiles', 'perfil-details'], { queryParams: { id } });
   }
   campoValido(nombre: string) {
     return (

@@ -2,7 +2,7 @@
   <form class="col-12" [formGroup]="perfilForm">
     <div class="card">
       <h5>
-        {{ perfilActual?.id ? "Datos de Perfil" : "Registro un nuevo Perfil" }}
+        {{ perfilActual?.id ? "Datos de Perfil Actuales" : "Registro un nuevo Perfil" }}
       </h5>
       <div class="p-fluid p-formgrid grid mt-5">
         <div class="field col-12 md:col-6">
@@ -200,7 +200,7 @@
         </div>
       </div>
     </div>
-    <div class="card">
+    <div class="card" *ngIf="!perfilActual?.id">
       <p>¿Es un Afiliado?</p>
       <p-divider></p-divider>
       <div class="grid">
@@ -320,7 +320,7 @@
         </div>
       </div>
     </div>
-    <div class="card">
+    <div class="card" *ngIf="!perfilActual?.id">
       <p>Acceso a una cuenta</p>
       <p-divider></p-divider>
       <div class="grid">
@@ -431,7 +431,7 @@
             pRipple
             class="p-button-primary"
             [label]="perfilActual?.id ? 'Modificar Perfil' : 'Registrar Perfil'"
-            [disabled]="afiliadoForm.pending"
+            [disabled]="perfilForm.pending"
             (click)="validForm()"
           ></button>
         </div>

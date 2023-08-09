@@ -8,21 +8,21 @@ import { accessResourceGuard } from '../../../guards/access-resource.guard';
 
 const routes: Routes = [
   {
-    path: '',
+    path: 'item-menu-list',
     component: ItemsMenuComponent,
     // canActivate:[accessResourceGuard]
   },
   {
-    path:'details',
+    path:'item-menu-details',
     component:ItemMenuDetailsComponent,
   },
   {
-    path:'form',
+    path:'item-menu-register',
     component:ItemMenuFormComponent,
   },
   {
     path: '**',
-    redirectTo: '',
+    redirectTo: 'item-menu-list',
   },
 ];
 

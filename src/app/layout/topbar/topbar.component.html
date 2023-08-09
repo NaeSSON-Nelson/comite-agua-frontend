@@ -15,23 +15,21 @@
     >
         <i class="pi pi-ellipsis-v"></i>
     </button>
-    <div class="layout-menu-bar">
-        <p-tabMenu [model]="tieredItems" >
-        </p-tabMenu>
-    </div>
     <div #topbarmenu class="layout-topbar-menu" [ngClass]="{'layout-topbar-menu-mobile-active': layoutService.state.profileSidebarVisible}">
-        <button class="p-link layout-topbar-button">
-            <i class="pi pi-calendar"></i>
-            <span>Calendar</span>
-        </button>
         <button class="p-link layout-topbar-button">
             <i class="pi pi-user"></i>
             <span>Profile</span>
         </button>
         <p *ngIf="usuario">Usuario:{{usuario.username}}</p>
-        <button class="p-link layout-topbar-button" [routerLink]="'/documentation'">
+        <button class="p-link layout-topbar-button" [routerLink]="'/dashboard'">
             <i class="pi pi-cog"></i>
-            <span>Settings</span>
+            <span>Roles</span>
         </button>
+        <p-dropdown [options]="roles"
+        optionLabel="name"
+        (onChange)="rolChange($event)"
+        optionValue="value"
+        >
+        </p-dropdown>
     </div>
 </div>

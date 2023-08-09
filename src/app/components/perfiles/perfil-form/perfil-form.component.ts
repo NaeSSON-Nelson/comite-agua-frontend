@@ -6,6 +6,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AfiliadoForm, Perfil, PerfilForm, ResponseCreatePerfil, Role, UsuarioForm } from 'src/app/interfaces';
 import { patternCI, patternSpanishInline, patternText } from 'src/app/patterns/forms-patterns';
 import { CommonAppService } from 'src/app/common/common-app.service';
+import { switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-perfil-form',
@@ -28,7 +29,59 @@ export class PerfilFormComponent {
   listRolesSelected: Role[] = [];
   addAfiliado:boolean=false;
   addUsuario:boolean=false;
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.perfilService.perfil.subscribe((res) => {
+      const { usuario,afiliado,accessAcount,created_at,updated_at,isActive,contactos,...dataPerfil } = res;
+      this.perfilActual=res;
+        this.perfilForm.setValue({...dataPerfil});
+    });
+    if (!this.router.url.includes('id')) return;
+
+    this.routerAct.queryParams
+      .pipe(switchMap(({ id }) => this.perfilService.findOne(id)))
+      .subscribe((res) => {
+        if (res.OK === false) {
+          switch (res.statusCode) {
+            case 401:
+              this.messageService.add({
+                severity: 'info',
+                summary: `OCURRIO UN ERROR AL OBTENER LA DATA:${res.error}`,
+                detail: `${res.message},code: ${res.statusCode}`,
+                life: 3000,
+              });
+              this.router.navigate(['auth', 'login']);
+              break;
+            case 403:
+              this.messageService.add({
+                severity: 'warn',
+                summary: `OCURRIO UN ERROR AL OBTENER LA DATA:${res.error}`,
+                detail: `${res.message},code: ${res.statusCode}`,
+                life: 5000,
+              });
+              this.router.navigate(['forbidden']);
+              break;
+            case 404:
+              this.messageService.add({
+                severity: 'warn',
+                summary: `OCURRIO UN ERROR AL OBTENER LA DATA:${res.error}`,
+                detail: `${res.message},code: ${res.statusCode}`,
+                life: 5000,
+              });
+              this.router.navigate(['perfiles'])
+              break;
+            default:
+              console.log(res);
+              this.messageService.add({
+                severity: 'error',
+                summary: 'Error no controlado',
+                detail: 'revise la consola',
+                life: 5000,
+              });
+              break;
+          }
+        }
+      });
+  }
 
   showTableAsignRoleModalForm: boolean = false;
   showModalTableRoles() {
@@ -42,6 +95,7 @@ export class PerfilFormComponent {
     apellidoSegundo:  [,[Validators.minLength(3), Validators.pattern(patternSpanishInline)],],
     CI:               [,[Validators.required,Validators.minLength(6),Validators.pattern(patternCI),],],
     profesion:        [,[Validators.minLength(3), Validators.pattern(patternText),Validators.required]],
+    direccion:        [,[Validators.required, Validators.pattern(patternText)]],
     genero:           [,[Validators.required, Validators.pattern(patternText)]],
     tipoPerfil:       [,[Validators.required]],
     fechaNacimiento:  [,[Validators.required]],
@@ -154,6 +208,30 @@ export class PerfilFormComponent {
       header: 'Confirmar Acción',
       icon: 'pi pi-info-circle',
       accept: () => {
+        if(this.perfilActual?.id){
+          this.perfilService.update(this.perfilActual.id,form).subscribe({
+            next:res=>{
+              if(res.OK){
+                this.messageService.add({
+                  severity: 'success',
+                  summary: 'Actualizacion Exitosa!',
+                  detail: res.message,
+                  icon: 'pi pi-check',
+                });
+                this.router.navigate(['perfiles','perfil-details'],{queryParams:{id:this.perfilActual!.id}});
+              }else{
+                this.messageService.add({
+                  severity: 'error',
+                  summary: 'Ocurrió un error al modificar!!',
+                  detail: `Detalles del error: console`,
+                  life: 5000,
+                  icon: 'pi pi-times',
+                });
+                console.log(res.error,res.message);
+              }
+            }
+          })
+        }else
         this.perfilService.create(form).subscribe({
           next: (res) => {
             console.log(res);

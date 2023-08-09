@@ -20,11 +20,16 @@ const routes: Routes = [
       {
         path:'perfiles',
         loadChildren:()=>import('./components/perfiles/perfiles-routing.module').then(m=>m.PerfilesRoutingModule),
-        // canActivate:[validarTokenGuard]
+        canActivate:[validarTokenGuard]
       },
       {
         path:'menus',
         loadChildren:()=>import('./components/menus/menus-routing.module').then(m=>m.MenusRoutingModule),
+        canActivate:[validarTokenGuard]
+      },
+      {
+        path:'items-menu',
+        loadChildren:()=>import('./components/menus/items-menu/items-menu-routing.module').then(m=>m.ItemsMenuRoutingModule),
         canActivate:[validarTokenGuard]
       },
       {

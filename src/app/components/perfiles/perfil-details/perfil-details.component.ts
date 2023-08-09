@@ -34,7 +34,7 @@ export class PerfilDetailsComponent {
         detail: 'SE DEBE MANDAR UNA REFERENCIA',
         life: 5000,
       });
-      this.router.navigate(['afiliados']);
+      this.router.navigate(['perfiles']);
       return;
     } else {
       this.routerAct.queryParams
@@ -89,7 +89,7 @@ export class PerfilDetailsComponent {
   actionData(action: string) {
     switch (action) {
       case 'MODIFICAR':
-        this.router.navigate(['/perfiles/form'], {
+        this.router.navigate(['perfiles','perfil-register'], {
           queryParams: { id: this.perfil.id },
         });
         break;
@@ -102,6 +102,159 @@ export class PerfilDetailsComponent {
           accept: () => {
             this.perfilService
               .updateStatus(this.perfil.id!, { estado: Estado.INACTIVO })
+              .subscribe({
+                next: (res) => {
+                  this.messageService.add({
+                    severity: 'info',
+                    summary: 'Se cambio con exito!',
+                    detail: `${res.message}`,
+                    icon: 'pi pi-check',
+                  });
+                },
+                error: (err) => {
+                  console.log(err);
+                  this.messageService.add({
+                    severity: 'error',
+                    summary: 'Ocurrió un error al modificar!!',
+                    detail: `Detalles del error: ???console`,
+                    life: 5000,
+                    icon: 'pi pi-times',
+                  });
+                },
+              });
+          },
+        });
+        break;
+
+      case 'HABILITAR':
+        this.confirmationService.confirm({
+          message: `¿Está seguro de Habilitar?`,
+          header: 'Confirmar Acción',
+          icon: 'pi pi-info-circle',
+          accept: () => {
+            this.perfilService
+              .updateStatus(this.perfil.id!, { estado: Estado.ACTIVO })
+              .subscribe({
+                next: (res) => {
+                  this.messageService.add({
+                    severity: 'info',
+                    summary: 'Se cambio con exito!',
+                    detail: `${res.message}`,
+                    icon: 'pi pi-check',
+                  });
+                },
+                error: (err) => {
+                  console.log(err);
+                  this.messageService.add({
+                    severity: 'error',
+                    summary: 'Ocurrió un error al modificar!!',
+                    detail: `Detalles del error: ???console`,
+                    life: 5000,
+                    icon: 'pi pi-times',
+                  });
+                },
+              });
+          },
+        });
+        break;
+
+      default:
+        console.log('Opcion invalida');
+        break;
+    }
+  }
+  actionDataAfiliado(action: string) {
+    switch (action) {
+      case 'MODIFICAR':
+        this.router.navigate(['perfiles','perfil-afiliado-register'], {
+          queryParams: { id: this.perfil.id },
+        });
+        break;
+
+      case 'DESHABILITAR':
+        this.confirmationService.confirm({
+          message: `¿Está seguro de Deshabilitar la afiliacion?`,
+          header: 'Confirmar Acción',
+          icon: 'pi pi-info-circle',
+          accept: () => {
+            this.perfilService
+              .updateAfiliadoStatus(this.perfil.id!, { estado: Estado.INACTIVO })
+              .subscribe({
+                next: (res) => {
+                  this.messageService.add({
+                    severity: 'info',
+                    summary: 'Se cambio con exito!',
+                    detail: `${res.message}`,
+                    icon: 'pi pi-check',
+                  });
+                },
+                error: (err) => {
+                  console.log(err);
+                  this.messageService.add({
+                    severity: 'error',
+                    summary: 'Ocurrió un error al modificar!!',
+                    detail: `Detalles del error: ???console`,
+                    life: 5000,
+                    icon: 'pi pi-times',
+                  });
+                },
+              });
+          },
+        });
+        break;
+
+      case 'HABILITAR':
+        this.confirmationService.confirm({
+          message: `¿Está seguro de Habilitar?`,
+          header: 'Confirmar Acción',
+          icon: 'pi pi-info-circle',
+          accept: () => {
+            this.perfilService
+              .updateAfiliadoStatus(this.perfil.id!, { estado: Estado.ACTIVO })
+              .subscribe({
+                next: (res) => {
+                  this.messageService.add({
+                    severity: 'info',
+                    summary: 'Se cambio con exito!',
+                    detail: `${res.message}`,
+                    icon: 'pi pi-check',
+                  });
+                },
+                error: (err) => {
+                  console.log(err);
+                  this.messageService.add({
+                    severity: 'error',
+                    summary: 'Ocurrió un error al modificar!!',
+                    detail: `Detalles del error: ???console`,
+                    life: 5000,
+                    icon: 'pi pi-times',
+                  });
+                },
+              });
+          },
+        });
+        break;
+
+      default:
+        console.log('Opcion invalida');
+        break;
+    }
+  }
+  actionDataUsuario(action: string) {
+    switch (action) {
+      case 'MODIFICAR':
+        this.router.navigate(['perfiles','perfil-user-register'], {
+          queryParams: { id: this.perfil.id },
+        });
+        break;
+      case 'DESHABILITAR':
+        this.confirmationService.confirm({
+          message: `¿Está seguro de Deshabilitar?`,
+          header: 'Confirmar Acción',
+          icon: 'pi pi-info-circle',
+          accept: () => {
+            this.perfilService
+              .updateUsuarioStatus(this.perfil.id!, { estado: Estado.INACTIVO })
               .subscribe({
                 next: (res) => {
                   this.messageService.add({

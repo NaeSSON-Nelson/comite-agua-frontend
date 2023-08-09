@@ -8,6 +8,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { switchMap } from 'rxjs';
 import { patternText } from 'src/app/patterns/forms-patterns';
 import { Menu } from 'src/app/interfaces/menu.interface';
+import { CommonAppService } from 'src/app/common/common-app.service';
 
 @Component({
   selector: 'app-role-form',
@@ -23,25 +24,19 @@ export class RoleFormComponent {
     private asyncValidators: AsyncValidatorRoleNameService,
     private confirmationService: ConfirmationService,
     private messageService: MessageService,
+    public commonAppService:CommonAppService,
     private router: Router,
     private routerAct: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
-    // if(this.clienteModificar?.id){
-    //   this.proveedorForm.setValue(this.clienteModificar);
-    // }
-    // this.routerAct.paramMap.subscribe((params)=>{
-    //   console.log(params);
-    // })
     this.rolesService.role.subscribe((res) => {
-      // console.log(res);
-      const { menus, ...dataMenu } = res;
+      const { menus,created_at,updated_at,isActive, ...dataRole } = res;
       this.listItemsSelected=menus!;
       this.ListItemMenuSelected(menus!);
 
       this.roleForm.setValue({
-        ...dataMenu,
+        ...dataRole,
         menus: menus?.map((val) => {
           return { id: val.id };
         }),
@@ -106,7 +101,8 @@ export class RoleFormComponent {
           Validators.pattern(patternText),
         ],
       ],
-      estado: [1, [Validators.required]],
+      estado: [,[Validators.required]],
+      nivel: [,[Validators.required]],
       menus: this.fb.array([], [Validators.required]),
     },
     {
@@ -158,14 +154,14 @@ export class RoleFormComponent {
                 detail: `${res.message}`,
                 icon: 'pi pi-check',
               });
-              this.router.navigate(['roles', 'details'], {
+              this.router.navigate(['roles', 'rol-details'], {
                 queryParams: { id: this.roleActual?.id },
               });
             },
             error: (err) => {
               this.messageService.add({
                 severity: 'error',
-                summary: 'Ocurrió un error al modificar el Empleado!!',
+                summary: 'Ocurrió un error al modificar!!',
                 detail: `Detalles del error: ???console`,
                 life: 5000,
                 icon: 'pi pi-times',
@@ -184,12 +180,12 @@ export class RoleFormComponent {
                 detail: res.message,
                 icon: 'pi pi-check',
               });
-              this.router.navigate(['roles']);
+              this.router.navigate(['roles','rol-list']);
             },
             error: (err) => {
               this.messageService.add({
                 severity: 'error',
-                summary: 'Ocurrió un error al registrar el Empleado!!',
+                summary: 'Ocurrió un error al registrar!!',
                 detail: `Detalles del error: console`,
                 life: 5000,
                 icon: 'pi pi-times',
@@ -277,6 +273,13 @@ export class RoleFormComponent {
   }
 
   getEstadoErrors(campo: string) {
+    const errors = this.roleForm.get(campo)?.errors;
+    if (errors?.['required']) {
+      return 'El campo es requerido';
+    }
+    return '';
+  }
+  getNivelErrors(campo: string) {
     const errors = this.roleForm.get(campo)?.errors;
     if (errors?.['required']) {
       return 'El campo es requerido';

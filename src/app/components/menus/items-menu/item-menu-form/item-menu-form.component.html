@@ -51,9 +51,31 @@
           <div class="field col-12 md:col-4">
             <span class="p-float-label">
               <p-dropdown
+                inputId="visible"
+                [autoDisplayFirst]="false"
+                [options]="estadoVisible"
+                formControlName="visible"
+                optionLabel="name"
+                optionValue="value"
+                placeholder="Select visible"
+                [ngClass]="inputValid('visible')"
+              ></p-dropdown>
+  
+              <label for="visible">visible</label>
+            </span>
+            <small
+              id="visible-help"
+              class="p-error block"
+              *ngIf="campoValido('visible')"
+              >{{ getVisibleErrors("visible") }}
+            </small>
+          </div>
+          <div class="field col-12 md:col-4">
+            <span class="p-float-label">
+              <p-dropdown
                 inputId="estado"
                 [autoDisplayFirst]="false"
-                [options]="estados"
+                [options]="commonService.estados"
                 formControlName="estado"
                 optionLabel="name"
                 optionValue="value"

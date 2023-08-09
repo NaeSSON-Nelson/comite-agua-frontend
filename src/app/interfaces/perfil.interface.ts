@@ -1,8 +1,9 @@
 import { Afiliado, AfiliadoForm } from "./afiliado.interface";
+import { ColumnsAlways } from "./always.interface";
 import { Estado, Genero, TipoPerfil } from './atributes.enum';
 import { Usuario, UsuarioForm } from "./usuario.interface";
 
-export interface Perfil{
+export interface Perfil extends ColumnsAlways{
     id?             :number;
     nombrePrimero?  :string;
     nombreSegundo?  :string;
@@ -15,9 +16,9 @@ export interface Perfil{
     tipoPerfil?     :TipoPerfil[]
     direccion?      :string;
     accessAcount?   :boolean;
-    usuario?        :Usuario
-    afiliado?       :Afiliado
-    estado?         :Estado
+    contactos?       :string[];
+    usuario?        :Usuario;
+    afiliado?       :Afiliado;
 }
 export interface PerfilForm{
     
@@ -32,9 +33,9 @@ export interface PerfilForm{
     fechaNacimiento?:Date;
     tipoPerfil?     :TipoPerfil[]
     direccion?      :string;
-    accessAcount?   :boolean;
+    contactos?      :string[]
     estado?         :Estado
-    usuarioForm?        :UsuarioForm
-    afiliadoForm?       :AfiliadoForm
+    usuarioForm?    :UsuarioForm
+    afiliadoForm?   :AfiliadoForm
 }
 

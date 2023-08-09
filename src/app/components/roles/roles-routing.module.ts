@@ -7,20 +7,20 @@ import { RoleFormComponent } from './role-form/role-form.component';
 
 const routes: Routes = [
   {
-    path: '',
+    path: 'rol-list',
     component: RolesComponent,
   },
   {
-    path:'details',
+    path:'rol-details',
     component:RoleDetailsComponent,
   },
   {
-    path:'form',
+    path:'rol-register',
     component:RoleFormComponent,
   },
   {
     path: '**',
-    redirectTo: '',
+    redirectTo: 'rol-list',
   },
 ];
 

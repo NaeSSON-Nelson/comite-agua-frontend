@@ -7,20 +7,16 @@ import { MenuFormComponent } from './menu-form/menu-form.component';
 
 const routes: Routes = [
   {
-    path: '',
+    path: 'menu-list',
     component: MenusComponent,
   },
   {
-    path:'details',
+    path:'menu-details',
     component:MenuDetailComponent,
   },
   {
-    path:'form',
+    path:'menu-register',
     component:MenuFormComponent,
-  },
-  {
-    path:'items',
-    loadChildren:()=>import('./items-menu/items-menu-routing.module').then(m=>m.ItemsMenuRoutingModule)
   },
   {
     path: '**',

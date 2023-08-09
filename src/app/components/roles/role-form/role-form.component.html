@@ -27,9 +27,31 @@
             <div class="field col-12 md:col-4">
               <span class="p-float-label">
                 <p-dropdown
+                  inputId="nivel"
+                  [autoDisplayFirst]="false"
+                  [options]="commonAppService.niveles"
+                  formControlName="estado"
+                  optionLabel="name"
+                  optionValue="value"
+                  placeholder="Select nivel"
+                  [ngClass]="inputValid('nivel')"
+                ></p-dropdown>
+    
+                <label for="nivel">nivel (*)</label>
+              </span>
+              <small
+                id="nivel-help"
+                class="p-error block"
+                *ngIf="campoValido('nivel')"
+                >{{ getNivelErrors("nivel") }}
+              </small>
+            </div>
+            <div class="field col-12 md:col-4">
+              <span class="p-float-label">
+                <p-dropdown
                   inputId="estado"
                   [autoDisplayFirst]="false"
-                  [options]="estados"
+                  [options]="commonAppService.estados"
                   formControlName="estado"
                   optionLabel="name"
                   optionValue="value"

@@ -90,7 +90,7 @@ export class MenuDetailComponent {
   actionData(action: string) {
     switch (action) {
       case 'MODIFICAR':
-        this.router.navigate(['menus','form'], {
+        this.router.navigate(['menus','register'], {
           queryParams: { id: this.menu.id },
         });
         break;
@@ -116,7 +116,7 @@ export class MenuDetailComponent {
                   console.log(err);
                   this.messageService.add({
                     severity: 'error',
-                    summary: 'Ocurrió un error al modificar el Empleado!!',
+                    summary: 'Ocurrió un error al modificar !!',
                     detail: `Detalles del error: ???console`,
                     life: 5000,
                     icon: 'pi pi-times',
