@@ -7,7 +7,7 @@ import { AfiliadoForm, Perfil, PerfilForm, ResponseCreatePerfil, Role, UsuarioFo
 import { patternCI, patternSpanishInline, patternText } from 'src/app/patterns/forms-patterns';
 import { CommonAppService } from 'src/app/common/common-app.service';
 import { switchMap } from 'rxjs';
-
+import * as L from 'leaflet'
 @Component({
   selector: 'app-perfil-form',
   templateUrl: './perfil-form.component.html',
@@ -106,8 +106,8 @@ export class PerfilFormComponent {
     estado          :[,[Validators.required]],
     barrio          :[,[Validators.required]],
     numeroVivienda  :[,[Validators.pattern(patternText),Validators.minLength(3)]],
-    longitud        :[,[Validators.pattern(patternText),Validators.minLength(3)]],
-    latitud         :[,[Validators.pattern(patternText),Validators.minLength(3)]],
+    longitud        :[{value:null,disabled:true}],
+    latitud         :[{value:null,disabled:true}],
   })
   usuarioForm: FormGroup = this.fb.group({
     roles           :this.fb.array([], [Validators.required]),
@@ -262,7 +262,10 @@ export class PerfilFormComponent {
       },
     });
   }
-
+  coordenadas($event:any){
+    this.afiliadoForm.get('latitud')?.setValue($event.lat);
+    this.afiliadoForm.get('longitud')?.setValue($event.lng);
+  }
   limpiarCampo(campo: string) {
     if (
       !this.perfilForm.get(campo)?.pristine &&
@@ -383,13 +386,23 @@ export class PerfilFormComponent {
 
   getFechaNacimientoErrors(campo: string) {
     const errors = this.perfilForm.get(campo)?.errors;
-
+    
     if (errors?.['required']) {
       return 'El campo es requerido';
     } else if (errors?.['pattern']) {
       return 'El formato debe fecha debe seguri el patron: dd/mm/yyyy';
     }
     return '';
+  }
+  getDireccionErrors(campo:string){
+    const errors = this.perfilForm.get(campo)?.errors;
+    if (errors?.['required']) {
+      return 'El campo es requerido';
+    } else if (errors?.['pattern']) {
+      return 'El formato debe fecha debe seguri el patron: dd/mm/yyyy';
+    }
+    return '';
+
   }
   getProfesionErrors(campo: string) {
     const errors = this.perfilForm.get(campo)?.errors;

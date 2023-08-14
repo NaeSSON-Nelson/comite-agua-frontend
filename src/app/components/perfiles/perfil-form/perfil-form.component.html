@@ -155,6 +155,25 @@
             >{{ getTipoPerfilErrors("tipoPerfil") }}
           </small>
         </div>
+        
+        <div class="field col-12 md:col-3">
+          <span class="p-float-label">
+            <input
+              type="text"
+              id="direccion"
+              pInputText
+              formControlName="direccion"
+              [ngClass]="inputValid('direccion')"
+            />
+            <label for="direccion">direccion (*)</label>
+          </span>
+          <small
+            id="direccion-help"
+            class="p-error block"
+            *ngIf="campoValido('direccion')"
+            >{{ getDireccionErrors("direccion") }}
+          </small>
+        </div>
         <div class="field col-12 md:col-4">
           <span class="p-float-label">
             <p-calendar
@@ -259,6 +278,11 @@
               >{{ getAfiliadoNumeroViviendaErrors("numeroVivienda") }}
             </small>
           </div>
+          <div class="col-12">
+            <app-map-coord
+          (sendLatLong)="coordenadas($event)"
+            ></app-map-coord>
+          </div>
           <div class="field col-12 md:col-6">
             <span class="p-float-label">
               <input
@@ -286,7 +310,7 @@
                 formControlName="latitud"
                 [ngClass]="inputValidAfiliado('latitud')"
               />
-              <label for="latitud">Longitud</label>
+              <label for="latitud">Latitud</label>
             </span>
             <small
               id="latitud-help"

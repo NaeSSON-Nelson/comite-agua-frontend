@@ -6,6 +6,7 @@ import { PrimeNgCrudModule } from '../prime-ng-crud/prime-ng-crud.module';
 import { MenuSelectTableComponent } from './menu-select-table/menu-select-table.component';
 import { RolesSelectTableComponent } from './roles-select-table/roles-select-table.component';
 import { AfiliadoUserSelectTableComponent } from './afiliado-user-select-table/afiliado-select-table.component';
+import { MapComponent } from './map/map.component';
 
 
 
@@ -15,6 +16,7 @@ import { AfiliadoUserSelectTableComponent } from './afiliado-user-select-table/a
     ItemMenuSelectTableComponent,
     MenuSelectTableComponent,
     RolesSelectTableComponent,
+    MapComponent,
   ],
   imports: [
     CommonModule,
@@ -26,6 +28,7 @@ import { AfiliadoUserSelectTableComponent } from './afiliado-user-select-table/a
     ItemMenuSelectTableComponent,
     MenuSelectTableComponent,
     RolesSelectTableComponent,
+    MapComponent,
   ]
 })
 export class HelpersModule { }

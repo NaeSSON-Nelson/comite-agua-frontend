@@ -26,12 +26,13 @@ export class TopbarComponent {
   roles:any[]=[];
   ngOnInit(): void {
     this.authService.usuario.subscribe((res) => {
+      console.log('respuesta desde el top-bar',res);
+      console.log('respuesta:',res);
       this.usuario = res;
       this.roles=res.roles!.map(rol=>{
-       return{name:rol.nombre,value:rol};
+       return{name:rol.nombre,value:rol.id};
       })
-
-      console.log('respuesta desde el top-bar',res);
+      this.menusUser(this.roles[0].value);
     });
     this.roles=[
       {name:'INVITADO',value:'INVITADO'},
@@ -39,7 +40,10 @@ export class TopbarComponent {
   }
   rolChange(event:any){
     console.log(event.value);
-    this.authService.getMenusUser(event.value.id).subscribe(res=>{
+    this.menusUser(event.value);
+  }
+  menusUser(idRol:number){
+    this.authService.getMenusUser(idRol).subscribe(res=>{
       console.log(res);
     });
   }

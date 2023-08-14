@@ -157,7 +157,34 @@ export class PerfilDetailsComponent {
           },
         });
         break;
-
+        
+        case 'AFILIADO':
+              if(this.perfil.afiliado===null){
+                this.router.navigate(['perfiles','perfil-afiliado-register'], {
+                  queryParams: { id: this.perfil.id }})
+              }else {
+                this.messageService.add({
+                    severity: 'error',
+                    summary: 'El perfil ya tiene un afiliado',
+                    life: 5000,
+                    icon: 'pi pi-times',
+                  });
+              }
+        break;
+        case 'USUARIO':
+          if(this.perfil.usuario===null){
+            this.router.navigate(['perfiles','perfil-user-register'], {
+              queryParams: { id: this.perfil.id },
+            });
+          }else{
+            this.messageService.add({
+              severity: 'error',
+              summary: 'El perfil ya tiene un usuario',
+              life: 5000,
+              icon: 'pi pi-times',
+            });
+          }
+          break;
       default:
         console.log('Opcion invalida');
         break;
@@ -310,7 +337,6 @@ export class PerfilDetailsComponent {
           },
         });
         break;
-
       default:
         console.log('Opcion invalida');
         break;
