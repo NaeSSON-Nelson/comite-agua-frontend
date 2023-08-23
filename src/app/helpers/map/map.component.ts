@@ -11,7 +11,7 @@ export class MapComponent {
   latLong!:L.LatLng;
   @Output()
   sendLatLong:EventEmitter<L.LatLngExpression> = new EventEmitter<L.LatLngExpression>();
-  private _map:any;
+  private _map!:L.Map;
 
   private initMap(){
     this._map=L.map('map',{
@@ -26,6 +26,11 @@ export class MapComponent {
     });
     tiles.addTo(this._map);
     const marker = L.marker({lat:-21.4734,lng:-64.8026},{draggable:true,})
+    this._map.on("click",($event)=>{
+      console.log($event);
+      console.log('se clickeo en el mapa');
+    })
+    
     marker.addEventListener("dragend",($event)=>{
       // console.log($event.target._latlng);
       

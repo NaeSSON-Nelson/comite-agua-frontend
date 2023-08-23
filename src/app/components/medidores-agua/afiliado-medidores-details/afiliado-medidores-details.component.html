@@ -63,14 +63,18 @@
                             <input pInputText id="correo" type="text" [disabled]="true" value="{{medidorSelected.fechaInstalacion | date: 'dd/MM/yyyy'}}" class="appearance-none text-color text-base" />
                         </div>
                         <div class="field col-12 md:col-6">
+                            <label htmlFor="contactos">Barrio ubicacion</label>
+                            <input pInputText id="contactos" type="text" [disabled]="true" [value]="medidorSelected.ubicacion?.barrio" class="appearance-none text-color text-base" />
+                        </div>
+                        <div class="field col-12 md:col-4">
                             <label htmlFor="codigoPostal">Lectura con la que se instaló</label>
                             <input pInputText id="codigoPostal" type="text" [disabled]="true" [value]="medidorSelected.lecturaInicial" class="appearance-none text-color text-base" />
                         </div>
-                        <div class="field col-12 md:col-6">
+                        <div class="field col-12 md:col-4">
                             <label htmlFor="contactos">Ultima lectura registrada</label>
                             <input pInputText id="contactos" type="text" [disabled]="true" [value]="medidorSelected.ultimaLectura" class="appearance-none text-color text-base" />
                         </div>
-                        <div class="field col-12 md:col-6">
+                        <div class="field col-12 md:col-4">
                             <label htmlFor="direccion">ESTADO</label>
                             <input pInputText id="direccion" type="text" [disabled]="true" [value]="medidorSelected.estado?'ACTIVO':'INACTIVO'" class="appearance-none text-color text-base" />
                         </div>

@@ -1,0 +1,50 @@
+<div class="grid">
+    <div class="col-12">
+        <div class="card">
+            <h4>REGISTRO DE LECTURAS DE MEDIDORES DE AGUA PARA LOS AFILIADOS</h4>
+            <p-divider></p-divider>
+            <div class="grid mt-5">
+                <p-dropdown></p-dropdown>
+            </div>
+        </div>
+    </div>
+    <div class="col-12">
+        <div class="card">
+            <h5>MEDIDORES POR BARRIO:</h5>
+            <p-divider></p-divider>
+            <div class="grid">
+                <div class="col-12 grid">
+                        <div class="col-3 border-1">Afiliado</div>
+                        <div class="col-3 border-1">Cedula de Identidad</div>
+                        <div class="col-3 border-1">Medidor</div>
+                        <div class="col-3 border-1">Lectura del mes</div>
+                    </div>
+                <div class="col-12 grid" *ngFor="let perfil of data">
+                    <div class="col-3 border-1">{{perfil.nombrePrimero | titlecase}} {{perfil.nombreSegundo ||"" |titlecase}} {{perfil.apellidoPrimero | titlecase}} {{perfil.apellidoSegundo ||"" | titlecase}}</div>
+                    <div class="col-3 border-1">{{perfil.CI}}</div>
+                    <div class="col-6 border-1">
+                        <div class="grid "*ngFor="let medidor of perfil.afiliado?.medidores">
+                            <div class="col border-1">{{medidor.nroMedidor}}</div>
+                            <div class="col border-1">
+                                <p-inputNumber  (onBlur)="addLectura(medidor.planillas![0],$event)"></p-inputNumber>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    
+                </div>
+                <div class="col-12 md:flex md:justify-content-center ">
+                    <button
+                    type="button"
+                    pButton
+                    pRipple
+                    class="p-button-primary"
+                    label="registrar lecturas"
+                    [disabled]="lecturasForm.pending"
+                    (click)="validForm()"
+                    ></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

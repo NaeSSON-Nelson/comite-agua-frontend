@@ -71,7 +71,7 @@ export class AfiliadoMedidoresDetailsComponent {
                     detail: `${res.message},code: ${res.statusCode}`,
                     life: 5000,
                   });
-                  this.router.navigate(['afiliados'])
+                  this.router.navigate(['medidores-agua'])
                   break;
                 default:
                   console.log(res);
@@ -100,9 +100,9 @@ export class AfiliadoMedidoresDetailsComponent {
     }else
     switch (action) {
       case 'MODIFICAR':
-        this.router.navigate(['medidores-agua','form'], {
+        this.router.navigate(['medidores-agua','medidor-register'], {
           //TODO: DEBE SER EL ID DEL MEDIDOR
-          queryParams: { idAfiliado: this.perfil.id!,idMedidor:this.medidorSelected.id },
+          queryParams: { idPerfil: this.perfil.id!,idMedidor:this.medidorSelected.id },
         });
         break;
 
@@ -179,6 +179,6 @@ export class AfiliadoMedidoresDetailsComponent {
     this.medidorSelected=data.value;
   }
   registrarMedidor(){
-    this.router.navigate(['medidores-agua','form'],{queryParams:{idAfiliado:this.perfil.id}})
+    this.router.navigate(['medidores-agua','medidor-register'],{queryParams:{idPerfil:this.perfil.id}})
   }
 }

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Medidor } from 'src/app/interfaces/medidor.interface';
+import { Medidor, MedidorForm } from 'src/app/interfaces/medidor.interface';
 import { MedidoresAguaService } from '../medidores-agua.service';
 import { AsyncValidatorsMedidorService } from '../Validators/async-validators-medidor.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
@@ -44,7 +44,8 @@ export class MedidorFormComponent {
       // this.medidorActual=res;
       // this.medidorForm.setValue({...dataMedidorForm,afiliado:{id:afiliado!.id}});
       this.perfilActual=res;
-      // console.log('afiliado',res);
+      console.log(res);
+      this.medidorForm.get('afiliado')?.get('id')?.setValue(this.perfilActual?.afiliado!.id)
       this.routerAct.queryParams
                     .subscribe(params=>{
                       // console.log('parametros',params);
@@ -54,18 +55,19 @@ export class MedidorFormComponent {
                         // console.log(params?.['idMedidor']);
                         this.medidorActual = this.perfilActual?.afiliado?.medidores?.find(val=>val.id===Number.parseInt(params?.['idMedidor']))
                         // console.log(this.medidorActual);
-                        const {afiliado,lecturas,ultimaLectura,...dataMedidor} = this.medidorActual!;
-                        this.medidorForm.setValue({...dataMedidor,afiliado:{id:this.perfilActual?.afiliado!.id}});
+                        const {afiliado,ultimaLectura,created_at,isActive,ubicacion,updated_at,...dataMedidor} = this.medidorActual!;
+                        console.log(this.perfilActual);
+                        this.medidorForm.setValue({...dataMedidor,afiliado:{id:this.perfilActual!.afiliado!.id},barrio:ubicacion?.barrio});
                       }
                     })
     });
-    if (!this.router.url.includes('idAfiliado')) return;
+    if (!this.router.url.includes('idPerfil')) return;
 
     this.routerAct.queryParams
-      .pipe(switchMap(({ idAfiliado}) => this.medidoresService.findOne(idAfiliado)))
+      .pipe(switchMap(({ idPerfil}) => this.medidoresService.findOne(idPerfil)))
       .subscribe((res) => {
-
-        if (res.OK === false) {
+        // console.log(res);
+        if (!res.OK) {
           switch (res.statusCode) {
             case 401:
               this.messageService.add({
@@ -92,7 +94,7 @@ export class MedidorFormComponent {
                 detail: `${res.message},code: ${res.statusCode}`,
                 life: 5000,
               });
-              this.router.navigate(['afiliados'])
+              this.router.navigate(['medidores-agua'])
               break;
             default:
               console.log(res);
@@ -105,6 +107,7 @@ export class MedidorFormComponent {
               break;
           }
         }
+          
       });
   }
   medidorForm: FormGroup = this.fb.group(
@@ -113,7 +116,7 @@ export class MedidorFormComponent {
       nroMedidor:[,[Validators.required,Validators.pattern(patternCI),Validators.minLength(4)]],
       fechaInstalacion:[,[Validators.required]],
       lecturaInicial:[0,[Validators.required,Validators.min(0)]],
-      ubicacionBarrio:[,[Validators.required,Validators.minLength(3),Validators.pattern(patternText)]],
+      barrio:[,[Validators.required,Validators.minLength(3),Validators.pattern(patternText)]],
       estado:[,[Validators.min(0)]],
       marca:[,[Validators.required,Validators.pattern(patternText),Validators.minLength(1)]],
       afiliado: this.fb.group({
@@ -130,17 +133,17 @@ export class MedidorFormComponent {
     console.log(this.medidorForm);
     if (this.medidorForm.invalid) return;
     // console.log(this.clienteForm.value);
-    let medidorSend: Medidor = {};
+    let medidorSend: MedidorForm = {};
     if (this.medidorActual) {
       for (const [key, value] of Object.entries(this.medidorForm.value)) {
         if (value !== this.medidorActual[key as keyof Medidor]) {
-          medidorSend[key as keyof Medidor] = value as any;
+          medidorSend[key as keyof MedidorForm] = value as any;
         }
       }
     } else {
       medidorSend = Object.assign({}, this.medidorForm.value);
       Object.entries(medidorSend).forEach(([key, value]) => {
-        if (value !== null && value !==undefined) delete medidorSend[key as keyof Medidor];
+        if (value === null || value ===undefined) delete medidorSend[key as keyof MedidorForm];
       });
     }
     this.registrarFormulario(medidorSend);
@@ -170,14 +173,14 @@ export class MedidorFormComponent {
                 detail: `${res.message}`,
                 icon: 'pi pi-check',
               });
-              this.router.navigate(['medidores-agua', 'details'], {
-                queryParams: { id: this.perfilActual?.afiliado?.id },
+              this.router.navigate(['medidores-agua', 'medidor-details'], {
+                queryParams: { id: this.perfilActual?.id },
               });
             },
             error: (err) => {
               this.messageService.add({
                 severity: 'error',
-                summary: 'Ocurrió un error al modificar el Empleado!!',
+                summary: 'Ocurrió un error al modificar!!',
                 detail: `Detalles del error: ???console`,
                 life: 5000,
                 icon: 'pi pi-times',
@@ -196,13 +199,13 @@ export class MedidorFormComponent {
                 detail: res.message,
                 icon: 'pi pi-check',
               });
-              this.router.navigate(['medidores-agua','details'],
-              {queryParams:{id:this.perfilActual?.afiliado?.id}});
+              this.router.navigate(['medidores-agua','medidor-details'],
+              {queryParams:{id:this.perfilActual?.id}});
             },
             error: (err) => {
               this.messageService.add({
                 severity: 'error',
-                summary: 'Ocurrió un error al registrar el Empleado!!',
+                summary: 'Ocurrió un error al registrar !!',
                 detail: `Detalles del error: console`,
                 life: 5000,
                 icon: 'pi pi-times',
@@ -296,7 +299,7 @@ export class MedidorFormComponent {
     }
     return '';
   }
-  getUbicacionBarrioErrors(campo: string) {
+  getBarrioErrors(campo: string) {
     const errors = this.medidorForm.get(campo)?.errors;
     if (errors?.['required']) {
       return 'El campo es requerido';

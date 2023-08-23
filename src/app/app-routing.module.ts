@@ -48,6 +48,10 @@ const routes: Routes = [
             loadChildren: () =>import('./components/medidores-agua/medidores-agua-routing.module').then((m) => m.MedidoresAguaRoutingModule),
             // canActivate:[validarTokenGuard],
           },
+          {
+            path:'lecturas',
+            loadChildren:()=>import('./components/medidores-agua/lecturas/lecturas-routing.module').then((m)=>m.LecturasRoutingModule)
+          },
         ]
       },
     ],

@@ -20,6 +20,7 @@ import { RolesModule } from './components/roles/roles.module';
 import { MedidoresAguaModule } from './components/medidores-agua/medidores-agua.module';
 import { ForbiddenComponent } from './common/forbidden/forbidden.component';
 import { PerfilesModule } from './components/perfiles/perfiles.module';
+import { LecturasModule } from './components/medidores-agua/lecturas/lecturas.module';
 
 
 
@@ -44,6 +45,7 @@ import { PerfilesModule } from './components/perfiles/perfiles.module';
     // RolesModule,
     // MedidoresAguaModule,
     // PerfilesModule,
+    LecturasModule,
   ],
   providers: [
     MessageService,

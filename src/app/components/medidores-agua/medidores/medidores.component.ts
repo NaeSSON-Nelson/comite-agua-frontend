@@ -38,7 +38,6 @@ export class MedidoresComponent {
       this.dataPaginator.size=res.size;
       this.data = res.data;
     });
-    
     this.routerAct.queryParams.subscribe((res) => {
       if (res) {
         this.dataPaginator = { ...res };
@@ -108,7 +107,7 @@ export class MedidoresComponent {
     });
   }
   dataDetail(id: number) {
-    this.router.navigate(['medidores-agua', 'details'], { queryParams: { id } });
+    this.router.navigate(['medidores-agua', 'medidor-details'], { queryParams: { id } });
   }
   campoValido(nombre: string) {
     return (
@@ -141,7 +140,7 @@ export class MedidoresComponent {
     this.debouncer.next($event.target.value);
   }
   onPageChange($event: PaginatorState) {
-    // console.log($event);
+    console.log($event);
     this.dataPaginator.offset = $event.first;
     this.dataPaginator.limit = $event.rows;
     this.findAll();

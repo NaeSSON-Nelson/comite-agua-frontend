@@ -110,21 +110,21 @@
                   <div class="field col-12 md:col-6 m-3">
                     <span class="p-float-label">
                         <p-dropdown
-                        formControlName="ubicacionBarrio"
+                        formControlName="barrio"
                         [options]="commonAppService.barrios"
-                        [ngClass]="inputValid('ubicacionBarrio')"
+                        [ngClass]="inputValid('barrio')"
                         optionValue="value"
                         optionLabel="name"
                         
-                        placeholder="Select ubicacion del medidor"
+                        placeholder="Select barrio del medidor"
                       ></p-dropdown>
-                      <label for="ubicacionBarrio">Barrio como ubicacion de instalacion(*)</label>
+                      <label for="barrio">Barrio como ubicacion de instalacion(*)</label>
                     </span>
                     <small
-                      id="ubicacionBarrio-help"
+                      id="barrio-help"
                       class="p-error block"
-                      *ngIf="campoValido('ubicacionBarrio')"
-                      >{{ getUbicacionBarrioErrors("ubicacionBarrio") }}
+                      *ngIf="campoValido('barrio')"
+                      >{{ getBarrioErrors("barrio") }}
                     </small>
                   </div>
                   <div class="field col-12 md:col-3 m-3">

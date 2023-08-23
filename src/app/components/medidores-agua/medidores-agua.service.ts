@@ -14,7 +14,7 @@ import { Perfil } from 'src/app/interfaces';
 })
 export class MedidoresAguaService {
 
-  URL_medidores: string = environment.apiURrl + '/medidores';
+  URL_medidores: string = environment.apiURrl + '/medidores-agua';
   private headers = new HttpHeaders().set(
     'authorization',
     `Bearer ${localStorage.getItem('token') || ''}`

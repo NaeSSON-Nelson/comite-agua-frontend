@@ -11,7 +11,7 @@ import { environment } from 'src/environments/environment';
 })
 export class AsyncValidatorsMedidorService {
 
-  API_URL = environment.apiURrl + '/medidores';
+  API_URL = environment.apiURrl + '/medidores-agua';
   private headers = new HttpHeaders().set(
     'authorization',
     `Bearer ${localStorage.getItem('token') || ''}`
