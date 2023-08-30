@@ -7,20 +7,20 @@ import { MedidorFormComponent } from './medidor-form/medidor-form.component';
 
 const routes: Routes = [
   {
-    path: 'medidores-list',
+    path: 'medidor-agua-list',
     component: MedidoresComponent,
   },
   {
-    path:'medidor-details',
+    path:'medidor-agua-details',
     component:AfiliadoMedidoresDetailsComponent,
   },
   {
-    path:'medidor-register',
+    path:'medidor-agua-register',
     component:MedidorFormComponent,
   },
   {
     path: '**',
-    redirectTo: 'medidores-list',
+    redirectTo: 'medidor-agua-list',
   },
 ];
 

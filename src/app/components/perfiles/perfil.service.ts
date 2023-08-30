@@ -191,21 +191,22 @@ export class PerfilService {
   }
   createUsuario(idPerfil: number, form: UsuarioForm) {
     return this.http
-      .post<HttpResponseApi<Perfil>>(`${this.URL_usuario}/${idPerfil}`, form, {
+      .post<HttpResponseApi<ResponseCreatePerfil>>(`${this.URL_usuario}/${idPerfil}`, form, {
         headers: this.headers,
       })
       .pipe(
         map((resp) => {
           // console.log('map',resp);
-          const respuesta: ResponseResult = {
+          const respuesta: ResponseResultData<ResponseCreatePerfil> = {
             OK: resp.OK,
             message: resp.message,
             statusCode: 201,
+            data: resp.data,
           };
           return respuesta;
         }),
         catchError((err: HttpErrorResponse) => {
-          const errors = err.error as ResponseResult;
+          const errors = err.error as ResponseResultData<ResponseCreatePerfil>;
           errors.OK = false;
           return of(errors);
         })

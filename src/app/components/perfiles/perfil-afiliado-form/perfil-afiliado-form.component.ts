@@ -109,8 +109,8 @@ export class PerfilAfiliadoFormComponent {
     estado          :[,[Validators.required]],
     barrio          :[,[Validators.required]],
     numeroVivienda  :[,[Validators.pattern(patternText),Validators.minLength(3)]],
-    longitud        :[,[Validators.pattern(patternText),Validators.minLength(3)]],
-    latitud         :[,[Validators.pattern(patternText),Validators.minLength(3)]],
+    longitud        :[,],
+    latitud         :[,],
   })
   validForm() {
     this.afiliadoForm.markAllAsTouched();
@@ -178,11 +178,10 @@ export class PerfilAfiliadoFormComponent {
                 icon: 'pi pi-times',
               });
               console.log(err);
-            },
-            complete: () => {},
+            }
           });
         } else
-          this.perfilService.create(form).subscribe({
+          this.perfilService.createAfiliado(this.perfilActual?.id!,form).subscribe({
             next: (res) => {
               console.log(res);
               this.messageService.add({
@@ -204,13 +203,14 @@ export class PerfilAfiliadoFormComponent {
                 icon: 'pi pi-times',
               });
               console.log(err);
-            },
-            complete: () => {
-              this.afiliadoForm.reset();
-            },
+            }
           });
       },
     });
+  }
+  coordenadas($event:any){
+    this.afiliadoForm.get('latitud')?.setValue($event.lat);
+    this.afiliadoForm.get('longitud')?.setValue($event.lng);
   }
   limpiarCampo(campo: string) {
     if (

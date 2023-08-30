@@ -15,21 +15,32 @@
     >
         <i class="pi pi-ellipsis-v"></i>
     </button>
-    <div #topbarmenu class="layout-topbar-menu" [ngClass]="{'layout-topbar-menu-mobile-active': layoutService.state.profileSidebarVisible}">
-        <button class="p-link layout-topbar-button">
-            <i class="pi pi-user"></i>
-            <span>Profile</span>
-        </button>
-        <p *ngIf="usuario">Usuario:{{usuario.username}}</p>
-        <button class="p-link layout-topbar-button" [routerLink]="'/dashboard'">
-            <i class="pi pi-cog"></i>
-            <span>Roles</span>
-        </button>
-        <p-dropdown [options]="roles"
-        optionLabel="name"
-        (onChange)="rolChange($event)"
-        optionValue="value"
-        >
-        </p-dropdown>
-    </div>
+    <div #topbarmenu class="layout-topbar-menu" [ngClass]="{'layout-topbar-menu-mobile-active': layoutService.state.profileSidebarVisible}" *ngIf="usuario; else nouser">
+            <button class="p-link layout-topbar-button">
+                <i class="pi pi-user"></i>
+                <span>Profile</span>
+            </button>
+            <p >Usuario:{{usuario.username}}</p>
+            <button class="p-link layout-topbar-button" [routerLink]="'/dashboard'">
+                <i class="pi pi-cog"></i>
+                <span>Roles</span>
+            </button>
+            <p-dropdown [options]="roles"
+            optionLabel="name"
+            (onChange)="rolChange($event)"
+            optionValue="value"
+            >
+            </p-dropdown>
+        </div>
+
+        <ng-template #nouser>
+            <!-- <button class="p-link layout-topbar-button">
+                <i class="pi pi-user"></i>
+                <span>Profile</span>
+            </button> -->
+            <div class="layout-topbar-menu" [ngClass]="{'layout-topbar-menu-mobile-active': layoutService.state.profileSidebarVisible}">
+                <p-button label="INGRESAR" styleClass="p-button-raised p-button-text" [routerLink]="'/auth/login'"></p-button>
+            </div>
+        </ng-template>
+        
 </div>

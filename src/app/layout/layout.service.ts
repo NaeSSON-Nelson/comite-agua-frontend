@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
+import { Usuario } from '../interfaces';
+import { AuthService } from '../auth/auth.service';
 
 interface LayoutState {
   staticMenuDesktopInactive: boolean;
@@ -41,6 +43,7 @@ export class LayoutService {
 
   overLayOpen$ = this.overlayOpen.asObservable();
   constructor() {}
+  
 
   onMenuToggle() {
     if (this.isOverlay()) {

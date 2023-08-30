@@ -47,7 +47,8 @@
           </small>
         </div>
         <div class="col-12">
-          <app-map-coord
+          <app-map-coord 
+          (sendLatLong)="coordenadas($event)"
           ></app-map-coord>
         </div>
         <div class="field col-12 md:col-6">

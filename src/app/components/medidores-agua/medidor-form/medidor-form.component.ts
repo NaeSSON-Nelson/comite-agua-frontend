@@ -173,7 +173,7 @@ export class MedidorFormComponent {
                 detail: `${res.message}`,
                 icon: 'pi pi-check',
               });
-              this.router.navigate(['medidores-agua', 'medidor-details'], {
+              this.router.navigate(['medidores-agua', 'medidor-agua-details'], {
                 queryParams: { id: this.perfilActual?.id },
               });
             },
@@ -199,7 +199,7 @@ export class MedidorFormComponent {
                 detail: res.message,
                 icon: 'pi pi-check',
               });
-              this.router.navigate(['medidores-agua','medidor-details'],
+              this.router.navigate(['medidores-agua','medidor-agua-details'],
               {queryParams:{id:this.perfilActual?.id}});
             },
             error: (err) => {

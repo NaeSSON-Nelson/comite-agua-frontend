@@ -1,7 +1,7 @@
 import { Injectable, signal } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
-import { tap, map } from 'rxjs/operators';
+import { tap, map, } from 'rxjs/operators';
 import { of, Observer, Subject, catchError } from 'rxjs';
 import { LayoutService } from '../layout/layout.service';
 
@@ -43,8 +43,9 @@ export class AuthService {
       .pipe(
         tap((resp) => {
           if (resp.OK) {
-            this._usuario$.next(resp.usuario);
+            console.log(resp);
             localStorage.setItem('token', resp.token!);
+            this._usuario$.next(resp.usuario);
           }
         }),
         map((resp) => {

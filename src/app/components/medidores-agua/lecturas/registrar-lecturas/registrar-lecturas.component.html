@@ -3,17 +3,100 @@
         <div class="card">
             <h4>REGISTRO DE LECTURAS DE MEDIDORES DE AGUA PARA LOS AFILIADOS</h4>
             <p-divider></p-divider>
+            <h4>Año de Gestion de lecturas:</h4>
+            <div class="grid mt-5 p-fluid">
+                <div class="col-4">
+                    <p-dropdown [options]="gestiones"  (onChange)="changeYear($event)" placeholder="Seleccione un año"></p-dropdown>
+                </div>
+            </div>
+            <p-divider></p-divider>
+            <h5>Mes de Registros de lecturas</h5>
+            <div class="grid mt-3 p-fluid" *ngIf="meses.length>0">
+                <div class="col-4">
+                    <p-dropdown [options]="meses" optionLabel="mes" optionValue="mes" placeholder="Seleccione un mes del daño" (onChange)="changeMonth($event)"></p-dropdown>
+                </div>
+            </div>
+            <p-divider></p-divider>
             <div class="grid mt-5">
-                <p-dropdown></p-dropdown>
+                <div class="col-12"></div>
+                <div class="col-3">
+                    <p-button (onClick)="buscarLecturas()" label="Mostrar lecturas de gestion" [disabled]=" lecturasOptions.gestion===null || lecturasOptions.mes===null" styleClass="p-button-raised p-button-secondary"></p-button>
+                </div>
             </div>
         </div>
     </div>
-    <div class="col-12">
+    <div class="col-12" *ngIf="showLecturas">
         <div class="card">
-            <h5>MEDIDORES POR BARRIO:</h5>
+            <h5>REGISTROS DE MEDIDORES POR BARRIO:
+                <p-dropdown [options]="commonAppService.barrios" optionLabel="name" optionValue="value" (onChange)="changeBarrio($event)"></p-dropdown>
+            </h5>
             <p-divider></p-divider>
-            <div class="grid">
-                <div class="col-12 grid">
+            <div class="card">
+                <div class="m-2 flex flex-row justify-content-around flex-wrap">
+                    <div class="flex align-items-center justify-content-center px-3"[style]="{'width':'25%'}"><h5>{{'AFILIADOS'}}</h5></div>
+                    <div class="flex align-items-center justify-content-center px-3"[style]="{'width':'25%'}"><h5>{{'CELULAR'}}</h5></div>
+                    <div class="flex align-items-center justify-content-center px-3"[style]="{'width':'50%'}"><h5>{{'DETALLES DE MEDIDORES'}}</h5></div>
+                </div>
+                <div class="flex justify-content-end flex-wrap">
+                    <div class="flex justify-content-around" [style]="{'width':'50%'}">
+                        <div class="flex align-items-center justify-content-center font-bold">Barrio Medidor.</div>
+                        <div class="flex align-items-center justify-content-center font-bold">Nro Medidor.</div>
+                        <div class="flex align-items-center justify-content-center font-bold">Acumulado.</div>
+                        <div class="flex align-items-center justify-content-center font-bold">Lectura</div>
+                        <div class="flex align-items-center justify-content-center font-bold">Estado del medidor.</div>
+                    </div>
+                </div>
+                <div *ngFor="let customer of data" class="card m-2 flex flex-row justify-content-between  flex-wrap">
+                    <div class="flex align-items-center justify-content-center px-3">{{customer.nombrePrimero | titlecase}} {{customer.nombreSegundo ||"" |titlecase}} {{customer.apellidoPrimero | titlecase}} {{customer.apellidoSegundo ||"" | titlecase}}</div>
+                    <div class="flex align-items-center justify-content-center px-3">{{customer.CI}}</div>
+                    <div class="flex overflow-hidden justify-content-between" [style]="{'min-width':'50%'}" *ngFor="let medidor of customer.afiliado!.medidores">
+                        <div class="flex justify-content-start px-3">{{medidor.ubicacion?.barrio}}</div>
+                        <div class="flex justify-content-start px-3">{{medidor.nroMedidor}}</div>
+                        <div class="flex justify-content-start px-3">{{medidor.ultimaLectura}}</div>
+                        <div class="flex align-items-center justify-content-center px-3" *ngIf="medidor.planillas![0].lecturas[0]?.lectura; else sinLectura">{{medidor.planillas![0].lecturas[0].lectura}}</div>
+                        <ng-template #sinLectura> <div class="field flex align-items-center justify-content-center px-3">
+                            
+                            <span class="p-float-label">
+                                <p-inputNumber
+                                  id="lectura"
+                                  (onBlur)="addLectura(medidor.planillas,$event)"
+                                ></p-inputNumber>
+                                <label for="lectura">Lectura</label>
+                            </span>
+                        </div></ng-template>
+                        <div class="flex align-items-center justify-content-center px-3" *ngIf="medidor.planillas![0].lecturas[0]?.lectura; else sinMedidor">{{medidor.planillas![0].lecturas[0].estadoMedidor || 'SIN NOVEDAD'}}</div>
+                        <ng-template #sinMedidor> <div class="field flex align-items-center justify-content-center px-3">
+                           
+                            <span class="p-float-label">
+                                <input
+                                  type="text"
+                                  id="estadoMedidor"
+                                  pInputText
+                                  (change)="addLectura(medidor,$event)"
+                                />
+                                <label for="estadoMedidor">Estado medidor...</label>
+                            </span>
+                        </div></ng-template>
+                        <!-- <div class="flex justify-content-start px-3">{{medidor.planillas![0].gestion}}</div> -->
+
+                        
+                    </div>
+                
+                </div>
+                <div class="col-12 md:flex md:justify-content-center ">
+                    <button
+                    type="button"
+                    pButton
+                    pRipple
+                    class="p-button-primary"
+                    label="registrar lecturas"
+                    [disabled]="lecturasForm.pending || lecturasArray.length===0"
+                    (click)="validForm()"
+                    ></button>
+                </div> 
+
+            </div>
+                <!-- <div class="col-12 grid">
                         <div class="col-3 border-1">Afiliado</div>
                         <div class="col-3 border-1">Cedula de Identidad</div>
                         <div class="col-3 border-1">Medidor</div>
@@ -33,18 +116,8 @@
                     
                     
                 </div>
-                <div class="col-12 md:flex md:justify-content-center ">
-                    <button
-                    type="button"
-                    pButton
-                    pRipple
-                    class="p-button-primary"
-                    label="registrar lecturas"
-                    [disabled]="lecturasForm.pending"
-                    (click)="validForm()"
-                    ></button>
-                </div>
-            </div>
+            -->
+
         </div>
     </div>
 </div>

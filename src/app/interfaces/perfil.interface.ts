@@ -31,11 +31,10 @@ export interface PerfilForm{
     genero?         :Genero;
     profesion?      :string;
     fechaNacimiento?:Date;
-    tipoPerfil?     :TipoPerfil[]
     direccion?      :string;
-    contactos?      :string[]
-    estado?         :Estado
-    usuarioForm?    :UsuarioForm
-    afiliadoForm?   :AfiliadoForm
+    contactos?      :string[];
+    estado?         :Estado;
+    usuarioForm?    :UsuarioForm;
+    afiliadoForm?   :AfiliadoForm;
 }
 

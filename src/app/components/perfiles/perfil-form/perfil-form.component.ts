@@ -31,7 +31,7 @@ export class PerfilFormComponent {
   addUsuario:boolean=false;
   ngOnInit(): void {
     this.perfilService.perfil.subscribe((res) => {
-      const { usuario,afiliado,accessAcount,created_at,updated_at,isActive,contactos,...dataPerfil } = res;
+      const { usuario,afiliado,accessAcount,created_at,updated_at,id,isActive,contactos,tipoPerfil,...dataPerfil } = res;
       this.perfilActual=res;
         this.perfilForm.setValue({...dataPerfil});
     });
@@ -88,16 +88,14 @@ export class PerfilFormComponent {
     this.showTableAsignRoleModalForm = true;
   }
   perfilForm:FormGroup = this.fb.group({
-    id:               [],
     nombrePrimero:    [,[Validators.required,Validators.minLength(3),Validators.pattern(patternSpanishInline),],],
     nombreSegundo:    [,[Validators.minLength(3), Validators.pattern(patternSpanishInline)],],
     apellidoPrimero:  [,[Validators.required,Validators.minLength(3),Validators.pattern(patternSpanishInline),],],
     apellidoSegundo:  [,[Validators.minLength(3), Validators.pattern(patternSpanishInline)],],
     CI:               [,[Validators.required,Validators.minLength(6),Validators.pattern(patternCI),],],
     profesion:        [,[Validators.minLength(3), Validators.pattern(patternText),Validators.required]],
-    direccion:        [,[Validators.required, Validators.pattern(patternText)]],
+    direccion:        [,[Validators.pattern(patternText)]],
     genero:           [,[Validators.required, Validators.pattern(patternText)]],
-    tipoPerfil:       [,[Validators.required]],
     fechaNacimiento:  [,[Validators.required]],
     estado:           [,[Validators.required]],
   })
@@ -106,8 +104,8 @@ export class PerfilFormComponent {
     estado          :[,[Validators.required]],
     barrio          :[,[Validators.required]],
     numeroVivienda  :[,[Validators.pattern(patternText),Validators.minLength(3)]],
-    longitud        :[{value:null,disabled:true}],
-    latitud         :[{value:null,disabled:true}],
+    longitud        :[],
+    latitud         :[],
   })
   usuarioForm: FormGroup = this.fb.group({
     roles           :this.fb.array([], [Validators.required]),
@@ -396,9 +394,7 @@ export class PerfilFormComponent {
   }
   getDireccionErrors(campo:string){
     const errors = this.perfilForm.get(campo)?.errors;
-    if (errors?.['required']) {
-      return 'El campo es requerido';
-    } else if (errors?.['pattern']) {
+    if (errors?.['pattern']) {
       return 'El formato debe fecha debe seguri el patron: dd/mm/yyyy';
     }
     return '';
@@ -425,13 +421,6 @@ export class PerfilFormComponent {
     return '';
   }
 
-  getTipoPerfilErrors(campo:string){
-    const errors = this.perfilForm.get(campo)?.errors;
-    if (errors?.['required']) {
-      return 'El campo es requerido';
-    }
-    return '';
-  }
   getEstadoErrors(campo: string) {
     const errors = this.perfilForm.get(campo)?.errors;
 

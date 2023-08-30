@@ -100,7 +100,7 @@ export class AfiliadoMedidoresDetailsComponent {
     }else
     switch (action) {
       case 'MODIFICAR':
-        this.router.navigate(['medidores-agua','medidor-register'], {
+        this.router.navigate(['medidores-agua','medidor-agua-register'], {
           //TODO: DEBE SER EL ID DEL MEDIDOR
           queryParams: { idPerfil: this.perfil.id!,idMedidor:this.medidorSelected.id },
         });

@@ -50,8 +50,8 @@ export interface MesSeguimientoRegistroLectura extends ColumnsAlways{
   fechaFinRegistroLectura:Date;
 }
 export interface LecturasOptions{
-  mes?:string;
-  gestion?:number;
+  mes?:string|null;
+  gestion?:number|null;
   barrio?:Barrio;
 }
 export interface PlanillaForm{
@@ -66,4 +66,9 @@ export interface lecturasRegisterForm{
   mes:string;
   anio:number;
   lecturas: lecturasForm[];
+}
+export interface Gestion{
+  anio: number|null;
+  mes:  string|null;
+  barrio:Barrio;
 }

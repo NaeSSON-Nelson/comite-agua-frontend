@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, ViewChild } from '@angular/core';
 import { LayoutService } from '../layout.service';
 import { Usuario } from 'src/app/interfaces/usuario.interface';
 import { AuthService } from '../../auth/auth.service';
@@ -10,8 +10,9 @@ import { MenuItem } from 'primeng/api';
   styles: [],
 })
 export class TopbarComponent {
-  usuario?: Usuario;
-  items!: MenuItem[];
+  @Input()
+  usuario: Usuario|null=null;
+  items: MenuItem[]=[];
 
   @ViewChild('menubutton') menuButton!: ElementRef;
 
@@ -23,21 +24,8 @@ export class TopbarComponent {
     public layoutService: LayoutService,
     private readonly authService: AuthService
   ) {}
+  @Input()
   roles:any[]=[];
-  ngOnInit(): void {
-    this.authService.usuario.subscribe((res) => {
-      console.log('respuesta desde el top-bar',res);
-      console.log('respuesta:',res);
-      this.usuario = res;
-      this.roles=res.roles!.map(rol=>{
-       return{name:rol.nombre,value:rol.id};
-      })
-      this.menusUser(this.roles[0].value);
-    });
-    this.roles=[
-      {name:'INVITADO',value:'INVITADO'},
-    ]
-  }
   rolChange(event:any){
     console.log(event.value);
     this.menusUser(event.value);
@@ -46,5 +34,15 @@ export class TopbarComponent {
     this.authService.getMenusUser(idRol).subscribe(res=>{
       console.log(res);
     });
+  }
+  ngOnInit(): void {
+    //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
+    //Add 'implements OnInit' to the class.
+    this.authService.usuario.subscribe(res=>{
+      console.log('respuesta desde top bar',res);
+      if(res.id){
+        this.menusUser(res.roles![0].id!);
+      }
+    })
   }
 }

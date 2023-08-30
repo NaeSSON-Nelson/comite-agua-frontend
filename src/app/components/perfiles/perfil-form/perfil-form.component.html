@@ -136,28 +136,6 @@
         </div>
         <div class="field col-12 md:col-3">
           <span class="p-float-label">
-            <p-multiSelect
-              inputId="tipoPerfil"
-              [options]="commonServiceApp.tipoPerfiles"
-              formControlName="tipoPerfil"
-              optionLabel="name"
-              optionValue="value"
-              placeholder="Select tipo Perfil"
-              [ngClass]="inputValid('tipoPerfil')"
-            ></p-multiSelect>
-
-            <label for="tipoPerfil">tipo de Perfil (*)</label>
-          </span>
-          <small
-            id="tipoPerfil-help"
-            class="p-error block"
-            *ngIf="campoValido('tipoPerfil')"
-            >{{ getTipoPerfilErrors("tipoPerfil") }}
-          </small>
-        </div>
-        
-        <div class="field col-12 md:col-3">
-          <span class="p-float-label">
             <input
               type="text"
               id="direccion"

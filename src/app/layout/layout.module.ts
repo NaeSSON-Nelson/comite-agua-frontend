@@ -12,6 +12,7 @@ import { TopbarComponent } from './topbar/topbar.component';
 import { FooterComponent } from './footer/footer.component';
 import { MenuitemComponent } from './menuitem/menuitem.component';
 import {DropdownModule} from 'primeng/dropdown'
+import {ButtonModule} from 'primeng/button'
 @NgModule({
   declarations: [
     LayoutComponent,
@@ -21,6 +22,8 @@ import {DropdownModule} from 'primeng/dropdown'
     FooterComponent,
     MenuitemComponent,
   ],
-  imports: [CommonModule, RouterModule, MenubarModule, TabMenuModule,DropdownModule],
+  imports: [CommonModule, 
+    ButtonModule,
+    RouterModule, MenubarModule, TabMenuModule,DropdownModule],
 })
 export class LayoutModule {}

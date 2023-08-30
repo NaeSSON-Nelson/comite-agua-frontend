@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { MenuItem } from 'primeng/api';
 import { LayoutService } from '../layout.service';
 import { AuthService } from 'src/app/auth/auth.service';
@@ -11,29 +11,12 @@ import { AuthService } from 'src/app/auth/auth.service';
 })
 export class MenuComponent {
 
-  model: any[] = [];
+    @Input()
+    model: any[] = [];
 
     constructor(public layoutService: LayoutService,private authService:AuthService) { }
 
     ngOnInit() {
-      this.authService.menusUser.subscribe((res) => {
-        this.model = res.map((menu) => {
-          const menuItem: MenuItem = {
-            label: menu.nombre,
-            // routerLink: [`/${menu.linkMenu}`],
-            items: menu.itemsMenu?.map((item) => {
-              const menuItem: MenuItem = {
-                label: item.nombre,
-                routerLink: [`/${menu.linkMenu}/${item.linkMenu}`],
-                visible:item.visible
-              };
-              return menuItem;
-            }),
-          };
-          return menuItem;
-        });
-      });
-      
         this.model = [
             {
                 label: 'Sesion',

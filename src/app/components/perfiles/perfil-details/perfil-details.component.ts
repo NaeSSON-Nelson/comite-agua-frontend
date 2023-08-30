@@ -342,4 +342,12 @@ export class PerfilDetailsComponent {
         break;
     }
   }
+  tipoPerfil(){
+    let tipo:string='';
+    if(this.perfil)
+    this.perfil.tipoPerfil?.forEach(tip=>{
+      tipo=`${tip}, ${tipo}`
+    })
+    return tipo;
+  }
 }

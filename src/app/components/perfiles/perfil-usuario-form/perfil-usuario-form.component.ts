@@ -177,7 +177,7 @@ export class PerfilUsuarioFormComponent {
             }
           })
         }else
-        this.perfilService.create(form).subscribe({
+        this.perfilService.createUsuario(this.perfilActual?.id!,form).subscribe({
           next: (res) => {
             console.log(res);
             this.messageService.add({

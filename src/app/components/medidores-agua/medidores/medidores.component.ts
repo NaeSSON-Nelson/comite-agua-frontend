@@ -107,7 +107,7 @@ export class MedidoresComponent {
     });
   }
   dataDetail(id: number) {
-    this.router.navigate(['medidores-agua', 'medidor-details'], { queryParams: { id } });
+    this.router.navigate(['medidores-agua', 'medidor-agua-details'], { queryParams: { id } });
   }
   campoValido(nombre: string) {
     return (
