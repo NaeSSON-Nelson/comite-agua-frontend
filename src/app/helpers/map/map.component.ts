@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import * as L from 'leaflet'
+import { MessageService } from 'primeng/api';
 @Component({
   selector: 'app-map-coord',
   templateUrl: './map.component.html',
@@ -7,35 +8,39 @@ import * as L from 'leaflet'
 })
 export class MapComponent {
 
+  constructor(private messageService: MessageService,){}
   @Input()
   latLong!:L.LatLng;
+  @Input()
+  visible:boolean=false;
+  @Output()
+  closeModal:EventEmitter<boolean> = new EventEmitter<boolean>();
   @Output()
   sendLatLong:EventEmitter<L.LatLngExpression> = new EventEmitter<L.LatLngExpression>();
   private _map!:L.Map;
 
   private initMap(){
     this._map=L.map('map',{
-      center: [ -21.4734,-64.8026 ],
+      center: [ this.latLong?.lat ||-21.4734,this.latLong?.lng||-64.8026],
       zoom: 15
     })
-    this.latLong
+    
     const tiles = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 18,
       minZoom: 3,
-      attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+      attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+
     });
     tiles.addTo(this._map);
-    const marker = L.marker({lat:-21.4734,lng:-64.8026},{draggable:true,})
-    this._map.on("click",($event)=>{
-      console.log($event);
-      console.log('se clickeo en el mapa');
-    })
-    
+    const marker = L.marker({lat:this.latLong?.lat ||-21.4734,lng:this.latLong?.lng||-64.8026},{draggable:true,pane:'markerPane',title:'Ubicacion!'})
     marker.addEventListener("dragend",($event)=>{
       // console.log($event.target._latlng);
       
-    this.sendLatLong.emit($event.target._latlng)
-    })
+    //this.sendLatLong.emit($event.target._latlng)
+      this.latLong=$event.target._latlng;
+      console.log($event);
+      console.log(this.latLong);
+  })
     marker.addTo(this._map);
   }
   ngAfterViewInit(): void {
@@ -43,7 +48,22 @@ export class MapComponent {
     //Add 'impleme nts AfterViewInit' to the class.
     this.initMap();
   }
-  enviarCoord(lat:number,lng:number){
-    this.sendLatLong.emit({lat,lng})
+  enviarCoord(){
+    if(this.latLong?.lat && this.latLong?.lng){
+      this.sendLatLong.emit(this.latLong)
+      this.closedModal();
+    }else{
+      this.messageService.add({
+        severity: 'info',
+        summary: 'Datos no seleccionados',
+        detail: `Debe seleccionar una ubicacion`,
+        life: 2000,
+        icon: 'pi pi-times',
+      });
+    }
+  }
+  closedModal(){
+    this.visible=false;
+    this.closeModal.emit(this.visible);
   }
 }

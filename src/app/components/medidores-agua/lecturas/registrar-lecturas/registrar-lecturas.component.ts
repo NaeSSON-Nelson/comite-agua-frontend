@@ -13,6 +13,10 @@ import { CommonAppService } from '../../../../common/common-app.service';
   selector: 'app-registrar-lecturas',
   templateUrl: './registrar-lecturas.component.html',
   styles: [
+    `
+    .fs-text{
+      font-size: 1.15rem
+    }`
   ]
 })
 export class RegistrarLecturasComponent {

@@ -159,52 +159,50 @@ export class MenuFormComponent {
         if (this.menuActual?.id) {
           this.menusService.update(this.menuActual.id, form).subscribe({
             next: (res) => {
-              this.messageService.add({
-                severity: 'info',
-                summary: 'Se cambio con exito!',
-                detail: `${res.message}`,
-                icon: 'pi pi-check',
-              });
-              this.router.navigate(['menus', 'menu-details'], {
-                queryParams: { id: this.menuActual?.id },
-              });
+              if(res.OK){
+
+                this.messageService.add({
+                  severity: 'info',
+                  summary: 'Se cambio con exito!',
+                  detail: `${res.message}`,
+                  icon: 'pi pi-check',
+                });
+                this.router.navigate(['menus', 'menu-details'], {
+                  queryParams: { id: this.menuActual?.id },
+                });
+              }else{
+                this.messageService.add({
+                  severity: 'error',
+                  summary: 'Ocurrió un error al modificar el Empleado!!',
+                  detail: `Detalles del error: ???console ${res.message}`,
+                  life: 5000,
+                  icon: 'pi pi-times',
+                });
+                console.log(res);
+              }
             },
-            error: (err) => {
-              this.messageService.add({
-                severity: 'error',
-                summary: 'Ocurrió un error al modificar el Empleado!!',
-                detail: `Detalles del error: ???console`,
-                life: 5000,
-                icon: 'pi pi-times',
-              });
-              console.log(err);
-            },
-            complete: () => {},
           });
         } else
           this.menusService.create(form).subscribe({
             next: (res) => {
-              console.log(res);
-              this.messageService.add({
-                severity: 'success',
-                summary: 'Registro Exitoso!',
-                detail: res.message,
-                icon: 'pi pi-check',
-              });
-              this.router.navigate(['menus']);
-            },
-            error: (err) => {
-              this.messageService.add({
-                severity: 'error',
-                summary: 'Ocurrió un error al registrar el Empleado!!',
-                detail: `Detalles del error: console`,
-                life: 5000,
-                icon: 'pi pi-times',
-              });
-              console.log(err);
-            },
-            complete: () => {
-              this.menuForm.reset();
+              if(res.OK){
+                this.messageService.add({
+                  severity: 'success',
+                  summary: 'Registro Exitoso!',
+                  detail: res.message,
+                  icon: 'pi pi-check',
+                });
+                this.router.navigate(['menus','menu-list']);
+              }else{
+                this.messageService.add({
+                  severity: 'error',
+                  summary: 'Ocurrió un error al registrar !!',
+                  detail: `Detalles del error: console ${res.message}`,
+                  life: 5000,
+                  icon: 'pi pi-times',
+                });
+                console.log(res);
+              }
             },
           });
       },

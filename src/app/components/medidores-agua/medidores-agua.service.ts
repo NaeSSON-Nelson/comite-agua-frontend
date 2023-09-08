@@ -4,7 +4,7 @@ import { Subject, catchError, map, of, tap } from 'rxjs';
 import { PaginatorFind } from 'src/app/interfaces/Paginator.interface';
 import { Afiliado } from 'src/app/interfaces/afiliado.interface';
 import { DataResult, HttpResponseApi, HttpResponseApiArray } from 'src/app/interfaces/http-respones.interface';
-import { Medidor } from 'src/app/interfaces/medidor.interface';
+import { Medidor, MesLectura, PlanillaLecturas } from 'src/app/interfaces/medidor.interface';
 import { environment } from 'src/environments/environment';
 import { ResponseResult } from '../../interfaces/http-respones.interface';
 import { Perfil } from 'src/app/interfaces';
@@ -14,7 +14,9 @@ import { Perfil } from 'src/app/interfaces';
 })
 export class MedidoresAguaService {
 
-  URL_medidores: string = environment.apiURrl + '/medidores-agua';
+  private URL_medidores: string = environment.apiURrl + '/medidores-agua';
+  private URL_planillas:string = this.URL_medidores +'/planillas';
+  private URL_lecturas:string = this.URL_medidores +'/lecturas';
   private headers = new HttpHeaders().set(
     'authorization',
     `Bearer ${localStorage.getItem('token') || ''}`
@@ -180,5 +182,23 @@ export class MedidoresAguaService {
           return of(errors);
         })
       );
+  }
+
+  //TODO: PLANILLAS DE LECTURAS DE UN MEDIDOR
+  listarPlanillasMedidor(idMedidor:number){
+    return this.http.get<HttpResponseApi<Medidor>>(`${this.URL_planillas}/${idMedidor}`,{ headers: this.headers })
+            .pipe(
+              map(resp=>{
+                  return resp.data?.planillas || [];
+              })
+            );
+  }
+  listarLecturasPlanilla(idPlanilla:number){
+    return this.http.get<HttpResponseApi<PlanillaLecturas>>(`${this.URL_lecturas}/${idPlanilla}`,{ headers: this.headers })
+            .pipe(
+              map(resp=>{
+                  return resp.data?.lecturas || [];
+              })
+            );
   }
 }

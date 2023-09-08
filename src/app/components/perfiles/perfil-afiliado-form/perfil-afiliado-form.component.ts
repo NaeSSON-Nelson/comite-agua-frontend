@@ -7,6 +7,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { switchMap } from 'rxjs';
 import { patternText } from 'src/app/patterns/forms-patterns';
 import { CommonAppService } from 'src/app/common/common-app.service';
+import * as L from 'leaflet';
 
 @Component({
   selector: 'app-perfil-afiliado-form',
@@ -16,6 +17,7 @@ import { CommonAppService } from 'src/app/common/common-app.service';
 })
 export class PerfilAfiliadoFormComponent {
   perfilActual?: Perfil;
+  showMap:boolean=false;
   constructor(
     private fb: FormBuilder,
     private readonly perfilService: PerfilService,
@@ -38,6 +40,7 @@ export class PerfilAfiliadoFormComponent {
       const {afiliado}=res;
       this.perfilActual=res;
       if(afiliado){
+        console.log(afiliado);
         this.afiliadoForm.setValue({
           estado:afiliado.estado,
           barrio:afiliado.ubicacion?.barrio,
@@ -159,51 +162,54 @@ export class PerfilAfiliadoFormComponent {
         if (this.perfilActual?.afiliado) {
           this.perfilService.updateAfiliado(this.perfilActual.id!, form).subscribe({
             next: (res) => {
-              this.messageService.add({
-                severity: 'info',
-                summary: 'Se cambio con exito!',
-                detail: `${res.message}`,
-                icon: 'pi pi-check',
-              });
-              this.router.navigate(['perfiles', 'perfil-details'], {
-                queryParams: { id: this.perfilActual?.id },
-              });
+              if(res.OK){
+                this.messageService.add({
+                  severity: 'info',
+                  summary: 'Se cambio con exito!',
+                  detail: `${res.message}`,
+                  icon: 'pi pi-check',
+                });
+                this.router.navigate(['perfiles', 'perfil-details'], {
+                  queryParams: { id: this.perfilActual?.id },
+                });
+              }else{
+                this.messageService.add({
+                  severity: 'error',
+                  summary: 'Ocurrió un error al modificar!!',
+                  detail: `Detalles del error: ???${res.message}`,
+                  life: 5000,
+                  icon: 'pi pi-times',
+                });
+                console.log(res);
+              }
             },
-            error: (err) => {
-              this.messageService.add({
-                severity: 'error',
-                summary: 'Ocurrió un error al modificar el Empleado!!',
-                detail: `Detalles del error: ???console`,
-                life: 5000,
-                icon: 'pi pi-times',
-              });
-              console.log(err);
-            }
           });
         } else
           this.perfilService.createAfiliado(this.perfilActual?.id!,form).subscribe({
             next: (res) => {
-              console.log(res);
-              this.messageService.add({
-                severity: 'success',
-                summary: 'Registro Exitoso!',
-                detail: res.message,
-                icon: 'pi pi-check',
-              });
-              this.router.navigate(['perfiles', 'perfil-details'], {
-                queryParams: { id: this.perfilActual?.id },
-              });
+              if(res.OK){
+
+                this.messageService.add({
+                  severity: 'success',
+                  summary: 'Registro Exitoso!',
+                  detail: res.message,
+                  icon: 'pi pi-check',
+                });
+                this.router.navigate(['perfiles', 'perfil-details'], {
+                  queryParams: { id: this.perfilActual?.id },
+                });
+              }
+              else{
+                this.messageService.add({
+                  severity: 'error',
+                  summary: 'Ocurrió un error al registrar!!',
+                  detail: `Detalles del error: console ${res.OK}`,
+                  life: 5000,
+                  icon: 'pi pi-times',
+                });
+                console.log(res);
+              }
             },
-            error: (err) => {
-              this.messageService.add({
-                severity: 'error',
-                summary: 'Ocurrió un error al registrar!!',
-                detail: `Detalles del error: console`,
-                life: 5000,
-                icon: 'pi pi-times',
-              });
-              console.log(err);
-            }
           });
       },
     });
@@ -211,6 +217,12 @@ export class PerfilAfiliadoFormComponent {
   coordenadas($event:any){
     this.afiliadoForm.get('latitud')?.setValue($event.lat);
     this.afiliadoForm.get('longitud')?.setValue($event.lng);
+  }
+  get coordenadasLatLng(){
+    return new L.LatLng(this.afiliadoForm.get('latitud')?.value ||-21.4734,this.afiliadoForm.get('longitud')?.value ||-64.8026);
+  }
+  cerrarMapa(modal:boolean){
+    this.showMap=modal;
   }
   limpiarCampo(campo: string) {
     if (

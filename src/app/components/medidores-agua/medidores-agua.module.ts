@@ -7,6 +7,7 @@ import { MedidoresAguaRoutingModule } from './medidores-agua-routing.module';
 import { PrimeNgCrudModule } from 'src/app/prime-ng-crud/prime-ng-crud.module';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HelpersModule } from 'src/app/helpers/helpers.module';
+import { GestionPlanillasComponent } from './gestion-planillas/gestion-planillas.component';
 
 
 
@@ -14,7 +15,8 @@ import { HelpersModule } from 'src/app/helpers/helpers.module';
   declarations: [
     MedidoresComponent,
     MedidorFormComponent,
-    AfiliadoMedidoresDetailsComponent
+    AfiliadoMedidoresDetailsComponent,
+    GestionPlanillasComponent
   ],
   imports: [
     CommonModule,

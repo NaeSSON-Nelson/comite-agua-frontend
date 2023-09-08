@@ -48,7 +48,13 @@
                         </div>
                     </div>
                     <p-divider ></p-divider>
-                    <h5 *ngIf="medidorSelected">Medidor seleccionado</h5>
+                    <div class="flex justify-content-around" *ngIf="medidorSelected">
+                        <h5>Medidor seleccionado</h5>
+                        <div class="flex flex-column">
+                            <h5>Gestion de Lecturas</h5>
+                            <button pButton label="Detalles" styleClass="p-button-info"(click)="showPlanillas()"></button>
+                        </div>
+                    </div>
                     <div class="grid p-fluid mt-3" *ngIf="medidorSelected; else noData">
                         <div class="field col-12 md:col-6">
                             <label htmlFor="username">Nro de Medidor Registrada</label>
@@ -108,3 +114,9 @@
     </div>
     
 </div>
+<app-gestion-planillas
+*ngIf="planillaVisible"
+[visible]="planillaVisible"
+[medidor]="medidorSelected"
+(closePlanilla)="cerrarPlanillas($event)"
+></app-gestion-planillas>

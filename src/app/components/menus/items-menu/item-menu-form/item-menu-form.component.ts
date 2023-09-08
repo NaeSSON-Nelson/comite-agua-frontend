@@ -12,21 +12,20 @@ import { CommonAppService } from 'src/app/common/common-app.service';
 @Component({
   selector: 'app-item-menu-form',
   templateUrl: './item-menu-form.component.html',
-  styles: [
-  ]
+  styles: [],
 })
 export class ItemMenuFormComponent {
   itemMenuActual?: ItemMenu;
-  blockSpace:RegExp=/[^\s]/;
+  blockSpace: RegExp = /[^\s]/;
   constructor(
     private fb: FormBuilder,
     private readonly itemsMenuService: ItemsMenuService,
     private asyncValidators: AsyncValidatorLinkService,
     private confirmationService: ConfirmationService,
     private messageService: MessageService,
-    public commonService:CommonAppService,
+    public commonService: CommonAppService,
     private router: Router,
-    private routerAct: ActivatedRoute,
+    private routerAct: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
@@ -36,16 +35,16 @@ export class ItemMenuFormComponent {
     // this.routerAct.paramMap.subscribe((params)=>{
     //   console.log(params);
     // })
-    this.itemsMenuService.itemMenu.subscribe(res=>{
-      const {created_at,isActive,updated_at,...dataItem} = res;
+    this.itemsMenuService.itemMenu.subscribe((res) => {
+      const { created_at, isActive, updated_at, ...dataItem } = res;
       this.itemMenuActual = res;
-      this.itemMenuForm.setValue({...dataItem});
-    })
+      this.itemMenuForm.setValue({ ...dataItem });
+    });
     if (!this.router.url.includes('id')) return;
 
     this.routerAct.queryParams
       .pipe(switchMap(({ id }) => this.itemsMenuService.findOne(id)))
-      .subscribe(res => {
+      .subscribe((res) => {
         if (res.OK === false) {
           switch (res.statusCode) {
             case 401:
@@ -73,7 +72,7 @@ export class ItemMenuFormComponent {
                 detail: `${res.message},code: ${res.statusCode}`,
                 life: 5000,
               });
-              this.router.navigate(['items-menu','item-menu-list'])
+              this.router.navigate(['items-menu', 'item-menu-list']);
               break;
             default:
               console.log(res);
@@ -88,79 +87,118 @@ export class ItemMenuFormComponent {
         }
       });
   }
-  itemMenuForm: FormGroup = this.fb.group({
-    id: [],
-    nombre: [,[Validators.required,Validators.minLength(3),Validators.pattern(patternText)]],
-    linkMenu: [,[Validators.minLength(3),Validators.required,Validators.pattern(patternText)]],
-    visible:[true,Validators.required],
-    estado: [, [Validators.required]],
-  },{
-    asyncValidators:[this.asyncValidators.validarLink('linkMenu','id')],
-    updateOn: 'blur',
-  });
+  itemMenuForm: FormGroup = this.fb.group(
+    {
+      id: [],
+      nombre: [
+        ,
+        [
+          Validators.required,
+          Validators.minLength(3),
+          Validators.pattern(patternText),
+        ],
+      ],
+      linkMenu: [
+        ,
+        [
+          Validators.minLength(3),
+          Validators.required,
+          Validators.pattern(patternText),
+        ],
+      ],
+      visible: [true, Validators.required],
+      estado: [, [Validators.required]],
+    },
+    {
+      asyncValidators: [this.asyncValidators.validarLink('linkMenu', 'id')],
+      updateOn: 'blur',
+    }
+  );
   validForm() {
     this.itemMenuForm.markAllAsTouched();
     // console.log(this.clienteForm.value);
     // console.log(this.itemMenuForm);
     if (this.itemMenuForm.invalid) return;
-    let itemMenuSend: ItemMenu={}; 
-    if(this.itemMenuActual){
-      for(const [key,value ] of Object.entries(this.itemMenuForm.value)){
-        if(value!==this.itemMenuActual[key as keyof ItemMenu]){
+    let itemMenuSend: ItemMenu = {};
+    if (this.itemMenuActual) {
+      for (const [key, value] of Object.entries(this.itemMenuForm.value)) {
+        if (value !== this.itemMenuActual[key as keyof ItemMenu]) {
           itemMenuSend[key as keyof ItemMenu] = value as any;
         }
       }
-    }else{
-      itemMenuSend=Object.assign({}, this.itemMenuForm.value);
+    } else {
+      itemMenuSend = Object.assign({}, this.itemMenuForm.value);
       Object.entries(itemMenuSend).forEach(([key, value]) => {
-        if (value === null || value ===undefined) delete itemMenuSend[key as keyof ItemMenu];
+        if (value === null || value === undefined)
+          delete itemMenuSend[key as keyof ItemMenu];
       });
     }
     this.registrarFormulario(itemMenuSend);
-    
+
     // console.log(itemMenuSend);
   }
-  registrarFormulario(form:ItemMenu){
+  registrarFormulario(form: ItemMenu) {
     this.confirmationService.confirm({
-      message: `¿Está seguro de ${this.itemMenuActual?.id  ? 'actualizar este registro':'registrar este formulario'}?`,
-          header: 'Confirmar Acción',
-          icon: 'pi pi-info-circle',
-          accept:()=>{
-            if(this.itemMenuActual?.id){
-
-              this.itemsMenuService.update(this.itemMenuActual.id,form).subscribe({
-                next:(res)=>{
-
-                  this.messageService.add({severity:'info',summary:'Se cambio con exito!', detail:`${res.message}`,icon:'pi pi-check'})
-                  this.router.navigate(['items-menu','item-menu-details'],{queryParams:{id:this.itemMenuActual?.id}});
-                },
-                error:err=>{
-                  this.messageService.add({severity:'error',summary:'Ocurrió un error al modificar!!', detail:`Detalles del error: ???console`,life:5000, icon:'pi pi-times'})
-                  console.log(err);
-                },
-                complete:()=>{
-              
+      message: `¿Está seguro de ${
+        this.itemMenuActual?.id
+          ? 'actualizar este registro'
+          : 'registrar este formulario'
+      }?`,
+      header: 'Confirmar Acción',
+      icon: 'pi pi-info-circle',
+      accept: () => {
+        if (this.itemMenuActual?.id) {
+          this.itemsMenuService.update(this.itemMenuActual.id, form).subscribe({
+            next: (res) => {
+              if(res.OK){
+                this.messageService.add({
+                  severity: 'info',
+                  summary: 'Se cambio con exito!',
+                  detail: `${res.message}`,
+                  icon: 'pi pi-check',
+                });
+                this.router.navigate(['items-menu', 'item-menu-details'], {
+                  queryParams: { id: this.itemMenuActual?.id },
+                });
+              }else{
+                this.messageService.add({
+                  severity: 'error',
+                  summary: 'Ocurrió un error al modificar!!',
+                  detail: `Detalles del error: console ${res.message}`,
+                  life: 5000,
+                  icon: 'pi pi-times',
+                });
+                console.log(res);
               }
-            });
-          }
-            else
-            this.itemsMenuService.create(form).subscribe({
-              next: res=>{
-                console.log(res);            
-                this.messageService.add({severity:'success',summary:'Registro Exitoso!', detail:res.message,icon:'pi pi-check'})
-                this.router.navigate(['items-menu','item-menu-list'],);
-              },
-              error: err=>{
-                this.messageService.add({severity:'error',summary:'Ocurrió un error al registrar el Empleado!!', detail:`Detalles del error: console`,life:5000, icon:'pi pi-times'})
-                console.log(err);
-              },
-              complete:()=>{
-                this.itemMenuForm.reset();
-              
+            }
+          });
+        } else
+          this.itemsMenuService.create(form).subscribe({
+            next: (res) => {
+              if(res.OK){
+
+                console.log(res);
+                this.messageService.add({
+                  severity: 'success',
+                  summary: 'Registro Exitoso!',
+                  detail: res.message,
+                  icon: 'pi pi-check',
+                });
+                this.router.navigate(['items-menu', 'item-menu-list']);
+              }else{
+                this.messageService.add({
+                  severity: 'error',
+                  summary: 'Ocurrió un error al registrar!!',
+                  detail: `Detalles del error: console ${res.message}`,
+                  life: 5000,
+                  icon: 'pi pi-times',
+                });
+                console.log(res);
               }
-            })
-          }
-    })
+            },
+          });
+      },
+    });
   }
   limpiarCampo(campo: string) {
     if (

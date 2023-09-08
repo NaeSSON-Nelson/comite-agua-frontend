@@ -1,5 +1,15 @@
-<div class="map-container">
-    <div class="map-frame">
+<p-dialog [style]="{'width':'85%', 'height':'90%'}" 
+[modal]="true" [(visible)]="visible" header="Ubicacion geografica del afiliado"
+[resizable]="true"
+(onHide)="closedModal()"
+[closable]="true"
+>
+  <div class="map-container grid p-fluid">
+    <div class="map-frame col-12">
       <div id="map"></div>
     </div>
+    <div class="col-12">
+      <p-button label="Guardar Ubicacion" styleClass="p-button-raised" (onClick)="enviarCoord()"></p-button>
+    </div>
   </div>
+</p-dialog>

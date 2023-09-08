@@ -1,0 +1,57 @@
+<p-dialog
+  header="{{ 'Gestion de Planillas del medidor con Numero:' }} {{medidor.nroMedidor}}"
+  [modal]="true"
+  [(visible)]="visible"
+  [breakpoints]="{ '960px': '75vw' }"
+  [style]="{ width: '75vw','min-height':'50vw',margin:'10px' }"
+  [baseZIndex]="750"
+  [draggable]="false"
+  (onShow)="mostrarDetalles()"
+  (onHide)="close()"
+  
+>
+  <p-divider></p-divider>
+  <div class="grid m-5 p-fluid">
+    <h5 class="col-12"> GESTION DE PLANILLAS</h5>
+    <div class="col-6">
+      <label for="">Seleccione un año de gestion disponible:</label>
+      <p-dropdown [options]="planillas" placeholder="Seleccione un año" (onChange)="mostrarLecturas($event)"></p-dropdown>
+    </div>
+    <div class="col-12" *ngIf="lecturas.length>0; else sinLecturas">
+      <h5>LECTURAS REGISTRADAS DE LOS MESES PASADOS:</h5>
+      <p-divider></p-divider>
+      <p-table [value]="lecturas">
+        <ng-template pTemplate="header" let-columns>
+          <tr>
+            <th>ID </th>
+            <th>Mes Lecturado</th>
+            <th>lectura Registrada.</th>
+            <th>Consumo Total.</th>
+            <th>Estado del medidor registrada</th>
+            <th>Estado de registro</th>
+          </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-product>
+          <tr>
+            <td>{{product.id}}</td>
+            <td>{{product.mesLecturado}}</td>
+            <td>{{product.lectura}}</td>
+            <td>{{product.consumoTotal}}</td>
+            <td>{{product.estadoMedidor || 'SIN REGISTRO DE ESTADO'}}</td>
+            <td>{{product.estado}}</td>
+          </tr>
+      </ng-template>
+      </p-table>
+
+    </div>
+    <ng-template #sinLecturas>
+      <div class="col-12">
+        <p-divider>
+        </p-divider>
+        <p>{{titleLecturas}}</p>
+
+      </div>
+    </ng-template>
+    
+  </div>
+</p-dialog>

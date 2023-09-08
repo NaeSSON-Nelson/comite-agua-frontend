@@ -10,6 +10,7 @@ import { patternCI, patternDateFormat, patternText } from 'src/app/patterns/form
 import { Afiliado } from 'src/app/interfaces/afiliado.interface';
 import { Perfil } from 'src/app/interfaces';
 import { CommonAppService } from 'src/app/common/common-app.service';
+import * as L from 'leaflet';
 
 @Component({
   selector: 'app-medidor-form',
@@ -20,6 +21,7 @@ import { CommonAppService } from 'src/app/common/common-app.service';
 export class MedidorFormComponent {
   perfilActual?: Perfil;
   medidorActual?:Medidor;
+  showMap:boolean=false;
   constructor(
     private fb: FormBuilder,
     private readonly medidoresService: MedidoresAguaService,
@@ -57,7 +59,12 @@ export class MedidorFormComponent {
                         // console.log(this.medidorActual);
                         const {afiliado,ultimaLectura,created_at,isActive,ubicacion,updated_at,...dataMedidor} = this.medidorActual!;
                         console.log(this.perfilActual);
-                        this.medidorForm.setValue({...dataMedidor,afiliado:{id:this.perfilActual!.afiliado!.id},barrio:ubicacion?.barrio});
+                        this.medidorForm.setValue({...dataMedidor,afiliado:
+                          {id:this.perfilActual!.afiliado!.id},
+                          barrio:ubicacion?.barrio,
+                          longitud:ubicacion?.longitud,
+                          latitud:ubicacion?.longitud,
+                          numeroVivienda:ubicacion?.numeroVivienda});
                       }
                     })
     });
@@ -112,16 +119,18 @@ export class MedidorFormComponent {
   }
   medidorForm: FormGroup = this.fb.group(
     {
-      id: [],
-      nroMedidor:[,[Validators.required,Validators.pattern(patternCI),Validators.minLength(4)]],
-      fechaInstalacion:[,[Validators.required]],
-      lecturaInicial:[0,[Validators.required,Validators.min(0)]],
-      barrio:[,[Validators.required,Validators.minLength(3),Validators.pattern(patternText)]],
-      estado:[,[Validators.min(0)]],
-      marca:[,[Validators.required,Validators.pattern(patternText),Validators.minLength(1)]],
-      afiliado: this.fb.group({
-        id:[,[Validators.required,Validators.min(0)]]
-      })
+      id:                [],
+      nroMedidor:        [,[Validators.required,Validators.pattern(patternCI),Validators.minLength(4)]],
+      fechaInstalacion:  [,[Validators.required]],
+      lecturaInicial:    [0,[Validators.required,Validators.min(0)]],
+      barrio:            [,[Validators.required,Validators.minLength(3),Validators.pattern(patternText)]],
+      estado:            [,[Validators.min(0)]],
+      marca:             [,[Validators.required,Validators.pattern(patternText),Validators.minLength(1)]],
+      afiliado:          this.fb.group({
+                          id:[,[Validators.required,Validators.min(0)]]}),
+      numeroVivienda:    [,[Validators.pattern(patternText)]],
+      longitud:          [],
+      latitud:           [],
     },
     {
       updateOn: 'blur',
@@ -147,12 +156,6 @@ export class MedidorFormComponent {
       });
     }
     this.registrarFormulario(medidorSend);
-    // console.log(medidorSend);
-    // const { itemsMenu: dataItems, ...dataSend } = menuSend;
-    // this.registrarFormulario({
-    //   ...dataSend,
-    //   itemsMenu: dataItems?.map((val) => val.id!),
-    // });
   }
   registrarFormulario(form: Medidor) {
     this.confirmationService.confirm({
@@ -167,53 +170,51 @@ export class MedidorFormComponent {
         if (this.medidorActual?.id) {
           this.medidoresService.update(this.medidorActual.id, form).subscribe({
             next: (res) => {
-              this.messageService.add({
-                severity: 'info',
-                summary: 'Se cambio con exito!',
-                detail: `${res.message}`,
-                icon: 'pi pi-check',
-              });
-              this.router.navigate(['medidores-agua', 'medidor-agua-details'], {
-                queryParams: { id: this.perfilActual?.id },
-              });
+              if(res.OK){
+
+                this.messageService.add({
+                  severity: 'info',
+                  summary: 'Se cambio con exito!',
+                  detail: `${res.message}`,
+                  icon: 'pi pi-check',
+                });
+                this.router.navigate(['medidores-agua', 'medidor-agua-details'], {
+                  queryParams: { id: this.perfilActual?.id },
+                });
+              }else{
+                this.messageService.add({
+                  severity: 'error',
+                  summary: 'Ocurrió un error al modificar!!',
+                  detail: `Detalles del error: ???console ${res.message}`,
+                  life: 5000,
+                  icon: 'pi pi-times',
+                });
+                console.log(res);
+              }
             },
-            error: (err) => {
-              this.messageService.add({
-                severity: 'error',
-                summary: 'Ocurrió un error al modificar!!',
-                detail: `Detalles del error: ???console`,
-                life: 5000,
-                icon: 'pi pi-times',
-              });
-              console.log(err);
-            },
-            complete: () => {},
           });
         } else
           this.medidoresService.create(form).subscribe({
             next: (res) => {
-              console.log(res);
-              this.messageService.add({
-                severity: 'success',
-                summary: 'Registro Exitoso!',
-                detail: res.message,
-                icon: 'pi pi-check',
-              });
-              this.router.navigate(['medidores-agua','medidor-agua-details'],
-              {queryParams:{id:this.perfilActual?.id}});
-            },
-            error: (err) => {
-              this.messageService.add({
-                severity: 'error',
-                summary: 'Ocurrió un error al registrar !!',
-                detail: `Detalles del error: console`,
-                life: 5000,
-                icon: 'pi pi-times',
-              });
-              console.log(err);
-            },
-            complete: () => {
-              this.medidorForm.reset();
+              if(res.OK){
+                this.messageService.add({
+                  severity: 'success',
+                  summary: 'Registro Exitoso!',
+                  detail: res.message,
+                  icon: 'pi pi-check',
+                });
+                this.router.navigate(['medidores-agua','medidor-agua-details'],
+                {queryParams:{id:this.perfilActual?.id}});
+              }else{
+                this.messageService.add({
+                  severity: 'error',
+                  summary: 'Ocurrió un error al registrar !!',
+                  detail: `Detalles del error: console ${res.message}`,
+                  life: 5000,
+                  icon: 'pi pi-times',
+                });
+                console.log(res);
+              }
             },
           });
       },
@@ -242,7 +243,16 @@ export class MedidorFormComponent {
       ? 'ng-valid ng-dirty'
       : '';
   }
-
+  coordenadas($event:any){
+    this.medidorForm.get('latitud')?.setValue($event.lat);
+    this.medidorForm.get('longitud')?.setValue($event.lng);
+  }
+  get coordenadasLatLng(){
+    return new L.LatLng(this.medidorForm.get('latitud')?.value ||-21.4734,this.medidorForm.get('longitud')?.value ||-64.8026);
+  }
+  cerrarMapa(modal:boolean){
+    this.showMap=modal;
+  }
   
   //MESSAGES ERRORS TYPE
 
@@ -308,6 +318,35 @@ export class MedidorFormComponent {
     }else if(errors?.['pattern']){
       return 'caracteres no validos'
     }
+    return '';
+  }
+  getNumeroViviendaErrors(campo: string) {
+    const errors = this.medidorForm.get(campo)?.errors;
+    if (errors?.['required']) {
+      return 'El campo es requerido';
+    } else if (errors?.['pattern']) {
+      return 'El campo contiene caracteres invalidos';
+    } else if (errors?.['minlength']) {
+      return 'El tamaño minimo debe ser 3';
+    }
+    return '';
+  }
+  getLongitudErrors(campo: string) {
+    const errors = this.medidorForm.get(campo)?.errors;
+    if (errors?.['required']) {
+      return 'El campo es requerido';
+    } else if (errors?.['pattern']) {
+      return 'El campo contiene caracteres invalidos';
+    } else if (errors?.['minlength']) {
+      return 'El tamaño minimo debe ser 3';
+    }
+    return '';
+  }
+  getLatitudErrors(campo: string) {
+    const errors = this.medidorForm.get(campo)?.errors;
+    if (errors?.['pattern']) {
+      return 'El campo contiene caracteres invalidos';
+    } 
     return '';
   }
 }

@@ -1,6 +1,11 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Perfil, ResponseCreatePerfil, Role, UsuarioForm } from 'src/app/interfaces';
+import {
+  Perfil,
+  ResponseCreatePerfil,
+  Role,
+  UsuarioForm,
+} from 'src/app/interfaces';
 import { PerfilService } from '../perfil.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { CommonAppService } from 'src/app/common/common-app.service';
@@ -10,19 +15,18 @@ import { switchMap } from 'rxjs';
 @Component({
   selector: 'app-perfil-usuario-form',
   templateUrl: './perfil-usuario-form.component.html',
-  styles: [
-  ]
+  styles: [],
 })
 export class PerfilUsuarioFormComponent {
   perfilActual?: Perfil;
-  
+
   listRolesSelected: Role[] = [];
   constructor(
     private fb: FormBuilder,
     private readonly perfilService: PerfilService,
     private confirmationService: ConfirmationService,
     private messageService: MessageService,
-    public commonServiceApp:CommonAppService,
+    public commonServiceApp: CommonAppService,
     private router: Router,
     private routerAct: ActivatedRoute
   ) {}
@@ -35,14 +39,24 @@ export class PerfilUsuarioFormComponent {
     // })
     this.perfilService.perfil.subscribe((res) => {
       // console.log(res);
-      const {usuario}=res;
-      this.perfilActual=res;
-      if(usuario){
+      const { usuario } = res;
+      this.perfilActual = res;
+      if (usuario) {
         console.log(usuario);
-        const {correoVerify,created_at,id,isActive,password,roles,updated_at,username,...dataUserForm} =usuario;
-        const rolesForm = roles?.map(rol=>rol.id);
-        this.usuarioForm.setValue({roles:rolesForm,...dataUserForm})
-        this.ListItemMenuSelected(roles!)
+        const {
+          correoVerify,
+          created_at,
+          id,
+          isActive,
+          password,
+          roles,
+          updated_at,
+          username,
+          ...dataUserForm
+        } = usuario;
+        const rolesForm = roles?.map((rol) => rol.id);
+        this.usuarioForm.setValue({ roles: rolesForm, ...dataUserForm });
+        this.ListItemMenuSelected(roles!);
       }
     });
     if (!this.router.url.includes('id')) {
@@ -52,11 +66,13 @@ export class PerfilUsuarioFormComponent {
         detail: 'OCURRIO UN ERROR AL OBTENER LA DATA',
         life: 5000,
       });
-      this.router.navigate(['perfiles','perfil-list']);
+      this.router.navigate(['perfiles', 'perfil-list']);
       return;
     } else {
       this.routerAct.queryParams
-        .pipe(switchMap(({ id }) => this.perfilService.findOnePerfilUsuario(id)))
+        .pipe(
+          switchMap(({ id }) => this.perfilService.findOnePerfilUsuario(id))
+        )
         .subscribe({
           next: (res) => {
             if (res.OK === false) {
@@ -86,7 +102,7 @@ export class PerfilUsuarioFormComponent {
                     detail: `${res.message},code: ${res.statusCode}`,
                     life: 5000,
                   });
-                  this.router.navigate(['perfiles','perfil-list'])
+                  this.router.navigate(['perfiles', 'perfil-list']);
                   break;
                 default:
                   console.log(res);
@@ -108,9 +124,9 @@ export class PerfilUsuarioFormComponent {
     this.showTableAsignRoleModalForm = true;
   }
   usuarioForm: FormGroup = this.fb.group({
-    roles           :[,[Validators.required]],
-    estado          :[,[Validators.required]],
-    correo          :[,[Validators.email]]
+    roles: [, [Validators.required]],
+    estado: [, [Validators.required]],
+    correo: [, [Validators.email]],
   });
   validForm() {
     this.usuarioForm.markAllAsTouched();
@@ -118,21 +134,22 @@ export class PerfilUsuarioFormComponent {
     // console.log(this.clienteForm.value);
     let usuarioSend: UsuarioForm = {};
     if (this.perfilActual?.usuario) {
-      const {roles,estado,correo} = this.perfilActual.usuario;
-      const usuarioFormSend:UsuarioForm={
-        estado,correo,
-        roles:roles?.map(rol=>rol.id!),
-      }
+      const { roles, estado, correo } = this.perfilActual.usuario;
+      const usuarioFormSend: UsuarioForm = {
+        estado,
+        correo,
+        roles: roles?.map((rol) => rol.id!),
+      };
       for (const [key, value] of Object.entries(this.usuarioForm.value)) {
         if (value !== usuarioFormSend[key as keyof UsuarioForm]) {
           usuarioSend[key as keyof UsuarioForm] = value as any;
-
         }
       }
     } else {
       usuarioSend = Object.assign({}, this.usuarioForm.value);
       Object.entries(usuarioSend).forEach(([key, value]) => {
-        if (value === null || value ===undefined) delete usuarioSend[key as keyof UsuarioForm];
+        if (value === null || value === undefined)
+          delete usuarioSend[key as keyof UsuarioForm];
       });
     }
     this.registrarFormulario(usuarioSend);
@@ -143,8 +160,8 @@ export class PerfilUsuarioFormComponent {
     //   itemsMenu: dataItems?.map((val) => val.id!),
     // });
   }
-  public usuarioCreate:boolean=false;
-  dataUser!:ResponseCreatePerfil;
+  public usuarioCreate: boolean = false;
+  dataUser!: ResponseCreatePerfil;
   registrarFormulario(form: UsuarioForm) {
     console.log(form);
     this.confirmationService.confirm({
@@ -152,76 +169,83 @@ export class PerfilUsuarioFormComponent {
       header: 'Confirmar Acción',
       icon: 'pi pi-info-circle',
       accept: () => {
-        if(this.perfilActual?.usuario){
-          this.perfilService.updateUsuario(this.perfilActual.id!,form).subscribe({
-            next:res=>{
-              if(res.OK){
-                this.messageService.add({
-                  severity: 'success',
-                  summary: 'Actualizacion Exitosa!',
-                  detail: res.message,
-                  icon: 'pi pi-check',
-                });
-                this.router.navigate(['perfiles','perfil-details'],{queryParams:{id:this.perfilActual!.id}});
-             
-              }else{
-                this.messageService.add({
-                  severity: 'error',
-                  summary: 'Ocurrió un error al modificar!!',
-                  detail: `Detalles del error: console`,
-                  life: 5000,
-                  icon: 'pi pi-times',
-                });
-                console.log(res.error,res.message);
-              }
-            }
-          })
-        }else
-        this.perfilService.createUsuario(this.perfilActual?.id!,form).subscribe({
-          next: (res) => {
-            console.log(res);
-            this.messageService.add({
-              severity: 'success',
-              summary: 'Registro Exitoso!',
-              detail: res.message,
-              icon: 'pi pi-check',
+        if (this.perfilActual?.usuario) {
+          this.perfilService
+            .updateUsuario(this.perfilActual.id!, form)
+            .subscribe({
+              next: (res) => {
+                if (res.OK) {
+                  this.messageService.add({
+                    severity: 'success',
+                    summary: 'Actualizacion Exitosa!',
+                    detail: res.message,
+                    icon: 'pi pi-check',
+                  });
+                  this.router.navigate(['perfiles', 'perfil-details'], {
+                    queryParams: { id: this.perfilActual!.id },
+                  });
+                } else {
+                  this.messageService.add({
+                    severity: 'error',
+                    summary: 'Ocurrió un error al modificar!!',
+                    detail: `Detalles del error: console${res.message}`,
+                    life: 5000,
+                    icon: 'pi pi-times',
+                  });
+                  console.log(res);
+                }
+              },
             });
-            if(res.data?.dataUser.therePassword){
-              this.dataUser=res.data;
-              this.usuarioCreate=true;
-            }else{
-
-              this.router.navigate(['perfiles','perfil-details'],{queryParams:{id:this.perfilActual!.id}});
-             
-            }
-          },
-          error: (err) => {
-            this.messageService.add({
-              severity: 'error',
-              summary: 'Ocurrió un error al registrar!!',
-              detail: `Detalles del error: console`,
-              life: 5000,
-              icon: 'pi pi-times',
+        } else
+          this.perfilService
+            .createUsuario(this.perfilActual?.id!, form)
+            .subscribe({
+              next: (res) => {
+                if (res.OK) {
+                  this.messageService.add({
+                    severity: 'success',
+                    summary: 'Registro Exitoso!',
+                    detail: res.message,
+                    icon: 'pi pi-check',
+                  });
+                  if (res.data?.dataUser.therePassword) {
+                    this.dataUser = res.data;
+                    this.usuarioCreate = true;
+                  } else {
+                    this.router.navigate(['perfiles', 'perfil-details'], {
+                      queryParams: { id: this.perfilActual!.id },
+                    });
+                  }
+                } else {
+                  this.messageService.add({
+                    severity: 'error',
+                    summary: 'Ocurrió un error al registrar!!',
+                    detail: `Detalles del error: console ${res.message}`,
+                    life: 5000,
+                    icon: 'pi pi-times',
+                  });
+                  console.log(res);
+                }
+              },
             });
-            console.log(err);
-          },
-        });
       },
     });
   }
   ListItemMenuSelected(list: Role[]) {
     this.usuarioForm.get('roles')?.reset();
     this.listRolesSelected = [];
-      this.usuarioForm.get('roles')?.setValue(list.map(role=>{
+    this.usuarioForm.get('roles')?.setValue(
+      list.map((role) => {
         this.listRolesSelected.push(role);
-        return role.id
-    }))
+        return role.id;
+      })
+    );
     this.closeTableRoleModalForm(false);
   }
   deleteItemMenu(id: number) {
     // console.log(index);
-    const index = this.listRolesSelected.findIndex(rol=>rol.id===id);
-    const rolesNumber= this.usuarioForm.get('roles')?.value as Array<number>;
+    const index = this.listRolesSelected.findIndex((rol) => rol.id === id);
+    const rolesNumber = this.usuarioForm.get('roles')?.value as Array<number>;
     rolesNumber.splice(index, 1);
     this.listRolesSelected.splice(index, 1);
   }
@@ -232,8 +256,6 @@ export class PerfilUsuarioFormComponent {
   closeTableRoleModalForm(view: boolean) {
     this.showTableAsignRoleModalForm = view;
   }
-
-
 
   limpiarCampo(campo: string) {
     if (
@@ -258,22 +280,22 @@ export class PerfilUsuarioFormComponent {
       ? 'ng-valid ng-dirty'
       : '';
   }
-  getUsuarioCorreoErrors(campo:string){
+  getUsuarioCorreoErrors(campo: string) {
     const errors = this.usuarioForm.get(campo)?.errors;
     if (errors?.['email']) {
       return 'El campo debe ser un correo: example@correo.com';
     }
-    return'';
+    return '';
   }
   getUsuarioEstadoErrors(campo: string) {
     const errors = this.usuarioForm.get(campo)?.errors;
-    
+
     if (errors?.['required']) {
       return 'El campo es requerido';
     }
     return '';
   }
-  getRolesErrors(campo:string) {
+  getRolesErrors(campo: string) {
     const errors = this.usuarioForm.get(campo)?.errors;
     if (errors?.['required']) {
       return 'debe asignar al menos un rol a la cuenta';

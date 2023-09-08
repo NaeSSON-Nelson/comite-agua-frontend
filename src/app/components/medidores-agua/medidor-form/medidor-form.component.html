@@ -127,6 +127,64 @@
                       >{{ getBarrioErrors("barrio") }}
                     </small>
                   </div>
+                  <div class="field col-12 md:col-4">
+                    <span class="p-float-label">
+                      <input
+                        type="text"
+                        id="numeroVivienda"
+                        pInputText
+                        formControlName="numeroVivienda"
+                        [ngClass]="inputValid('numeroVivienda')"
+                      />
+                      <label for="numeroVivienda">Numero de Vivienda del afiliado</label>
+                    </span>
+                    <small
+                      id="apellidoPrimero-help"
+                      class="p-error block"
+                      *ngIf="campoValido('numeroVivienda')"
+                      >{{ getNumeroViviendaErrors("numeroVivienda") }}
+                    </small>
+                  </div>
+                  <div class="col-12 flex justify-content-center">
+                    <p-button icon="pi pi-map-marker" styleClass="p-button-rounded p-button-secondary p-button-text p-button-raised" (onClick)="showMap=true"></p-button>
+                  </div>
+          
+                  <div class="field col-12 md:col-6">
+                    <span class="p-float-label">
+                      <input
+                        type="text"
+                        id="longitud"
+                        pInputText
+                        formControlName="longitud"
+                        [ngClass]="inputValid('longitud')"
+                      />
+                      <label for="longitud">Longitud</label>
+                    </span>
+                    <small
+                      id="longitud-help"
+                      class="p-error block"
+                      *ngIf="campoValido('longitud')"
+                      >{{ getLongitudErrors("longitud") }}
+                    </small>
+                  </div>
+                  <div class="field col-12 md:col-6">
+                    <span class="p-float-label">
+                      <input
+                        type="text"
+                        id="latitud"
+                        pInputText
+                        formControlName="latitud"
+                        [ngClass]="inputValid('latitud')"
+                      />
+                      <label for="latitud">Latitud</label>
+                    </span>
+                    <small
+                      id="latitud-help"
+                      class="p-error block"
+                      *ngIf="campoValido('latitud')"
+                      >{{ getLatitudErrors("latitud") }}
+                    </small>
+                  </div>
                   <div class="field col-12 md:col-3 m-3">
                     <span class="p-float-label">
                       <p-dropdown
@@ -166,4 +224,9 @@
       </div>
     </form>
   </div>
-  
+  <app-map-coord *ngIf="showMap"
+  (sendLatLong)="coordenadas($event)"
+  [latLong]="coordenadasLatLng"
+  [visible]="showMap"
+  (closeModal)="cerrarMapa($event)"
+  ></app-map-coord>

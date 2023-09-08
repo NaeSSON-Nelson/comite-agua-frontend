@@ -148,52 +148,51 @@ export class RoleFormComponent {
         if (this.roleActual?.id) {
           this.rolesService.update(this.roleActual.id, form).subscribe({
             next: (res) => {
-              this.messageService.add({
-                severity: 'info',
-                summary: 'Se cambio con exito!',
-                detail: `${res.message}`,
-                icon: 'pi pi-check',
-              });
-              this.router.navigate(['roles', 'rol-details'], {
-                queryParams: { id: this.roleActual?.id },
-              });
+              if(res.OK){
+
+                this.messageService.add({
+                  severity: 'info',
+                  summary: 'Se cambio con exito!',
+                  detail: `${res.message}`,
+                  icon: 'pi pi-check',
+                });
+                this.router.navigate(['roles', 'rol-details'], {
+                  queryParams: { id: this.roleActual?.id },
+                });
+              }else{
+                this.messageService.add({
+                  severity: 'error',
+                  summary: 'Ocurrió un error al modificar!!',
+                  detail: `Detalles del error: ???console ${res.message}`,
+                  life: 5000,
+                  icon: 'pi pi-times',
+                });
+                console.log(res);
+
+              }
             },
-            error: (err) => {
-              this.messageService.add({
-                severity: 'error',
-                summary: 'Ocurrió un error al modificar!!',
-                detail: `Detalles del error: ???console`,
-                life: 5000,
-                icon: 'pi pi-times',
-              });
-              console.log(err);
-            },
-            complete: () => {},
           });
         } else
           this.rolesService.create(form).subscribe({
             next: (res) => {
-              console.log(res);
-              this.messageService.add({
-                severity: 'success',
-                summary: 'Registro Exitoso!',
-                detail: res.message,
-                icon: 'pi pi-check',
-              });
-              this.router.navigate(['roles','rol-list']);
-            },
-            error: (err) => {
-              this.messageService.add({
-                severity: 'error',
-                summary: 'Ocurrió un error al registrar!!',
-                detail: `Detalles del error: console`,
-                life: 5000,
-                icon: 'pi pi-times',
-              });
-              console.log(err);
-            },
-            complete: () => {
-              this.roleForm.reset();
+              if(res.OK){
+                this.messageService.add({
+                  severity: 'success',
+                  summary: 'Registro Exitoso!',
+                  detail: res.message,
+                  icon: 'pi pi-check',
+                });
+                this.router.navigate(['roles','rol-list']);
+              }else{
+                this.messageService.add({
+                  severity: 'error',
+                  summary: 'Ocurrió un error al registrar!!',
+                  detail: `Detalles del error: console ${res.message}`,
+                  life: 5000,
+                  icon: 'pi pi-times',
+                });
+                console.log(res);
+              }
             },
           });
       },

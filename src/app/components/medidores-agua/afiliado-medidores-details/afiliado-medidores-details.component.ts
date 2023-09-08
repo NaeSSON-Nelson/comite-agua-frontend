@@ -24,6 +24,7 @@ export class AfiliadoMedidoresDetailsComponent {
 
   perfil!: Perfil;
   medidorSelected!: Medidor;
+  planillaVisible:boolean=false;
   ngOnInit(): void {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
@@ -179,6 +180,12 @@ export class AfiliadoMedidoresDetailsComponent {
     this.medidorSelected=data.value;
   }
   registrarMedidor(){
-    this.router.navigate(['medidores-agua','medidor-register'],{queryParams:{idPerfil:this.perfil.id}})
+    this.router.navigate(['medidores-agua','medidor-agua-register'],{queryParams:{idPerfil:this.perfil.id}})
+  }
+  showPlanillas(){
+    this.planillaVisible=!this.planillaVisible;
+  }
+  cerrarPlanillas(evento:boolean){
+    this.planillaVisible=evento;
   }
 }

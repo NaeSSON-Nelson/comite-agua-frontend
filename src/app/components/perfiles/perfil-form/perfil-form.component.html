@@ -256,10 +256,8 @@
               >{{ getAfiliadoNumeroViviendaErrors("numeroVivienda") }}
             </small>
           </div>
-          <div class="col-12">
-            <app-map-coord
-          (sendLatLong)="coordenadas($event)"
-            ></app-map-coord>
+          <div class="col-12 flex justify-content-center">
+            <p-button icon="pi pi-map-marker" styleClass="p-button-rounded p-button-secondary p-button-text p-button-raised" (onClick)="showMap=true"></p-button>
           </div>
           <div class="field col-12 md:col-6">
             <span class="p-float-label">
@@ -447,3 +445,9 @@
 [dataSelected]="dataUser"
 (onCloseDetalles)="usuarioCreate=$event"
 ></app-usuario-created>
+<app-map-coord *ngIf="showMap"
+(sendLatLong)="coordenadas($event)"
+[latLong]="coordenadasLatLng"
+[visible]="showMap"
+(closeModal)="cerrarMapa($event)"
+></app-map-coord>
