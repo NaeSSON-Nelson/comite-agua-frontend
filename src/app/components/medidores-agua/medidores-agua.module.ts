@@ -10,13 +10,12 @@ import { HelpersModule } from 'src/app/helpers/helpers.module';
 import { GestionPlanillasComponent } from './gestion-planillas/gestion-planillas.component';
 
 
-
 @NgModule({
   declarations: [
     MedidoresComponent,
     MedidorFormComponent,
     AfiliadoMedidoresDetailsComponent,
-    GestionPlanillasComponent
+    GestionPlanillasComponent,
   ],
   imports: [
     CommonModule,

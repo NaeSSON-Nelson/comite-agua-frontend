@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 import { RegistrarLecturasComponent } from './registrar-lecturas/registrar-lecturas.component';
 import { LecturasComponent } from './lecturas/lecturas.component';
+import { ReportesComponent } from './reportes/reportes.component';
 
 const routes: Routes = [
   {
@@ -11,6 +12,10 @@ const routes: Routes = [
   },{
     path: 'lecturas-all-register',
     component: RegistrarLecturasComponent,
+  },
+  {
+    path:'reportes',
+    component: ReportesComponent,
   },
   {
     path: '**',

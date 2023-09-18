@@ -6,6 +6,8 @@ import { LecturasComponent } from './lecturas/lecturas.component';
 import { PrimeNgCrudModule } from 'src/app/prime-ng-crud/prime-ng-crud.module';
 import { ReactiveFormsModule } from '@angular/forms';
 import { LecturasMedidorComponent } from './lecturas-medidor/lecturas-medidor.component';
+import { ReportesComponent } from './reportes/reportes.component';
+import { LecturasRegistradasComponent } from './reportes/lecturas-registradas/lecturas-registradas.component';
 
 
 
@@ -13,7 +15,9 @@ import { LecturasMedidorComponent } from './lecturas-medidor/lecturas-medidor.co
   declarations: [
     RegistrarLecturasComponent,
     LecturasComponent,
-    LecturasMedidorComponent
+    LecturasMedidorComponent,
+    ReportesComponent,
+    LecturasRegistradasComponent
   ],
   imports: [
     CommonModule,
