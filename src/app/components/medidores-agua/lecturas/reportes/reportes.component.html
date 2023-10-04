@@ -31,7 +31,7 @@
                     </ng-template>
                     <ng-template pTemplate="body" let-product let-index="rowIndex">
                         <tr>
-                            <td>{{ index }}</td>
+                            <td>{{ index+1 }}</td>
                             <td>{{ product.mes }}</td>
                             <td>{{ product.fechaRegistroLecturas | date: 'dd/MM/yyyy'  }}</td>
                             <td>{{ product.fechaFinRegistroLecturas | date: 'dd/MM/yyyy' }}</td>
