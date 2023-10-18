@@ -52,6 +52,10 @@ const routes: Routes = [
             path:'lecturas',
             loadChildren:()=>import('./components/medidores-agua/lecturas/lecturas-routing.module').then((m)=>m.LecturasRoutingModule)
           },
+          {
+            path:'pagos-de-servicio',
+            loadChildren:()=>import('./components/pago-servicios/pagos-routing.module').then((m)=>m.PagosRoutingModule)
+          },
         ]
       },
     ],

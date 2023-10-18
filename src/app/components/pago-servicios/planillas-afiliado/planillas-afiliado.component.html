@@ -1,0 +1,72 @@
+<div class="grid">
+  <div class="col-12">
+    <div class="card">
+      <h5>Afiliado Vinculado</h5>
+      <div class="grid" *ngIf="perfil">
+        <div class="col-12 grid">
+          <div class="col-12 md:col-4">
+            <img
+              src="../../../../assets/img/default_client.jpg"
+              class=""
+              alt="User profile"
+              [style]="{ 'max-width': '248px' }"
+            />
+          </div>
+          <div class="col-12 md:col-8">
+            <h5 class="flex justify-content-center">Afiliado Vinculado</h5>
+            <div class="grid p-fluid">
+              <div class="field col-12 md:col-6">
+                <label htmlFor="afiliado">Nombre Completo</label>
+                <input
+                  pInputText
+                  id="afiliado"
+                  type="text"
+                  [disabled]="true"
+                  value="{{ perfil.nombrePrimero | titlecase }} {{
+                    perfil.nombreSegundo || '' | titlecase
+                  }} {{ perfil.apellidoPrimero | titlecase }} {{
+                    perfil.apellidoSegundo || '' | titlecase
+                  }}"
+                  class="appearance-none text-color text-base"
+                />
+              </div>
+              <div class="field col-12 md:col-6">
+                <label htmlFor="CI">Cedula de Identidad</label>
+                <input
+                  pInputText
+                  id="CI"
+                  type="text"
+                  [disabled]="true"
+                  [value]="perfil.CI"
+                  class="appearance-none text-color text-base"
+                />
+              </div>
+              <div class="field col-12 md:col-6">
+                <label htmlFor="contacto">Contacto</label>
+                <input
+                  pInputText
+                  id="contacto"
+                  type="text"
+                  [disabled]="true"
+                  value="SIN CONTACTOS"
+                  class="appearance-none text-color text-base"
+                />
+              </div>
+              <div class="field col-12 md:col-6">
+                <label htmlFor="estado">Estado</label>
+                <input
+                  pInputText
+                  id="estado"
+                  type="text"
+                  [disabled]="true"
+                  [value]="perfil.estado"
+                  class="appearance-none text-color text-base"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

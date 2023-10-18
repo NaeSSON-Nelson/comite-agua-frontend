@@ -21,6 +21,7 @@ import { MedidoresAguaModule } from './components/medidores-agua/medidores-agua.
 import { ForbiddenComponent } from './common/forbidden/forbidden.component';
 import { PerfilesModule } from './components/perfiles/perfiles.module';
 import { LecturasModule } from './components/medidores-agua/lecturas/lecturas.module';
+import { PagoServiciosModule } from './components/pago-servicios/pago-servicios.module';
 
 
 
@@ -38,14 +39,15 @@ import { LecturasModule } from './components/medidores-agua/lecturas/lecturas.mo
     ToastModule,
     ConfirmDialogModule,
 
-    //UNA SOLUCION AL ERROR: NOW?
+    // //UNA SOLUCION AL ERROR: NOW?
     // AuthModule,
     // ItemsMenuModule,
     // MenusModule,
     // RolesModule,
     // MedidoresAguaModule,
     // PerfilesModule,
-    LecturasModule,
+    // LecturasModule,
+    // PagoServiciosModule,
   ],
   providers: [
     MessageService,
