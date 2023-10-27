@@ -256,4 +256,6 @@ export class RegistrarLecturasComponent {
     this.lecturasOptions.barrio=event.value;
     this.getAllLecturas();
   }
+  visibleGenerar:boolean=false;
+  
 }

@@ -201,4 +201,10 @@ export class MedidoresAguaService {
               })
             );
   }
+  obtenerLectura(idLectura:number){
+    return this.http.get<HttpResponseApi<MesLectura>>(`${this.URL_lecturas}/comprobantes/${idLectura}`,{headers:this.headers})
+            .pipe(
+              map(res=>res.data!)
+            )
+  }
 }

@@ -8,7 +8,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { LecturasMedidorComponent } from './lecturas-medidor/lecturas-medidor.component';
 import { ReportesComponent } from './reportes/reportes.component';
 import { LecturasRegistradasComponent } from './reportes/lecturas-registradas/lecturas-registradas.component';
-
+import { ModalReportesComponent } from './modal-reportes/modal-reportes.component';
+import {ToastModule} from 'primeng/toast'
 
 
 @NgModule({
@@ -17,13 +18,15 @@ import { LecturasRegistradasComponent } from './reportes/lecturas-registradas/le
     LecturasComponent,
     LecturasMedidorComponent,
     ReportesComponent,
-    LecturasRegistradasComponent
+    LecturasRegistradasComponent,
+    ModalReportesComponent
   ],
   imports: [
     CommonModule,
     LecturasRoutingModule,
     PrimeNgCrudModule,
     ReactiveFormsModule,
+    ToastModule,
   ]
 })
 export class LecturasModule { }

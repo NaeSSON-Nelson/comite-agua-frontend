@@ -27,9 +27,12 @@
     </div>
     <div class="col-12" *ngIf="showLecturas">
         <div class="card">
-            <h5>REGISTROS DE MEDIDORES POR BARRIO:
-                <p-dropdown [options]="commonAppService.barrios" optionLabel="name" optionValue="value" (onChange)="changeBarrio($event)"></p-dropdown>
-            </h5>
+            <div class="grid">
+                <h5 class="col">REGISTROS DE MEDIDORES POR BARRIO:
+                    <p-dropdown [options]="commonAppService.barrios" optionLabel="name" optionValue="value" (onChange)="changeBarrio($event)"></p-dropdown>
+                </h5>
+                <button pButton pRipple label="Generar reportes" (click)="visibleGenerar = true" class="p-button-primary"></button>
+            </div>
             <p-divider></p-divider>
             <div class="card">
                 <div class="m-2 flex flex-row justify-content-around flex-wrap">
@@ -129,3 +132,8 @@
         </div>
     </div>
 </div>
+<app-modal-reportes
+*ngIf="visibleGenerar"
+[visibleModal]="visibleGenerar"
+(event)="visibleGenerar = $event"
+></app-modal-reportes>

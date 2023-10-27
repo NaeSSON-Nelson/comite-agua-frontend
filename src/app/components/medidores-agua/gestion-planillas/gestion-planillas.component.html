@@ -8,6 +8,7 @@
   [draggable]="false"
   (onShow)="mostrarDetalles()"
   (onHide)="close()"
+  [closeOnEscape]="false"
   
 >
   <p-divider></p-divider>
@@ -23,22 +24,30 @@
       <p-table [value]="lecturas">
         <ng-template pTemplate="header" let-columns>
           <tr>
-            <th>ID </th>
+            <th></th>
             <th>Mes Lecturado</th>
             <th>lectura Registrada.</th>
             <th>Consumo Total.</th>
             <th>Estado del medidor registrada</th>
             <th>Estado de registro</th>
+            <th></th>
           </tr>
       </ng-template>
-      <ng-template pTemplate="body" let-product>
+      <ng-template pTemplate="body" let-product let-rowIndex="rowIndex">
           <tr>
-            <td>{{product.id}}</td>
+            <td>{{rowIndex +1}}</td>
             <td>{{product.mesLecturado}}</td>
             <td>{{product.lectura}}</td>
             <td>{{product.consumoTotal}}</td>
             <td>{{product.estadoMedidor || 'SIN REGISTRO DE ESTADO'}}</td>
             <td>{{product.estado}}</td>
+            <td>
+              <p-selectButton [options]="justifyOptions" optionLabel="icon" (onOptionClick)="options($event,product.id)">
+                <ng-template let-item pTemplate>
+                    <i [class]="item.icon"></i>
+                </ng-template>
+            </p-selectButton>
+            </td>
           </tr>
       </ng-template>
       </p-table>
@@ -55,3 +64,16 @@
     
   </div>
 </p-dialog>
+<app-detalles-lectura
+*ngIf="visibleLecturaModal"
+[visible]="visibleLecturaModal"
+(eventVisible)="visibleLecturaModal = $event"
+[idLectura]="idLectura"
+></app-detalles-lectura>
+<app-comprobante-lectura
+*ngIf="visibleComprobanteModal"
+[visible]="visibleComprobanteModal"
+(eventVisible)="visibleComprobanteModal = $event"
+[idLectura]="idLectura"
+
+></app-comprobante-lectura>

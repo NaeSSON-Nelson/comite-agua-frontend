@@ -24,3 +24,6 @@ export enum Nivel{
     contador=30,
     administrativo=50,
 }
+export enum Monedas{
+    Bs ="Bs"
+}

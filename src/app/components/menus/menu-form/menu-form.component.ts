@@ -263,8 +263,8 @@ export class MenuFormComponent {
   }
 
   estados = [
-    { name: 'Activo', value: 1 },
-    { name: 'Inactivo', value: 0 },
+    { name: 'Activo', value: 'ACTIVO' },
+    { name: 'Inactivo', value: 'INACTIVO' },
   ];
   getNombreErrors(campo: string) {
     const errors = this.menuForm.get(campo)?.errors;

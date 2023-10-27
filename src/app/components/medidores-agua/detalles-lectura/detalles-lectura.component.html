@@ -1,0 +1,24 @@
+<p-dialog header="{{'Detalles de la lectura registrada del Mes ' + lectura?.mesLecturado}}" [(visible)]="visible" [modal]="true" [style]="{ width: '50vw' }" [draggable]="false" [resizable]="false" (onHide)="eventVisible.emit(false)" [baseZIndex]="900">
+    <div class="card grid p-fluid m-3">
+        <div class="field col-12 md:col-6">
+            <label htmlFor="afiliado">Fecha Registrada</label>
+            <input pInputText id="afiliado" type="text" [disabled]="true" value="{{lectura?.created_at| date }}">
+        </div>
+        <div class="field col-12 md:col-6">
+            <label htmlFor="afiliado">Mes Lecturado</label>
+            <input pInputText id="afiliado" type="text" [disabled]="true" value="{{lectura?.mesLecturado| titlecase  }}">
+        </div>
+        <div class="field col-12 md:col-6">
+            <label htmlFor="afiliado">lectura</label>
+            <input pInputText id="afiliado" type="text" [disabled]="true" value="{{lectura?.lectura }} m3.">
+        </div>
+        <div class="field col-12 md:col-6">
+            <label htmlFor="afiliado">Estado del medidor encontrado a la fecha</label>
+            <input pInputText id="afiliado" type="text" [disabled]="true" value="{{lectura?.estadoMedidor || 'SIN NOVEDADES' }}">
+        </div>
+        <div class="field col-12 md:col-6">
+            <label htmlFor="afiliado">Consumo total calculado</label>
+            <input pInputText id="afiliado" type="text" [disabled]="true" value="{{lectura?.consumoTotal}} m3.">
+        </div>
+    </div>
+</p-dialog>

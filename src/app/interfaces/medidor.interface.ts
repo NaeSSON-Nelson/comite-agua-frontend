@@ -1,6 +1,7 @@
 import { Afiliado, Ubicacion } from "./afiliado.interface";
 import { ColumnsAlways } from "./always.interface";
 import { Barrio } from "./atributes.enum";
+import { ComprobantePorPago } from "./pagos-services.interface";
 
 
 export interface Medidor extends ColumnsAlways{
@@ -37,6 +38,7 @@ export interface MesLectura extends ColumnsAlways{
   consumoTotal?: number;
   estadoMedidor?: string;
   mesLecturado?:string;
+  lecturaPorPagar?:ComprobantePorPago;
 }
 export interface AnioSeguimientoLecturas extends ColumnsAlways{
   id?:number;

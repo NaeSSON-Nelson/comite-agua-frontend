@@ -1,0 +1,25 @@
+<p-dialog header="Header" [(visible)]="visibleModal" position="top" [style]="{ width: '50vw' }" [modal]="true" (onHide)="event.emit(false)">
+    <p>
+    <i>SE GENERARAN COMPROBANTES POR PAGAR DEL MES: : DEL AÑO : : A LOS USUARIOS QUE NO TIENE COMPROBANTE DEL MES</i>
+    </p>
+    <button pButton pRipple class="p-button-secondary" label="Generar reportes" (click)="showConfirm()"></button>
+</p-dialog>
+<p-toast position="bottom-center" key="confirm" [baseZIndex]="5000">
+    <ng-template let-message pTemplate="message">
+        <div class="flex flex-column" style="flex: 1">
+            <div class="text-center">
+                <i class="pi pi-exclamation-triangle" style="font-size: 3rem"></i>
+                <h4>{{message.summary}}</h4>
+                <p>{{message.detail}}</p>
+            </div>
+            <div class="grid p-fluid">
+                <div class="col-6">
+                    <button type="button" pButton (click)="onConfirm()" label="Sí" class="p-button-success"></button>
+                </div>
+                <div class="col-6">
+                    <button type="button" pButton label="No" class="p-button-secondary" (click)="onReject()"></button>
+                </div>
+            </div>
+        </div>
+    </ng-template>
+    </p-toast>

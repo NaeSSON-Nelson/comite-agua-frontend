@@ -10,7 +10,9 @@ import { Medidor, MesLectura } from 'src/app/interfaces';
 export class GestionPlanillasComponent {
 
   @Input()
-  visible=false;
+  visible:boolean=false;
+  visibleLecturaModal:boolean=false;
+  visibleComprobanteModal:boolean=false;
   @Input()
   medidor!:Medidor;
   planillas:any[]=[];
@@ -49,4 +51,25 @@ export class GestionPlanillasComponent {
       }
     })
   }
+  idLectura:number=0;
+  detallesLectura(idLectura:number){
+    this.idLectura=idLectura;
+    this.visibleLecturaModal=true;
+  }
+  comprobanteLectura(idLectura:number){
+    this.idLectura=idLectura;
+    this.visibleComprobanteModal=true;
+    
+  }
+  justifyOptions: any[] = [
+    { icon: 'pi pi-list', justify: 'Left' , },
+    { icon: 'pi pi-credit-card', justify: 'Right' },];
+    options($event:any,indice:number){
+      console.log($event);
+      if($event.index===0){
+        this.detallesLectura(indice);
+      }else if($event.index===1){
+        this.comprobanteLectura(indice);
+      }
+    }
 }

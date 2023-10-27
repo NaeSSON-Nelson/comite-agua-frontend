@@ -8,7 +8,9 @@ import { PrimeNgCrudModule } from 'src/app/prime-ng-crud/prime-ng-crud.module';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HelpersModule } from 'src/app/helpers/helpers.module';
 import { GestionPlanillasComponent } from './gestion-planillas/gestion-planillas.component';
-
+import { DetallesLecturaComponent } from './detalles-lectura/detalles-lectura.component';
+import { ComprobanteLecturaComponent } from './comprobante-lectura/comprobante-lectura.component';
+import { TabViewModule } from 'primeng/tabview';
 
 @NgModule({
   declarations: [
@@ -16,11 +18,13 @@ import { GestionPlanillasComponent } from './gestion-planillas/gestion-planillas
     MedidorFormComponent,
     AfiliadoMedidoresDetailsComponent,
     GestionPlanillasComponent,
+    DetallesLecturaComponent,
+    ComprobanteLecturaComponent,
   ],
   imports: [
     CommonModule,
     ReactiveFormsModule,
-
+    TabViewModule,
     MedidoresAguaRoutingModule,
     PrimeNgCrudModule,
     HelpersModule,
