@@ -26,7 +26,7 @@
         </div>
     </div>
     <div class="col-12" *ngIf="showLecturas">
-        <div class="card">
+        <div class="card" [formGroup]="lecturasForm">
             <div class="grid">
                 <h5 class="col">REGISTROS DE MEDIDORES POR BARRIO:
                     <p-dropdown [options]="commonAppService.barrios" optionLabel="name" optionValue="value" (onChange)="changeBarrio($event)"></p-dropdown>
@@ -34,7 +34,7 @@
                 <button pButton pRipple label="Generar reportes" (click)="visibleGenerar = true" class="p-button-primary"></button>
             </div>
             <p-divider></p-divider>
-            <div class="card">
+            <div class="card" *ngIf="data.length>0; else sinData">
                 <div class="m-2 flex flex-row justify-content-around flex-wrap">
                     <div class="flex align-items-center justify-content-center px-3"[style]="{'width':'25%'}"><h5>{{'AFILIADOS'}}</h5></div>
                     <div class="flex align-items-center justify-content-center px-3"[style]="{'width':'75%'}"><h5>{{'DETALLES DE MEDIDORES'}}</h5></div>
@@ -45,52 +45,59 @@
                         <div class="flex align-items-center justify-content-center font-bold">Nro Medidor.</div>
                         <div class="flex align-items-center justify-content-center font-bold">Lectura Marcada</div>
                         <div class="flex align-items-center justify-content-center font-bold">Estado del medidor.</div>
-                        <div class="flex align-items-center justify-content-center font-bold">Ultima Lectura.</div>
                     </div>
                 </div>
-                <div *ngFor="let customer of data" class="card m-2 flex flex-row justify-content-between  flex-wrap">
-                    <div class="flex align-items-center justify-content-center px-3">
+                <div *ngFor="let customer of data" class="card grid nested-grid">
+                    <div class="col-3 px-3">
                     <p class="fs-text">
                         {{customer.nombrePrimero | titlecase}} {{customer.nombreSegundo ||"" |titlecase}} {{customer.apellidoPrimero | titlecase}} {{customer.apellidoSegundo ||"" | titlecase}}
                     </p>
                     </div>
-                    <div class="flex overflow-hidden justify-content-between" [style]="{'min-width':'75%', 'padding':'18px 0 0 0'}" *ngFor="let medidor of customer.afiliado!.medidores">
-                        <div class="flex justify-content-start px-3"><p class="fs-text">{{medidor.ubicacion?.barrio}}</p></div>
-                        <div class="flex justify-content-start px-3"><p class="fs-text">{{medidor.nroMedidor}}</p></div>
-                        <div class="flex align-items-center justify-content-center px-3" *ngIf="medidor.planillas![0].lecturas[0]?.lectura; else sinLectura"><p class="fs-text">{{medidor.planillas![0].lecturas[0].lectura}}</p></div>
-                        <ng-template #sinLectura> <div class="field flex align-items-center justify-content-center px-3">
-                            
-                            <span class="p-float-label">
-                                <p-inputNumber
-                                id="lectura"
-                                (onBlur)="addLectura(medidor.planillas,$event)"
-                                ></p-inputNumber>
-                                <label for="lectura">Lectura</label>
-                            </span>
-                        </div></ng-template>
-                        <div class="flex align-items-center justify-content-center px-3" *ngIf="medidor.planillas![0].lecturas[0]?.lectura; else sinMedidor"> <p class="fs-text">{{medidor.planillas![0].lecturas[0].estadoMedidor || 'SIN NOVEDAD'}}</p></div>
-                        <ng-template #sinMedidor> 
-                            <div class="field flex align-items-center justify-content-center px-3">
+                    <div class="col-9" *ngIf="lecturados" formArrayName="registros" >
+                        <div class="grid" [style]="{'min-width':'75%', 'padding':'18px 0 0 0'}" *ngFor="let medidor of customer.afiliado!.medidores">
+                        <div class="col-3 px-3"><p class="fs-text">{{medidor.ubicacion?.barrio}}</p></div>
+                        <div class="col-3 px-3"><p class="fs-text">{{medidor.nroMedidor}}</p></div>
+                        <ng-container *ngFor="let lecturaForm of lecturasArray.controls; let i=index">
+                            <ng-container *ngIf="lecturaForm.get('planilla')?.value.id === medidor.planillas![0].id" [formGroupName]="i">
+                            <div class="field col-3 align-items-center justify-content-center px-3">
+                                <span class="p-float-label">
+                                    <p-inputNumber
+                                    id="lectura"
+                                    placeholder="Anterior lectura: {{medidor.ultimaLectura}}"
+                                    formControlName="lectura"
+                                    [ngClass]="inputArrayValid('lectura',i)"
+                                    ></p-inputNumber>
+                                    <label for="lectura">Lectura</label>
+                                    <small
+                                            id="longitud-help"
+                                            class="p-error block"
+                                            *ngIf="campoArrayValido('lectura',i)"
+                                            >{{ getLecturaErrors("lectura",i) }}
+                                            </small>
+                                </span>
+                            </div>
+                            <div class="field col-3 px-3">
                                 <span class="p-float-label">
                                     <input
                                     type="text"
                                     id="estadoMedidor"
                                     pInputText
-                                    (change)="addLectura(medidor,$event)"
+                                    formControlName="estadoMedidor"
+                                    [ngClass]="inputArrayValid('estadoMedidor',i)"
+                                    (change)="addRequiredLectura('estadoMedidor',i)"
                                     />
                                     <label for="estadoMedidor">Estado medidor (Opcional)</label>
+                                    <small
+                                            id="longitud-help"
+                                            class="p-error block"
+                                            *ngIf="campoArrayValido('estadoMedidor',i)"
+                                            >{{ getEstadoMedidorErrors("estadoMedidor",i) }}
+                                            </small>
                                 </span>
                             </div>
-                        </ng-template>
-                        <div class="flex justify-content-start px-4">
-                            <div class="w-full">
-                                <p class="fs-text">
-                                    {{medidor.ultimaLectura}}
-                                </p>
-                            </div>
-                        </div>
-                        <!-- <div class="flex justify-content-start px-3">{{medidor.planillas![0].gestion}}</div> -->
-                        
+                            </ng-container>
+                        </ng-container>
+                    </div>
                     </div>
                 
                 </div>
@@ -107,6 +114,10 @@
                 </div> 
 
             </div>
+            <ng-template #sinData>
+                <p><i>NO HAY AFILIADOS DEL BARRIO {{lecturasOptions.barrio}} SIN REGISTRO DE LECTURA DEL MES {{lecturasOptions.mes}}</i></p>
+            </ng-template>
+            
                 <!-- <div class="col-12 grid">
                         <div class="col-3 border-1">Afiliado</div>
                         <div class="col-3 border-1">Cedula de Identidad</div>
@@ -135,5 +146,6 @@
 <app-modal-reportes
 *ngIf="visibleGenerar"
 [visibleModal]="visibleGenerar"
+[lectuaOptions]="lecturasOptions"
 (event)="visibleGenerar = $event"
 ></app-modal-reportes>

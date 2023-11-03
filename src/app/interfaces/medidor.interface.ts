@@ -38,7 +38,7 @@ export interface MesLectura extends ColumnsAlways{
   consumoTotal?: number;
   estadoMedidor?: string;
   mesLecturado?:string;
-  lecturaPorPagar?:ComprobantePorPago;
+  pagar?:ComprobantePorPago;
 }
 export interface AnioSeguimientoLecturas extends ColumnsAlways{
   id?:number;
@@ -67,7 +67,7 @@ export interface lecturasForm{
 export interface lecturasRegisterForm{
   mes:string;
   anio:number;
-  lecturas: lecturasForm[];
+  registros: lecturasForm[];
 }
 export interface Gestion{
   anio: number|null;

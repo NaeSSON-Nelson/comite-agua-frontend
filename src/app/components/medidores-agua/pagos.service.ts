@@ -1,7 +1,7 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Subject, catchError, map, of, tap } from 'rxjs';
-import { DataResult, HttpResponseApi, HttpResponseApiArray, MesLectura, PaginatorFind, Perfil, ResponseResult } from 'src/app/interfaces';
+import { DataResult, HttpResponseApi, HttpResponseApiArray, LecturasOptions, MesLectura, PaginatorFind, Perfil, ResponseResult } from 'src/app/interfaces';
 import { ComprobantePorPago } from 'src/app/interfaces/pagos-services.interface';
 import { environment } from 'src/environments/environment';
 
@@ -11,6 +11,7 @@ import { environment } from 'src/environments/environment';
 export class PagosService {
   private URL_pagos:string = environment.apiURrl +'/pagos-de-servicio';
   private URL_comprobantes_pagos:string = this.URL_pagos +'/comprobantes';
+  private URL_lecturas:string =environment.apiURrl+'/medidores-agua/lecturas';
   private headers = new HttpHeaders().set(
     'authorization',
     `Bearer ${localStorage.getItem('token') || ''}`
@@ -24,8 +25,16 @@ export class PagosService {
       map(res=>res.data!)
     )
   }
+  obtenerAfiliadosSinTarifa(parameters:LecturasOptions){
+    return this.http.get<HttpResponseApi<Perfil[]>>(`${this.URL_lecturas}/comprobantes/perfiles`,{
+      headers: this.headers,
+      params:{gestion:parameters.gestion!,mes:parameters.mes!}
+    }).pipe(
+      map(res=>res.data!)
+    )
+  }
   generarComprobantes(){
-    return this.http.get<HttpResponseApi<number>>(`${this.URL_comprobantes_pagos}/generar`,{headers:this.headers})
+    return this.http.get<HttpResponseApi<ComprobantePorPago[]>>(`${this.URL_comprobantes_pagos}/generar`,{headers:this.headers})
             .pipe(
               map(res=>res.data!)
             )

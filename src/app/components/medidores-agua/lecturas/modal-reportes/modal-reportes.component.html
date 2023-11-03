@@ -1,7 +1,42 @@
-<p-dialog header="Header" [(visible)]="visibleModal" position="top" [style]="{ width: '50vw' }" [modal]="true" (onHide)="event.emit(false)">
+<p-dialog header="GENERAR TARIFAS DE PAGOS" [(visible)]="visibleModal" position="center" [style]="{ width: '75vw' }" [modal]="true" (onHide)="event.emit(false)" (onShow)="showAfiliados()">
     <p>
-    <i>SE GENERARAN COMPROBANTES POR PAGAR DEL MES: : DEL AÑO : : A LOS USUARIOS QUE NO TIENE COMPROBANTE DEL MES</i>
-    </p>
+    <i>SE GENERARAN TARIFAS POR PAGAR DEL MES: : DEL AÑO : : A LOS USUARIOS QUE NO TIENE COMPROBANTE DEL MES</i>
+    <i class="pi pi-spin pi-spinner" style="font-size: 2rem" *ngIf="loading; else informacion"></i>
+</p>
+    <ng-template #informacion>
+        <div class="card">
+            
+        <div class="grid" *ngIf="perfiles.length>0; else sinInfo">
+            <div class="col-12 grid">
+                <div class="col">AFILIADO</div>
+                <div class="col">NRO. MEDIDOR</div>
+                <div class="col">BARRIO MEDIDOR.</div>
+                <div class="col">LECTURA DEL MES</div>
+                <div class="col">ESTADO MEDIDOR</div>
+            </div>
+            <div class="col-12" *ngFor="let customer of perfiles;let i=index">
+                <div class="card grid nested-grid">
+                    <div class="col-3 ">
+                        <p class="fs-text">
+                            {{customer.nombrePrimero | titlecase}} {{customer.nombreSegundo ||"" |titlecase}} {{customer.apellidoPrimero | titlecase}} {{customer.apellidoSegundo ||"" | titlecase}}
+                        </p>
+                    </div>
+                    <div class="col-9">
+                        <div class="grid" *ngFor="let medidor of customer.afiliado!.medidores;let j=index">
+                            <div class="col-3 px-3"><p class="fs-text">{{medidor.nroMedidor}}</p></div>
+                            <div class="col-3 px-3"><p class="fs-text">{{medidor.ubicacion?.barrio}}</p></div>
+                            <div class="col-3 px-3"><p class="fs-text">{{medidor.planillas![0].lecturas![0].lectura}}</p></div>
+                            <div class="col-3 px-3"><p class="fs-text">{{medidor.planillas![0].lecturas![0].estadoMedidor}}</p></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <ng-template #sinInfo>
+            <p>NO HAY AFILIADOS SIN TARIFAS POR GENERAR DEL MES: ....</p>
+        </ng-template>
+        
+    </div></ng-template>
     <button pButton pRipple class="p-button-secondary" label="Generar reportes" (click)="showConfirm()"></button>
 </p-dialog>
 <p-toast position="bottom-center" key="confirm" [baseZIndex]="5000">

@@ -1,6 +1,8 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { PagosService } from '../../pagos.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
+import { LecturasService } from '../lecturas.service';
+import { LecturasOptions, Perfil } from 'src/app/interfaces';
 
 @Component({
   selector: 'app-modal-reportes',
@@ -13,14 +15,26 @@ export class ModalReportesComponent {
   @Input()
   visibleModal:boolean=false;
   visible:boolean=false;
+  @Input()
+  lectuaOptions:LecturasOptions={
+    gestion:new Date().getFullYear(),
+    mes:'ENERO'
+  };
+  perfiles:Perfil[]=[];
+  loading:boolean=true;
   @Output()
   event:EventEmitter<boolean> = new EventEmitter<boolean>()
   constructor(private pagosService:PagosService,
+    private lecturasService:LecturasService,
     private readonly messageService: MessageService,
     private readonly confirmationService:ConfirmationService,){}
   total=0;
-  generar(){
-    
+  showAfiliados(){
+    this.pagosService.obtenerAfiliadosSinTarifa(this.lectuaOptions).subscribe(res=>{
+      this.perfiles=res;
+      // console.log(res);
+      this.loading=false;
+    })
   }
   showConfirm() {
     if (!this.visible) {
@@ -32,8 +46,8 @@ export class ModalReportesComponent {
     this.messageService.clear('confirm');
     this.visible = false;
     this.pagosService.generarComprobantes().subscribe(res=>{
-      this.total=res;
-      if(res===0){
+      this.total=res.length;
+      if(res.length===0){
         this.messageService.add({
           severity: 'info',
           summary: 'Respuesta del servidor',

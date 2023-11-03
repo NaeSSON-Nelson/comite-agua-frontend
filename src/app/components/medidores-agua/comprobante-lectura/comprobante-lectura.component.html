@@ -14,26 +14,26 @@
         <div class="col-12" >
             <p-tabView>
                 <p-tabPanel header="Comprobante" *ngIf="lectura">
-                    <div class="grid" *ngIf="lectura.lecturaPorPagar; else sinComprobante">
+                    <div class="grid" *ngIf="lectura.pagar; else sinComprobante">
                         <div class="col-12 md:col-6">
                             <div class="text-900 text-xl mb-2 font-medium text-right">Fecha de Comprobante emitida</div>
-                            <p class="text-700 line-height-3 text-right">{{lectura.lecturaPorPagar.created_at | date: 'dd/mm/yyyy'}}</p>
+                            <p class="text-700 line-height-3 text-right">{{lectura.pagar.created_at | date: 'dd/mm/yyyy'}}</p>
                         </div>
                         <div class="col-12 md:col-6">
                             <div class="text-900 text-xl mb-2 font-medium text-right">Monto de Pago</div>
-                            <p class="text-700 line-height-3 text-right">{{lectura.lecturaPorPagar.monto}} {{lectura.lecturaPorPagar.moneda}}</p>
+                            <p class="text-700 line-height-3 text-right">{{lectura.pagar.monto}} {{lectura.pagar.moneda}}</p>
                         </div>
                         <div class="col-12 md:col-6">
                             <div class="text-900 text-xl mb-2 font-medium text-right">Motivo del pago</div>
-                            <p class="text-700 line-height-3 text-right">{{lectura.lecturaPorPagar.motivo}}</p>
+                            <p class="text-700 line-height-3 text-right">{{lectura.pagar.motivo}}</p>
                         </div>
                         <div class="col-12 md:col-6">
                             <div class="text-900 text-xl mb-2 font-medium text-right">Estado del pago</div>
-                            <p class="text-700 line-height-3 text-right">{{lectura.lecturaPorPagar.estadoComprobate}}</p>
+                            <p class="text-700 line-height-3 text-right">{{lectura.pagar.estadoComprobate}}</p>
                         </div>
                         <div class="col-12 md:col-6">
                             <div class="text-900 text-xl mb-2 font-medium text-right">Metodo de creacion del registro</div>
-                            <p class="text-700 line-height-3 text-right">{{lectura.lecturaPorPagar.metodoRegistro}}</p>
+                            <p class="text-700 line-height-3 text-right">{{lectura.pagar.metodoRegistro}}</p>
                         </div>
                     </div>
                     <ng-template #sinComprobante>

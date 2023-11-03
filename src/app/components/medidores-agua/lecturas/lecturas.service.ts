@@ -35,7 +35,7 @@ export class LecturasService {
     return this._anioSeguimiento$.asObservable();
   }
   AllPerfilesLecturas(parameters:LecturasOptions){
-    console.log(parameters);
+    // console.log(parameters);
     // let { size, ...dataPaginator } = paginator;
     return this.http
       .get<HttpResponseApiArray<Perfil>>(`${this.URL_lecturas}/perfiles`, {
