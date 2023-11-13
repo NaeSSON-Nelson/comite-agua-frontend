@@ -6,54 +6,23 @@ import { validarTokenGuard } from './guards/validar-token.guard';
 
 const routes: Routes = [
   {
-    path: '',
-    component: LayoutComponent,
-    // canActivateChild:[validarTokenGuard],
+    path: '',component: LayoutComponent,
     children: [  
-      {
-        path: 'auth',
-        loadChildren: () =>import('./auth/auth-routing.module').then((m) => m.AuthRoutingModule),
-      },
-      {
-        path:'',
-        canActivate:[validarTokenGuard],
-        children:[
-          {
-            path: 'dashboard',
-            loadChildren: () =>import('./dashboard/dashboard-routing.module').then((m) => m.DashboardRoutingModule),
-            // canActivate:[validarTokenGuard],
-          },
-          {
-            path: 'perfiles',
-            loadChildren: () =>import('./components/perfiles/perfiles-routing.module').then((m) => m.PerfilesRoutingModule),
-            // canActivate:[validarTokenGuard],
-          },
-          {
-            path: 'menus',
-            loadChildren: () =>import('./components/menus/menus-routing.module').then((m) => m.MenusRoutingModule),
-            // canActivate:[validarTokenGuard],
-          },
-          {
-            path: 'items-menu',
-            loadChildren: () =>import('./components/menus/items-menu/items-menu-routing.module').then((m) => m.ItemsMenuRoutingModule),
-            // canActivate:[validarTokenGuard],
-          },
-          {
-            path: 'roles',
-            loadChildren: () =>import('./components/roles/roles-routing.module').then((m) => m.RolesRoutingModule),
-            // canActivate:[validarTokenGuard],
-          },
-          {
-            path: 'medidores-agua',
-            loadChildren: () =>import('./components/medidores-agua/medidores-agua-routing.module').then((m) => m.MedidoresAguaRoutingModule),
-            // canActivate:[validarTokenGuard],
-          },
-          {
-            path:'lecturas',
-            loadChildren:()=>import('./components/medidores-agua/lecturas/lecturas-routing.module').then((m)=>m.LecturasRoutingModule)
-          },
-        ]
-      },
+      {path:'',canActivate:[validarTokenGuard],
+      children:[
+        {path: 'perfiles',loadChildren: () =>import('./components/perfiles/perfiles-routing.module').then((m) => m.PerfilesRoutingModule),},
+        {path: 'menus',loadChildren: () =>import('./components/menus/menus-routing.module').then((m) => m.MenusRoutingModule),},
+        {path: 'items-menu',loadChildren: () =>import('./components/menus/items-menu/items-menu-routing.module').then((m) => m.ItemsMenuRoutingModule),},
+        {path: 'roles',loadChildren: () =>import('./components/roles/roles-routing.module').then((m) => m.RolesRoutingModule),},
+        {path: 'medidores-agua',loadChildren: () =>import('./components/medidores-agua/medidores-agua-routing.module').then((m) => m.MedidoresAguaRoutingModule),},
+        {path:'lecturas',loadChildren:()=>import('./components/medidores-agua/lecturas/lecturas-routing.module').then((m)=>m.LecturasRoutingModule)},
+        {path:'user',children:[
+          {path: '',loadChildren: () =>import('./components/usuarios-funciones/usuarios-funciones-routing.module').then((m) => m.UsuariosFuncionesRoutingModule),},
+          {path: 'dashboard',loadChildren: () =>import('./dashboard/dashboard-routing.module').then((m) => m.DashboardRoutingModule),},
+        ]},
+      ]
+    },
+    {path: 'auth',loadChildren: () =>import('./auth/auth-routing.module').then((m) => m.AuthRoutingModule),},
     ],
   },
   {

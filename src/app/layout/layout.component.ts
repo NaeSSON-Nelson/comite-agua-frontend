@@ -19,9 +19,14 @@ export class LayoutComponent {
       console.log('respuesta desde usuario',res);
       console.log('respuesta:',res);
       this.usuario = res;
-      this.roles=res.roles!.map(rol=>{
-       return{name:rol.nombre,value:rol.id};
-      })
+      console.log(this.usuario);
+      if(res){
+        this.roles=res.roles!.map(rol=>{
+          return{name:rol.nombre,value:rol.id};
+        })
+      }else{
+
+      }
     });
     
   }

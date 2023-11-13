@@ -12,13 +12,13 @@ import { HttpResponseApi, Menu, ResponseResult, Role } from '../interfaces';
   providedIn: 'root',
 })
 export class AuthService {
-  private _usuario$: Subject<Usuario>;
+  private _usuario$: Subject<Usuario|null>;
   private _menusUser$:Subject<Menu[]>;
   constructor(
     public layoutService: LayoutService,
     private readonly http: HttpClient
   ) {
-    this._usuario$ = new Subject<Usuario>();
+    this._usuario$ = new Subject<Usuario|null>();
     this._menusUser$= new Subject<Menu[]>();
   }
 
@@ -68,9 +68,13 @@ export class AuthService {
       }),
       map((resp) => resp.OK),
       catchError((err) => of(false))
-    );
+      );
+    }
+  logout(){
+      localStorage.removeItem('token')
+      this._usuario$.next(null);
+      
   }
-
   //TODO: UN GUARD QUE VALIDE EL ACCESO AL RECURSO
   // validarAcceso(){
   //   const headers = new HttpHeaders().set(

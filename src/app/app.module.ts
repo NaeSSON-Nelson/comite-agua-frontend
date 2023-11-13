@@ -21,6 +21,7 @@ import { MedidoresAguaModule } from './components/medidores-agua/medidores-agua.
 import { ForbiddenComponent } from './common/forbidden/forbidden.component';
 import { PerfilesModule } from './components/perfiles/perfiles.module';
 import { LecturasModule } from './components/medidores-agua/lecturas/lecturas.module';
+import { UsuariosFuncionesModule } from './components/usuarios-funciones/usuarios-funciones.module';
 
 
 
@@ -46,7 +47,7 @@ import { LecturasModule } from './components/medidores-agua/lecturas/lecturas.mo
     // MedidoresAguaModule,
     // PerfilesModule,
     // LecturasModule,
-    // PagoServiciosModule,
+    // UsuariosFuncionesModule,
   ],
   providers: [
     MessageService,

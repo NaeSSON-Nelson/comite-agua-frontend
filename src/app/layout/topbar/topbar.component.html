@@ -21,10 +21,15 @@
                 <span>Profile</span>
             </button>
             <p >Usuario:{{usuario.username}}</p>
-            <button class="p-link layout-topbar-button" [routerLink]="'/dashboard'">
+            <p-overlayPanel #op>
+                <ng-template pTemplate="content">
+                    <p-panelMenu [model]="itemsUser" [style]="{'width':'250px'}"></p-panelMenu>
+                </ng-template>
+            </p-overlayPanel>
+            <button class="p-link layout-topbar-button"
+                (click)="op.toggle($event)"    >
                 <i class="pi pi-cog"></i>
-                <span>Roles</span>
-            </button>
+            </button> 
             <p-dropdown [options]="roles"
             optionLabel="name"
             (onChange)="rolChange($event)"
