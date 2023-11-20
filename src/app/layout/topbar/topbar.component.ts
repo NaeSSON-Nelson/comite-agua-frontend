@@ -15,7 +15,7 @@ export class TopbarComponent {
   usuario: Usuario|null=null;
   items: MenuItem[]=[];
   itemsUser:MenuItem[]=[
-    {label:'Panel de usuario', routerLink:'/user/dashboard'},
+    {label:'Panel de usuario', routerLink:'/user/perfil'},
     {label:'Cerrar sesion',command:(event)=>{
       this.authService.logout()
       this.router.navigate(['']);

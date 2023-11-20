@@ -19,6 +19,6 @@ export interface AfiliadoForm{
 export interface Ubicacion{
     barrio?          :Barrio
     numeroVivienda?  :string;
-    longitud?        :string;
-    latitud?         :string;
+    longitud?        :any;
+    latitud?         :any;
 }

@@ -1,0 +1,26 @@
+<p-dialog header="{{'Detalles de la lectura registrada del Mes ' + lectura?.mesLecturado}}" [(visible)]="visible" [modal]="true" [style]="{ width: '50vw' }" [draggable]="false" [resizable]="false" (onHide)="eventVisible.emit(false)" [baseZIndex]="900">
+    <h4>LECTURA</h4>
+    <div class="card grid" *ngIf="lectura">
+        <div class="sm:col-6 col-12">
+            <label class="col-12 mb-2 md:col-2 md:mb-0 text-700 text-lg"> <b>LECTURA REGISTRADA: </b></label>
+            <div class="col-12 md:col-10">
+                <p class="text-900 text-left text-lg">{{lectura.lectura}} m3.</p>
+            </div>
+        </div>
+        <div class="sm:col-6 col-12">
+            <label class="col-12 mb-2 md:col-2 md:mb-0 text-700 text-lg"> <b>M3. UTILIZADOS: </b></label>
+            <div class="col-12 md:col-10">
+                <p class="text-900 text-left text-lg">{{lectura.consumoTotal}} m3.</p>
+            </div>
+        </div>
+        <div class="sm:col-6 col-12">
+            <label class="col-12 mb-2 md:col-2 md:mb-0 text-700 text-lg"> <b>ESTADO DEL MEDIDOR: </b></label>
+            <div class="col-12 md:col-10">
+                <p class="text-900 text-left text-lg">{{lectura.estadoMedidor || 'SIN ESTADO REGISTRADO'}}</p>
+            </div>
+        </div>
+    </div>
+    <h4>DETALLES DE PAGO</h4>
+    <div class="card grid">
+    </div>
+</p-dialog>

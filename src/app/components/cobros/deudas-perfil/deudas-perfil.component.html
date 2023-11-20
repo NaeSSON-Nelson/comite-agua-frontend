@@ -1,0 +1,68 @@
+<p-dialog header="Perfil:" [(visible)]="visible" [modal]="true" [style]="{ width: '90vw' }" [draggable]="false" [resizable]="false" (onHide)="eventVisible.emit(false)" [baseZIndex]="900">
+    <div class="card m-3">
+        <div class=" col-12 grid">
+            <ng-container *ngIf="perfil">
+            <div class="col-12 md:col-6">
+                    <div class="text-900 text-xl mb-2 font-medium text-right">AFILIADO</div>
+                    <p class="text-700 line-height-3 text-right">{{perfil.nombrePrimero | titlecase}} {{perfil.nombreSegundo ||'' |titlecase}} {{perfil.apellidoPrimero | titlecase}} {{perfil.apellidoSegundo ||'' | titlecase}}</p>        
+                </div>
+                <div class="col-12 md:col-3">
+                    <div class="text-900 text-xl mb-2 font-medium text-right">Cedula de Identidad</div>
+                    <p class="text-700 line-height-3 text-right">{{perfil.CI}}</p>
+                </div>
+                <div class="col-12 md:col-3">
+                    <div class="text-900 text-xl mb-2 font-medium text-right">BARRIO</div>
+                    <p class="text-700 line-height-3 text-right">{{perfil.afiliado?.ubicacion?.barrio}}</p>
+                </div>
+            </ng-container>
+        </div>
+        <div class="col-12" >
+            <i class="pi pi-spin pi-spinner" style="font-size: 2rem" *ngIf="loading"></i>
+            <p-divider></p-divider>
+            <ng-container *ngIf="perfil">
+                <p-treeTable [value]="medidoresDeudas" (onNodeSelect)="addSelect($event)" (onNodeUnselect)="dropSelected($event)" [columns]="cols" selectionMode="checkbox"  selectionMode="multiple" [(selection)]="selectedNodes" [scrollable]="true" [tableStyle]="{'min-width':'50rem'}" >
+                    <ng-template pTemplate="caption">
+                        <div class="flex">
+                            <p-treeTableHeaderCheckbox ></p-treeTableHeaderCheckbox>
+                            <span class="ml-2">Seleccionar todos</span>
+                        </div>
+                    </ng-template>
+                    <ng-template pTemplate="header" let-columns>
+                        <tr>
+                            <th *ngFor="let col of columns">
+                                {{ col.header }}
+                            </th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-rowNode let-rowData="rowData" let-columns="columns">
+                        <tr>
+                            <td *ngFor="let col of columns; let i = index">
+                                <p-treeTableToggler [rowNode]="rowNode" *ngIf="i === 0" ></p-treeTableToggler>
+                                <p-treeTableCheckbox [value]="rowNode" *ngIf="i === 0" ></p-treeTableCheckbox>
+                                {{ rowData[col.field] }}
+                            </td>
+                        </tr>
+                    </ng-template>
+                </p-treeTable>
+            </ng-container>
+            
+            
+        </div>
+        
+        <div class="col-12 grid">
+            <button pButton pRipple label="Registrar Pagos" [disabled]="comprobantesPagar.length===0" class="p-button-success" (click)="registrarDeudas()"></button>
+            <div class="col-12 md:col-3">
+                <div class="text-900 text-xl mb-2 font-medium text-right">TOTAL POR PAGAR:</div>
+                <p class="text-700 line-height-3 text-right">{{total}} Bs.</p>
+            </div>
+        </div>
+    </div>
+ </p-dialog>
+ <app-form-register-deudas
+ *ngIf="visiblePagar"
+ [porPagar]="comprobantesPagar"
+ [visible]="visiblePagar"
+ [idPerfil]="perfil?.afiliado?.id || -1"
+ [totalPagar]="total"
+ (eventVisible)="closeModalForm($event)"
+ ></app-form-register-deudas>

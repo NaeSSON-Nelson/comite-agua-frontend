@@ -1,0 +1,80 @@
+<div class="grid">
+    <div class="col-12">
+        <div class="card px-6 py-6">
+            <p-table #dt [value]="data"    [rowHover]="true" >
+                <ng-template pTemplate="caption">
+                    <form class="flex flex-column md:flex-row md:justify-content-between md:align-items-center"
+                    [formGroup]="searchForm"
+                    >
+                        <h5 class="m-0">{{titleTable}}</h5>
+                        <span class="block mt-2 md:mt-0 p-input-icon-left">
+                            <i class="pi pi-search"></i>
+                            <input pInputText type="text" inputId="termino"  placeholder="Search..." formControlName="termino" class="w-full sm:w-auto" (input)="search($event)" />
+                            <small
+                                id="termino-help"
+                                class="p-error block"
+                                *ngIf="campoValido('termino')"
+                                >{{ getTerminoErrors("termino") }}
+                            </small>
+                        </span>
+                    </form>
+                </ng-template>
+                <ng-template pTemplate="header">
+                    <tr>
+                        
+                        <th >Code</th>
+                        <th >Nombres</th>
+                        <th>Cedula de Identidad</th>
+                        <th >Contacto</th>
+                        <th >Barrio</th>
+                        <th >Estado</th>
+                        <th></th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-customer>
+                    <tr >
+                        <td style="width:14%; min-width:10rem;"><span class="p-column-title">Code</span>
+                            {{customer.id}}
+                        </td>
+                        <td style="width:14%; min-width:10rem;">
+                            <span class="p-column-title">Nombres</span>
+                            {{customer.nombrePrimero | titlecase}} {{customer.nombreSegundo ||"" |titlecase}} {{customer.apellidoPrimero | titlecase}} {{customer.apellidoSegundo ||"" | titlecase}} 
+                        </td>
+                        <td style="width:14%; min-width:10rem;"><span class="p-column-title">Ci</span>
+                            <span class="p-column-title">Afiliado</span>
+                            {{customer.CI}}
+                        </td>
+                        <td style="width:14%; min-width:8rem;">
+                            <span class="p-column-title">contactos</span>
+                           {{'SIN CONTACTOS'}}
+                        </td>
+                        <td style="width:14%; min-width:10rem;">
+                            <span class="p-column-title">barrio</span>
+                            {{customer.barrio}}
+                        </td>
+                        <td style="width:14%; min-width: 10rem;"><span class="p-column-title">ESTADO</span>
+                            <span [class]="'product-badge'">{{customer.estado}}</span>
+                        </td>
+                        <td  style="width:14%; min-width: 10rem;">
+                            <div class="flex p-fluid">
+                                <button pButton pRipple icon="pi pi-plus" label="mas..." class="p-button-rounded p-button-info mr-2"
+                                (click)="dataDetail(customer.id)"
+                                ></button>
+                                
+                            </div>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+    </div>
+    <div class="col-12 card flex justify-content-center" *ngIf="data.length>0" >
+        <p-paginator (onPageChange)="onPageChange($event)" [first]="dataPaginator.offset ||0" [totalRecords]="dataPaginator.size!" [rows]="dataPaginator.limit||10" [rowsPerPageOptions]="[10, 20, 50]"></p-paginator>
+    </div>
+</div>
+<app-deudas-perfil
+*ngIf="idPerfil>0"
+[idPerfil]="idPerfil"
+[visible]="visible"
+(eventVisible)="closeModal($event)"
+></app-deudas-perfil>

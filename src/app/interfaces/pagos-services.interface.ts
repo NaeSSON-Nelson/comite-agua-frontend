@@ -23,3 +23,9 @@ export interface ComprobantePago{
     entidadPago:string;
     nroRecibo:string;
 }
+export interface PagosForm{
+    titular:string;
+    ciTitular:string;
+    perfilId:number;
+    comprobantes:number[];
+}

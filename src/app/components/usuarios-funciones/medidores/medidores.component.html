@@ -1,19 +1,118 @@
 <div class="card">
-    <div class="grid">
+    <p-dropdown [options]="selectMedidores" class="m-5" optionLabel="nroMedidor" optionValue="nroMedidor" (onChange)="obtenerMedidor($event)" placeholder="Seleccione su medidor" emptyMessage="Sin medidores"></p-dropdown>
+    <div class="card col-12 grid m-3" *ngIf="medidor">
         <div class="col-12">
-            <div class="col-3">
-                <span class="p-float-label">
-                    <!-- <p-dropdown
-                    [options]="perfil.afiliado?.medidores"
-                    placeholder="Seleccione un medidor"
-                    optionLabel="nroMedidor"
-                    inputId="float-label"
-                    (onChange)="selectMedidor($event)"
-                    ></p-dropdown>
-                    <label for="float-label">Seleccione un medidor</label> -->
-                </span>
+            <h4>MEDIDOR {{medidor.nroMedidor}}</h4>
+            <p-divider></p-divider>
+            <div class="grid">
+                <div class="col-12"><h5>DATOS DEL MEDIDOR</h5> <p-divider></p-divider></div>
+                <div class="col-12 md:col-7 md:col-offset-3 grid col-offset-0" >
+                    <div class="sm:col-6 col-12">
+                        <label class="col-12 mb-2 md:col-2 md:mb-0 text-700 text-lg"> <b>NRO MEDIDOR: </b></label>
+                        <div class="col-12 md:col-10">
+                            <p class="text-900 text-left text-lg">{{medidor.nroMedidor | uppercase}}</p>
+                        </div>
+                    </div>
+                    <div class="sm:col-6 col-12">
+                        <label class="col-12 mb-2 md:col-2 md:mb-0 text-700 text-lg"> <b>MARCA: </b></label>
+                        <div class="col-12 md:col-10">
+                            <p class="text-900 text-left text-lg">{{medidor.marca | uppercase}}</p>
+                        </div>
+                    </div>
+                    <div class="sm:col-6 col-12">
+                        <label class="col-12 mb-2 md:col-2 md:mb-0 text-700 text-lg"> <b>F. INSTALACIÓN: </b></label>
+                        <div class="col-12 md:col-10">
+                            <p class="text-900 text-left text-lg">{{medidor.fechaInstalacion | date : 'dd-MM-yyyy'}}</p>
+                        </div>
+                    </div>
+                    <div class="sm:col-6 col-12">
+                        <label class="col-12 mb-2 md:col-2 md:mb-0 text-700 text-lg"> <b>LECTURA DE INSTALACION: </b></label>
+                        <div class="col-12 md:col-10">
+                            <p class="text-900 text-left text-lg">{{medidor.lecturaInicial }} m3.</p>
+                        </div>
+                    </div>
+                    <div class="sm:col-6 col-12">
+                        <label class="col-12 mb-2 md:col-2 md:mb-0 text-700 text-lg"> <b>LECTURA REGISTRA: </b></label>
+                        <div class="col-12 md:col-10">
+                            <p class="text-900 text-left text-lg">{{medidor.ultimaLectura }} m3.</p>
+                        </div>
+                    </div>
+                    <div class="sm:col-6 col-12">
+                        <label class="col-12 mb-2 md:col-2 md:mb-0 text-700 text-lg"> <b>NRO MEDIDOR: </b></label>
+                        <div class="col-12 md:col-10">
+                            <p class="text-900 text-left text-lg">{{medidor.nroMedidor | uppercase}}</p>
+                        </div>
+                    </div>
+                    <div class="sm:col-6 col-12">
+                        <label class="col-12 mb-2 md:col-2 md:mb-0 text-700 text-lg"> <b>NRO MEDIDOR: </b></label>
+                        <div class="col-12 md:col-10">
+                            <p class="text-900 text-left text-lg">{{medidor.nroMedidor | uppercase}}</p>
+                        </div>
+                    </div>
+                    <div class="sm:col-6 col-12">
+                        <label class="col-12 mb-2 md:col-2 md:mb-0 text-700 text-lg"> <b>NRO MEDIDOR: </b></label>
+                        <div class="col-12 md:col-10">
+                            <p class="text-900 text-left text-lg">{{medidor.nroMedidor | uppercase}}</p>
+                        </div>
+                    </div>
+                    <div class="sm:col-6 col-12">
+                        <label class="col-12 mb-2 md:col-2 md:mb-0 text-700 text-lg"> <b>NRO MEDIDOR: </b></label>
+                        <div class="col-12 md:col-10">
+                            <p class="text-900 text-left text-lg">{{medidor.nroMedidor | uppercase}}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12"><h5>LECTURAS REGISTRAS DEL MEDIDOR</h5><p-divider></p-divider><p-dropdown [options]="planillasSelect" placeholder="Selecte Planilla" (onChange)="obtenerLecturas($event)"></p-dropdown></div>
+                <div class="col-12 grid" *ngIf="planillaSelected">
+                    <div class="col-12" *ngIf="planillaSelected.lecturas.length>0; else sinLecturas">
+                        <h5>REGISTROS DE LECTURA DEL MEDIDOR, GESTION {{planillaSelected.gestion}}</h5>
+                        <p-divider></p-divider>
+                        <p-table [value]="planillaSelected.lecturas">
+                          <ng-template pTemplate="header" let-columns>
+                            <tr>
+                              <th class="text-center text-xl"></th>
+                              <th class="text-center text-xl">Mes Lecturado</th>
+                              <th class="text-center text-xl">lectura Registrada. (m3)</th>
+                              <th class="text-center text-xl">Consumo Total. (m3)</th>
+                              <th class="text-center text-xl">Tarifa de pago (Bs)</th>
+                              <th class="text-center text-xl">Tarifa pagada</th>
+                              <th></th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-product let-rowIndex="rowIndex">
+                            <tr>
+                              <td class="text-center text-lg">{{rowIndex +1}}</td>
+                              <td class="text-center text-lg">{{product.mesLecturado}}</td>
+                              <td class="text-center text-lg">{{product.lectura}} m3.</td>
+                              <td class="text-center text-lg">{{product.consumoTotal}} m3.</td>
+                              <td class="text-center text-lg">{{product.pagar ? product.pagar.monto +' '+product.pagar.moneda:'LECTURA SIN TARIFA DE PAGO'}}</td>
+                              <td class="text-center text-lg">{{product.pagar ? product.pagar.pagado ? 'SI':'NO' :''}}</td>
+                              <td>
+                                <p-button icon="pi pi-external-link" severity="secondary" styleClass="p-button-rounded p-button-secondary p-button-text p-button-raised" (onClick)="obtenerLectura(product.id)"></p-button>
+
+                              </td>
+                            </tr>
+                        </ng-template>
+                        </p-table>
+                  
+                      </div>
+                      <ng-template #sinLecturas>
+                        <div class="col-12">
+                          <p-divider>
+                          </p-divider>
+                          <p>{{titleLecturas}}</p>
+                  
+                        </div>
+                      </ng-template>
+                </div>
             </div>
         </div>
         <div class="col-12"></div>
     </div>
 </div>
+<app-lectura-details
+[idLectura]="lecturaSelected"
+*ngIf="visible"
+[visible]="visible"
+(eventVisible)="visible = $event"
+></app-lectura-details>

@@ -22,6 +22,7 @@ import { ForbiddenComponent } from './common/forbidden/forbidden.component';
 import { PerfilesModule } from './components/perfiles/perfiles.module';
 import { LecturasModule } from './components/medidores-agua/lecturas/lecturas.module';
 import { UsuariosFuncionesModule } from './components/usuarios-funciones/usuarios-funciones.module';
+import { CobrosModule } from './components/cobros/cobros.module';
 
 
 
@@ -48,6 +49,7 @@ import { UsuariosFuncionesModule } from './components/usuarios-funciones/usuario
     // PerfilesModule,
     // LecturasModule,
     // UsuariosFuncionesModule,
+    // CobrosModule,
   ],
   providers: [
     MessageService,

@@ -16,6 +16,7 @@ const routes: Routes = [
         {path: 'roles',loadChildren: () =>import('./components/roles/roles-routing.module').then((m) => m.RolesRoutingModule),},
         {path: 'medidores-agua',loadChildren: () =>import('./components/medidores-agua/medidores-agua-routing.module').then((m) => m.MedidoresAguaRoutingModule),},
         {path:'lecturas',loadChildren:()=>import('./components/medidores-agua/lecturas/lecturas-routing.module').then((m)=>m.LecturasRoutingModule)},
+        {path:'cobros',loadChildren:()=>import('./components/cobros/cobros-routing.module').then((m)=>m.CobrosRoutingModule)},
         {path:'user',children:[
           {path: '',loadChildren: () =>import('./components/usuarios-funciones/usuarios-funciones-routing.module').then((m) => m.UsuariosFuncionesRoutingModule),},
           {path: 'dashboard',loadChildren: () =>import('./dashboard/dashboard-routing.module').then((m) => m.DashboardRoutingModule),},

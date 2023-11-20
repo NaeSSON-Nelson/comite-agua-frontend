@@ -1,0 +1,78 @@
+<p-dialog
+header="Detalles del registro de pagos"
+[(visible)]="visible" [modal]="true" [style]="{ width: '75vw' }" [draggable]="false" [resizable]="false" (onHide)="eventVisible.emit(false)" [baseZIndex]="1250"
+>
+<div class="card grid" [formGroup]="pagarForm">
+    <h5 class="col-12"> DATOS DEL TITULAR</h5>
+    <div class="grid col-12 p-fluid">
+        <div class="field col-12 sm:col-6 m-3">
+            <span class="p-float-label">
+              <input
+                type="text"
+                id="titular"
+                pInputText
+                formControlName="titular"
+                [ngClass]="inputValid('titular')"
+              />
+              <label for="titular">TITULAR (*)</label>
+            </span>
+            <small
+              id="titular-help"
+              class="p-error block"
+              *ngIf="campoValido('titular')"
+              >{{ getTitularErrors("titular") }}
+            </small>
+          </div>
+          <div class="field col-12 sm:col-6 m-3">
+            <span class="p-float-label">
+              <input
+                type="text"
+                id="ciTitular"
+                pInputText
+                formControlName="ciTitular"
+                [ngClass]="inputValid('ciTitular')"
+              />
+              <label for="ciTitular">CEDULA DE IDENTIDAD (*)</label>
+            </span>
+            <small
+              id="ciTitular-help"
+              class="p-error block"
+              *ngIf="campoValido('ciTitular')"
+              >{{ getCiTitularErrors("ciTitular") }}
+            </small>
+          </div>
+    </div>
+    <div class="col-12">
+        <h5>LECTURAS REGISTRADAS DE LOS MESES PASADOS:</h5>
+      <p-divider></p-divider>
+      <p-table [value]="porPagar">
+        <ng-template pTemplate="header" let-columns>
+          <tr>
+            <th>Mes</th>
+            <th>lectura (m3.)</th>
+            <th>Estado del medidor (m3.)</th>
+            <th>Consumo del mes</th>
+            <th>monto (Bs.)</th>
+            <th></th>
+          </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-product let-rowIndex="rowIndex">
+          <tr>
+            <td>{{product.mesLectura}}</td>
+            <td>{{product.lectura}}</td>
+            <td>{{product.estadoMedidor || 'SIN REGISTRO DE ESTADO'}}</td>
+            <td>{{product.total}}</td>
+            <td>{{product.monto}}</td>
+          </tr>
+      </ng-template>
+      </p-table>
+    </div>
+    <div class="col-12 grid">
+        <button pButton pRipple label="Registrar Pagos" class="p-button-success" (click)="validForm()"></button>
+        <div class="col-12 md:col-3">
+            <div class="text-900 text-xl mb-2 font-medium text-right">TOTAL A PAGAR:</div>
+            <p class="text-700 line-height-3 text-right">{{totalPagar}} Bs.</p>
+        </div>  
+    </div>
+</div>
+</p-dialog>

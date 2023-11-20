@@ -1,1 +1,115 @@
-<p>perfil works!</p>
+<div class="card grid">
+    <div class="col-12 grid" *ngIf="userPerfil">
+        <div class="col-4"></div>
+        <div class="col-8">
+            <h4>Perfil</h4>
+            <p-divider></p-divider>
+            <div class="grid mt-3">
+                <div class="col-12">
+                    <label class="col-12 mb-2 md:col-2 md:mb-0 text-700 text-lg"> <b>NOMBRES: </b></label>
+                    <div class="col-12 md:col-10">
+                        <p class="text-900 text-left text-lg">{{userPerfil.nombrePrimero |uppercase}} {{userPerfil.nombreSegundo || "" |uppercase}} {{userPerfil.apellidoPrimero |uppercase}} {{userPerfil.apellidoSegundo || "" |uppercase}}</p>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <label class="col-12 mb-2 md:col-2 md:mb-0 text-700 text-lg"> <b>CI: </b></label>
+                    <div class="col-12 md:col-10">
+                        <p class="text-900 text-left text-lg">{{userPerfil.CI}}</p>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <label class="col-12 mb-2 md:col-2 md:mb-0 text-700 text-lg"> <b>GENERO: </b></label>
+                    <div class="col-12 md:col-10">
+                        <p class="text-900 text-left text-lg">{{userPerfil.genero | uppercase}}</p>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <label class="col-12 mb-2 md:col-2 md:mb-0 text-700 text-lg"> <b>PROFESIÓN: </b></label>
+                    <div class="col-12 md:col-10">
+                        <p class="text-900 text-left text-lg">{{userPerfil.profesion | uppercase}}</p>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <label class="col-12 mb-2 md:col-2 md:mb-0 text-700 text-lg"> <b>F. NACIMIENTO: </b></label>
+                    <div class="col-12 md:col-10">
+                        <p class="text-900 text-left text-lg">{{userPerfil.fechaNacimiento | date :'dd-MM-yyyy'}}</p>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <label class="col-12 mb-2 md:col-2 md:mb-0 text-700 text-lg"> <b>Tipo Perfil: </b></label>
+                    <div class="col-12 md:col-10">
+                        <p class="text-900 text-left text-lg">{{userPerfil.tipoPerfil?.toString()}}</p>
+                    </div>
+                </div>
+            </div>
+            <h4 *ngIf="userPerfil.afiliado">AFILIACION</h4>
+            <p-divider *ngIf="userPerfil.afiliado"></p-divider>
+            <div class="grid mt-3" *ngIf="userPerfil.afiliado">
+                <div class="col-6">
+                    <label class="col-12 mb-2 md:col-2 md:mb-0 text-700 text-lg"> <b>BARRIO DEL AFILIADO: </b></label>
+                    <div class="col-12 md:col-10">
+                        <p class="text-900 text-left text-lg">{{userPerfil.afiliado.ubicacion?.barrio}}</p>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <label class="col-12 mb-2 md:col-2 md:mb-0 text-700 text-lg"> <b>UBICACION GEOGRAFICA: </b></label>
+                    <ng-container *ngIf="userPerfil.afiliado?.ubicacion?.latitud && userPerfil.afiliado?.ubicacion?.longitud; else noUbicacion">
+                        <!-- <div class="col-12 md:col-10">
+                            <p class="text-900 text-left text-lg">{{userPerfil.afiliado?.ubicacion?.latitud}} lat.</p>
+                        </div>
+                        <div class="col-12 md:col-10">
+                            <p class="text-900 text-left text-lg">{{userPerfil.afiliado?.ubicacion?.longitud}} lng.</p>
+                        </div> -->
+                        <div class="col-12 flex md:col-10">
+                            <p-button icon="pi pi-map-marker" styleClass="p-button-rounded p-button-secondary p-button-text p-button-raised" (click)="mapModal=true"></p-button>
+                          </div>
+                    </ng-container>
+                    <ng-template #noUbicacion>
+                        <div class="col-12 md:col-10">
+                            <p class="text-900 text-left text-lg"> <i>NO TIENE REGISTRO DE UBICACION GEOGRAFICA</i></p>
+                        </div>
+                    </ng-template>
+                    
+                </div>
+            </div>
+            <h4 *ngIf="userPerfil.usuario">USUARIO DE ACCESO</h4>
+            <p-divider *ngIf="userPerfil.usuario"></p-divider>
+            <div class="grid mt-3" *ngIf="userPerfil.usuario">
+                <div class="col-12">
+                    <label class="col-12 mb-2 md:col-2 md:mb-0 text-700 text-lg"> <b>USERNAME: </b></label>
+                    <div class="col-12 md:col-10">
+                        <p class="text-900 text-left text-lg">{{userPerfil.usuario.username}}</p>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <label class="col-12 mb-2 md:col-2 md:mb-0 text-700 text-lg"> <b>CORRECTO ELECTRONICO: </b></label>
+                    <div class="col-12 md:col-10">
+                        <p class="text-900 text-left text-lg" *ngIf="userPerfil.usuario?.correo; else sinCorreo">{{userPerfil.usuario.correo}}
+                            <p-tag icon="pi pi-exclamation-triangle" severity="warning" value="Warning" value="correo no verificado" *ngIf=" userPerfil.usuario?.correoVerify === false"></p-tag>
+                        </p>
+                        <ng-template #sinCorreo>
+                            <p class="text-900 text-left text-lg"> <i>SIN CORREO ELECTRÓNICO</i></p>
+                        </ng-template>
+                        
+                    </div>
+                </div>
+                <div class="col-6">
+                    <label class="col-12 mb-2 md:col-2 md:mb-0 text-700 text-lg"> <b>ROLES DE ACCESO: </b></label>
+                    <div class="col-12 md:col-10">
+                        <p class="text-900 text-left text-lg">{{userPerfil.usuario.roles?.toString() | uppercase}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-12"></div>
+    <div class="col-12"></div>
+</div>
+<app-map-coord
+*ngIf="mapModal"
+[visible]="mapModal"
+[latLong]="coordenadasLatLng"
+
+(closeModal)="mapModal=$event"
+>
+</app-map-coord>
