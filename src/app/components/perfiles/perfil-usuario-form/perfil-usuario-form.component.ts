@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {
+  Estado,
   Perfil,
   ResponseCreatePerfil,
   Role,
@@ -125,7 +126,7 @@ export class PerfilUsuarioFormComponent {
   }
   usuarioForm: FormGroup = this.fb.group({
     roles: [, [Validators.required]],
-    estado: [, [Validators.required]],
+    estado: [Estado.ACTIVO, [Validators.required]],
     correo: [, [Validators.email]],
   });
   validForm() {

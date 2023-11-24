@@ -1,10 +1,10 @@
 import { Afiliado, Ubicacion } from "./afiliado.interface";
 import { ColumnsAlways } from "./always.interface";
-import { Barrio } from "./atributes.enum";
+import { Barrio, Estado } from "./atributes.enum";
 import { ComprobantePorPago } from "./pagos-services.interface";
 
 
-export interface Medidor extends ColumnsAlways{
+export interface Medidor{
   id?:                number;
   nroMedidor?:        string;
   fechaInstalacion?:  Date;
@@ -13,7 +13,11 @@ export interface Medidor extends ColumnsAlways{
   ubicacion?:         Ubicacion;
   marca?:             string;
   afiliado?:          Afiliado;
-  planillas?:          PlanillaLecturas[];
+  planillas?:         PlanillaLecturas[];
+  created_at?:        Date;
+  updated_at?:        Date;
+  isActive?:          boolean;
+  estado?:            Estado;
 }
 export interface MedidorForm{
   id?:                number;
@@ -26,6 +30,7 @@ export interface MedidorForm{
   numeroVivienda?:    string;
   longitud?:          string;
   latitud?:           string;
+  estado?:            Estado;
 }
 export interface PlanillaLecturas{
   id?:  number;
@@ -54,7 +59,7 @@ export interface MesSeguimientoRegistroLectura extends ColumnsAlways{
 export interface LecturasOptions{
   mes?:string|null;
   gestion?:number|null;
-  barrio?:Barrio;
+  barrio?:Barrio | null;
 }
 export interface PlanillaForm{
   id:number;
@@ -65,8 +70,6 @@ export interface lecturasForm{
   planilla:PlanillaForm;
 }
 export interface lecturasRegisterForm{
-  mes:string;
-  anio:number;
   registros: lecturasForm[];
 }
 export interface Gestion{

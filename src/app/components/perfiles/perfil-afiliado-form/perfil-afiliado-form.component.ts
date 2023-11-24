@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AfiliadoForm, Perfil } from 'src/app/interfaces';
+import { AfiliadoForm, Estado, Perfil } from 'src/app/interfaces';
 import { PerfilService } from '../perfil.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -40,7 +40,7 @@ export class PerfilAfiliadoFormComponent {
       const {afiliado}=res;
       this.perfilActual=res;
       if(afiliado){
-        console.log(afiliado);
+        // console.log(afiliado);
         this.afiliadoForm.setValue({
           estado:afiliado.estado,
           barrio:afiliado.ubicacion?.barrio,
@@ -109,7 +109,7 @@ export class PerfilAfiliadoFormComponent {
     }
   }
   afiliadoForm:FormGroup= this.fb.group({
-    estado          :[,[Validators.required]],
+    estado          :[Estado.ACTIVO,[Validators.required]],
     barrio          :[,[Validators.required]],
     numeroVivienda  :[,[Validators.pattern(patternText),Validators.minLength(3)]],
     longitud        :[,],

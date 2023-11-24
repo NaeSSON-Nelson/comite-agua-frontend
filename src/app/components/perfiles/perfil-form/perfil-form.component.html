@@ -143,13 +143,31 @@
               formControlName="direccion"
               [ngClass]="inputValid('direccion')"
             />
-            <label for="direccion">direccion (*)</label>
+            <label for="direccion">direccion</label>
           </span>
           <small
             id="direccion-help"
             class="p-error block"
             *ngIf="campoValido('direccion')"
             >{{ getDireccionErrors("direccion") }}
+          </small>
+        </div>
+        <div class="field col-12 md:col-3">
+          <span class="p-float-label">
+            <input
+              type="text"
+              id="contacto"
+              pInputText
+              formControlName="contacto"
+              [ngClass]="inputValid('contacto')"
+            />
+            <label for="contacto">Nro. Contacto</label>
+          </span>
+          <small
+            id="contacto-help"
+            class="p-error block"
+            *ngIf="campoValido('contacto')"
+            >{{ getContactoErrors("contacto") }}
           </small>
         </div>
         <div class="field col-12 md:col-4">
@@ -448,6 +466,7 @@
 <app-map-coord *ngIf="showMap"
 (sendLatLong)="coordenadas($event)"
 [latLong]="coordenadasLatLng"
+[buttonInsert]="true"
 [visible]="showMap"
 (closeModal)="cerrarMapa($event)"
 ></app-map-coord>

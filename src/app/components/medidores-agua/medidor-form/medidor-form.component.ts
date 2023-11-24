@@ -8,7 +8,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { switchMap } from 'rxjs';
 import { patternCI, patternDateFormat, patternText } from 'src/app/patterns/forms-patterns';
 import { Afiliado } from 'src/app/interfaces/afiliado.interface';
-import { Perfil } from 'src/app/interfaces';
+import { Estado, Perfil } from 'src/app/interfaces';
 import { CommonAppService } from 'src/app/common/common-app.service';
 import * as L from 'leaflet';
 
@@ -124,7 +124,7 @@ export class MedidorFormComponent {
       fechaInstalacion:  [,[Validators.required]],
       lecturaInicial:    [0,[Validators.required,Validators.min(0)]],
       barrio:            [,[Validators.required,Validators.minLength(3),Validators.pattern(patternText)]],
-      estado:            [,[Validators.min(0)]],
+      estado:            [Estado.ACTIVO,[Validators.min(0)]],
       marca:             [,[Validators.required,Validators.pattern(patternText),Validators.minLength(1)]],
       afiliado:          this.fb.group({
                           id:[,[Validators.required,Validators.min(0)]]}),

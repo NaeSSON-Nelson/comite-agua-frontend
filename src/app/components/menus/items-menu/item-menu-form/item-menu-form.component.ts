@@ -8,6 +8,7 @@ import { switchMap } from 'rxjs';
 import { patternText } from 'src/app/patterns/forms-patterns';
 import { AsyncValidatorLinkService } from '../validators/async-validator-link.service';
 import { CommonAppService } from 'src/app/common/common-app.service';
+import { Estado } from 'src/app/interfaces';
 
 @Component({
   selector: 'app-item-menu-form',
@@ -107,7 +108,7 @@ export class ItemMenuFormComponent {
         ],
       ],
       visible: [true, Validators.required],
-      estado: [, [Validators.required]],
+      estado: [Estado.ACTIVO, [Validators.required]],
     },
     {
       asyncValidators: [this.asyncValidators.validarLink('linkMenu', 'id')],

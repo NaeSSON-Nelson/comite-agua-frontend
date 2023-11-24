@@ -37,10 +37,11 @@ export class LecturasService {
   AllPerfilesLecturas(parameters:LecturasOptions){
     // console.log(parameters);
     // let { size, ...dataPaginator } = paginator;
+    
     return this.http
       .get<HttpResponseApiArray<Perfil>>(`${this.URL_lecturas}/perfiles`, {
         headers: this.headers,
-        params:{gestion:parameters.gestion!,mes:parameters.mes!,barrio:parameters.barrio!}
+        params:{barrio:parameters.barrio || ''}
       })
       .pipe(
         tap((resp) => {

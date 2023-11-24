@@ -127,6 +127,7 @@
   <app-map-coord *ngIf="showMap"
   (sendLatLong)="coordenadas($event)"
   [latLong]="coordenadasLatLng"
+  [buttonInsert]="true"
   [visible]="showMap"
   (closeModal)="cerrarMapa($event)"
   ></app-map-coord>

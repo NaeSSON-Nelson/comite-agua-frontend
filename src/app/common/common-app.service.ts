@@ -17,17 +17,20 @@ export interface MenuIcon{
 export class CommonAppService {
 
   
-  private _estados:Values<Estado>[]=[
+  private _estados:Values<string>[]=[
     {name:'ACTIVO',value:Estado.ACTIVO},
-    {name:'INACTIVO',value:Estado.INACTIVO},
-    {name:'PROCESO',value:Estado.PROCESO},
-    {name:'SUSPENDIDO',value:Estado.SUSPENDIDO},
+    {name:'DESHABILITADO',value:Estado.DESHABILITADO},
+    // {name:'INACTIVO',value:Estado.INACTIVO},
+    // {name:'PROCESO',value:Estado.PROCESO},
+    // {name:'SUSPENDIDO',value:Estado.SUSPENDIDO},
   ]
+  
   private _generos:Values<Genero>[]=[
     {name:'MASCULINO',value:Genero.MASCULINO},
     {name:'FEMENINO',value:Genero.FEMENINO},
   ]
-  private _barrios:Values<Barrio>[]=[
+  private _barrios:Values<any>[]=[
+    {name:'TODOS',value:null},
     {name:'20 DE MARZO',value:Barrio._20DeMarzo},
     {name:'MENDEZ FORTALEZA',value:Barrio.mendezFortaleza},
     {name:'PRIMAVERA',value:Barrio.primavera},
@@ -50,6 +53,7 @@ export class CommonAppService {
   get estados(){
     return [...this._estados];
   }
+
   get generos(){
     return [...this._generos];
   }

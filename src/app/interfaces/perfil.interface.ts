@@ -16,7 +16,7 @@ export interface Perfil extends ColumnsAlways{
     tipoPerfil?     :TipoPerfil[]
     direccion?      :string;
     accessAcount?   :boolean;
-    contactos?       :string[];
+    contacto?       :string;
     usuario?        :Usuario;
     afiliado?       :Afiliado;
 }

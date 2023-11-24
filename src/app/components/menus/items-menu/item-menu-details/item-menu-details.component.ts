@@ -102,7 +102,7 @@ export class ItemMenuDetailsComponent {
           icon: 'pi pi-info-circle',
           accept: () => {
             this.itemsMenuService
-              .updateStatus(this.itemMenu.id!, { estado: Estado.INACTIVO })
+              .updateStatus(this.itemMenu.id!, { estado: Estado.DESHABILITADO })
               .subscribe({
                 next: (res) => {
                   this.messageService.add({

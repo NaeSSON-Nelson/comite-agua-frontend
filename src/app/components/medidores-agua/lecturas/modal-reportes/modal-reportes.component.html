@@ -1,6 +1,6 @@
 <p-dialog header="GENERAR TARIFAS DE PAGOS" [(visible)]="visibleModal" position="center" [style]="{ width: '75vw' }" [modal]="true" (onHide)="event.emit(false)" (onShow)="showAfiliados()">
     <p>
-    <i>SE GENERARAN TARIFAS POR PAGAR DEL MES: : DEL AÑO : : A LOS USUARIOS QUE NO TIENE COMPROBANTE DEL MES</i>
+    <i>{{title}}</i>
     <i class="pi pi-spin pi-spinner" style="font-size: 2rem" *ngIf="loading; else informacion"></i>
 </p>
     <ng-template #informacion>
@@ -37,7 +37,7 @@
         </ng-template>
         
     </div></ng-template>
-    <button pButton pRipple class="p-button-secondary" label="Generar reportes" (click)="showConfirm()"></button>
+    <button pButton pRipple class="p-button-secondary" label="Generar reportes" (click)="showConfirm()" [disabled]="perfiles.length===0"></button>
 </p-dialog>
 <p-toast position="bottom-center" key="confirm" [baseZIndex]="5000">
     <ng-template let-message pTemplate="message">

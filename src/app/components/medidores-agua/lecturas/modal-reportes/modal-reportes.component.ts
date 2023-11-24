@@ -15,13 +15,14 @@ export class ModalReportesComponent {
   @Input()
   visibleModal:boolean=false;
   visible:boolean=false;
-  @Input()
-  lectuaOptions:LecturasOptions={
-    gestion:new Date().getFullYear(),
-    mes:'ENERO'
-  };
+  // @Input()
+  // lectuaOptions:LecturasOptions={
+  //   gestion:new Date().getFullYear(),
+  //   mes:'ENERO'
+  // };
   perfiles:Perfil[]=[];
   loading:boolean=true;
+  title:string='';
   @Output()
   event:EventEmitter<boolean> = new EventEmitter<boolean>()
   constructor(private pagosService:PagosService,
@@ -30,8 +31,11 @@ export class ModalReportesComponent {
     private readonly confirmationService:ConfirmationService,){}
   total=0;
   showAfiliados(){
-    this.pagosService.obtenerAfiliadosSinTarifa(this.lectuaOptions).subscribe(res=>{
-      this.perfiles=res;
+    this.pagosService.obtenerAfiliadosSinTarifa().subscribe(res=>{
+      if(res.OK){
+        this.perfiles=res.data!;
+      }
+      this.title=res.message;
       // console.log(res);
       this.loading=false;
     })
@@ -46,9 +50,12 @@ export class ModalReportesComponent {
     this.messageService.clear('confirm');
     this.visible = false;
     this.pagosService.generarComprobantes().subscribe(res=>{
-      this.total=res.length;
-      if(res.length===0){
-        this.messageService.add({
+      if(res.OK){
+
+        this.total=res.data!.length;
+        
+        if(res.data!.length===0){
+          this.messageService.add({
           severity: 'info',
           summary: 'Respuesta del servidor',
           detail: `No se encontro ninguna lectura para generar reporte, total: ${this.total}`,
@@ -64,6 +71,14 @@ export class ModalReportesComponent {
         });
         this.event.emit(false);
       }
+    }else{
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Ocurrio un error al generar los comprobantes',
+        detail: `${res.message}`,
+        icon: 'pi pi-check',
+      });
+    }
     })
   }
 

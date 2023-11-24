@@ -9,7 +9,12 @@
       <div id="map"></div>
     </div>
     <div class="col-12">
-      <p-button label="Guardar Ubicacion" styleClass="p-button-raised" (onClick)="enviarCoord()"></p-button>
+      <p-button label="Guardar Ubicacion" styleClass="p-button-raised" (onClick)="enviarCoord()" *ngIf="buttonInsert;else closeModal"></p-button>
+      <ng-template #closeModal>
+        <p-button label="Cerrar ventana" styleClass="p-button-raised" (onClick)="closedModal()"></p-button>
+      </ng-template>
+      
+      
     </div>
   </div>
 </p-dialog>

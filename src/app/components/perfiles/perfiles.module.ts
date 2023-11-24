@@ -10,7 +10,7 @@ import { HelpersModule } from 'src/app/helpers/helpers.module';
 import { PrimeNgCrudModule } from 'src/app/prime-ng-crud/prime-ng-crud.module';
 import { PerfilesRoutingModule } from './perfiles-routing.module';
 import { UsuarioCreatedComponent } from './usuario-created/usuario-created.component';
-
+import {TagModule} from 'primeng/tag'
 
 
 @NgModule({
@@ -28,6 +28,7 @@ import { UsuarioCreatedComponent } from './usuario-created/usuario-created.compo
     HelpersModule,
     PrimeNgCrudModule,
     PerfilesRoutingModule,
+    TagModule,
   ],
   exports:[
 

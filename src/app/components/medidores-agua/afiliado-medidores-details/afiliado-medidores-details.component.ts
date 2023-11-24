@@ -114,7 +114,7 @@ export class AfiliadoMedidoresDetailsComponent {
           icon: 'pi pi-info-circle',
           accept: () => {
             this.medidoresService
-              .updateStatus(this.medidorSelected.id!, { estado:Estado.ACTIVO })
+              .updateStatus(this.medidorSelected.id!, { estado:Estado.DESHABILITADO })
               .subscribe({
                 next: (res) => {
                   this.messageService.add({

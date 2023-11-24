@@ -9,6 +9,7 @@ import { switchMap } from 'rxjs';
 import { patternText } from 'src/app/patterns/forms-patterns';
 import { Menu } from 'src/app/interfaces/menu.interface';
 import { CommonAppService } from 'src/app/common/common-app.service';
+import { Estado } from 'src/app/interfaces';
 
 @Component({
   selector: 'app-role-form',
@@ -101,7 +102,7 @@ export class RoleFormComponent {
           Validators.pattern(patternText),
         ],
       ],
-      estado: [,[Validators.required]],
+      estado: [Estado.ACTIVO,[Validators.required]],
       nivel: [,[Validators.required]],
       menus: this.fb.array([], [Validators.required]),
     },

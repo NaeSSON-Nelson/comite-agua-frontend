@@ -36,9 +36,7 @@ export class RegistrarLecturasComponent {
   ) {}
   
   lecturasOptions:LecturasOptions={
-    gestion:null,
-    mes:null,
-    barrio:Barrio._20DeMarzo
+    barrio: null
   }
   ngOnInit(): void {
     this.lecturasService.perfilesLecturas.subscribe({
@@ -47,24 +45,25 @@ export class RegistrarLecturasComponent {
         this.data=res.data;
       }
     })
-    this.lecturasService.aniosSeguimiento.subscribe({
-      next:res=>{ 
-        // this.gestiones=res;
-        // console.log(res);
-        this.gestiones=res.map(ges=>{
-          return {
-            label:  ges.anio?.toString(),
-            value:ges.anio,
-            meses:ges.meses,
-          }
-        })
-      }
-    })
-    this.getSeguimientos();
+    // this.lecturasService.aniosSeguimiento.subscribe({
+    //   next:res=>{ 
+    //     // this.gestiones=res;
+    //     // console.log(res);
+    //     this.gestiones=res.map(ges=>{
+    //       return {
+    //         label:  ges.anio?.toString(),
+    //         value:ges.anio,
+    //         meses:ges.meses,
+    //       }
+    //     })
+    //   }
+    // })
+    // this.getSeguimientos();
+    this.getAllLecturas();
   }
   lecturasForm:FormGroup=this.fb.group({
-    anio:     [this.lecturasOptions.gestion,[Validators.required,Validators.min(2000)]],
-    mes:      [this.lecturasOptions.mes,[Validators.required]],
+    // anio:     [this.lecturasOptions.gestion,[Validators.required,Validators.min(2000)]],
+    // mes:      [this.lecturasOptions.mes,[Validators.required]],
     registros: this.fb.array([]),
   });
   get lecturasArray(){
@@ -98,7 +97,7 @@ export class RegistrarLecturasComponent {
       accept: () => {
         this.lecturasService.registerAllLecturas(formulario).subscribe({
             next: (res) => {
-              // console.log(res);
+              console.log(res);
               if(res.OK){
                 this.messageService.add({
                   severity: 'success',
@@ -106,7 +105,8 @@ export class RegistrarLecturasComponent {
                   detail: res.message,
                   icon: 'pi pi-check',
                 });
-                this.router.navigate(['medidores-agua'])
+                // this.router.navigate(['medidores-agua'])
+                this.getAllLecturas();
               }else{
                 this.messageService.add({
                   severity: 'error',
@@ -131,12 +131,18 @@ export class RegistrarLecturasComponent {
       },
     });
   }
-  
+  showForm=false;
+  loading=false;
+  titleError ='';
   getAllLecturas() {
     this.lecturasService.AllPerfilesLecturas(this.lecturasOptions).subscribe({
       next: (res) => {
         if (res.OK === false) {
           switch (res.statusCode) {
+            case 400:
+            console.log(res);
+            this.titleError=res.message;
+              break;
             case 401:
               this.messageService.add({
                 severity: 'info',
@@ -166,6 +172,7 @@ export class RegistrarLecturasComponent {
               break;
           }
         }else{
+          this.showForm=true;
           this.showLecturas=true;
           this.agregarPlanillaParaPago();
         }
@@ -207,40 +214,40 @@ export class RegistrarLecturasComponent {
       }
     })
   }
-  changeYear(event:any){
-    // console.log(event);
-    const gestion=this.gestiones.find(ges=>ges.value===event.value);
-    // console.log(gestion);
-    if(gestion) {
-      this.lecturasOptions={
-        gestion:gestion.value,
-        mes:null,
-        barrio:Barrio._20DeMarzo
-      }
-      this.lecturasForm.get('anio')?.setValue(gestion.value);
-      this.meses=gestion.meses
-      this.showLecturas=false;
-    }
-  }
-  changeMonth(event:any){
-    // console.log(event);
-    this.lecturasOptions.mes=event.value;
-    this.lecturasForm.get('mes')?.setValue(event.value);
+  // changeYear(event:any){
+  //   // console.log(event);
+  //   const gestion=this.gestiones.find(ges=>ges.value===event.value);
+  //   // console.log(gestion);
+  //   if(gestion) {
+  //     this.lecturasOptions={
+  //       gestion:gestion.value,
+  //       mes:null,
+  //       barrio:Barrio._20DeMarzo
+  //     }
+  //     this.lecturasForm.get('anio')?.setValue(gestion.value);
+  //     this.meses=gestion.meses
+  //     this.showLecturas=false;
+  //   }
+  // }
+  // changeMonth(event:any){
+  //   // console.log(event);
+  //   this.lecturasOptions.mes=event.value;
+  //   this.lecturasForm.get('mes')?.setValue(event.value);
     
-    this.showLecturas=false;
-  }
+  //   this.showLecturas=false;
+  // }
   showLecturas=false;
-  buscarLecturas(){
-    if(this.lecturasOptions.gestion===null || this.lecturasOptions.mes===null){
-      this.messageService.add({
-        severity: 'info',
-        summary: `DEBE SELECCIONAR EL AÑO Y MES DE GESTION!!`,
-        life: 3000,
-      });
-      return
-    }
-    this.getAllLecturas();
-  }
+  // buscarLecturas(){
+  //   if(this.lecturasOptions.gestion===null || this.lecturasOptions.mes===null){
+  //     this.messageService.add({
+  //       severity: 'info',
+  //       summary: `DEBE SELECCIONAR EL AÑO Y MES DE GESTION!!`,
+  //       life: 3000,
+  //     });
+  //     return
+  //   }
+  //   this.getAllLecturas();
+  // }
   agregarPlanillaParaPago(){
     if(this.data.length>0){
       for(const pe of this.data){

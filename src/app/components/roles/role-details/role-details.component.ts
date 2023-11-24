@@ -102,7 +102,7 @@ export class RoleDetailsComponent {
           icon: 'pi pi-info-circle',
           accept: () => {
             this.rolesService
-              .updateStatus(this.role.id!, { estado: Estado.INACTIVO })
+              .updateStatus(this.role.id!, { estado: Estado.DESHABILITADO })
               .subscribe({
                 next: (res) => {
                   this.messageService.add({

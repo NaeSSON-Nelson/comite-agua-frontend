@@ -26,6 +26,7 @@ export class PerfilDetailsComponent {
     //Add 'implements OnInit' to the class.
     this.perfilService.perfil.subscribe((res) => {
       this.perfil = res;
+      // console.log(res);
     });
     if (!this.router.url.includes('id')) {
       this.messageService.add({
@@ -101,7 +102,7 @@ export class PerfilDetailsComponent {
           icon: 'pi pi-info-circle',
           accept: () => {
             this.perfilService
-              .updateStatus(this.perfil.id!, { estado: Estado.INACTIVO })
+              .updateStatus(this.perfil.id!, { estado: Estado.DESHABILITADO })
               .subscribe({
                 next: (res) => {
                   this.messageService.add({
@@ -205,7 +206,7 @@ export class PerfilDetailsComponent {
           icon: 'pi pi-info-circle',
           accept: () => {
             this.perfilService
-              .updateAfiliadoStatus(this.perfil.id!, { estado: Estado.INACTIVO })
+              .updateAfiliadoStatus(this.perfil.id!, { estado: Estado.DESHABILITADO })
               .subscribe({
                 next: (res) => {
                   this.messageService.add({
@@ -281,7 +282,7 @@ export class PerfilDetailsComponent {
           icon: 'pi pi-info-circle',
           accept: () => {
             this.perfilService
-              .updateUsuarioStatus(this.perfil.id!, { estado: Estado.INACTIVO })
+              .updateUsuarioStatus(this.perfil.id!, { estado: Estado.DESHABILITADO })
               .subscribe({
                 next: (res) => {
                   this.messageService.add({

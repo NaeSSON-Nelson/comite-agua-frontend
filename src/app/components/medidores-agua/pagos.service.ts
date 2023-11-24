@@ -25,18 +25,18 @@ export class PagosService {
       map(res=>res.data!)
     )
   }
-  obtenerAfiliadosSinTarifa(parameters:LecturasOptions){
+  obtenerAfiliadosSinTarifa(){
     return this.http.get<HttpResponseApi<Perfil[]>>(`${this.URL_lecturas}/comprobantes/perfiles`,{
       headers: this.headers,
-      params:{gestion:parameters.gestion!,mes:parameters.mes!}
+      // params:{gestion:parameters.gestion!,mes:parameters.mes!}
     }).pipe(
-      map(res=>res.data!)
+      // map(res=>res.data!)
     )
   }
   generarComprobantes(){
     return this.http.get<HttpResponseApi<ComprobantePorPago[]>>(`${this.URL_comprobantes_pagos}/generar`,{headers:this.headers})
             .pipe(
-              map(res=>res.data!)
+              // map(res=>res.data!)
             )
   }
 }

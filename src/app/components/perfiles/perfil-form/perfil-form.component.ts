@@ -3,7 +3,7 @@ import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { PerfilService } from '../perfil.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AfiliadoForm, Perfil, PerfilForm, ResponseCreatePerfil, Role, UsuarioForm } from 'src/app/interfaces';
+import { AfiliadoForm, Estado, Perfil, PerfilForm, ResponseCreatePerfil, Role, UsuarioForm } from 'src/app/interfaces';
 import { patternCI, patternSpanishInline, patternText } from 'src/app/patterns/forms-patterns';
 import { CommonAppService } from 'src/app/common/common-app.service';
 import { switchMap } from 'rxjs';
@@ -32,9 +32,9 @@ export class PerfilFormComponent {
   showMap:boolean=false;
   ngOnInit(): void {
     this.perfilService.perfil.subscribe((res) => {
-      const { usuario,afiliado,accessAcount,created_at,updated_at,id,isActive,contactos,tipoPerfil,...dataPerfil } = res;
+      const { usuario,afiliado,accessAcount,created_at,updated_at,id,isActive,contacto,tipoPerfil,...dataPerfil } = res;
       this.perfilActual=res;
-        this.perfilForm.setValue({...dataPerfil});
+        this.perfilForm.setValue({...dataPerfil,contacto});
     });
     if (!this.router.url.includes('id')) return;
 
@@ -98,11 +98,12 @@ export class PerfilFormComponent {
     direccion:        [,[Validators.pattern(patternText)]],
     genero:           [,[Validators.required, Validators.pattern(patternText)]],
     fechaNacimiento:  [,[Validators.required]],
-    estado:           [,[Validators.required]],
+    contacto:         ['+591 ',[Validators.pattern(/^\+[591]{3}\s[0-9]{6,8}$/gs)]],
+    estado:           [Estado.ACTIVO,[Validators.required]],
   })
 
   afiliadoForm:FormGroup= this.fb.group({
-    estado          :[,[Validators.required]],
+    estado          :[Estado.ACTIVO,[Validators.required]],
     barrio          :[,[Validators.required]],
     numeroVivienda  :[,[Validators.pattern(patternText),Validators.minLength(3)]],
     longitud        :[],
@@ -110,7 +111,7 @@ export class PerfilFormComponent {
   })
   usuarioForm: FormGroup = this.fb.group({
     roles           :this.fb.array([], [Validators.required]),
-    estado          :[,[Validators.required]],
+    estado          :[Estado.ACTIVO,[Validators.required]],
     correo          :[,[Validators.email]]
   });
   get rolesForm() {
@@ -510,6 +511,13 @@ export class PerfilFormComponent {
       return 'debe asignar al menos un rol a la cuenta';
     }else if(this.rolesForm.length===0){
       return 'Debe asignar al menos un rol!';
+    }
+    return '';
+  }
+  getContactoErrors(campo:string) {
+    const errors = this.perfilForm.get(campo)?.errors;
+    if (errors?.['pattern']) {
+      return 'Debe seguir el patron: +591 XXXXXXXX';
     }
     return '';
   }

@@ -7,6 +7,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { switchMap } from 'rxjs';
 import { patternText } from 'src/app/patterns/forms-patterns';
 import { AsyncValidatorLinkService } from '../validators/async-validator-link.service';
+import { Estado } from 'src/app/interfaces';
 
 @Component({
   selector: 'app-menu-form',
@@ -113,7 +114,7 @@ export class MenuFormComponent {
           Validators.pattern(patternText),
         ],
       ],
-      estado: [1, [Validators.required]],
+      estado: [Estado.ACTIVO, [Validators.required]],
       itemsMenu: this.fb.array([], [Validators.required]),
     },
     {

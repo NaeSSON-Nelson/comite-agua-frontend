@@ -40,7 +40,13 @@
 				</div>
 				<div class="field col-12 md:col-3">
 					<label htmlFor="tipoPerfil">Tipo de Perfil</label>
-					<input pInputText type="text"[disabled]="true" id="profesion" [value]="tipoPerfil()" class="appearance-none text-color text-base"/>
+					<input pInputText type="text"[disabled]="true" id="tipoPerfil" [value]="perfil.tipoPerfil?.toString()" class="appearance-none text-color text-base"/>
+				</div>
+				<div class="field col-12 md:col-3">
+					<label htmlFor="tipoPerfil">Estado</label>
+					<input pInputText type="text"[disabled]="true" id="estado" [value]="perfil.estado" class="appearance-none text-color text-base"/>
+					
+					<p-tag icon="pi pi-exclamation-triangle" severity="danger" value="danger" value="ESTE PERFIL ESTA DESHABILITADO" class="mt-2" *ngIf=" perfil.isActive === false"></p-tag>
 				</div>
 			</div>
         </div>

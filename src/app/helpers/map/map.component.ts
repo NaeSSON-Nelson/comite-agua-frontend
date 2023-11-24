@@ -17,6 +17,8 @@ export class MapComponent {
   closeModal:EventEmitter<boolean> = new EventEmitter<boolean>();
   @Output()
   sendLatLong:EventEmitter<L.LatLngExpression> = new EventEmitter<L.LatLngExpression>();
+  @Input()
+  buttonInsert:boolean=false;
   private _map!:L.Map;
 
   private initMap(){

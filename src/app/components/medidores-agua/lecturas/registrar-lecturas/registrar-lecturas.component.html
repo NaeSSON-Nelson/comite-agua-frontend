@@ -1,7 +1,6 @@
-<div class="grid">
-    <div class="col-12">
+<div class="grid card">
+    <!-- <div class="col-12">
         <div class="card">
-            <h4>REGISTRO DE LECTURAS DE MEDIDORES DE AGUA PARA LOS AFILIADOS</h4>
             <p-divider></p-divider>
             <h4>Año de Gestion de lecturas:</h4>
             <div class="grid mt-5 p-fluid">
@@ -24,14 +23,15 @@
                 </div>
             </div>
         </div>
-    </div>
-    <div class="col-12" *ngIf="showLecturas">
-        <div class="card" [formGroup]="lecturasForm">
+    </div> -->
+    <div class="col-12">
+        <h4>REGISTRO DE LECTURAS DE MEDIDORES DE AGUA DE LOS AFILIADOS</h4>
+        <div class="card" [formGroup]="lecturasForm" *ngIf="showForm;else finalizado">
             <div class="grid">
                 <h5 class="col">REGISTROS DE MEDIDORES POR BARRIO:
                     <p-dropdown [options]="commonAppService.barrios" optionLabel="name" optionValue="value" (onChange)="changeBarrio($event)"></p-dropdown>
                 </h5>
-                <button pButton pRipple label="Generar reportes" (click)="visibleGenerar = true" class="p-button-primary"></button>
+                <button pButton pRipple label="Generar Comprobantes" (click)="visibleGenerar = true" class="p-button-primary"></button>
             </div>
             <p-divider></p-divider>
             <div class="card" *ngIf="data.length>0; else sinData">
@@ -141,11 +141,14 @@
             -->
 
         </div>
+        <ng-template #finalizado>
+            <p><i>{{titleError}}</i></p>
+        </ng-template>
+        
     </div>
 </div>
 <app-modal-reportes
 *ngIf="visibleGenerar"
 [visibleModal]="visibleGenerar"
-[lectuaOptions]="lecturasOptions"
 (event)="visibleGenerar = $event"
 ></app-modal-reportes>
