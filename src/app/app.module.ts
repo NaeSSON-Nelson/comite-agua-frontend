@@ -41,7 +41,7 @@ import { CobrosModule } from './components/cobros/cobros.module';
     ConfirmDialogModule,
 
     // //UNA SOLUCION AL ERROR: NOW?
-    // AuthModule,
+    AuthModule,
     // ItemsMenuModule,
     // MenusModule,
     // RolesModule,

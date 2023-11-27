@@ -17,11 +17,13 @@ export class MedidoresComponent {
   planillaSelected:PlanillaLecturas|null=null;
   titleLecturas='Debe seleccionar una año de gestion'
   loading:boolean=false;
+  showLecturas:boolean=false;
   constructor(private usuarioFunciones:UsuarioFuncionesService,
     private readonly messageService: MessageService,){}
   ngOnInit(): void {
     this.usuarioFunciones.PlanillaLecturas.subscribe(res=>{
       this.planillaSelected=res;
+      this.showLecturas=true;
       console.log(res);
       if(res.lecturas.length===0){
         this.titleLecturas='NO HAY LECTURAS DE ESA GESTION'
@@ -47,6 +49,7 @@ export class MedidoresComponent {
   }
   obtenerMedidor(event:any){
     // console.log(event);
+    this.showLecturas=false;
     this.usuarioFunciones.getMedidor(event.value).subscribe(res=>{
       // console.log(res);
       if(res.OK){
@@ -69,6 +72,7 @@ export class MedidoresComponent {
           detail:res.message,
           life: 5000,
         });
+        this.showLecturas=true;
       }
     })
   }

@@ -11,9 +11,11 @@ import { MenuItem } from 'primeng/api';
 })
 export class LayoutComponent {
   usuario:Usuario|null=null;
-  
+  userLevel:number=0;
   roles:any[]=[];
-  constructor(private authService:AuthService){}
+  constructor(private authService:AuthService){
+    console.log('inicio layout');
+  }
   ngOnInit(): void {
     this.authService.usuario.subscribe((res) => {
       console.log('respuesta desde usuario',res);
@@ -22,15 +24,19 @@ export class LayoutComponent {
       console.log(this.usuario);
       if(res){
         this.roles=res.roles!.map(rol=>{
-          return{name:rol.nombre,value:rol.id};
+          return{name:rol.nombre,value:{id:rol.id,nivel:rol.nivel}};
         })
+        this.userLevel = this.roles[0].value.nivel;
       }else{
-
+        console.log('no usuario');
       }
     });
     
   }
   get containerClass() {
     return this.usuario?'layout-static':'layout-overlay';
+  }
+  typeRoleSelected(){
+      
   }
 }

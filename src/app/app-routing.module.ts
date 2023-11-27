@@ -8,7 +8,7 @@ const routes: Routes = [
   {
     path: '',component: LayoutComponent,
     children: [  
-      {path:'',canActivate:[validarTokenGuard],
+      {path:'',
       children:[
         {path: 'perfiles',loadChildren: () =>import('./components/perfiles/perfiles-routing.module').then((m) => m.PerfilesRoutingModule),},
         {path: 'menus',loadChildren: () =>import('./components/menus/menus-routing.module').then((m) => m.MenusRoutingModule),},
@@ -21,9 +21,13 @@ const routes: Routes = [
           {path: '',loadChildren: () =>import('./components/usuarios-funciones/usuarios-funciones-routing.module').then((m) => m.UsuariosFuncionesRoutingModule),},
           {path: 'dashboard',loadChildren: () =>import('./dashboard/dashboard-routing.module').then((m) => m.DashboardRoutingModule),},
         ]},
-      ]
+      ],
+      canActivate:[validarTokenGuard],
     },
-    {path: 'auth',loadChildren: () =>import('./auth/auth-routing.module').then((m) => m.AuthRoutingModule),},
+    {path: 'auth',
+    
+      loadChildren: () =>import('./auth/auth-routing.module').then((m) => m.AuthRoutingModule),
+  },
     ],
   },
   {

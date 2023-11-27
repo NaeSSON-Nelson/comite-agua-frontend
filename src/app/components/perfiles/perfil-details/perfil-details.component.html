@@ -93,13 +93,16 @@
 				</div>
 				<div class="field col-12 md:col-6">
 					<label htmlFor="nombrePrimero">correo electronico</label>
-					<input pInputText id="nombrePrimero" type="text" [disabled]="true" [value]="perfil.usuario.correo || ''" class="appearance-none text-color text-base" />
+					<input pInputText id="nombrePrimero" type="text" [disabled]="true" [value]="perfil.usuario.correo || ' SIN CORREO ELECTRONICO'" class="appearance-none text-color text-base" />
 				</div>
 				<div class="field col-12 md:col-6">
 					<label htmlFor="nombrePrimero">Estado de la cuenta</label>
 					<input pInputText id="nombrePrimero" type="text" [disabled]="true" [value]="perfil.usuario.estado || ''" class="appearance-none text-color text-base" />
 				</div>
-				<p>Roles</p>
+				<div class="field col-12 md:col-6">
+					<label htmlFor="roles">Roles</label>
+					<input pInputText id="roles" type="text" [disabled]="true" [value]="perfil.usuario.roles?.toString() || 'SIN ROLES'" class="appearance-none text-color text-base" />
+				</div>
 			</div>
 			<h5>Opciones</h5>
 			<div class="grid p-fluid md:justify-content-center">

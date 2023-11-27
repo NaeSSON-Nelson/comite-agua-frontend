@@ -19,8 +19,43 @@
                 <p class="text-900 text-left text-lg">{{lectura.estadoMedidor || 'SIN ESTADO REGISTRADO'}}</p>
             </div>
         </div>
+        <div class="sm:col-6 col-12">
+            <label class="col-12 mb-2 md:col-2 md:mb-0 text-700 text-lg"> <b>F. REGISTRO LECTURA: </b></label>
+            <div class="col-12 md:col-10">
+                <p class="text-900 text-left text-lg">{{lectura.created_at | date : 'dd-MM-yyyy'}}</p>
+            </div>
+        </div>
     </div>
     <h4>DETALLES DE PAGO</h4>
-    <div class="card grid">
+    <div class="card">
+        <div class="col-12 grid" *ngIf="lectura?.pagar; else sinComprobante">
+            <div class="sm:col-6 col-12">
+                <label class="col-12 mb-2 md:col-2 md:mb-0 text-700 text-lg"> <b>F. CREADA: </b></label>
+                <div class="col-12 md:col-10">
+                    <p class="text-900 text-left text-lg">{{lectura!.pagar!.created_at | date: 'dd-MM-yyyy'}}</p>
+                </div>
+            </div>
+            <div class="sm:col-6 col-12">
+                <label class="col-12 mb-2 md:col-2 md:mb-0 text-700 text-lg"> <b>MOTIVO PARA PAGAR: </b></label>
+                <div class="col-12 md:col-10">
+                    <p class="text-900 text-left text-lg">{{lectura!.pagar!.motivo}}</p>
+                </div>
+            </div>
+            <div class="sm:col-6 col-12">
+                <label class="col-12 mb-2 md:col-2 md:mb-0 text-700 text-lg"> <b>MONTO: </b></label>
+                <div class="col-12 md:col-10">
+                    <p class="text-900 text-left text-lg">{{lectura!.pagar!.monto}} {{lectura!.pagar!.moneda}}</p>
+                </div>
+            </div>
+            <div class="sm:col-6 col-12">
+                <label class="col-12 mb-2 md:col-2 md:mb-0 text-700 text-lg"> <b>ESTADO: </b></label>
+                <div class="col-12 md:col-10">
+                    <p class="text-900 text-left text-lg">{{lectura!.pagar!.estadoComprobate}}</p>
+                </div>
+            </div>
+            
+        </div>
+        <ng-template #sinComprobante> <p><i>LA LECTURA NO TIENE COMPROBANTE POR PAGAR</i></p></ng-template>
+        
     </div>
 </p-dialog>

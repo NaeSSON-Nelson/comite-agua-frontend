@@ -1,9 +1,10 @@
-import { Component, ElementRef, Input, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { LayoutService } from '../layout.service';
 import { Usuario } from 'src/app/interfaces/usuario.interface';
 import { AuthService } from '../../auth/auth.service';
 import { MenuItem } from 'primeng/api';
 import { Router } from '@angular/router';
+import { Role } from 'src/app/interfaces';
 
 @Component({
   selector: 'app-topbar',
@@ -35,9 +36,15 @@ export class TopbarComponent {
   ) {}
   @Input()
   roles:any[]=[];
+  @Input()
+  userLevel:number=0;
+  @Output()
+  userLevelEmit:EventEmitter<number> = new EventEmitter<number>();
   rolChange(event:any){
-    console.log(event.value);
-    this.menusUser(event.value);
+    console.log('rol cambiado',event.value);
+    this.menusUser(event.value.id);
+    this.userLevel = event.value.nivel;
+    this.userLevelEmit.emit(event.value.nivel)
   }
   menusUser(idRol:number){
     this.authService.getMenusUser(idRol).subscribe(res=>{

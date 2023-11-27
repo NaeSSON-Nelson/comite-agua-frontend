@@ -25,6 +25,7 @@ export class LecturaDetailsComponent {
   }
   obtenerLecuraDetalles(){
     this.usuarioService.getLectura(this.idLectura).subscribe(res=>{
+      console.log(res);
       if(res.OK){
         this.lectura = res.data!;
         console.log(res.data);
