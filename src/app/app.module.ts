@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { HttpClientModule } from "@angular/common/http";
+import { HTTP_INTERCEPTORS, HttpClientModule } from "@angular/common/http";
 
 
 import { ConfirmationService, MessageService } from 'primeng/api';
@@ -23,13 +23,17 @@ import { PerfilesModule } from './components/perfiles/perfiles.module';
 import { LecturasModule } from './components/medidores-agua/lecturas/lecturas.module';
 import { UsuariosFuncionesModule } from './components/usuarios-funciones/usuarios-funciones.module';
 import { CobrosModule } from './components/cobros/cobros.module';
+import { LoginComponent } from './auth/login/login.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { AuthInterceptor } from './interceptors/auth.interceptor';
+import { ErrorApiInterceptor } from './interceptors/error-api.interceptor';
 
 
 
 @NgModule({
   declarations: [
     AppComponent,
-    ForbiddenComponent
+    ForbiddenComponent,
   ],
   imports: [
     BrowserModule,
@@ -39,7 +43,7 @@ import { CobrosModule } from './components/cobros/cobros.module';
     LayoutModule,
     ToastModule,
     ConfirmDialogModule,
-
+    ReactiveFormsModule,
     // //UNA SOLUCION AL ERROR: NOW?
     AuthModule,
     // ItemsMenuModule,
@@ -53,7 +57,17 @@ import { CobrosModule } from './components/cobros/cobros.module';
   ],
   providers: [
     MessageService,
-    ConfirmationService
+    ConfirmationService,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass:AuthInterceptor,
+      multi:true,
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass:ErrorApiInterceptor,
+      multi:true,
+    }
   ],
   bootstrap: [AppComponent]
 })

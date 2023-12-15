@@ -14,10 +14,6 @@ export class RolesService {
 
   
   URL_Roles: string = environment.apiURrl + '/roles';
-  private headers = new HttpHeaders().set(
-    'authorization',
-    `Bearer ${localStorage.getItem('token') || ''}`
-  );
   private _roles$:Subject<DataResult<Role>>;
   private _roleSelected$:Subject<Role>;
   constructor(private http: HttpClient) {
@@ -33,7 +29,7 @@ export class RolesService {
   findAll(paginator:PaginatorFind) {
     let {size,...dataPaginator } = paginator;
     return this.http
-      .get<HttpResponseApiArray<Role>>(`${this.URL_Roles}`,{headers:this.headers,params:{...dataPaginator}})
+      .get<HttpResponseApiArray<Role>>(`${this.URL_Roles}`,{params:{...dataPaginator}})
       .pipe(
         tap((resp)=>{
           if(resp.OK){
@@ -55,7 +51,7 @@ export class RolesService {
 
   findOne(id: number) {
     return this.http
-      .get<HttpResponseApi<Role>>(`${this.URL_Roles}/${id}`,{headers:this.headers})
+      .get<HttpResponseApi<Role>>(`${this.URL_Roles}/${id}`)
       .pipe(
         tap((resp)=>{
           if(resp.OK){
@@ -76,7 +72,7 @@ export class RolesService {
   }
   create(form: RoleForm) {
     return this.http
-      .post<HttpResponseApi<Role>>(`${this.URL_Roles}`, form,{headers:this.headers})
+      .post<HttpResponseApi<Role>>(`${this.URL_Roles}`, form)
       .pipe(
         map((resp) => {
           // console.log('map',resp);
@@ -92,7 +88,7 @@ export class RolesService {
   }
   update(id: number, form: RoleForm) {
     return this.http
-      .patch<HttpResponseApi<Role>>(`${this.URL_Roles}/${id}`, form,{headers:this.headers})
+      .patch<HttpResponseApi<Role>>(`${this.URL_Roles}/${id}`, form)
       .pipe(
         tap((resp)=>{
           if(resp.OK){
@@ -113,7 +109,7 @@ export class RolesService {
   }
   updateStatus(id: number, form: Role) {
     return this.http
-      .patch<HttpResponseApi<Role>>(`${this.URL_Roles}/status/${id}`, form,{headers:this.headers})
+      .patch<HttpResponseApi<Role>>(`${this.URL_Roles}/status/${id}`, form)
       .pipe(
         tap((resp)=>{
           if(resp.OK){

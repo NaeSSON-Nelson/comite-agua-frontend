@@ -17,7 +17,7 @@ export class SidebarComponent {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
     this.authService.menusUser.subscribe((res) => {
-      console.log(res);
+      // console.log(res);
       this.model = res.map((menu) => {
         const menuItem: MenuItem = {
           label: menu.nombre,

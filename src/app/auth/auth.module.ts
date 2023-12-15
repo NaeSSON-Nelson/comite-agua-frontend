@@ -21,6 +21,6 @@ import { MessagesModule} from 'primeng/messages';
     MessagesModule,
     InputTextModule,
     ButtonModule,
-  ]
+  ],
 })
 export class AuthModule { }

@@ -13,10 +13,7 @@ export class LecturasService {
   URL_lecturas:string =environment.apiURrl+'/medidores-agua/lecturas';
   URL_seguimiento:string =environment.apiURrl+'/medidores-agua/gestion/anios-seguimientos';
   URL_reportes:string = this.URL_lecturas+'/reportes'
-  private headers = new HttpHeaders().set(
-    'authorization',
-    `Bearer ${localStorage.getItem('token') || ''}`
-  );
+  
   private _perfiles$: Subject<DataResult<Perfil>>;
   private _aniosSeguimientos$:Subject<AnioSeguimientoLecturas[]>;
   private _anioSeguimiento$:Subject<AnioSeguimientoLecturas>;
@@ -40,7 +37,7 @@ export class LecturasService {
     
     return this.http
       .get<HttpResponseApiArray<Perfil>>(`${this.URL_lecturas}/perfiles`, {
-        headers: this.headers,
+       
         params:{barrio:parameters.barrio || ''}
       })
       .pipe(
@@ -67,7 +64,7 @@ export class LecturasService {
       );
   }
   registerAllLecturas(registros:lecturasRegisterForm){
-    return this.http.post<HttpResponseApiArray<Perfil>>(`${this.URL_lecturas}`,registros,{headers:this.headers})
+    return this.http.post<HttpResponseApiArray<Perfil>>(`${this.URL_lecturas}`,registros,)
             .pipe(
               map((resp) => {
                 console.log('map',resp);
@@ -82,7 +79,7 @@ export class LecturasService {
             )
   }
   aniosSeguimientos(){
-    return this.http.get<HttpResponseApi<AnioSeguimientoLecturas[]>>(`${this.URL_seguimiento}`,{headers:this.headers,})
+    return this.http.get<HttpResponseApi<AnioSeguimientoLecturas[]>>(`${this.URL_seguimiento}`,)
             .pipe(
               map(resp=>{
                 this._aniosSeguimientos$.next(resp.data!);
@@ -99,7 +96,7 @@ export class LecturasService {
 
   //* REPORTES
   lecturasPorMes(params:LecturasOptions){
-    return this.http.get<HttpResponseApi<AnioSeguimientoLecturas>>(`${this.URL_reportes}/meses`,{headers:this.headers,params:{gestion:params.gestion!}})
+    return this.http.get<HttpResponseApi<AnioSeguimientoLecturas>>(`${this.URL_reportes}/meses`,{params:{gestion:params.gestion!}})
             .pipe(
               map(resp=>{
                 this._anioSeguimiento$.next(resp.data!);
@@ -114,7 +111,7 @@ export class LecturasService {
             );
   }
   PlanillasPorMes(params:LecturasOptions){
-    return this.http.get<HttpResponseApiArray<Perfil>>(`${this.URL_reportes}/planillas`,{headers:this.headers,params:{gestion:params.gestion!,mes:params.mes!,barrio:params.barrio!}})
+    return this.http.get<HttpResponseApiArray<Perfil>>(`${this.URL_reportes}/planillas`,{params:{gestion:params.gestion!,mes:params.mes!,barrio:params.barrio!}})
             .pipe(
               map(resp=>{
                 this._perfiles$.next(resp.data!);

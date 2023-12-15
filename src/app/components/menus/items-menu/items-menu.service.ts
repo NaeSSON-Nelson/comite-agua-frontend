@@ -11,10 +11,7 @@ import { environment } from 'src/environments/environment';
 })
 export class ItemsMenuService {
   URL_itemsMenus: string = environment.apiURrl + '/items-menu';
-  private headers = new HttpHeaders().set(
-    'authorization',
-    `Bearer ${localStorage.getItem('token') || ''}`
-  );
+ 
   private _itemsMenus$:Subject<DataResult<ItemMenu>>;
   private _itemMenuSelected$:Subject<ItemMenu>;
   constructor(private http: HttpClient) {
@@ -30,7 +27,7 @@ export class ItemsMenuService {
   findAll(paginator:PaginatorFind) {
     let {size,...dataPaginator } = paginator;
     return this.http
-      .get<HttpResponseApiArray<ItemMenu>>(`${this.URL_itemsMenus}`,{headers:this.headers,params:{...dataPaginator}})
+      .get<HttpResponseApiArray<ItemMenu>>(`${this.URL_itemsMenus}`,{params:{...dataPaginator}})
       .pipe(
         tap((resp)=>{
           if(resp.OK){
@@ -52,7 +49,7 @@ export class ItemsMenuService {
 
   findOne(id: number) {
     return this.http
-      .get<HttpResponseApi<ItemMenu>>(`${this.URL_itemsMenus}/${id}`,{headers:this.headers})
+      .get<HttpResponseApi<ItemMenu>>(`${this.URL_itemsMenus}/${id}`)
       .pipe(
         tap((resp)=>{
           if(resp.OK){
@@ -73,7 +70,7 @@ export class ItemsMenuService {
   }
   create(form: ItemMenu) {
     return this.http
-      .post<HttpResponseApi<ItemMenu>>(`${this.URL_itemsMenus}`, form,{headers:this.headers})
+      .post<HttpResponseApi<ItemMenu>>(`${this.URL_itemsMenus}`, form)
       .pipe(
         map((resp) => {
           // console.log('map',resp);
@@ -89,7 +86,7 @@ export class ItemsMenuService {
   }
   update(id: number, form: ItemMenu) {
     return this.http
-      .patch<HttpResponseApi<ItemMenu>>(`${this.URL_itemsMenus}/${id}`, form,{headers:this.headers})
+      .patch<HttpResponseApi<ItemMenu>>(`${this.URL_itemsMenus}/${id}`, form)
       .pipe(
         tap((resp)=>{
           if(resp.OK){
@@ -110,7 +107,7 @@ export class ItemsMenuService {
   }
   updateStatus(id: number, form: ItemMenu) {
     return this.http
-      .patch<HttpResponseApi<ItemMenu>>(`${this.URL_itemsMenus}/status/${id}`, form,{headers:this.headers})
+      .patch<HttpResponseApi<ItemMenu>>(`${this.URL_itemsMenus}/status/${id}`, form)
       .pipe(
         tap((resp)=>{
           if(resp.OK){

@@ -7,12 +7,12 @@ import { CobrosComponent } from './cobros.component';
 
 const routes: Routes = [
   {
-    path: '',
+    path: 'cobros-register',
     component: CobrosComponent,
   },
   {
     path: '**',
-    redirectTo: '',
+    redirectTo: 'cobros-register',
   },
 ];
 

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { EventEmitter, Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { Usuario } from '../interfaces';
 import { AuthService } from '../auth/auth.service';
@@ -40,11 +40,19 @@ export class LayoutService {
     scale: 14,
   };
   private overlayOpen = new Subject<any>();
-
+  // private _user$:Subject<Usuario> = new Subject<Usuario>()
+  private _user$:EventEmitter<Usuario | null> = new EventEmitter<Usuario | null>();
   overLayOpen$ = this.overlayOpen.asObservable();
-  constructor() {}
+  constructor() {
+    // this.userObserver.
+  }
+  get user(){
+    return this._user$.asObservable();
+  }
+  get userObserver(){
+    return this._user$;
+  }
   
-
   onMenuToggle() {
     if (this.isOverlay()) {
       this.state.overlayMenuActive = !this.state.overlayMenuActive;

@@ -22,6 +22,7 @@ export class FormRegisterDeudasComponent {
   totalPagar:number=0;
   @Input()
   visible:boolean=false;
+  closable:boolean=true;
   @Output()
   eventVisible:EventEmitter<boolean> = new EventEmitter<boolean>();
   constructor(

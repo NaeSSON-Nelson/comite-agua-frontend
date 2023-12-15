@@ -36,7 +36,13 @@ export class CommonAppService {
     {name:'PRIMAVERA',value:Barrio.primavera},
     {name:'SAN ANTONIO',value:Barrio.sanAntonio},
     {name:'VERDE OLIVO',value:Barrio.verdeOlivo},
-
+  ]
+  private _barriosForm:Values<any>[]=[
+    {name:'20 DE MARZO',value:Barrio._20DeMarzo},
+    {name:'MENDEZ FORTALEZA',value:Barrio.mendezFortaleza},
+    {name:'PRIMAVERA',value:Barrio.primavera},
+    {name:'SAN ANTONIO',value:Barrio.sanAntonio},
+    {name:'VERDE OLIVO',value:Barrio.verdeOlivo},
   ]
   private _tipoPerfil:Values<TipoPerfil>[]=[
     {name:'AFILIADO',value:TipoPerfil.AFILIADO},
@@ -59,6 +65,9 @@ export class CommonAppService {
   }
   get barrios(){
     return [...this._barrios];
+  }
+  get barriosForm(){
+    return [...this._barriosForm]
   }
   get tipoPerfiles(){
     return [...this._tipoPerfil];

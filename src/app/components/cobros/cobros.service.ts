@@ -12,10 +12,7 @@ export class CobrosService {
 
   URL_deudas:string = environment.apiURrl+'/pagos-de-servicio'
   URL_comprobantes:string = environment.apiURrl +'/comprobantes'
-  private headers = new HttpHeaders().set(
-    'authorization',
-    `Bearer ${localStorage.getItem('token') || ''}`
-  );
+  
   private _perfiles$: Subject<DataResult<Perfil>>;
   private _perfil$: Subject<Perfil>;
 
@@ -35,7 +32,7 @@ export class CobrosService {
     let { size, ...dataPaginator } = paginator;
     return this.http
       .get<HttpResponseApiArray<Perfil>>(`${this.URL_deudas}/perfiles`, {
-        headers: this.headers,
+       
         params: { ...dataPaginator },
       })
       .pipe(
@@ -63,7 +60,7 @@ export class CobrosService {
   findOnePerfil(id: number) {
     return this.http
       .get<HttpResponseApi<Perfil>>(`${this.URL_deudas}/comprobantes-pagar/perfiles/${id}`, {
-        headers: this.headers,
+        
       })
       .pipe(
         tap((resp) => {
@@ -90,7 +87,7 @@ export class CobrosService {
   }
   registrarPagos(pagosForm:PagosForm){
     return this.http.post<HttpResponseApi<ComprobantePago>>(`${this.URL_deudas}/register`,pagosForm,{
-      headers: this.headers,
+     
     }).pipe(
       map((resp) => {
         // console.log('map',resp);

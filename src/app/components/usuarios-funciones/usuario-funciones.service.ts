@@ -12,10 +12,6 @@ export class UsuarioFuncionesService {
 
   URL_user = environment.apiURrl +'/user';
   URL_user_medidores = this.URL_user +'/medidores'
-  private headers = new HttpHeaders().set(
-    'authorization',
-    `Bearer ${localStorage.getItem('token') || ''}`
-  );
   private _deudasLecturasMedidor$:Subject<Medidor>;
   private _lecturasMedidor$:Subject<PlanillaLecturas>
   constructor(private http:HttpClient) {
@@ -29,7 +25,7 @@ export class UsuarioFuncionesService {
     return this._lecturasMedidor$.asObservable();
   }
   getPerfilUser(){
-    return this.http.get<HttpResponseApi<Perfil>>(`${this.URL_user}/profile`,{headers:this.headers}).pipe(
+    return this.http.get<HttpResponseApi<Perfil>>(`${this.URL_user}/profile`).pipe(
       map((resp) => {
         // console.log('map',resp);
         const respuesta:ResponseResultData<Perfil>={OK:resp.OK,message:resp.message,statusCode:200,data:resp.data!}
@@ -43,7 +39,7 @@ export class UsuarioFuncionesService {
     )
   }
   getSelectsMedidores(){
-    return this.http.get<HttpResponseApi<Medidor[]>>(`${this.URL_user_medidores}`,{headers:this.headers}).pipe(
+    return this.http.get<HttpResponseApi<Medidor[]>>(`${this.URL_user_medidores}`).pipe(
       map((resp) => {
         // console.log('map',resp);
         const respuesta:ResponseResultData<Medidor[]>={OK:resp.OK,message:resp.message,statusCode:200,data:resp.data!}
@@ -57,7 +53,7 @@ export class UsuarioFuncionesService {
     )
   }
   getMedidor(nroMedidor:string){
-    return this.http.get<HttpResponseApi<Medidor>>(`${this.URL_user_medidores}/${nroMedidor}`,{headers:this.headers}).pipe(
+    return this.http.get<HttpResponseApi<Medidor>>(`${this.URL_user_medidores}/${nroMedidor}`).pipe(
       map((resp) => {
         // console.log('map',resp);
         const respuesta:ResponseResultData<Medidor>={OK:resp.OK,message:resp.message,statusCode:200,data:resp.data!}
@@ -71,7 +67,7 @@ export class UsuarioFuncionesService {
     )
   }
   getLecturasMedidor(id:number){
-    return this.http.get<HttpResponseApi<PlanillaLecturas>>(`${this.URL_user_medidores}/planillas/${id}`,{headers:this.headers}).pipe(
+    return this.http.get<HttpResponseApi<PlanillaLecturas>>(`${this.URL_user_medidores}/planillas/${id}`).pipe(
       tap(resp=>{
         if(resp.OK)
         this._lecturasMedidor$.next(resp.data!)
@@ -107,7 +103,7 @@ export class UsuarioFuncionesService {
     )
   }
   getLectura(id:number){
-    return this.http.get<HttpResponseApi<MesLectura>>(`${this.URL_user_medidores}/lecturas/${id}`,{headers:this.headers}).pipe(
+    return this.http.get<HttpResponseApi<MesLectura>>(`${this.URL_user_medidores}/lecturas/${id}`).pipe(
       map((resp) => {
         // console.log('map',resp);
         const respuesta:ResponseResultData<MesLectura>={OK:resp.OK,message:resp.message,statusCode:200,data:resp.data!}

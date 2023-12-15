@@ -8,6 +8,9 @@ import {
 } from '../../patterns/forms-patterns';
 import { Usuario } from 'src/app/interfaces/usuario.interface';
 import { Router } from '@angular/router';
+import { LocalStorageService } from 'src/app/common/storage/local-storage.service';
+import { KEY_STORAGE } from 'src/app/interfaces/storage.enum';
+import { LayoutService } from 'src/app/layout/layout.service';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -18,7 +21,9 @@ export class LoginComponent {
   msgs: Message[] = [];
   constructor(
     private fb: FormBuilder,
-    private authService: AuthService,
+    private readonly authService: AuthService,
+    private readonly localStorageService:LocalStorageService,
+    private readonly layoutService:LayoutService,
     private messageService: MessageService,
     private router: Router
   ) {}
@@ -50,23 +55,12 @@ export class LoginComponent {
   signUp(form: Usuario) {
     
     this.authService.login(form).subscribe((res) => {
-      if (res) {
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Logueado con exito',
-          detail: `Bienvenido`,
-          icon: 'pi pi-check',
-          life: 2000,
-        });
-        this.router.navigate(['/dashboard']);
-      } else {
-        this.msgs=[];
-        this.msgs.push({
-          severity: 'warn',
-          summary: 'Warn Message',
-          detail: 'Credenciales invalidas',
-        });
-      }
+      // console.log(res);
+      this.localStorageService.setItem(KEY_STORAGE.DATA_USER,res.dataUser);
+      // this.layoutService.user.next(res.dataUser)
+      this.getUser();
+      
+      this.router.navigateByUrl('');
     });
   }
   limpiarCampo(campo: string) {
@@ -112,5 +106,11 @@ export class LoginComponent {
       return 'El tamaño del campo debe ser 6 como minimo';
     }
     return '';
+  }
+  getUser(){
+    this.authService.getUser().subscribe(res=>{
+      console.log(res);
+      this.layoutService.userObserver.emit(res.data!)
+    })
   }
 }

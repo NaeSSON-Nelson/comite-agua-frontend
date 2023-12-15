@@ -128,10 +128,10 @@
 				<div class="col-12 md:col-3 md:flex md:justify-content-center" *ngIf="perfil.isActive; else inhabilitado">
 					<button pButton pRipple label="Deshabilitar perfil de usuario" class="p-button-warning" (click)="actionData('DESHABILITAR')"></button>
 				</div>
-				<div class="col-12 md:col-3 md:flex md:justify-content-center" *ngIf="perfil.afiliado===null;">
+				<div class="col-12 md:col-3 md:flex md:justify-content-center" *ngIf="!perfil.afiliado;">
 					<button pButton pRipple label="Añadir afiliacion" class="p-button-secondary" (click)="actionData('AFILIADO')"></button>
 				</div>
-				<div class="col-12 md:col-3 md:flex md:justify-content-center" *ngIf="perfil.usuario===null;">
+				<div class="col-12 md:col-3 md:flex md:justify-content-center" *ngIf="!perfil.usuario;">
 					<button pButton pRipple label="añadir cuenta de usuario" class="p-button-help" (click)="actionData('USUARIO')"></button>
 				</div>
 				<ng-template #inhabilitado>

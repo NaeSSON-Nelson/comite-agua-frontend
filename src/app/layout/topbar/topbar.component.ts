@@ -9,7 +9,11 @@ import { Role } from 'src/app/interfaces';
 @Component({
   selector: 'app-topbar',
   templateUrl: './topbar.component.html',
-  styles: [],
+  styles: [`
+  .menu-taps{
+    width: 100%
+  }
+  `],
 })
 export class TopbarComponent {
   @Input()
@@ -41,24 +45,52 @@ export class TopbarComponent {
   @Output()
   userLevelEmit:EventEmitter<number> = new EventEmitter<number>();
   rolChange(event:any){
-    console.log('rol cambiado',event.value);
+    // console.log('rol cambiado',event.value);
     this.menusUser(event.value.id);
     this.userLevel = event.value.nivel;
     this.userLevelEmit.emit(event.value.nivel)
   }
   menusUser(idRol:number){
     this.authService.getMenusUser(idRol).subscribe(res=>{
+      // console.log('RESPONSE MENUS USER');
       console.log(res);
+      console.log(this.items);
     });
   }
   ngOnInit(): void {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
-    this.authService.usuario.subscribe(res=>{
-      console.log('respuesta desde top bar',res);
+    this.layoutService.user.subscribe(res=>{
+      // console.log('respuesta desde top bar',res);
       if(res){
         this.menusUser(res.roles![0].id!);
+        if(res!.roles![0].nivel!<=40){
+          this.getMenus();
+        }
       }
+      
     })
+    
+  }
+  getMenus(){
+    this.authService.menusUser.subscribe((res) => {
+      // console.log('TAP TAP MENU',res);
+
+      this.items = res.map((menu) => {
+        const menuItem: MenuItem = {
+          label: menu.nombre,
+          // routerLink: [`/${menu.linkMenu}`],
+          items: menu.itemsMenu?.map((item) => {
+            const menuItem: MenuItem = {
+              label: item.nombre,
+              routerLink: [`/${menu.linkMenu}/${item.linkMenu}`],
+              visible:item.visible
+            };
+            return menuItem;
+          }),
+        };
+        return menuItem;
+      });
+    });
   }
 }

@@ -26,7 +26,7 @@ export class PerfilDetailsComponent {
     //Add 'implements OnInit' to the class.
     this.perfilService.perfil.subscribe((res) => {
       this.perfil = res;
-      // console.log(res);
+      console.log(res);
     });
     if (!this.router.url.includes('id')) {
       this.messageService.add({

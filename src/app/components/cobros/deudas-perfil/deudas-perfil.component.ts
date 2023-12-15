@@ -15,6 +15,7 @@ export class DeudasPerfilComponent {
   idPerfil!:number;
   @Input()
   visible:boolean=false;
+  closable:boolean=true;
   @Output()
   eventVisible:EventEmitter<boolean> = new EventEmitter<boolean>();
   perfil:Perfil|null=null;
@@ -99,6 +100,7 @@ export class DeudasPerfilComponent {
     })
   }
   closeModalForm(event:boolean){
+    this.closable=true;
     this.visiblePagar=false;
     this.obtenerComprobanteDetalles();
     this.total=0;
@@ -110,6 +112,7 @@ export class DeudasPerfilComponent {
     // console.log(this.comprobantesPagar);
     // this.idPerfil=this.perfil!.id!;
     this.visiblePagar=true;
+    this.closable=false;
   }
   addSelect(event:any){
     // console.log(event);

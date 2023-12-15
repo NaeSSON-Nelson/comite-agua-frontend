@@ -29,10 +29,6 @@ export class PerfilService {
   URL_perfil: string = environment.apiURrl + '/perfiles';
   URL_afiliado: string = this.URL_perfil + '/afiliado';
   URL_usuario: string = this.URL_perfil + '/usuario';
-  private headers = new HttpHeaders().set(
-    'authorization',
-    `Bearer ${localStorage.getItem('token') || ''}`
-  );
   private _perfiles$: Subject<DataResult<Perfil>>;
   private _perfil$: Subject<Perfil>;
   private _afiliadoSelected$: Subject<Afiliado>;
@@ -58,7 +54,6 @@ export class PerfilService {
     let { size, ...dataPaginator } = paginator;
     return this.http
       .get<HttpResponseApiArray<Perfil>>(`${this.URL_perfil}`, {
-        headers: this.headers,
         params: { ...dataPaginator },
       })
       .pipe(
@@ -86,9 +81,7 @@ export class PerfilService {
 
   findOne(id: number) {
     return this.http
-      .get<HttpResponseApi<Perfil>>(`${this.URL_perfil}/${id}`, {
-        headers: this.headers,
-      })
+      .get<HttpResponseApi<Perfil>>(`${this.URL_perfil}/${id}`)
       .pipe(
         tap((resp) => {
           if (resp.OK) {
@@ -113,9 +106,7 @@ export class PerfilService {
   }
   findOnePerfilUsuario(idPerfil: number) {
     return this.http
-      .get<HttpResponseApi<Perfil>>(`${this.URL_usuario}/${idPerfil}`, {
-        headers: this.headers,
-      })
+      .get<HttpResponseApi<Perfil>>(`${this.URL_usuario}/${idPerfil}`)
       .pipe(
         tap((resp) => {
           if (resp.OK) {
@@ -140,9 +131,7 @@ export class PerfilService {
   }
   findOnePerfilAfiliado(idPerfil: number) {
     return this.http
-      .get<HttpResponseApi<Perfil>>(`${this.URL_afiliado}/${idPerfil}`, {
-        headers: this.headers,
-      })
+      .get<HttpResponseApi<Perfil>>(`${this.URL_afiliado}/${idPerfil}`)
       .pipe(
         tap((resp) => {
           if (resp.OK) {
@@ -168,9 +157,7 @@ export class PerfilService {
 
   create(form: PerfilForm) {
     return this.http
-      .post<HttpResponseApi<ResponseCreatePerfil>>(`${this.URL_perfil}`, form, {
-        headers: this.headers,
-      })
+      .post<HttpResponseApi<ResponseCreatePerfil>>(`${this.URL_perfil}`, form,)
       .pipe(
         map((resp) => {
           // console.log('map',resp);
@@ -191,9 +178,7 @@ export class PerfilService {
   }
   createUsuario(idPerfil: number, form: UsuarioForm) {
     return this.http
-      .post<HttpResponseApi<ResponseCreatePerfil>>(`${this.URL_usuario}/${idPerfil}`, form, {
-        headers: this.headers,
-      })
+      .post<HttpResponseApi<ResponseCreatePerfil>>(`${this.URL_usuario}/${idPerfil}`, form)
       .pipe(
         map((resp) => {
           // console.log('map',resp);
@@ -214,9 +199,7 @@ export class PerfilService {
   }
   createAfiliado(idPerfil: number, form: AfiliadoForm) {
     return this.http
-      .post<HttpResponseApi<Perfil>>(`${this.URL_afiliado}/${idPerfil}`, form, {
-        headers: this.headers,
-      })
+      .post<HttpResponseApi<Perfil>>(`${this.URL_afiliado}/${idPerfil}`, form)
       .pipe(
         map((resp) => {
           // console.log('map',resp);
@@ -236,9 +219,7 @@ export class PerfilService {
   }
   update(id: number, form: PerfilForm) {
     return this.http
-      .patch<HttpResponseApi<Perfil>>(`${this.URL_perfil}/${id}`, form, {
-        headers: this.headers,
-      })
+      .patch<HttpResponseApi<Perfil>>(`${this.URL_perfil}/${id}`, form)
       .pipe(
         map((resp) => {
           // console.log('map',resp);
@@ -260,8 +241,7 @@ export class PerfilService {
     return this.http
       .patch<HttpResponseApi<Afiliado>>(
         `${this.URL_afiliado}/${idPerfil}`,
-        form,
-        { headers: this.headers }
+        form
       )
       .pipe(
         map((resp) => {
@@ -284,8 +264,7 @@ export class PerfilService {
     return this.http
       .patch<HttpResponseApi<Afiliado>>(
         `${this.URL_afiliado}/status/${idPerfil}`,
-        form,
-        { headers: this.headers }
+        form
       )
       .pipe(
         tap((resp) => {
@@ -313,8 +292,7 @@ export class PerfilService {
     return this.http
       .patch<HttpResponseApi<Perfil>>(
         `${this.URL_perfil}/status/${idPerfil}`,
-        form,
-        { headers: this.headers }
+        form
       )
       .pipe(
         tap((resp) => {
@@ -342,8 +320,7 @@ export class PerfilService {
     return this.http
       .patch<HttpResponseApi<Afiliado>>(
         `${this.URL_usuario}/${idPerfil}`,
-        form,
-        { headers: this.headers }
+        form
       )
       .pipe(
         map((resp) => {
@@ -366,8 +343,7 @@ export class PerfilService {
     return this.http
       .patch<HttpResponseApi<Usuario>>(
         `${this.URL_usuario}/status/${idPerfil}`,
-        form,
-        { headers: this.headers }
+        form
       )
       .pipe(
         tap((resp) => {

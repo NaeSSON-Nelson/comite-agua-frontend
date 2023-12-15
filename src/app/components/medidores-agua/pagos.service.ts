@@ -12,29 +12,21 @@ export class PagosService {
   private URL_pagos:string = environment.apiURrl +'/pagos-de-servicio';
   private URL_comprobantes_pagos:string = this.URL_pagos +'/comprobantes';
   private URL_lecturas:string =environment.apiURrl+'/medidores-agua/lecturas';
-  private headers = new HttpHeaders().set(
-    'authorization',
-    `Bearer ${localStorage.getItem('token') || ''}`
-  );
-  
+
   constructor(private http: HttpClient) { }
   obtenerComprobantePorPagar(idLectura:number){
-    return this.http.get<HttpResponseApi<MesLectura>>(`${this.URL_comprobantes_pagos}/${idLectura}`,
-    {headers:this.headers})
+    return this.http.get<HttpResponseApi<MesLectura>>(`${this.URL_comprobantes_pagos}/${idLectura}`)
     .pipe(
       map(res=>res.data!)
     )
   }
   obtenerAfiliadosSinTarifa(){
-    return this.http.get<HttpResponseApi<Perfil[]>>(`${this.URL_lecturas}/comprobantes/perfiles`,{
-      headers: this.headers,
-      // params:{gestion:parameters.gestion!,mes:parameters.mes!}
-    }).pipe(
+    return this.http.get<HttpResponseApi<Perfil[]>>(`${this.URL_lecturas}/comprobantes/perfiles`).pipe(
       // map(res=>res.data!)
     )
   }
   generarComprobantes(){
-    return this.http.get<HttpResponseApi<ComprobantePorPago[]>>(`${this.URL_comprobantes_pagos}/generar`,{headers:this.headers})
+    return this.http.get<HttpResponseApi<ComprobantePorPago[]>>(`${this.URL_comprobantes_pagos}/generar`)
             .pipe(
               // map(res=>res.data!)
             )

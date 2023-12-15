@@ -13,10 +13,7 @@ import { ResponseResult } from '../../interfaces/http-respones.interface';
 export class MenusService {
 
   URL_Menus: string = environment.apiURrl + '/menus';
-  private headers = new HttpHeaders().set(
-    'authorization',
-    `Bearer ${localStorage.getItem('token') || ''}`
-  );
+  
   private _menus$:Subject<DataResult<Menu>>;
   private _menuSelected$:Subject<Menu>;
   constructor(private http: HttpClient) {
@@ -32,7 +29,7 @@ export class MenusService {
   findAll(paginator:PaginatorFind) {
     let {size,...dataPaginator } = paginator;
     return this.http
-      .get<HttpResponseApiArray<Menu>>(`${this.URL_Menus}`,{headers:this.headers,params:{...dataPaginator}})
+      .get<HttpResponseApiArray<Menu>>(`${this.URL_Menus}`,{params:{...dataPaginator}})
       .pipe(
         tap((resp)=>{
           if(resp.OK){
@@ -54,7 +51,7 @@ export class MenusService {
 
   findOne(id: number) {
     return this.http
-      .get<HttpResponseApi<Menu>>(`${this.URL_Menus}/${id}`,{headers:this.headers})
+      .get<HttpResponseApi<Menu>>(`${this.URL_Menus}/${id}`)
       .pipe(
         tap((resp)=>{
           if(resp.OK){
@@ -75,7 +72,7 @@ export class MenusService {
   }
   create(form: MenuForm) {
     return this.http
-      .post<HttpResponseApi<Menu>>(`${this.URL_Menus}`, form,{headers:this.headers})
+      .post<HttpResponseApi<Menu>>(`${this.URL_Menus}`, form)
       .pipe(
         map((resp) => {
           // console.log('map',resp);
@@ -91,7 +88,7 @@ export class MenusService {
   }
   update(id: number, form: MenuForm) {
     return this.http
-      .patch<HttpResponseApi<Menu>>(`${this.URL_Menus}/${id}`, form,{headers:this.headers})
+      .patch<HttpResponseApi<Menu>>(`${this.URL_Menus}/${id}`, form)
       .pipe(
         tap((resp)=>{
           if(resp.OK){
@@ -112,7 +109,7 @@ export class MenusService {
   }
   updateStatus(id: number, form: Menu) {
     return this.http
-      .patch<HttpResponseApi<Menu>>(`${this.URL_Menus}/status/${id}`, form,{headers:this.headers})
+      .patch<HttpResponseApi<Menu>>(`${this.URL_Menus}/status/${id}`, form)
       .pipe(
         tap((resp)=>{
           if(resp.OK){

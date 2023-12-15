@@ -98,7 +98,7 @@ export class PerfilFormComponent {
     direccion:        [,[Validators.pattern(patternText)]],
     genero:           [,[Validators.required, Validators.pattern(patternText)]],
     fechaNacimiento:  [,[Validators.required]],
-    contacto:         ['+591 ',[Validators.pattern(/^\+[591]{3}\s[0-9]{6,8}$/gs)]],
+    contacto:         ['+591 ',[Validators.pattern(/^\+[591]{3}\s[0-9]{8}$/g)]],
     estado:           [Estado.ACTIVO,[Validators.required]],
   })
 
@@ -118,7 +118,7 @@ export class PerfilFormComponent {
     return this.usuarioForm.controls['roles'] as FormArray;
   }
   addGroupDataAfiliado(event:any){
-    console.log(event);
+    // console.log(event);
     if(event.value){
       this.perfilForm.addControl('afiliadoForm',this.afiliadoForm);
       this.addAfiliado=true;
@@ -129,7 +129,7 @@ export class PerfilFormComponent {
     }
   }
   addGroupDataUsuario(event:any){
-    console.log(event);
+    // console.log(event);
     if(event.value){
       this.perfilForm.addControl('usuarioForm',this.usuarioForm);
       this.addUsuario=true;
@@ -516,6 +516,7 @@ export class PerfilFormComponent {
   }
   getContactoErrors(campo:string) {
     const errors = this.perfilForm.get(campo)?.errors;
+    console.log(errors);
     if (errors?.['pattern']) {
       return 'Debe seguir el patron: +591 XXXXXXXX';
     }

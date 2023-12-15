@@ -7,14 +7,15 @@
     <!-- <button #menubutton class="p-link layout-menu-button layout-topbar-button" (click)="layoutService.onMenuToggle()">
         <i class="pi pi-bars"></i>
     </button> -->
-    <button #menubutton class="p-link layout-menu-button layout-topbar-button" (click)="layoutService.onMenuToggle()">
+    <button #menubutton class="p-link layout-menu-button layout-topbar-button" (click)="layoutService.onMenuToggle()" *ngIf="userLevel>40">
         <i class="pi pi-bars"></i>
     </button>
-    <button #topbarmenubutton class="p-link layout-topbar-menu-button layout-topbar-button" 
-    
-    >
+    <button #topbarmenubutton class="p-link layout-topbar-menu-button layout-topbar-button">
         <i class="pi pi-ellipsis-v"></i>
     </button>
+    <div *ngIf="items.length>0" class="menu-taps">
+        <p-menubar [model]="items"></p-menubar>
+    </div>
     <div #topbarmenu class="layout-topbar-menu" [ngClass]="{'layout-topbar-menu-mobile-active': layoutService.state.profileSidebarVisible}" *ngIf="usuario; else nouser">
             <button class="p-link layout-topbar-button">
                 <i class="pi pi-user"></i>
