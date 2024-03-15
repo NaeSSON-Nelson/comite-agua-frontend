@@ -24,7 +24,7 @@ export class DeudasPerfilComponent {
   selectedNodes: any =null;
   loading:boolean=false;
   cols:any[]=[
-    { field: 'name', header: 'Nombres' },
+    { field: 'name', header: 'Nro. medidor afiliado' },
     { field: 'mesLectura', header: 'Mes Lecturado' },
     { field: 'lectura', header: 'Lectura (m3.)' },
     { field: 'estadoMedidor', header: 'Estado medidor ' },
@@ -42,6 +42,7 @@ export class DeudasPerfilComponent {
       // if(res.afiliado?.medidores?.length>0)
       this.medidoresDeudas=res.afiliado!.medidores!.map(medidor=>{
         const {nroMedidor,marca,planillas}=medidor
+        console.log(medidor);
         const nodoMedidor:TreeNode<any> ={
           expanded:true,
           data:{
@@ -70,8 +71,8 @@ export class DeudasPerfilComponent {
                   data:{
                     name:'', 
                     mesLectura:lect.mesLecturado,
-                    lectura:lect.lectura,
-                    total:lect.consumoTotal,
+                    lectura:`${lect.lectura} m3.`,
+                    total:`${lect.consumoTotal} m3.`,
                     estadoMedidor:lect.estadoMedidor || 'SIN ESTADO REGISTRADO',
                     monto:lect.pagar!.monto,
                     idComprobante:lect.pagar!.id
@@ -93,8 +94,9 @@ export class DeudasPerfilComponent {
     this.loading=true;
     this.cobrosService.findOnePerfil(this.idPerfil).subscribe(res=>{
       // this.perfil=res;
-      console.log(res);
+      // console.log(res);
       if(res.OK){
+        this.total=0;
       }
       this.loading=false;
     })
@@ -103,7 +105,7 @@ export class DeudasPerfilComponent {
     this.closable=true;
     this.visiblePagar=false;
     this.obtenerComprobanteDetalles();
-    this.total=0;
+    // this.total=0;
   }
   total:number=0;
   visiblePagar:boolean=false;
@@ -139,7 +141,7 @@ export class DeudasPerfilComponent {
   reduceCobro(nodo:TreeNode<any>){
     if(!nodo.children){
       const comp = this.comprobantesPagar.findIndex(compa=>compa.idComprobante=== nodo.data.idComprobante);
-      if(comp>=0){
+      if(comp>=0 && this.total>=0){
         this.comprobantesPagar.splice(comp,1)
         this.total=this.total-nodo.data.monto
       }

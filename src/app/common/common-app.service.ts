@@ -1,7 +1,10 @@
 import { Injectable } from '@angular/core';
-import { Barrio, Estado, Genero, TipoPerfil } from '../interfaces';
+import { Barrio, Estado, Genero, MesLectura, Perfil, TipoPerfil } from '../interfaces';
 import { Nivel } from '../interfaces/atributes.enum';
-
+import * as IPdf from 'pdfmake/interfaces'
+import * as pdfMake from "pdfmake/build/pdfmake";
+import * as pdfFonts from 'pdfmake/build/vfs_fonts';
+(<any>pdfMake).vfs = pdfFonts.pdfMake.vfs;
 
 export interface Values<T>{
   name:   string;
@@ -74,5 +77,172 @@ export class CommonAppService {
   }
   get niveles(){
     return [...this._nivelesRoles]
+  }
+  constructor(){}
+  comprobantesPdfGenerated(lecturas:MesLectura[],afiliado:Perfil){
+    console.log(lecturas);
+    console.log(afiliado);
+    const content:IPdf.TableCell[][]=[];
+    content.push([
+                  
+      {
+        border: [true, true, false, false],
+        fillColor: '#eeeeee',
+        text: 'fajado 1',
+        alignment:'center'
+      },
+      {
+        border: [false, true, false, false],
+        fillColor: '#eeeeee',
+        text: 'fajado 2'
+      },
+      {
+        border: [false, true, true, false],
+        fillColor: '#eeeeee',
+        text: 'fajado 3'
+      }
+    ],
+    [
+        {
+        border: [true, false, false, false],
+        fillColor: '#eeeeee',
+        text: 'fajado 4'
+      },  
+        {
+        border: [false, false, false, false],
+        fillColor: '#eeeeee',
+        text: 'fajado 5'
+      },  
+        {
+        border: [false, false, true, false],
+        fillColor: '#eeeeee',
+        text: 'fajado 6'
+      },  
+    ],
+    [
+        {
+        border: [true, false, false, false],
+        fillColor: '#eeeeee',
+        text: 'fajado 7'
+      },  
+        {
+        border: [false, false, false, false],
+        fillColor: '#eeeeee',
+        text: 'fajado 8'
+      },  
+        {
+        border: [false, false, true, false],
+        fillColor: '#eeeeee',
+        text: 'fajado 9'
+      },  
+    ],
+    [
+        {
+        border: [true, false, false, false],
+        fillColor: '#eeeeee',
+        text: 'fajado 10'
+      },  
+        {
+        border: [false, false, false, false],
+        fillColor: '#eeeeee',
+        text: 'fajado 11'
+      },  
+        {
+        border: [false, false, true, false],
+        fillColor: '#eeeeee',
+        text: 'fajado 12'
+      },  
+    ],
+    [
+        {
+        border: [true, false, false, false],
+        fillColor: '#eeeeee',
+        text: 'fajado 13'
+      },  
+        {
+        border: [false, false, false, false],
+        fillColor: '#eeeeee',
+        text: 'fajado 14'
+      },  
+        {
+        border: [false, false, true, false],
+        fillColor: '#eeeeee',
+        text: 'fajado 15'
+      },  
+    ],
+    [
+      {
+        border: [true, true, true, true],
+        fillColor: '#eeeeff',
+        text: 'TITULO 1',
+        fontSize:15,
+        color:'black',
+        alignment: 'center'
+      },
+      {
+        border: [true, true, true, true],
+        fillColor: '#eeeeff',
+        text: 'TITULO 2',
+        fontSize:15,
+        color:'black',
+        alignment: 'center'
+      },
+      {
+        border: [true, true, true, true],
+        fillColor: '#eeeeff',
+        text: 'TITULO 3',
+        fontSize:15,
+        color:'black',
+        alignment: 'center'
+      },
+    ],
+    [
+      '',
+      {
+        border: [true, true, true, true],
+        fillColor: '#eeffee',
+        text: '\n'
+      },
+      ''
+    ],
+    [
+      '',
+      {
+        border: undefined,
+        fillColor: '#eeeeee',
+        text: '\n'
+      },
+      {
+        border: [false, false, true, true],
+        fillColor: '#dddddd',
+        text: ''
+      }
+    ])
+    console.log(content);
+    const dd:IPdf.TDocumentDefinitions={
+      // a string or { width: number, height: number }
+      pageSize: 'RA4',
+      pageOrientation: 'landscape',
+      watermark: { text: 'test watermark', color: 'blue', opacity: 0.3, bold: true, italics: false },
+      // [left, top, right, bottom] or [horizontal, vertical] or just a number for equal margins
+      pageMargins: [ 40, 60, 40, 60 ],
+        content: [
+          {
+            style: 'tableExample',
+			      color: '#444',
+            table: {
+              body: 
+                content
+              
+            }
+          }
+          ]
+    }  
+    pdfMake.createPdf(dd).open();
+  }
+  
+
+  addRowPdf(){
+    return []
   }
 }

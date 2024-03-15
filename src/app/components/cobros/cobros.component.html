@@ -26,7 +26,6 @@
                         <th >Nombres</th>
                         <th>Cedula de Identidad</th>
                         <th >Contacto</th>
-                        <th >Barrio</th>
                         <th >Estado</th>
                         <th></th>
                     </tr>
@@ -48,19 +47,18 @@
                             <span class="p-column-title">contactos</span>
                            {{'SIN CONTACTOS'}}
                         </td>
-                        <td style="width:14%; min-width:10rem;">
-                            <span class="p-column-title">barrio</span>
-                            {{customer.barrio}}
-                        </td>
+                        
                         <td style="width:14%; min-width: 10rem;"><span class="p-column-title">ESTADO</span>
                             <span [class]="'product-badge'">{{customer.estado}}</span>
                         </td>
                         <td  style="width:14%; min-width: 10rem;">
                             <div class="flex p-fluid">
-                                <button pButton pRipple icon="pi pi-plus" label="mas..." class="p-button-rounded p-button-info mr-2"
-                                (click)="dataDetail(customer.id)"
+                                <button pButton pRipple icon="pi pi-plus" class="p-button-rounded p-button-info mr-2"
+                                (click)="cobrosAfiliado(customer.id)"
                                 ></button>
-                                
+                                <button pButton pRipple icon="pi pi-book" class="p-button-rounded p-button-info mr-2"
+                                (click)="historialCobros(customer.id)"
+                                ></button>
                             </div>
                         </td>
                     </tr>
@@ -73,8 +71,14 @@
     </div>
 </div>
 <app-deudas-perfil
-*ngIf="idPerfil>0"
+*ngIf="idPerfil>0 && visible"
 [idPerfil]="idPerfil"
 [visible]="visible"
 (eventVisible)="closeModal($event)"
 ></app-deudas-perfil>
+<app-historial-cobros
+*ngIf="idPerfil>0 && visibleHistorial"
+[idPerfil]="idPerfil"
+[visible]="visibleHistorial"
+(eventVisible)="visibleHistorial = $event"
+></app-historial-cobros>

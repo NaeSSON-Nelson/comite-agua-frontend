@@ -31,9 +31,9 @@ export class AuthInterceptor implements HttpInterceptor {
 
     const dataUser = authService.getDataUser();
     if(!dataUser || !dataUser.accessToken){
-      inject(Router).navigateByUrl(PATH_AUTH);
+      inject(Router).navigateByUrl(URL_SIGNIN);
     }
-    const requestClonse = authService.addTokenHeader(request);
-    return next.handle(requestClonse);
+    const requestClone = authService.addTokenHeader(request);
+    return next.handle(requestClone);
   }
 }

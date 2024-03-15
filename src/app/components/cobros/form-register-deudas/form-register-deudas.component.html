@@ -1,6 +1,8 @@
 <p-dialog
 header="Detalles del registro de pagos"
-[(visible)]="visible" [modal]="true" [style]="{ width: '75vw' }" [draggable]="false" [resizable]="false" (onHide)="eventVisible.emit(false)" [baseZIndex]="1250" [closeOnEscape]="closable"
+[(visible)]="visible" [modal]="true" [style]="{ width: '75vw' }" [draggable]="false" [resizable]="false" [baseZIndex]="1250" [closeOnEscape]="false"
+(visibleChange)="cerrando($event)"
+(onShow)="changesModal()"
 >
 <div class="card grid" [formGroup]="pagarForm">
     <h5 class="col-12"> DATOS DEL TITULAR</h5>
@@ -75,4 +77,9 @@ header="Detalles del registro de pagos"
         </div>  
     </div>
 </div>
+</p-dialog>
+<p-dialog
+header="Registros realizados"
+[(visible)]="visibleRegisters" [modal]="true" [style]="{ width: '50vw' }" [draggable]="true" [resizable]="true"  [baseZIndex]="1500">
+
 </p-dialog>

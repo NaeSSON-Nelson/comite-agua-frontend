@@ -24,12 +24,20 @@ export class AfiliadoMedidoresDetailsComponent {
 
   perfil!: Perfil;
   medidorSelected!: Medidor;
+  medidoresPerfil:any[]=[];
   planillaVisible:boolean=false;
   ngOnInit(): void {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
     this.medidoresService.afiliadoWithMedidores.subscribe((res) => {
       this.perfil = res;
+      if(res.afiliado){
+        for(const med of res.afiliado.medidores!)
+        this.medidoresPerfil.push({
+          name:`${med.nroMedidor}${med.isActive?'':' (deshabilitado)'}`,
+          value:med
+        })
+      }
     });
     if (!this.router.url.includes('id')) {
       this.messageService.add({

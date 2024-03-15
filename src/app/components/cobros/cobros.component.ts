@@ -108,9 +108,14 @@ export class CobrosComponent {
   }
   idPerfil:number=-1;
   visible:boolean=false;
-  dataDetail(id: number) {
+  cobrosAfiliado(id: number) {
     // this.router.navigate(['perfiles', 'perfil-details'], { queryParams: { id } });
     this.visible=true;
+    this.idPerfil=id;
+  }
+  visibleHistorial:boolean=false;
+  historialCobros(id:number){
+    this.visibleHistorial=true;
     this.idPerfil=id;
   }
   closeModal(event:any){

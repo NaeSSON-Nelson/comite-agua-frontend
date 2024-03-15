@@ -13,10 +13,12 @@ import {
   PATH_LECTURAS,
   PATH_MEDIDORES,
   PATH_MENUS,
+  PATH_NOTFOUND,
   PATH_PERFILES,
   PATH_ROLES,
   PATH_USER,
 } from './interfaces/routes-app';
+import { NotFound404Component } from './public/not-found404/not-found404.component';
 
 const routes: Routes = [
   {
@@ -31,7 +33,8 @@ const routes: Routes = [
             loadChildren: () =>
               import('./components/perfiles/perfiles-routing.module').then(
                 (m) => m.PerfilesRoutingModule
-              ),
+              ),       
+            canActivate: [validarTokenGuard],
           },
           {
             path: PATH_MENUS,
@@ -39,6 +42,7 @@ const routes: Routes = [
               import('./components/menus/menus-routing.module').then(
                 (m) => m.MenusRoutingModule
               ),
+            canActivate: [validarTokenGuard],
           },
           {
             path: PATH_ITEMSMENU,
@@ -46,6 +50,7 @@ const routes: Routes = [
               import(
                 './components/menus/items-menu/items-menu-routing.module'
               ).then((m) => m.ItemsMenuRoutingModule),
+            canActivate: [validarTokenGuard],
           },
           {
             path: PATH_ROLES,
@@ -53,6 +58,7 @@ const routes: Routes = [
               import('./components/roles/roles-routing.module').then(
                 (m) => m.RolesRoutingModule
               ),
+            canActivate: [validarTokenGuard],
           },
           {
             path: PATH_MEDIDORES,
@@ -60,6 +66,7 @@ const routes: Routes = [
               import(
                 './components/medidores-agua/medidores-agua-routing.module'
               ).then((m) => m.MedidoresAguaRoutingModule),
+            canActivate: [validarTokenGuard],
           },
           {
             path: PATH_LECTURAS,
@@ -67,6 +74,7 @@ const routes: Routes = [
               import(
                 './components/medidores-agua/lecturas/lecturas-routing.module'
               ).then((m) => m.LecturasRoutingModule),
+            canActivate: [validarTokenGuard],
           },
           {
             path: PATH_COBROS,
@@ -74,6 +82,7 @@ const routes: Routes = [
               import('./components/cobros/cobros-routing.module').then(
                 (m) => m.CobrosRoutingModule
               ),
+            canActivate: [validarTokenGuard],
           },
           {
             path: PATH_USER,
@@ -93,9 +102,9 @@ const routes: Routes = [
                   ),
               },
             ],
+            canActivate: [validarTokenGuard],
           },
         ],
-        canActivate: [validarTokenGuard],
       },
       {
         path: PATH_AUTH,
@@ -110,8 +119,12 @@ const routes: Routes = [
     component: ForbiddenComponent,
   },
   {
+    path: PATH_NOTFOUND,
+    component: NotFound404Component,
+  },
+  {
     path: '**',
-    redirectTo: '',
+    redirectTo: PATH_NOTFOUND,
   },
 ];
 

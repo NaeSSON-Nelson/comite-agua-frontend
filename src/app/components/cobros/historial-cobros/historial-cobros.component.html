@@ -1,0 +1,103 @@
+<p-dialog header="Historial de cobros por medidor:" [(visible)]="visible" [modal]="true" [style]="{ width: '95vw' }" [draggable]="false" [resizable]="false" [baseZIndex]="900" [closeOnEscape]="false" (onHide)="eventVisible.emit(false)">
+    <div class="card m-3" *ngIf="perfil">
+        <div class=" col-12 grid">
+            <ng-container >
+            <div class="col-12 md:col-6">
+                    <div class="text-900 text-xl mb-2 font-medium text-right">AFILIADO</div>
+                    <p class="text-700 line-height-3 text-right">{{perfil.nombrePrimero | titlecase}} {{perfil.nombreSegundo ||'' |titlecase}} {{perfil.apellidoPrimero | titlecase}} {{perfil.apellidoSegundo ||'' | titlecase}}</p>        
+                </div>
+                <div class="col-12 md:col-3">
+                    <div class="text-900 text-xl mb-2 font-medium text-right">Cedula de Identidad</div>
+                    <p class="text-700 line-height-3 text-right">{{perfil.CI}}</p>
+                </div>
+                <div class="col-12 md:col-3">
+                    <div class="text-900 text-xl mb-2 font-medium text-right">BARRIO</div>
+                    <p class="text-700 line-height-3 text-right">{{perfil.afiliado?.ubicacion?.barrio}}</p>
+                </div>
+            </ng-container>
+        </div>
+        <p-divider></p-divider>
+        <div class="col-12 grid p-fluid">
+            <div class="field col-12 md:col-3">
+                <span class="p-float-label">
+                <p-dropdown
+                    inputId="medidor"
+                    [autoDisplayFirst]="false"
+                    [options]="perfil.afiliado?.medidores"
+                    optionLabel="nroMedidor"
+                    optionValue="nroMedidor"
+                    placeholder="Select Medidor"
+                    (onChange)="obtenerGestiones($event)"
+                ></p-dropdown>
+                <label for="medidor">Medidor:</label>
+                </span>
+            </div>
+        </div>
+        <div class="col-12 grid p-fluid">
+            <div class="field col-12 md:col-3">
+                <span class="p-float-label">
+                <p-dropdown
+                    inputId="gestion"
+                    [autoDisplayFirst]="false"
+                    [options]="planillas"
+                    optionLabel="gestion"
+                    optionValue="id"
+                    [emptyMessage]="messagePlanillas"
+                    placeholder="Select Gestion"
+                    (onChange)="obtenerLecturas($event)"
+                ></p-dropdown>
+                <label for="gestion">Gestión:</label>
+                </span>
+            </div>
+        </div>
+        <div class="col-12" *ngIf="lecturas.length>0 && showTable; else sinLecturas">
+            <p-table [value]="lecturas" [tableStyle]="{'min-width': '50rem'}"
+            [(selection)]="lecturasSelected">
+                <ng-template pTemplate="caption">
+                    <div class="grid">
+                        <button pButton pRipple icon="pi pi-book" class="p-button-rounded p-button-info mr-2"
+                                (click)="generarPdf()" [disabled]="lecturasSelected.length===0"></button>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="header" let-columns>
+                    <tr>
+                        <th>PDF</th>
+                        <th>Mes </th>
+                        <th>Lectura (m3.)</th>
+                        <th>consumo (m3.)</th>
+                        <th>consumo (bs.)</th>
+                        <th>Estado pago</th>
+                        <th>Titular pago</th>
+                        <th>CI titular</th>
+                        <th>Monto cancelado (Bs.)</th>
+                        <th>Metodo de pago (tipo)</th>
+                        <th>Fecha registrada</th>
+                        <th>Entidad de pago</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-product let-columns="columns">
+                    <tr>
+                        <td>
+                            <p-tableCheckbox [value]="product"></p-tableCheckbox>
+                        </td>
+                        <td>{{product.mesLecturado}}</td>
+                        <td>{{product.lectura}}</td>
+                        <td>{{product.consumoTotal}}</td>
+                        <td>{{product.pagar.monto}}</td>
+                        <td>{{product.pagar.estadoComprobate}}</td>
+                        <td>{{product.pagar.comprobante.titular}}</td>
+                        <td>{{product.pagar.comprobante.ciTitular}}</td>
+                        <td>{{product.pagar.comprobante.montoPagado}}</td>
+                        <td>{{product.pagar.comprobante.metodoPago}}</td>
+                        <td>{{product.pagar.comprobante.fechaEmitida | date :'dd-MM-yyyy HH:MM'}}</td>
+                        <td>{{product.pagar.comprobante.entidadPago}}</td>
+                    </tr>
+                </ng-template>
+            </p-table>   
+        </div>
+        <ng-template #sinLecturas>
+            <div class="col-12"><p><i>{{tableReport}}</i></p></div>
+        </ng-template>
+        
+    </div>
+</p-dialog>

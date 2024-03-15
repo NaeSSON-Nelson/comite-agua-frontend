@@ -1,4 +1,5 @@
-<p-dialog header="Perfil:" [(visible)]="visible" [modal]="true" [style]="{ width: '90vw' }" [draggable]="false" [resizable]="false" (onHide)="eventVisible.emit(false)" [baseZIndex]="900" [closeOnEscape]="closable">
+<p-dialog header="Perfil de cobros:" [(visible)]="visible" [modal]="true" [style]="{ width: '90vw' }" [draggable]="false" [resizable]="false" (onHide)="eventVisible.emit(false)" [baseZIndex]="900" [closeOnEscape]="false">
+    
     <div class="card m-3">
         <div class=" col-12 grid">
             <ng-container *ngIf="perfil">
@@ -16,17 +17,18 @@
                 </div>
             </ng-container>
         </div>
+        <h3>DEUDAS DE LECTURAS POR PAGAR</h3>
         <div class="col-12" >
             <i class="pi pi-spin pi-spinner" style="font-size: 2rem" *ngIf="loading"></i>
             <p-divider></p-divider>
             <ng-container *ngIf="perfil">
                 <p-treeTable [value]="medidoresDeudas" (onNodeSelect)="addSelect($event)" (onNodeUnselect)="dropSelected($event)" [columns]="cols" selectionMode="checkbox"  selectionMode="multiple" [(selection)]="selectedNodes" [scrollable]="true" [tableStyle]="{'min-width':'50rem'}" >
-                    <ng-template pTemplate="caption">
+                    <!-- <ng-template pTemplate="caption">
                         <div class="flex">
                             <p-treeTableHeaderCheckbox ></p-treeTableHeaderCheckbox>
                             <span class="ml-2">Seleccionar todos</span>
                         </div>
-                    </ng-template>
+                    </ng-template> -->
                     <ng-template pTemplate="header" let-columns>
                         <tr>
                             <th *ngFor="let col of columns">
@@ -38,7 +40,7 @@
                         <tr>
                             <td *ngFor="let col of columns; let i = index">
                                 <p-treeTableToggler [rowNode]="rowNode" *ngIf="i === 0" ></p-treeTableToggler>
-                                <p-treeTableCheckbox [value]="rowNode" *ngIf="i === 0" ></p-treeTableCheckbox>
+                                <p-treeTableCheckbox [value]="rowNode" *ngIf="i === 0"></p-treeTableCheckbox>
                                 {{ rowData[col.field] }}
                             </td>
                         </tr>
@@ -59,10 +61,12 @@
     </div>
  </p-dialog>
  <app-form-register-deudas
- *ngIf="visiblePagar"
+ 
  [porPagar]="comprobantesPagar"
  [visible]="visiblePagar"
  [idPerfil]="perfil?.afiliado?.id || -1"
  [totalPagar]="total"
- (eventVisible)="closeModalForm($event)"
+ (eventVisible)="visiblePagar = $event"
+ (pagado)="closeModalForm($event)"
+ (porPagarPagadosEmit)=" comprobantesPagar = $event"
  ></app-form-register-deudas>

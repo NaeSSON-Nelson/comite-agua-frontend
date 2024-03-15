@@ -2,7 +2,7 @@
   <form class="col-12" [formGroup]="perfilForm">
     <div class="card">
       <h5>
-        {{ perfilActual?.id ? "Datos de Perfil Actuales" : "Registro un nuevo Perfil" }}
+        {{ perfilActual?.id ? "Datos de Perfil Actuales" : "Registro de nuevo usuario" }}
       </h5>
       <div class="p-fluid p-formgrid grid mt-5">
         <div class="field col-12 md:col-6">
@@ -143,7 +143,7 @@
               formControlName="direccion"
               [ngClass]="inputValid('direccion')"
             />
-            <label for="direccion">direccion</label>
+            <label for="direccion">direccion (opcional)</label>
           </span>
           <small
             id="direccion-help"
@@ -204,7 +204,7 @@
               [ngClass]="inputValid('estado')"
             ></p-dropdown>
 
-            <label for="estado">estado (*)</label>
+            <label for="estado">estado de registro(*)</label>
           </span>
           <small
             id="estado-help"
@@ -245,7 +245,7 @@
                 [ngClass]="inputValidAfiliado('barrio')"
               ></p-dropdown>
 
-              <label for="barrio">Barrio (*)</label>
+              <label for="barrio">Barrio del afiliado(*)</label>
             </span>
             <small
               id="barrio-help"
@@ -274,10 +274,15 @@
               >{{ getAfiliadoNumeroViviendaErrors("numeroVivienda") }}
             </small>
           </div>
-          <div class="col-12 flex justify-content-center">
-            <p-button icon="pi pi-map-marker" styleClass="p-button-rounded p-button-secondary p-button-text p-button-raised" (onClick)="showMap=true"></p-button>
+          <div class="col-12 grid">
+            <label for="icon-geo" class="col-12">Ubicacion georeferencial</label>
+            <p-button   id="icon-geo" class="col-1" icon="pi pi-map-marker" styleClass="p-button-rounded p-button-secondary p-button-text p-button-raised" (onClick)="showMap=true"></p-button>
+            <div class="col-1" *ngIf="this.afiliadoForm.get('latitud')?.value &&
+            this.afiliadoForm.get('longitud')?.value">
+              <p>latitud: {{this.afiliadoForm.get('latitud')?.value}} longitud: {{this.afiliadoForm.get('longitud')?.value}}</p>
+            </div>
           </div>
-          <div class="field col-12 md:col-6">
+          <!-- <div class="field col-12 md:col-6">
             <span class="p-float-label">
               <input
                 type="text"
@@ -312,7 +317,7 @@
               *ngIf="campoValidoAfiliado('latitud')"
               >{{ getAfiliadoLatitudErrors("latitud") }}
             </small>
-          </div>
+          </div> -->
           <div class="field col-12 md:col-3">
             <span class="p-float-label">
               <p-dropdown
@@ -339,7 +344,7 @@
       </div>
     </div>
     <div class="card" *ngIf="!perfilActual?.id">
-      <p>Acceso a una cuenta</p>
+      <p>Cuenta de acceso al sistema</p>
       <p-divider></p-divider>
       <div class="grid">
         <div class="col-2">

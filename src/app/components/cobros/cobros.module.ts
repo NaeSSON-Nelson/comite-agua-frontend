@@ -7,6 +7,7 @@ import { CobrosRoutingModule } from './cobros-routing.module';
 import { PrimeNgCrudModule } from 'src/app/prime-ng-crud/prime-ng-crud.module';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TreeTableModule } from 'primeng/treetable';
+import { HistorialCobrosComponent } from './historial-cobros/historial-cobros.component';
 
 
 @NgModule({
@@ -14,6 +15,7 @@ import { TreeTableModule } from 'primeng/treetable';
     CobrosComponent,
     DeudasPerfilComponent,
     FormRegisterDeudasComponent,
+    HistorialCobrosComponent,
   ],
   imports: [
     CommonModule,

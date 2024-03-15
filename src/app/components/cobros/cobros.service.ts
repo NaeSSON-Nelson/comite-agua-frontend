@@ -1,7 +1,8 @@
 import { HttpHeaders, HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Subject, catchError, map, of, tap } from 'rxjs';
-import { DataResult, HttpResponseApi, HttpResponseApiArray, PaginatorFind, Perfil, ResponseResult } from 'src/app/interfaces';
+import { DataResult, HttpResponseApi, HttpResponseApiArray, PaginatorFind, Perfil, ResponseResult, ResponseResultData } from 'src/app/interfaces';
+import { MesLectura, PlanillaLecturas } from 'src/app/interfaces/medidor.interface';
 import { ComprobantePago, PagosForm } from 'src/app/interfaces/pagos-services.interface';
 import { environment } from 'src/environments/environment';
 
@@ -91,6 +92,36 @@ export class CobrosService {
     }).pipe(
       map((resp) => {
         // console.log('map',resp);
+        const respuesta: ResponseResultData<ComprobantePago> = {
+          OK: resp.OK,
+          message: resp.message,
+          statusCode: 200,
+          data:resp.data
+        };
+        return respuesta;
+      }),
+      catchError((err: HttpErrorResponse) => {
+        const errors = err.error as ResponseResult;
+        errors.OK = false;
+        return of(errors);
+      })
+    );
+  }
+
+  findPerfilMedidores(id:number){
+    return this.http
+    .get<HttpResponseApi<Perfil>>(`${this.URL_deudas}/comprobantes-pagar/perfiles/${id}`, {
+      
+    })
+    .pipe(
+      tap((resp) => {
+        console.log(resp);
+        if (resp.OK) {
+          this._perfil$.next(resp.data!);
+        }
+      }),
+      map((resp) => {
+        // console.log('map',resp);
         const respuesta: ResponseResult = {
           OK: resp.OK,
           message: resp.message,
@@ -104,5 +135,65 @@ export class CobrosService {
         return of(errors);
       })
     );
+  }
+
+  getAfiliadoMedidores(idPerfil:number){
+    return this.http.get<HttpResponseApi<Perfil>>(`${this.URL_deudas}/perfiles/${idPerfil}`).pipe(
+      map((resp) => {
+        // console.log('map',resp);
+        const respuesta: ResponseResultData<Perfil> = {
+          OK: resp.OK,
+          message: resp.message,
+          statusCode: 200,
+          data:resp.data
+        };
+        return respuesta;
+      }),
+      catchError((err: HttpErrorResponse) => {
+        const errors = err.error as ResponseResultData<Perfil>;
+        errors.OK = false;
+        return of(errors);
+      })
+    )
+  }
+  getGestionesMedidor(idPerfil:number,nroMedidor:string){
+    return this.http.get<HttpResponseApi<PlanillaLecturas[]>>(`${this.URL_deudas}/medidores/${idPerfil}/${nroMedidor}`).pipe(
+      map((resp) => {
+        // console.log('map',resp);
+        resp.data
+        const respuesta: ResponseResultData<PlanillaLecturas[]> = {
+          OK: resp.OK,
+          message: resp.message,
+          statusCode: 200,
+          data:resp.data
+        };
+        return respuesta;
+      }),
+      catchError((err: HttpErrorResponse) => {
+        const errors = err.error as ResponseResultData<PlanillaLecturas[]>;
+        errors.OK = false;
+        return of(errors);
+      })
+    )
+  }
+  getLecturasPlanillas(nroMedidor:string,idPlanilla:number){
+    return this.http.get<HttpResponseApi<MesLectura[]>>(`${this.URL_deudas}/cobros/historial/${nroMedidor}/${idPlanilla}`).pipe(
+      map((resp) => {
+        // console.log('map',resp);
+        resp.data
+        const respuesta: ResponseResultData<MesLectura[]> = {
+          OK: resp.OK,
+          message: resp.message,
+          statusCode: 200,
+          data:resp.data
+        };
+        return respuesta;
+      }),
+      catchError((err: HttpErrorResponse) => {
+        const errors = err.error as ResponseResultData<MesLectura[]>;
+        errors.OK = false;
+        return of(errors);
+      })
+    )
   }
 }

@@ -17,8 +17,7 @@ export const validarTokenGuard: CanActivateFn = (route, state) => {
   const user =localStorage.getItem<IDataUser>(KEY_STORAGE.DATA_USER);
   if(user) validate=true;
   else router.navigateByUrl(PATH_AUTH)
-  return  validate; 
-  // return true;
+  return  validate;
   };
 
 

@@ -33,6 +33,7 @@ export class PerfilFormComponent {
   ngOnInit(): void {
     this.perfilService.perfil.subscribe((res) => {
       const { usuario,afiliado,accessAcount,created_at,updated_at,id,isActive,contacto,tipoPerfil,...dataPerfil } = res;
+      console.log(res);
       this.perfilActual=res;
         this.perfilForm.setValue({...dataPerfil,contacto});
     });
@@ -167,7 +168,10 @@ export class PerfilFormComponent {
   }
   validForm() {
     this.perfilForm.markAllAsTouched();
-    if (this.perfilForm.invalid) return;
+    if (this.perfilForm.invalid){
+      this.messageService.add({severity: 'info', summary: 'Datos incompletos', detail: 'Hay campos requeridos sin llenar',life:1500 })
+      return;
+    } 
     // console.log(this.clienteForm.value);
     let perfilSend: PerfilForm = {};
     let afiliadoSend:AfiliadoForm={};

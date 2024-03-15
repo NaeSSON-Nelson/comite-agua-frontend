@@ -34,9 +34,11 @@
                         <div class="col-3">
                             <span class="p-float-label">
                                 <p-dropdown
-                                [options]="perfil.afiliado?.medidores"
+                                [options]="medidoresPerfil"
                                 placeholder="Seleccione un medidor"
-                                optionLabel="nroMedidor"
+                                optionLabel="name"
+                                optionValue="value"
+                                emptyMessage="Afiliado sin medidor"
                                 inputId="float-label"
                                 (onChange)="selectMedidor($event)"
                                 ></p-dropdown>
