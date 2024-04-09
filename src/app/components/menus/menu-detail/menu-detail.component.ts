@@ -90,7 +90,7 @@ export class MenuDetailComponent {
   actionData(action: string) {
     switch (action) {
       case 'MODIFICAR':
-        this.router.navigate(['menus','register'], {
+        this.router.navigate(['menus','menu-register'], {
           queryParams: { id: this.menu.id },
         });
         break;

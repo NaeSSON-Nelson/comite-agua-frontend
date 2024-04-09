@@ -60,6 +60,7 @@ export class PerfilService {
         tap((resp) => {
           if (resp.OK) {
             this._perfiles$.next(resp.data);
+            console.log(resp.data);
           }
         }),
         map((resp) => {

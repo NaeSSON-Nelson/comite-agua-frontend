@@ -64,7 +64,7 @@
  
  [porPagar]="comprobantesPagar"
  [visible]="visiblePagar"
- [idPerfil]="perfil?.afiliado?.id || -1"
+ [idPerfil]="perfil?.id || -1"
  [totalPagar]="total"
  (eventVisible)="visiblePagar = $event"
  (pagado)="closeModalForm($event)"

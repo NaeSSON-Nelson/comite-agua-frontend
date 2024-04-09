@@ -71,6 +71,7 @@ export class PerfilesComponent {
   findAll() {
     this.perfilService.findAll(this.dataPaginator).subscribe({
       next: (res) => {
+        // console.log(res);
         if (res.OK === false) {
           switch (res.statusCode) {
             case 401:
@@ -140,7 +141,7 @@ export class PerfilesComponent {
     this.debouncer.next($event.target.value);
   }
   onPageChange($event: PaginatorState) {
-    console.log($event);
+    // console.log($event);
     this.dataPaginator.offset = $event.first;
     this.dataPaginator.limit = $event.rows;
     this.findAll();

@@ -70,6 +70,7 @@ export class FormRegisterDeudasComponent {
     this.registrarPagos({
     ciTitular,titular,perfilId,comprobantes:comprobantes.map((res:any)=>res.id)
    })
+  // console.log(this.pagarForm.value);
   }
   cerrando(event:any){
     console.log(event);
