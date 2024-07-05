@@ -8,6 +8,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { patternSpanishInline } from 'src/app/patterns/forms-patterns';
 import { PaginatorFind } from 'src/app/interfaces/Paginator.interface';
 import { PaginatorState } from 'primeng/paginator';
+import { PATH_AUTH, PATH_FORBBIDEN, PATH_ITEMSMENU, PATH_MODULE_DETAILS } from 'src/app/interfaces/routes-app';
 
 @Component({
   selector: 'app-items-menu',
@@ -91,7 +92,7 @@ export class ItemsMenuComponent {
                 detail: `${res.message},code: ${res.statusCode}`,
                 life: 3000,
               });
-              this.router.navigate(['auth', 'login']);
+              this.router.navigate([PATH_AUTH]);
               break;
             case 403:
               this.messageService.add({
@@ -100,7 +101,7 @@ export class ItemsMenuComponent {
                 detail: `${res.message},code: ${res.statusCode}`,
                 life: 5000,
               });
-              this.router.navigate(['forbidden']);
+              this.router.navigate([PATH_FORBBIDEN]);
               break;
             default:
               console.log(res);
@@ -117,9 +118,7 @@ export class ItemsMenuComponent {
     });
   }
   dataDetail(id: number) {
-    this.router.navigate(['items-menu', 'item-menu-details'], {
-      queryParams: { id },
-    });
+    this.router.navigate([PATH_ITEMSMENU, PATH_MODULE_DETAILS,id]);
   }
   campoValido(nombre: string) {
     return (

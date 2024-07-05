@@ -33,6 +33,7 @@
             <th>ID</th>
             <th>Nombre</th>
             <th>Link de Acceso</th>
+            <th>Total de Items</th>
             <th>Estado</th>
             <th></th>
           </tr>
@@ -51,6 +52,10 @@
             <td style="width: 14%; min-width: 8rem">
               <span class="p-column-title">linkMenu</span>
               {{ customer.linkMenu }}
+            </td>
+            <td style="width: 14%; min-width: 8rem">
+              <span class="p-column-title">Items</span>
+              {{ customer.itemMenu.length }}
             </td>
             <td style="width: 14%; min-width: 10rem">
               <span class="p-column-title">ESTADO</span>

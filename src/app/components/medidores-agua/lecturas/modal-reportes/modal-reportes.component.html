@@ -22,11 +22,11 @@
                         </p>
                     </div>
                     <div class="col-9">
-                        <div class="grid" *ngFor="let medidor of customer.afiliado!.medidores;let j=index">
-                            <div class="col-3 px-3"><p class="fs-text">{{medidor.nroMedidor}}</p></div>
-                            <div class="col-3 px-3"><p class="fs-text">{{medidor.ubicacion?.barrio}}</p></div>
-                            <div class="col-3 px-3"><p class="fs-text">{{medidor.planillas![0].lecturas![0].lectura}}</p></div>
-                            <div class="col-3 px-3"><p class="fs-text">{{medidor.planillas![0].lecturas![0].estadoMedidor}}</p></div>
+                        <div class="grid" *ngFor="let asc of customer.afiliado!.medidorAsociado;let j=index">
+                            <div class="col-3 px-3"><p class="fs-text">{{asc.medidor?.nroMedidor}}</p></div>
+                            <div class="col-3 px-3"><p class="fs-text">{{asc.ubicacion?.barrio}}</p></div>
+                            <div class="col-3 px-3"><p class="fs-text">{{asc.planillas![0].lecturas![0].lectura}}</p></div>
+                            <div class="col-3 px-3"><p class="fs-text">{{asc.planillas![0].lecturas![0].estadoMedidor}}</p></div>
                         </div>
                     </div>
                 </div>

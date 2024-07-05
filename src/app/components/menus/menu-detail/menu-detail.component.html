@@ -52,6 +52,7 @@
               <tr>
                 <th>Code</th>
                 <th>Nombre de Item</th>
+                <th>Visibilidad</th>
                 <th>Enlace de Item</th>
               </tr>
             </ng-template>
@@ -59,7 +60,8 @@
               <tr>
                 <td>{{ customer.id }}</td>
                 <td>{{ customer.nombre }}</td>
-                <td>{{ customer.linkMenu }}</td>
+                <td>{{ customer.visible?'VISIBLE':'SIN VISIBILIDAD' }}</td>
+                <td>{{ customer.itemMenu.linkMenu }}</td>
               </tr>
             </ng-template>
           </p-table>

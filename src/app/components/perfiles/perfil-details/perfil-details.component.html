@@ -131,7 +131,7 @@
 				<div class="col-12 md:col-3 md:flex md:justify-content-center" *ngIf="!perfil.afiliado;">
 					<button pButton pRipple label="Añadir afiliacion" class="p-button-secondary" (click)="actionData('AFILIADO')"></button>
 				</div>
-				<div class="col-12 md:col-3 md:flex md:justify-content-center" *ngIf="!perfil.usuario;">
+				<div class="col-12 md:col-3 md:flex md:justify-content-center" *ngIf="!perfil.accessAcount;">
 					<button pButton pRipple label="añadir cuenta de usuario" class="p-button-help" (click)="actionData('USUARIO')"></button>
 				</div>
 				<ng-template #inhabilitado>

@@ -54,16 +54,16 @@
                     </p>
                     </div>
                     <div class="col-9" *ngIf="lecturados" formArrayName="registros" >
-                        <div class="grid" [style]="{'min-width':'75%', 'padding':'18px 0 0 0'}" *ngFor="let medidor of customer.afiliado!.medidores">
-                        <div class="col-3 px-3"><p class="fs-text">{{medidor.ubicacion?.barrio}}</p></div>
-                        <div class="col-3 px-3"><p class="fs-text">{{medidor.nroMedidor}}</p></div>
+                        <div class="grid" [style]="{'min-width':'75%', 'padding':'18px 0 0 0'}" *ngFor="let asc of customer.afiliado!.medidorAsociado">
+                        <div class="col-3 px-3"><p class="fs-text">{{asc.ubicacion?.barrio}}</p></div>
+                        <div class="col-3 px-3"><p class="fs-text">{{asc.medidor?.nroMedidor}}</p></div>
                         <ng-container *ngFor="let lecturaForm of lecturasArray.controls; let i=index">
-                            <ng-container *ngIf="lecturaForm.get('planilla')?.value.id === medidor.planillas![0].id" [formGroupName]="i">
+                            <ng-container *ngIf="lecturaForm.get('planilla')?.value.id === asc.planillas![0].id" [formGroupName]="i">
                             <div class="field col-3 align-items-center justify-content-center px-3">
                                 <span class="p-float-label">
                                     <p-inputNumber
                                     id="lectura"
-                                    placeholder="Anterior lectura: {{medidor.ultimaLectura}}"
+                                    placeholder="Anterior lectura: {{asc.lecturaSeguimiento}}"
                                     formControlName="lectura"
                                     [ngClass]="inputArrayValid('lectura',i)"
                                     ></p-inputNumber>

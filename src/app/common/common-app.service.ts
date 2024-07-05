@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Barrio, Estado, Genero, MesLectura, Perfil, TipoPerfil } from '../interfaces';
-import { Nivel } from '../interfaces/atributes.enum';
+import { Medicion, Nivel } from '../interfaces/atributes.enum';
 import * as IPdf from 'pdfmake/interfaces'
 import * as pdfMake from "pdfmake/build/pdfmake";
 import * as pdfFonts from 'pdfmake/build/vfs_fonts';
@@ -59,6 +59,14 @@ export class CommonAppService {
     {name:'RESPONSABILITY',value:Nivel.contador},
     {name:'SUPERIOR',value:Nivel.administrativo},
   ]
+  private _mediciones:Values<Medicion>[]=[
+    {name:'mt3: metros cúbicos',value:Medicion.mt3},
+    {name:'ft3: pies cúbicos',value:Medicion.ft3},
+  ]
+  private _registrables:Values<boolean>[]=[
+    {name:'SI',value:true },
+    {name:'NO',value:false}
+  ]
   get estados(){
     return [...this._estados];
   }
@@ -70,13 +78,20 @@ export class CommonAppService {
     return [...this._barrios];
   }
   get barriosForm(){
-    return [...this._barriosForm]
+    return [...this._barriosForm];
   }
   get tipoPerfiles(){
     return [...this._tipoPerfil];
   }
   get niveles(){
-    return [...this._nivelesRoles]
+    return [...this._nivelesRoles];
+  }
+  get mediciones(){
+    return [...this._mediciones];
+  }
+
+  get registrables(){
+    return [...this._registrables];
   }
   constructor(){}
   comprobantesPdfGenerated(lecturas:MesLectura[],afiliado:Perfil){

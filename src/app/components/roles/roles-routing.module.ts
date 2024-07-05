@@ -4,23 +4,28 @@ import { RouterModule, Routes } from '@angular/router';
 import { RolesComponent } from './roles/roles.component';
 import { RoleDetailsComponent } from './role-details/role-details.component';
 import { RoleFormComponent } from './role-form/role-form.component';
+import { PATH_EDIT, PATH_LISTAR, PATH_MODULE_DETAILS, PATH_REGISTRAR } from 'src/app/interfaces/routes-app';
 
 const routes: Routes = [
   {
-    path: 'rol-list',
+    path: PATH_LISTAR,
     component: RolesComponent,
   },
   {
-    path:'rol-details',
+    path: `${PATH_MODULE_DETAILS}/:id`,
     component:RoleDetailsComponent,
   },
   {
-    path:'rol-register',
+    path: PATH_REGISTRAR,
+    component:RoleFormComponent,
+  },
+  {
+    path: `${PATH_REGISTRAR}/${PATH_EDIT}/:id`,
     component:RoleFormComponent,
   },
   {
     path: '**',
-    redirectTo: 'rol-list',
+    redirectTo: PATH_LISTAR,
   },
 ];
 

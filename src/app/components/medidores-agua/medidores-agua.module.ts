@@ -11,6 +11,9 @@ import { GestionPlanillasComponent } from './gestion-planillas/gestion-planillas
 import { DetallesLecturaComponent } from './detalles-lectura/detalles-lectura.component';
 import { ComprobanteLecturaComponent } from './comprobante-lectura/comprobante-lectura.component';
 import { TabViewModule } from 'primeng/tabview';
+import { MedidoresListarComponent } from './medidores-listar/medidores-listar.component';
+import { MedidorDetailsComponent } from './medidor-details/medidor-details.component';
+import { AsociarMedidorComponent } from './asociar-medidor/asociar-medidor.component';
 
 @NgModule({
   declarations: [
@@ -20,6 +23,9 @@ import { TabViewModule } from 'primeng/tabview';
     GestionPlanillasComponent,
     DetallesLecturaComponent,
     ComprobanteLecturaComponent,
+    MedidoresListarComponent,
+    MedidorDetailsComponent,
+    AsociarMedidorComponent,
   ],
   imports: [
     CommonModule,

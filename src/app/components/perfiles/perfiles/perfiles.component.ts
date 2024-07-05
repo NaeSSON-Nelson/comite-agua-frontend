@@ -7,6 +7,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { patternSpanishInline } from 'src/app/patterns/forms-patterns';
 import { PaginatorState } from 'primeng/paginator';
+import { PATH_AUTH, PATH_FORBBIDEN, PATH_MODULE_DETAILS, PATH_PERFILES } from 'src/app/interfaces/routes-app';
 
 @Component({
   selector: 'app-perfiles',
@@ -81,7 +82,7 @@ export class PerfilesComponent {
                 detail: `${res.message},code: ${res.statusCode}`,
                 life: 3000,
               });
-              this.router.navigate(['auth', 'login']);
+              this.router.navigate([PATH_AUTH]);
               break;
             case 403:
               this.messageService.add({
@@ -90,7 +91,7 @@ export class PerfilesComponent {
                 detail: `${res.message},code: ${res.statusCode}`,
                 life: 5000,
               });
-              this.router.navigate(['forbidden']);
+              this.router.navigate([PATH_FORBBIDEN]);
               break;
             default:
               console.log(res);
@@ -108,7 +109,7 @@ export class PerfilesComponent {
     });
   }
   dataDetail(id: number) {
-    this.router.navigate(['perfiles', 'perfil-details'], { queryParams: { id } });
+    this.router.navigate([PATH_PERFILES, PATH_MODULE_DETAILS,id],);
   }
   campoValido(nombre: string) {
     return (
@@ -151,6 +152,7 @@ export class PerfilesComponent {
     const errors = this.searchForm.get(campo)?.errors;
 
     if(errors?.['pattern']){
+      console.log(errors);
       return 'El buscador contiene caracteres no validos'
     }else if(errors?.['minlength']){
       return 'El tamaño minimo es 1'

@@ -8,6 +8,7 @@ import { patternCI, patternSpanishInline, patternText } from 'src/app/patterns/f
 import { CommonAppService } from 'src/app/common/common-app.service';
 import { switchMap } from 'rxjs';
 import * as L from 'leaflet'
+import { PATH_AUTH, PATH_EDIT, PATH_FORBBIDEN, PATH_MODULE_DETAILS, PATH_PERFILES } from 'src/app/interfaces/routes-app';
 @Component({
   selector: 'app-perfil-form',
   templateUrl: './perfil-form.component.html',
@@ -37,52 +38,57 @@ export class PerfilFormComponent {
       this.perfilActual=res;
         this.perfilForm.setValue({...dataPerfil,contacto});
     });
-    if (!this.router.url.includes('id')) return;
-
-    this.routerAct.queryParams
-      .pipe(switchMap(({ id }) => this.perfilService.findOne(id)))
-      .subscribe((res) => {
-        if (res.OK === false) {
-          switch (res.statusCode) {
-            case 401:
-              this.messageService.add({
-                severity: 'info',
-                summary: `OCURRIO UN ERROR AL OBTENER LA DATA:${res.error}`,
-                detail: `${res.message},code: ${res.statusCode}`,
-                life: 3000,
-              });
-              this.router.navigate(['auth', 'login']);
-              break;
-            case 403:
-              this.messageService.add({
-                severity: 'warn',
-                summary: `OCURRIO UN ERROR AL OBTENER LA DATA:${res.error}`,
-                detail: `${res.message},code: ${res.statusCode}`,
-                life: 5000,
-              });
-              this.router.navigate(['forbidden']);
-              break;
-            case 404:
-              this.messageService.add({
-                severity: 'warn',
-                summary: `OCURRIO UN ERROR AL OBTENER LA DATA:${res.error}`,
-                detail: `${res.message},code: ${res.statusCode}`,
-                life: 5000,
-              });
-              this.router.navigate(['perfiles'])
-              break;
-            default:
-              console.log(res);
-              this.messageService.add({
-                severity: 'error',
-                summary: 'Error no controlado',
-                detail: 'revise la consola',
-                life: 5000,
-              });
-              break;
+    // console.log(this.router);
+    // console.log(this.routerAct);
+    if (this.routerAct.snapshot.params['id'] && this.routerAct.snapshot.routeConfig?.path?.includes(PATH_EDIT)){
+        // console.log('es edit');
+        this.perfilService.findOne(this.routerAct.snapshot.params['id']).
+        subscribe((res) => {
+          if (res.OK === false) {
+            switch (res.statusCode) {
+              case 401:
+                this.messageService.add({
+                  severity: 'info',
+                  summary: `OCURRIO UN ERROR AL OBTENER LA DATA:${res.error}`,
+                  detail: `${res.message},code: ${res.statusCode}`,
+                  life: 3000,
+                });
+                this.router.navigate([PATH_AUTH]);
+                break;
+              case 403:
+                this.messageService.add({
+                  severity: 'warn',
+                  summary: `OCURRIO UN ERROR AL OBTENER LA DATA:${res.error}`,
+                  detail: `${res.message},code: ${res.statusCode}`,
+                  life: 5000,
+                });
+                this.router.navigate([PATH_FORBBIDEN]);
+                break;
+              case 404:
+                this.messageService.add({
+                  severity: 'warn',
+                  summary: `OCURRIO UN ERROR AL OBTENER LA DATA:${res.error}`,
+                  detail: `${res.message},code: ${res.statusCode}`,
+                  life: 5000,
+                });
+                this.router.navigate([PATH_PERFILES])
+                break;
+              default:
+                console.log(res);
+                this.messageService.add({
+                  severity: 'error',
+                  summary: 'Error no controlado',
+                  detail: 'revise la consola',
+                  life: 5000,
+                });
+                break;
+            }
           }
-        }
-      });
+        })
+    }
+
+    // this.routerAct.queryParams
+    //   .pipe(switchMap(({ id }) => this.perfilService.findOne(id)));
   }
 
   showTableAsignRoleModalForm: boolean = false;
@@ -222,7 +228,7 @@ export class PerfilFormComponent {
                   detail: res.message,
                   icon: 'pi pi-check',
                 });
-                this.router.navigate(['perfiles','perfil-details'],{queryParams:{id:this.perfilActual!.id}});
+                this.router.navigate([PATH_PERFILES, PATH_MODULE_DETAILS,this.perfilActual!.id]);
               }else{
                 this.messageService.add({
                   severity: 'error',
@@ -250,7 +256,7 @@ export class PerfilFormComponent {
                 this.dataUser=res.data;
                 this.usuarioCreate=true;
               }else{
-                this.router.navigate(['perfiles']);
+                this.router.navigate([PATH_PERFILES]);
               }
             }else{
               this.messageService.add({

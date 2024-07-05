@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ItemMenu, Menu, MenuForm } from 'src/app/interfaces/menu.interface';
+import { ItemMenu, Menu, MenuForm, ItemToMenu } from 'src/app/interfaces/menu.interface';
 import { MenusService } from '../menus.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -8,6 +8,7 @@ import { switchMap } from 'rxjs';
 import { patternText } from 'src/app/patterns/forms-patterns';
 import { AsyncValidatorLinkService } from '../validators/async-validator-link.service';
 import { Estado } from 'src/app/interfaces';
+import { PATH_AUTH, PATH_EDIT, PATH_FORBBIDEN, PATH_LISTAR, PATH_MENUS, PATH_MODULE_DETAILS } from 'src/app/interfaces/routes-app';
 
 @Component({
   selector: 'app-menu-form',
@@ -28,31 +29,22 @@ export class MenuFormComponent {
   ) {}
 
   ngOnInit(): void {
-    // if(this.clienteModificar?.id){
-    //   this.proveedorForm.setValue(this.clienteModificar);
-    // }
-    // this.routerAct.paramMap.subscribe((params)=>{
-    //   console.log(params);
-    // })
+    
     this.menusService.menu.subscribe((res) => {
       // console.log(res);
       const { itemsMenu,created_at,updated_at,isActive, ...dataMenu } = res;
-      this.listItemsSelected=itemsMenu!;
-      this.ListItemMenuSelected(itemsMenu!);
-
+      this.menuActual = res;
       this.menuForm.setValue({
         ...dataMenu,
-        itemsMenu: itemsMenu?.map((val) => {
-          return { id: val.id };
-        }),
+        itemsMenu:[]
       });
-      this.menuActual = res;
+      // this.ListItemMenuSelected(itemsMenu!);
+      this.addITemsSelect(itemsMenu!);
+      // console.log(itemsMenu);
     });
-    if (!this.router.url.includes('id')) return;
-
-    this.routerAct.queryParams
-      .pipe(switchMap(({ id }) => this.menusService.findOne(id)))
-      .subscribe((res) => {
+    if (this.routerAct.snapshot.params['id'] && this.routerAct.snapshot.routeConfig?.path?.includes(PATH_EDIT)){
+      this.menusService.findOne(this.routerAct.snapshot.params['id']).
+      subscribe((res) => {
         if (res.OK === false) {
           switch (res.statusCode) {
             case 401:
@@ -62,7 +54,7 @@ export class MenuFormComponent {
                 detail: `${res.message},code: ${res.statusCode}`,
                 life: 3000,
               });
-              this.router.navigate(['auth', 'login']);
+              this.router.navigate([PATH_AUTH]);
               break;
             case 403:
               this.messageService.add({
@@ -71,7 +63,7 @@ export class MenuFormComponent {
                 detail: `${res.message},code: ${res.statusCode}`,
                 life: 5000,
               });
-              this.router.navigate(['forbidden']);
+              this.router.navigate([PATH_FORBBIDEN]);
               break;
             case 404:
               this.messageService.add({
@@ -80,7 +72,7 @@ export class MenuFormComponent {
                 detail: `${res.message},code: ${res.statusCode}`,
                 life: 5000,
               });
-              this.router.navigate(['menus'])
+              this.router.navigate([PATH_MENUS])
               break;
             default:
               console.log(res);
@@ -93,28 +85,15 @@ export class MenuFormComponent {
               break;
           }
         }
-      });
+      })
+  }
   }
   menuForm: FormGroup = this.fb.group(
     {
       id: [],
-      nombre: [
-        ,
-        [
-          Validators.required,
-          Validators.minLength(3),
-          Validators.pattern(patternText),
-        ],
-      ],
-      linkMenu: [
-        ,
-        [
-          Validators.minLength(3),
-          Validators.required,
-          Validators.pattern(patternText),
-        ],
-      ],
-      estado: [Estado.ACTIVO, [Validators.required]],
+      nombre:[,[Validators.required,Validators.pattern(patternText),Validators.minLength(2)]],
+      linkMenu: [,[Validators.minLength(3),Validators.required,Validators.pattern(patternText),],],
+      estado: [, [Validators.required]],
       itemsMenu: this.fb.array([], [Validators.required]),
     },
     {
@@ -122,6 +101,10 @@ export class MenuFormComponent {
       asyncValidators: [this.asyncValidators.validarLink('linkMenu', 'id')],
     }
   );
+  visibles=[
+    {name:'VISIBLE',value:true},
+    {name:'NO VISIBLE',value:false},
+  ]
   validForm() {
     this.menuForm.markAllAsTouched();
     if (this.menuForm.invalid) return;
@@ -140,12 +123,10 @@ export class MenuFormComponent {
       });
     }
     // this.registrarFormulario(menuSend);
-    console.log(menuSend);
-    const { itemsMenu: dataItems, ...dataSend } = menuSend;
-    this.registrarFormulario({
-      ...dataSend,
-      itemsMenu: dataItems?.map((val) => val.id!),
-    });
+    console.log('MENU FORM',this.menuForm);
+    console.log('menu send',menuSend);
+    // const { itemsMenu: dataItems, ...dataSend } = menuSend;
+    this.registrarFormulario(menuSend);
   }
   registrarFormulario(form: MenuForm) {
     this.confirmationService.confirm({
@@ -168,7 +149,7 @@ export class MenuFormComponent {
                   detail: `${res.message}`,
                   icon: 'pi pi-check',
                 });
-                this.router.navigate(['menus', 'menu-details'], {
+                this.router.navigate([PATH_MENUS, PATH_MODULE_DETAILS], {
                   queryParams: { id: this.menuActual?.id },
                 });
               }else{
@@ -193,7 +174,7 @@ export class MenuFormComponent {
                   detail: res.message,
                   icon: 'pi pi-check',
                 });
-                this.router.navigate(['menus','menu-list']);
+                this.router.navigate([PATH_MENUS,PATH_LISTAR]);
               }else{
                 this.messageService.add({
                   severity: 'error',
@@ -210,29 +191,53 @@ export class MenuFormComponent {
     });
   }
 
-  listItemsSelected: ItemMenu[] = [];
+  // listItemsSelected: itemToMenu[] = [];
   showTableAsignModalForm: boolean = false;
   get itemsMenuForm() {
     return this.menuForm.controls['itemsMenu'] as FormArray;
   }
-
+  listItemsSelected:ItemMenu[]=[];
   ListItemMenuSelected(list: ItemMenu[]) {
     this.itemsMenuForm.clear();
-    this.listItemsSelected = [];
+    this.listItemsSelected = list;
+    // console.log(list);
     for (let item of list) {
-      const itemMenu = this.fb.group({
-        id: [item.id, [Validators.required]],
-      });
-      this.listItemsSelected.push(item);
-      this.itemsMenuForm.push(itemMenu);
+      const itemsForm=this.fb.group({
+        itemMenuId:[item.id,[Validators.required,Validators.min(1)]],
+        nombre: [,[Validators.required,Validators.minLength(3),Validators.pattern(patternText),]],
+        visible:[true],
+      })
+      // this.listItemsSelected.push(item);
+      this.itemsMenuForm.push(itemsForm);
     }
     // this.closeTableModalForm(false);
+  }
+  addITemsSelect(list:ItemToMenu[]){
+    this.listItemsSelected = list.map(val=>val.itemMenu!);
+    // console.log('LISTA AGREGADA',list);
+    for (let item of list) {
+      const itemsForm=this.fb.group({
+        itemMenuId:[item.itemMenu!.id,[Validators.required,Validators.min(1)]],
+        nombre: [item.nombre,[Validators.required,Validators.minLength(3),Validators.pattern(patternText),]],
+        visible:[true],
+      })
+      // this.listItemsSelected.push(item);
+      this.itemsMenuForm.push(itemsForm);
+    }
+  }
+  getItemLinkName(item:any){
+    // console.log('ITEM FORM',item);
+    // console.log('LISTA SELECTADA',this.listItemsSelected);
+    return this.listItemsSelected.find(val=>val.id===item.itemMenuId)?.linkMenu;
   }
   closeTableModalForm(view: boolean) {
     this.showTableAsignModalForm = view;
   }
-  deleteItemMenu(id: number) {
-    const index = this.listItemsSelected.findIndex((val) => val.id === id);
+  deleteItemMenu(item: any) {
+    console.log(item);
+    console.log(this.listItemsSelected);
+    const index = this.listItemsSelected.findIndex((val) => val.id === item.itemMenuId);
+    // console.log(index);
     this.itemsMenuForm.removeAt(index);
     this.listItemsSelected.splice(index, 1);
   }
@@ -259,6 +264,29 @@ export class MenuFormComponent {
       ? 'ng-invalid ng-dirty'
       : this.menuForm.controls[nombre].valid &&
         this.menuForm.controls[nombre].touched
+      ? 'ng-valid ng-dirty'
+      : '';
+  }
+  limpiarCampoArray(campo: string,index:number) {
+    if (
+      !this.itemsMenuForm.at(index).get(campo)?.pristine &&
+      this.itemsMenuForm.at(index).get(campo)?.value?.length === 0
+    ) {
+      this.itemsMenuForm.at(index).get(campo)?.reset();
+    }
+  }
+  campoValidoArray(nombre: string,index:number) {
+    return (
+      this.itemsMenuForm.at(index).get(nombre)?.errors &&
+      this.itemsMenuForm.at(index).get(nombre)?.touched
+    );
+  }
+  inputValidArray(nombre: string,index:number) {
+    return this.itemsMenuForm.at(index).get(nombre)?.errors &&
+      this.itemsMenuForm.at(index).get(nombre)?.touched
+      ? 'ng-invalid ng-dirty'
+      : this.itemsMenuForm.at(index).get(nombre)?.valid &&
+        this.itemsMenuForm.at(index).get(nombre)?.touched
       ? 'ng-valid ng-dirty'
       : '';
   }
@@ -302,4 +330,21 @@ export class MenuFormComponent {
     }
     return '';
   }
+
+  getNombreItemErrors(campo:string,index:number){
+    const errors = this.itemsMenuForm.at(index).get(campo)?.errors;
+    if (errors?.['required']) {
+      return 'El campo es requerido';
+    } else if (errors?.['pattern']) {
+      return 'El campo contiene caracteres invalidos';
+    } else if (errors?.['minlength']) {
+      return 'El tamaño del campo debe ser 3 como minimo';
+    } 
+    return '';
+  }
+  // getVisiblesArrayItem(campo:string,index:number){
+  //   const errors = this.itemsMenuForm.at(index).get(campo)?.errors;
+
+
+  // }
 }

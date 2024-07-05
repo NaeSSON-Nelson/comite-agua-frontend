@@ -1,0 +1,81 @@
+<p-dialog
+  [header]="titleTable"
+  [(visible)]="displayModalTable"
+  [baseZIndex]="1000"
+  [modal]="true"
+  [style]="{ width: '70vw' }"
+  [draggable]="false"
+  [resizable]="false"
+  (onHide)="closeModal()"
+>
+  <ng-template pTemplate="content">
+    <div class="grid">
+      <div class="col-12">
+        <p-table
+          [value]="data"
+          [(selection)]="dataSelected"
+          selectionMode="single"
+          dataKey="id"
+          [metaKeySelection]="false"
+          [tableStyle]="{ 'min-width': '50rem' }"
+        >
+          <ng-template pTemplate="caption">
+            <form
+              class="flex flex-column md:flex-row md:justify-content-between md:align-items-center"
+              [formGroup]="searchForm"
+            >
+              <h5 class="m-0">{{ titleTable }}</h5>
+              <span class="block mt-2 md:mt-0 p-input-icon-left">
+                <i class="pi pi-search"></i>
+                <input
+                  pInputText
+                  type="text"
+                  inputId="termino"
+                  placeholder="Search..."
+                  formControlName="termino"
+                  class="w-full sm:w-auto"
+                  (input)="search($event)"
+                />
+                <small
+                  id="termino-help"
+                  class="p-error block"
+                  *ngIf="campoValido('termino')"
+                  >{{ getTerminoErrors("termino") }}
+                </small>
+              </span>
+            </form>
+          </ng-template>
+          <ng-template pTemplate="header">
+            <tr>
+              <th style="min-width: 200px">Nro. Medidor de agua</th>
+              <th >Marca</th>
+              <th >Lectura de Medidor Actual</th>
+              <th >Estado</th>
+              <th >Funcionamiento</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-employee let-rowIndex="rowIndex">
+            <tr [pSelectableRow]="employee" [pSelectableRowIndex]="rowIndex">
+              <!-- <td>
+                    <p-tableRadioButton  [value]="employee" ></p-tableRadioButton >
+                    </td> -->
+
+              <td>{{ employee.nroMedidor }}</td>
+              <td>{{ employee.marca }}</td>
+              <td>{{ employee.lecturaMedidor }}</td>
+              <td>{{ employee.estado }}</td>
+              <td>{{ employee.funcionamiento }}</td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+      <div class="col-12 md:col-4 md:col-offset-4">
+        <p-button
+          [label]="(dataSelected ===null || dataSelected === undefined)? 'Seleccione un medidor':'Asignar Medidor como asociado'"
+          (onClick)="selectData()"
+          [disabled]="(dataSelected === null || dataSelected === undefined)"
+        ></p-button>
+      </div>
+    </div>
+  </ng-template>
+</p-dialog>

@@ -40,20 +40,20 @@ export class DeudasPerfilComponent {
       this.perfil=res;
       console.log(res);
       // if(res.afiliado?.medidores?.length>0)
-      this.medidoresDeudas=res.afiliado!.medidores!.map(medidor=>{
-        const {nroMedidor,marca,planillas}=medidor
-        console.log(medidor);
+      this.medidoresDeudas=res.afiliado!.medidorAsociado!.map(asc=>{
+        const {medidor,planillas}=asc
+        console.log(asc);
         const nodoMedidor:TreeNode<any> ={
           expanded:true,
           data:{
-          name:medidor.nroMedidor,
+          name:medidor!.nroMedidor,
           mesLectura:'',
           lectura:'',
           estadoMedidor:'',
           total:'',
           monto:'',
           },
-          children:medidor.planillas?.map(planilla=>{
+          children:asc.planillas?.map(planilla=>{
             const nodoPlanilla:TreeNode<any>={
               expanded:true,
               data:{

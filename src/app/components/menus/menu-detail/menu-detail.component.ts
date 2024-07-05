@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Menu } from 'src/app/interfaces/menu.interface';
 import { switchMap } from 'rxjs';
 import { Estado } from 'src/app/interfaces';
+import { PATH_AUTH, PATH_EDIT, PATH_FORBBIDEN, PATH_MENUS, PATH_REGISTRAR } from 'src/app/interfaces/routes-app';
 
 @Component({
   selector: 'app-menu-detail',
@@ -27,72 +28,72 @@ export class MenuDetailComponent {
     //Add 'implements OnInit' to the class.
     this.menusService.menu.subscribe((res) => {
       this.menu = res;
+      console.log(res);
     });
-    if (!this.router.url.includes('id')) {
+    if (!this.routerAct.snapshot.params['id']) {
       this.messageService.add({
         severity: 'warn',
         summary: 'Warn Message',
-        detail: 'OCURRIO UN ERROR AL OBTENER LA DATA',
+        detail: 'SE DEBE MANDAR UNA REFERENCIA',
         life: 5000,
       });
-      this.router.navigate(['menus']);
+      this.router.navigate([PATH_MENUS]);
       return;
     } else {
-      this.routerAct.queryParams
-        .pipe(switchMap(({ id }) => this.menusService.findOne(id)))
-        .subscribe({
-          next: (res) => {
-            if (res.OK === false) {
-              switch (res.statusCode) {
-                case 401:
-                  this.messageService.add({
-                    severity: 'info',
-                    summary: `OCURRIO UN ERROR AL OBTENER LA DATA:${res.error}`,
-                    detail: `${res.message},code: ${res.statusCode}`,
-                    life: 3000,
-                  });
-                  this.router.navigate(['auth', 'login']);
-                  break;
-                case 403:
-                  this.messageService.add({
-                    severity: 'warn',
-                    summary: `OCURRIO UN ERROR AL OBTENER LA DATA:${res.error}`,
-                    detail: `${res.message},code: ${res.statusCode}`,
-                    life: 5000,
-                  });
-                  this.router.navigate(['forbidden']);
-                  break;
-                case 404:
-                  this.messageService.add({
-                    severity: 'warn',
-                    summary: `OCURRIO UN ERROR AL OBTENER LA DATA:${res.error}`,
-                    detail: `${res.message},code: ${res.statusCode}`,
-                    life: 5000,
-                  });
-                  this.router.navigate(['menus'])
-                  break;
-                default:
-                  console.log(res);
-                  this.messageService.add({
-                    severity: 'error',
-                    summary: 'Error no controlado',
-                    detail: 'revise la consola',
-                    life: 5000,
-                  });
-                  break;
-              }
+      const id =this.routerAct.snapshot.params['id']
+        
+      this.menusService.findOne(id).subscribe({
+        next: (res) => {
+          // console.log(res);
+          if (res.OK === false) {
+            switch (res.statusCode) {
+              case 401:
+                this.messageService.add({
+                  severity: 'info',
+                  summary: `OCURRIO UN ERROR AL OBTENER LA DATA:${res.error}`,
+                  detail: `${res.message},code: ${res.statusCode}`,
+                  life: 3000,
+                });
+                this.router.navigate([PATH_AUTH]);
+                break;
+              case 403:
+                this.messageService.add({
+                  severity: 'warn',
+                  summary: `OCURRIO UN ERROR AL OBTENER LA DATA:${res.error}`,
+                  detail: `${res.message},code: ${res.statusCode}`,
+                  life: 5000,
+                });
+                this.router.navigate([PATH_FORBBIDEN]);
+                break;
+              case 404:
+                this.messageService.add({
+                  severity: 'warn',
+                  summary: `OCURRIO UN ERROR AL OBTENER LA DATA:${res.error}`,
+                  detail: `${res.message},code: ${res.statusCode}`,
+                  life: 5000,
+                });
+                this.router.navigate([PATH_MENUS])
+                break;
+              default:
+                console.log(res);
+                this.messageService.add({
+                  severity: 'error',
+                  summary: 'Error no controlado',
+                  detail: 'revise la consola',
+                  life: 5000,
+                });
+                break;
             }
-          },
-        });
+          }
+        },
+      });
     }
   }
 
   actionData(action: string) {
     switch (action) {
       case 'MODIFICAR':
-        this.router.navigate(['menus','menu-register'], {
-          queryParams: { id: this.menu.id },
-        });
+        this.router.navigate([PATH_MENUS,PATH_REGISTRAR,PATH_EDIT,this.menu.id]);
         break;
 
       case 'DESHABILITAR':

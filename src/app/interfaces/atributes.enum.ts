@@ -29,3 +29,7 @@ export enum Nivel{
 export enum Monedas{
     Bs ="Bs"
 }
+export enum Medicion{
+    ft3 = "ft3",
+    mt3 = 'mt3',
+}

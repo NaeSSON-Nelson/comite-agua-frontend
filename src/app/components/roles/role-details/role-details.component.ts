@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Role } from 'src/app/interfaces/role.interface';
 import { switchMap } from 'rxjs';
 import { Estado } from 'src/app/interfaces';
+import { PATH_AUTH, PATH_EDIT, PATH_FORBBIDEN, PATH_REGISTRAR, PATH_ROLES } from 'src/app/interfaces/routes-app';
 
 @Component({
   selector: 'app-role-details',
@@ -27,72 +28,71 @@ export class RoleDetailsComponent {
     //Add 'implements OnInit' to the class.
     this.rolesService.role.subscribe((res) => {
       this.role = res;
+      console.log(res);
     });
-    if (!this.router.url.includes('id')) {
+    if (!this.routerAct.snapshot.params['id']) {
       this.messageService.add({
         severity: 'warn',
         summary: 'Warn Message',
-        detail: 'OCURRIO UN ERROR AL OBTENER LA DATA',
+        detail: 'SE DEBE MANDAR UNA REFERENCIA',
         life: 5000,
       });
-      this.router.navigate(['roles']);
+      this.router.navigate([PATH_ROLES]);
       return;
     } else {
-      this.routerAct.queryParams
-        .pipe(switchMap(({ id }) => this.rolesService.findOne(id)))
-        .subscribe({
-          next: (res) => {
-            if (res.OK === false) {
-              switch (res.statusCode) {
-                case 401:
-                  this.messageService.add({
-                    severity: 'info',
-                    summary: `OCURRIO UN ERROR AL OBTENER LA DATA:${res.error}`,
-                    detail: `${res.message},code: ${res.statusCode}`,
-                    life: 3000,
-                  });
-                  this.router.navigate(['auth', 'login']);
-                  break;
-                case 403:
-                  this.messageService.add({
-                    severity: 'warn',
-                    summary: `OCURRIO UN ERROR AL OBTENER LA DATA:${res.error}`,
-                    detail: `${res.message},code: ${res.statusCode}`,
-                    life: 5000,
-                  });
-                  this.router.navigate(['forbidden']);
-                  break;
-                case 404:
-                  this.messageService.add({
-                    severity: 'warn',
-                    summary: `OCURRIO UN ERROR AL OBTENER LA DATA:${res.error}`,
-                    detail: `${res.message},code: ${res.statusCode}`,
-                    life: 5000,
-                  });
-                  this.router.navigate(['roles'])
-                  break;
-                default:
-                  console.log(res);
-                  this.messageService.add({
-                    severity: 'error',
-                    summary: 'Error no controlado',
-                    detail: 'revise la consola',
-                    life: 5000,
-                  });
-                  break;
-              }
+      const id =this.routerAct.snapshot.params['id']
+      this.rolesService.findOne(id).subscribe({
+        next: (res) => {
+          // console.log(res);
+          if (res.OK === false) {
+            switch (res.statusCode) {
+              case 401:
+                this.messageService.add({
+                  severity: 'info',
+                  summary: `OCURRIO UN ERROR AL OBTENER LA DATA:${res.error}`,
+                  detail: `${res.message},code: ${res.statusCode}`,
+                  life: 3000,
+                });
+                this.router.navigate([PATH_AUTH]);
+                break;
+              case 403:
+                this.messageService.add({
+                  severity: 'warn',
+                  summary: `OCURRIO UN ERROR AL OBTENER LA DATA:${res.error}`,
+                  detail: `${res.message},code: ${res.statusCode}`,
+                  life: 5000,
+                });
+                this.router.navigate([PATH_FORBBIDEN]);
+                break;
+              case 404:
+                this.messageService.add({
+                  severity: 'warn',
+                  summary: `OCURRIO UN ERROR AL OBTENER LA DATA:${res.error}`,
+                  detail: `${res.message},code: ${res.statusCode}`,
+                  life: 5000,
+                });
+                this.router.navigate([PATH_ROLES])
+                break;
+              default:
+                console.log(res);
+                this.messageService.add({
+                  severity: 'error',
+                  summary: 'Error no controlado',
+                  detail: 'revise la consola',
+                  life: 5000,
+                });
+                break;
             }
-          },
-        });
+          }
+        },
+      });
     }
   }
 
   actionData(action: string) {
     switch (action) {
       case 'MODIFICAR':
-        this.router.navigate(['roles','rol-register'], {
-          queryParams: { id: this.role.id },
-        });
+        this.router.navigate([PATH_ROLES,PATH_REGISTRAR,PATH_EDIT,this.role.id]);
         break;
 
       case 'DESHABILITAR':

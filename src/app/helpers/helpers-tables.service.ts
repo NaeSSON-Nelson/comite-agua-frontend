@@ -7,6 +7,7 @@ import { DataResult, HttpResponseApiArray } from '../interfaces/http-respones.in
 import { PaginatorFind } from '../interfaces/Paginator.interface';
 import { Role } from '../interfaces/role.interface';
 import { Afiliado } from '../interfaces/afiliado.interface';
+import { Medidor } from '../interfaces';
 
 @Injectable({
   providedIn: 'root'
@@ -18,6 +19,7 @@ export class HelpersTablesService {
   URL_menus: string = environment.apiURrl + '/menus';
   URL_roles: string = environment.apiURrl + '/roles';
   URL_afiliados: string = environment.apiURrl + '/afiliados';
+  URL_medidores: string = environment.apiURrl + '/medidores-agua';
 
   private headers = new HttpHeaders().set(
     'authorization',
@@ -27,11 +29,13 @@ export class HelpersTablesService {
   private _menus$:Subject<DataResult<Menu>>;
   private _roles$:Subject<DataResult<Role>>;
   private _afiliadosSinUsuario$:Subject<DataResult<Afiliado>>;
+  private _medidores$:Subject<DataResult<Medidor>>;
   constructor(private http: HttpClient) {
     this._itemsMenus$= new Subject<DataResult<ItemMenu>>();
     this._menus$= new Subject<DataResult<Menu>>();
     this._roles$= new Subject<DataResult<Role>>();
     this._afiliadosSinUsuario$ = new Subject<DataResult<Afiliado>>();
+    this._medidores$ = new Subject<DataResult<Medidor>>();
   }
   get itemsMenus(){
     return this._itemsMenus$.asObservable();
@@ -44,6 +48,9 @@ export class HelpersTablesService {
   }
   get afiliadosSinUsuario(){
     return this._afiliadosSinUsuario$.asObservable();
+  }
+  get medidores(){
+    return this._medidores$.asObservable();
   }
   findAllItemsMenus(paginator:PaginatorFind) {
     let {size,...dataPaginator } = paginator;
@@ -112,6 +119,26 @@ export class HelpersTablesService {
         tap((resp)=>{
           if(resp.OK){
             this._afiliadosSinUsuario$.next(resp.data)
+          }
+        }),
+        map((resp) => {
+          return {OK: resp.OK, message: resp.message,};
+        }),
+        catchError((err) => {
+          console.log(err);
+          return of({ OK: false, message: 'Error recibido' });
+        })
+      );
+  }
+  findAllMedidoresWithoutAsociacion(paginator:PaginatorFind){
+    let {size,...dataPaginator } = paginator;
+    return this.http
+      .get<HttpResponseApiArray<Medidor>>(`${this.URL_medidores}/asociacion`,{headers:this.headers,params:{...dataPaginator}})
+      .pipe(
+        tap((resp)=>{
+          
+          if(resp.OK){
+            this._medidores$.next(resp.data)
           }
         }),
         map((resp) => {

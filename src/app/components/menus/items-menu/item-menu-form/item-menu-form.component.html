@@ -6,24 +6,6 @@
       </h5>
       <p-divider></p-divider>
       <div class="p-fluid p-formgrid grid mt-5">
-        <div class="field col-12 md:col-6">
-            <span class="p-float-label">
-              <input
-                type="text"
-                id="nombre"
-                pInputText
-                formControlName="nombre"
-                [ngClass]="inputValid('nombre')"
-              />
-              <label for="nombre">Nombre de Item (*)</label>
-            </span>
-            <small
-              id="nombre-help"
-              class="p-error block"
-              *ngIf="campoValido('nombre')"
-              >{{ getNombreErrors("nombre") }}
-            </small>
-          </div>
           <div class="field col-12 md:col-6">
             <span class="p-float-label p-input-icon-right">
               <input
@@ -47,28 +29,6 @@
             <ng-template #helper>
                 <small id="linkMenu-help">Use el guion "-" para separar</small>
             </ng-template>
-          </div>
-          <div class="field col-12 md:col-4">
-            <span class="p-float-label">
-              <p-dropdown
-                inputId="visible"
-                [autoDisplayFirst]="false"
-                [options]="estadoVisible"
-                formControlName="visible"
-                optionLabel="name"
-                optionValue="value"
-                placeholder="Select visible"
-                [ngClass]="inputValid('visible')"
-              ></p-dropdown>
-  
-              <label for="visible">visible</label>
-            </span>
-            <small
-              id="visible-help"
-              class="p-error block"
-              *ngIf="campoValido('visible')"
-              >{{ getVisibleErrors("visible") }}
-            </small>
           </div>
           <div class="field col-12 md:col-4">
             <span class="p-float-label">

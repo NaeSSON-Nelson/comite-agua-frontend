@@ -1,9 +1,11 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { AbstractControl, ValidationErrors } from '@angular/forms';
-import { Observable, delay, map } from 'rxjs';
+import { AbstractControl } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { map } from 'rxjs';
 import { HttpResponseApi } from 'src/app/interfaces/http-respones.interface';
 import { Medidor } from 'src/app/interfaces/medidor.interface';
+import { PATH_EDIT } from 'src/app/interfaces/routes-app';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
@@ -16,40 +18,32 @@ export class AsyncValidatorsMedidorService {
     'authorization',
     `Bearer ${localStorage.getItem('token') || ''}`
   );
-  constructor(private http: HttpClient) {}
-  validarNroMedidor(campoMedidor: string, campoId: string) {
-    return (
-      formGroup: AbstractControl<any, any>
-    ): Observable<ValidationErrors | null> => {
-      const medidor = formGroup.get(campoMedidor)?.value;
-      const id = formGroup.get(campoId)?.value;
-      // console.log(ci,id);
-      return this.http
-        .get<HttpResponseApi<Medidor>>(`${this.API_URL}/nro-medidor/${medidor}`, {
-          headers: this.headers,
-        })
-        .pipe(
-          delay(100),
-          map(({ data }) => {
-            // return data.length === 0 ? null : { ciExist: true,actual:{} };
-            // console.log(id);
-            // console.log(data,id);
-            if (data) {
-              // console.log(data);
-              if (id) {
-                if (data.id !== id) {
-                  formGroup.get(campoMedidor)?.setErrors({ exist: true });
-                  return { exist: true };
-                }
-                return null;
-              } else {
-                formGroup.get(campoMedidor)?.setErrors({ exist: true });
-                return { exist: true };
-              }
-            }
-            return null;
-          })
-        );
-    };
+  constructor(private http: HttpClient,
+    private router: Router,
+    private routerAct: ActivatedRoute
+  ) {}
+
+  validate(control: AbstractControl){
+
+    return this.http.get<HttpResponseApi<Medidor>>(`${this.API_URL}/nro-medidor/${control.value}`)
+    .pipe(
+      map(({ data }) => {
+        if (data) {
+          const indexEdit=this.router.url.split("/").findIndex(val=>val === PATH_EDIT);
+          if (this.router.url.includes(PATH_EDIT)){
+            
+            if(data.id === Number.parseInt(this.router.url.split("/")[indexEdit+1]))
+              return null   
+                control.setErrors({exist:true});
+              return {exist:true}   
+          }else{
+            control.setErrors({exist:true});
+            return {exist:true}   
+          }
+        }else{
+          return null;
+        }
+      })
+    );
   }
 }

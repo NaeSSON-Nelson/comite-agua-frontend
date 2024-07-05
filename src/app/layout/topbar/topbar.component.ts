@@ -83,7 +83,7 @@ export class TopbarComponent {
           items: menu.itemsMenu?.map((item) => {
             const menuItem: MenuItem = {
               label: item.nombre,
-              routerLink: [`/${menu.linkMenu}/${item.linkMenu}`],
+              routerLink: [`/${menu.linkMenu}/${item.itemMenu!.linkMenu}`],
               visible:item.visible
             };
             return menuItem;

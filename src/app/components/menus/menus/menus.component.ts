@@ -8,6 +8,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { patternSpanishInline } from 'src/app/patterns/forms-patterns';
 import { PaginatorFind } from 'src/app/interfaces/Paginator.interface';
 import { PaginatorState } from 'primeng/paginator';
+import { PATH_AUTH, PATH_FORBBIDEN, PATH_MENUS, PATH_MODULE_DETAILS } from 'src/app/interfaces/routes-app';
 
 @Component({
   selector: 'app-menus',
@@ -31,6 +32,7 @@ export class MenusComponent {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
     this.menusService.menus.subscribe((res) => {
+      console.log(res);
       this.dataPaginator.limit=res.limit;
       this.dataPaginator.offset=res.offset;
       this.dataPaginator.order=res.order;
@@ -81,7 +83,7 @@ export class MenusComponent {
                 detail: `${res.message},code: ${res.statusCode}`,
                 life: 3000,
               });
-              this.router.navigate(['auth', 'login']);
+              this.router.navigate([PATH_AUTH]);
               break;
             case 403:
               this.messageService.add({
@@ -90,7 +92,7 @@ export class MenusComponent {
                 detail: `${res.message},code: ${res.statusCode}`,
                 life: 5000,
               });
-              this.router.navigate(['forbidden']);
+              this.router.navigate([PATH_FORBBIDEN]);
               break;
             default:
               console.log(res);
@@ -107,7 +109,7 @@ export class MenusComponent {
     });
   }
   dataDetail(id: number) {
-    this.router.navigate(['menus', 'menu-details'], { queryParams: { id } });
+    this.router.navigate([PATH_MENUS, PATH_MODULE_DETAILS,id]);
   }
   campoValido(nombre: string) {
     return (

@@ -4,23 +4,28 @@ import { RouterModule, Routes } from '@angular/router';
 import { MenusComponent } from './menus/menus.component';
 import { MenuDetailComponent } from './menu-detail/menu-detail.component';
 import { MenuFormComponent } from './menu-form/menu-form.component';
+import { PATH_EDIT, PATH_LISTAR, PATH_MODULE_DETAILS, PATH_REGISTRAR } from 'src/app/interfaces/routes-app';
 
 const routes: Routes = [
   {
-    path: 'menu-list',
+    path:PATH_LISTAR,
     component: MenusComponent,
   },
   {
-    path:'menu-details',
+    path:`${PATH_MODULE_DETAILS}/:id`,
     component:MenuDetailComponent,
   },
   {
-    path:'menu-register',
+    path:PATH_REGISTRAR,
+    component:MenuFormComponent,
+  },
+  {
+    path:`${PATH_REGISTRAR}/${PATH_EDIT}/:id`,
     component:MenuFormComponent,
   },
   {
     path: '**',
-    redirectTo: '',
+    redirectTo: PATH_LISTAR,
   },
 ];
 

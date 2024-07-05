@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MedidoresAguaService } from '../medidores-agua.service';
-import { Medidor, MesLectura } from 'src/app/interfaces';
+import { Medidor, MedidorAsociado, MesLectura } from 'src/app/interfaces';
 
 @Component({
   selector: 'app-gestion-planillas',
@@ -14,7 +14,7 @@ export class GestionPlanillasComponent {
   visibleLecturaModal:boolean=false;
   visibleComprobanteModal:boolean=false;
   @Input()
-  medidor!:Medidor;
+  medidor!:MedidorAsociado;
   planillas:any[]=[];
   lecturas:MesLectura[]=[];
   titleLecturas='Debe seleccionar una año de gestion'

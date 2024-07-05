@@ -14,3 +14,11 @@ export const PATH_EMPTY ='';
 //* RESPONSE OF RESULT
 export const PATH_FORBBIDEN ='forbidden';
 export const PATH_NOTFOUND ='404';
+
+//* FUNCTIONS ALL MODULES
+export const PATH_LISTAR='';
+export const PATH_REGISTRAR='form';
+export const PATH_MODULE_DETAILS='details';
+export const PATH_EDIT='edit';
+
+export const PATH_AFILIADO ='afiliado';

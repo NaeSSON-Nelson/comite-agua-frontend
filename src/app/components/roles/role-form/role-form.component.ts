@@ -10,6 +10,7 @@ import { patternText } from 'src/app/patterns/forms-patterns';
 import { Menu } from 'src/app/interfaces/menu.interface';
 import { CommonAppService } from 'src/app/common/common-app.service';
 import { Estado } from 'src/app/interfaces';
+import { PATH_AUTH, PATH_EDIT, PATH_FORBBIDEN, PATH_LISTAR, PATH_MODULE_DETAILS, PATH_ROLES } from 'src/app/interfaces/routes-app';
 
 @Component({
   selector: 'app-role-form',
@@ -32,9 +33,10 @@ export class RoleFormComponent {
 
   ngOnInit(): void {
     this.rolesService.role.subscribe((res) => {
+      console.log(res);
       const { menus,created_at,updated_at,isActive, ...dataRole } = res;
-      this.listItemsSelected=menus!;
-      this.ListItemMenuSelected(menus!);
+      this.listMenusSelected=menus!;
+      this.ListMenuSelected(menus!);
 
       this.roleForm.setValue({
         ...dataRole,
@@ -42,13 +44,13 @@ export class RoleFormComponent {
           return { id: val.id };
         }),
       });
+      console.log('role form',this.roleForm.value);
       this.roleActual = res;
     });
-    if (!this.router.url.includes('id')) return;
-
-    this.routerAct.queryParams
-      .pipe(switchMap(({ id }) => this.rolesService.findOne(id)))
-      .subscribe((res) => {
+    if (this.routerAct.snapshot.params['id'] && this.routerAct.snapshot.routeConfig?.path?.includes(PATH_EDIT)){
+      // console.log('es edit');
+      this.rolesService.findOne(this.routerAct.snapshot.params['id']).
+      subscribe((res) => {
         if (res.OK === false) {
           switch (res.statusCode) {
             case 401:
@@ -58,7 +60,7 @@ export class RoleFormComponent {
                 detail: `${res.message},code: ${res.statusCode}`,
                 life: 3000,
               });
-              this.router.navigate(['auth', 'login']);
+              this.router.navigate([PATH_AUTH]);
               break;
             case 403:
               this.messageService.add({
@@ -67,7 +69,7 @@ export class RoleFormComponent {
                 detail: `${res.message},code: ${res.statusCode}`,
                 life: 5000,
               });
-              this.router.navigate(['forbidden']);
+              this.router.navigate([PATH_FORBBIDEN]);
               break;
             case 404:
               this.messageService.add({
@@ -76,7 +78,7 @@ export class RoleFormComponent {
                 detail: `${res.message},code: ${res.statusCode}`,
                 life: 5000,
               });
-              this.router.navigate(['roles'])
+              this.router.navigate([PATH_ROLES])
               break;
             default:
               console.log(res);
@@ -89,7 +91,8 @@ export class RoleFormComponent {
               break;
           }
         }
-      });
+      })
+  }
   }
   roleForm: FormGroup = this.fb.group(
     {
@@ -157,9 +160,7 @@ export class RoleFormComponent {
                   detail: `${res.message}`,
                   icon: 'pi pi-check',
                 });
-                this.router.navigate(['roles', 'rol-details'], {
-                  queryParams: { id: this.roleActual?.id },
-                });
+                this.router.navigate([PATH_ROLES, PATH_MODULE_DETAILS,this.roleActual?.id]);
               }else{
                 this.messageService.add({
                   severity: 'error',
@@ -183,7 +184,7 @@ export class RoleFormComponent {
                   detail: res.message,
                   icon: 'pi pi-check',
                 });
-                this.router.navigate(['roles','rol-list']);
+                this.router.navigate([PATH_ROLES,PATH_LISTAR]);
               }else{
                 this.messageService.add({
                   severity: 'error',
@@ -200,20 +201,19 @@ export class RoleFormComponent {
     });
   }
 
-  listItemsSelected: Menu[] = [];
+  listMenusSelected: Menu[] = [];
   showTableAsignModalForm: boolean = false;
   get menusForm() {
     return this.roleForm.controls['menus'] as FormArray;
   }
 
-  ListItemMenuSelected(list: Menu[]) {
+  ListMenuSelected(list: Menu[]) {
     this.menusForm.clear();
-    this.listItemsSelected = [];
+    this.listMenusSelected=list;
     for (let item of list) {
       const menu = this.fb.group({
         id: [item.id, [Validators.required]],
       });
-      this.listItemsSelected.push(item);
       this.menusForm.push(menu);
     }
     // this.closeTableModalForm(false);
@@ -222,9 +222,9 @@ export class RoleFormComponent {
     this.showTableAsignModalForm = view;
   }
   deleteItemMenu(id: number) {
-    const index = this.listItemsSelected.findIndex((val) => val.id === id);
-    this.menusForm.removeAt(index);
-    this.listItemsSelected.splice(index, 1);
+    const index = this.listMenusSelected.findIndex((val) => val.id === id);
+    this.menusForm.removeAt(id);
+    this.listMenusSelected.splice(index, 1);
   }
   addItem() {
     this.showTableAsignModalForm = true;

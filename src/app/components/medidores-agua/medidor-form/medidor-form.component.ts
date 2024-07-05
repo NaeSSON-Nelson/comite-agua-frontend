@@ -11,6 +11,7 @@ import { Afiliado } from 'src/app/interfaces/afiliado.interface';
 import { Estado, Perfil } from 'src/app/interfaces';
 import { CommonAppService } from 'src/app/common/common-app.service';
 import * as L from 'leaflet';
+import { PATH_AUTH, PATH_EDIT, PATH_FORBBIDEN, PATH_MEDIDORES, PATH_MODULE_DETAILS } from 'src/app/interfaces/routes-app';
 
 @Component({
   selector: 'app-medidor-form',
@@ -19,9 +20,7 @@ import * as L from 'leaflet';
   ]
 })
 export class MedidorFormComponent {
-  perfilActual?: Perfil;
   medidorActual?:Medidor;
-  showMap:boolean=false;
   constructor(
     private fb: FormBuilder,
     private readonly medidoresService: MedidoresAguaService,
@@ -34,47 +33,23 @@ export class MedidorFormComponent {
   ) {}
 
   ngOnInit(): void {
-    // if(this.clienteModificar?.id){
-    //   this.proveedorForm.setValue(this.clienteModificar);
-    // }
-    // this.routerAct.paramMap.subscribe((params)=>{
-    //   console.log(params);
-    // })
-    this.medidoresService.afiliadoWithMedidores.subscribe((res) => {
-      // console.log(res);
-      // const {medidores} =res;
-      // this.medidorActual=res;
-      // this.medidorForm.setValue({...dataMedidorForm,afiliado:{id:afiliado!.id}});
-      this.perfilActual=res;
+    
+    this.medidoresService.medidor.subscribe((res) => {
       console.log(res);
-      this.medidorForm.get('afiliado')?.get('id')?.setValue(this.perfilActual?.afiliado!.id)
-      this.routerAct.queryParams
-                    .subscribe(params=>{
-                      // console.log('parametros',params);
-                      if(params?.['idMedidor']){
-                        // console.log(params?.['idMedidor']);
-                        if(Number.isInteger(Number.parseInt(params?.['idMedidor'])))
-                        // console.log(params?.['idMedidor']);
-                        this.medidorActual = this.perfilActual?.afiliado?.medidores?.find(val=>val.id===Number.parseInt(params?.['idMedidor']))
-                        // console.log(this.medidorActual);
-                        const {afiliado,ultimaLectura,created_at,isActive,ubicacion,updated_at,...dataMedidor} = this.medidorActual!;
-                        console.log(this.perfilActual);
-                        this.medidorForm.setValue({...dataMedidor,afiliado:
-                          {id:this.perfilActual!.afiliado!.id},
-                          barrio:ubicacion?.barrio,
-                          longitud:ubicacion?.longitud,
-                          latitud:ubicacion?.longitud,
-                          numeroVivienda:ubicacion?.numeroVivienda});
-                      }
-                    })
+      this.medidorForm.setValue({
+        nroMedidor:res.nroMedidor,
+        lecturaInicial:res.lecturaInicial,
+        estado:res.estado,
+        medicion:res.medicion,
+        marca:res.marca,
+        funcionamiento:res.funcionamiento,
+      })
+      this.medidorActual=res;
     });
-    if (!this.router.url.includes('idPerfil')) return;
-
-    this.routerAct.queryParams
-      .pipe(switchMap(({ idPerfil}) => this.medidoresService.findOne(idPerfil)))
-      .subscribe((res) => {
-        // console.log(res);
-        if (!res.OK) {
+    if (this.routerAct.snapshot.params['id'] && this.routerAct.snapshot.routeConfig?.path?.includes(PATH_EDIT)){
+      this.medidoresService.findOneMedidor(this.routerAct.snapshot.params['id']).
+      subscribe((res) => {
+        if (res.OK === false) {
           switch (res.statusCode) {
             case 401:
               this.messageService.add({
@@ -83,7 +58,7 @@ export class MedidorFormComponent {
                 detail: `${res.message},code: ${res.statusCode}`,
                 life: 3000,
               });
-              this.router.navigate(['auth', 'login']);
+              this.router.navigate([PATH_AUTH]);
               break;
             case 403:
               this.messageService.add({
@@ -92,7 +67,7 @@ export class MedidorFormComponent {
                 detail: `${res.message},code: ${res.statusCode}`,
                 life: 5000,
               });
-              this.router.navigate(['forbidden']);
+              this.router.navigate([PATH_FORBBIDEN]);
               break;
             case 404:
               this.messageService.add({
@@ -101,7 +76,7 @@ export class MedidorFormComponent {
                 detail: `${res.message},code: ${res.statusCode}`,
                 life: 5000,
               });
-              this.router.navigate(['medidores-agua'])
+              this.router.navigate([PATH_MEDIDORES])
               break;
             default:
               console.log(res);
@@ -114,32 +89,29 @@ export class MedidorFormComponent {
               break;
           }
         }
-          
-      });
+      })
+  }
   }
   medidorForm: FormGroup = this.fb.group(
     {
-      id:                [],
-      nroMedidor:        [,[Validators.required,Validators.pattern(patternCI),Validators.minLength(4)]],
-      fechaInstalacion:  [,[Validators.required]],
+      nroMedidor:        [,[Validators.required,Validators.pattern(patternCI),Validators.minLength(4),],[this.asyncValidators]],
       lecturaInicial:    [0,[Validators.required,Validators.min(0)]],
-      barrio:            [,[Validators.required,Validators.minLength(3),Validators.pattern(patternText)]],
-      estado:            [Estado.ACTIVO,[Validators.min(0)]],
+      estado:            [Estado.ACTIVO],
+      medicion:          [,Validators.required],
       marca:             [,[Validators.required,Validators.pattern(patternText),Validators.minLength(1)]],
-      afiliado:          this.fb.group({
-                          id:[,[Validators.required,Validators.min(0)]]}),
-      numeroVivienda:    [,[Validators.pattern(patternText)]],
-      longitud:          [],
-      latitud:           [],
+      funcionamiento:     [,Validators.required]
     },
     {
       updateOn: 'blur',
-      asyncValidators: [this.asyncValidators.validarNroMedidor('nroMedidor', 'id')],
     }
   );
+  tiposFun=[
+    {name:'SI',value:'SI',},
+    {name:'NO',value:'NO',},
+  ]
   validForm() {
     this.medidorForm.markAllAsTouched();
-    console.log(this.medidorForm);
+    // console.log(this.medidorForm);
     if (this.medidorForm.invalid) return;
     // console.log(this.clienteForm.value);
     let medidorSend: MedidorForm = {};
@@ -155,6 +127,7 @@ export class MedidorFormComponent {
         if (value === null || value ===undefined) delete medidorSend[key as keyof MedidorForm];
       });
     }
+    // console.log('MEDIDOR SEND',medidorSend);
     this.registrarFormulario(medidorSend);
   }
   registrarFormulario(form: Medidor) {
@@ -178,8 +151,8 @@ export class MedidorFormComponent {
                   detail: `${res.message}`,
                   icon: 'pi pi-check',
                 });
-                this.router.navigate(['medidores-agua', 'medidor-agua-details'], {
-                  queryParams: { id: this.perfilActual?.id },
+                this.router.navigate([PATH_MEDIDORES, PATH_MODULE_DETAILS,this.medidorActual?.id], {
+                  // queryParams: { id: this.perfilActual?.id },
                 });
               }else{
                 this.messageService.add({
@@ -203,8 +176,9 @@ export class MedidorFormComponent {
                   detail: res.message,
                   icon: 'pi pi-check',
                 });
-                this.router.navigate(['medidores-agua','medidor-agua-details'],
-                {queryParams:{id:this.perfilActual?.id}});
+                this.router.navigate([PATH_MEDIDORES],
+                // {queryParams:{id:this.perfilActual?.id}}
+              );
               }else{
                 this.messageService.add({
                   severity: 'error',
@@ -250,9 +224,7 @@ export class MedidorFormComponent {
   get coordenadasLatLng(){
     return new L.LatLng(this.medidorForm.get('latitud')?.value ||-21.4734,this.medidorForm.get('longitud')?.value ||-64.8026);
   }
-  cerrarMapa(modal:boolean){
-    this.showMap=modal;
-  }
+
   
   //MESSAGES ERRORS TYPE
 
@@ -265,17 +237,7 @@ export class MedidorFormComponent {
     } else if (errors?.['minlength']) {
       return 'El tamaño del campo debe ser 4 como minimo';
     } else if(errors?.['exist']){
-      return 'El Numero de medidor ya existe'
-    }
-    return '';
-  }
-  getFechaInstalacionErrors(campo: string) {
-    const errors = this.medidorForm.get(campo)?.errors;
-
-    if (errors?.['required']) {
-      return 'El campo es requerido';
-    } else if (errors?.['pattern']) {
-      return 'La fecha debe seguir el orden: dd/mm/yyyy';
+      return `El numero de medidor esta registrado`
     }
     return '';
   }
@@ -304,49 +266,20 @@ export class MedidorFormComponent {
 
   getEstadoErrors(campo: string) {
     const errors = this.medidorForm.get(campo)?.errors;
-    if (errors?.['min']) {
-      return 'El minimo es 0';
-    }
+    
     return '';
   }
-  getBarrioErrors(campo: string) {
+  getMedicionErrors(campo: string) {
     const errors = this.medidorForm.get(campo)?.errors;
-    if (errors?.['required']) {
+    if(errors?.['required']) 
       return 'El campo es requerido';
-    }else if(errors?.['minlength']){
-      return 'El valor minimo es 3'
-    }else if(errors?.['pattern']){
-      return 'caracteres no validos'
-    }
     return '';
   }
-  getNumeroViviendaErrors(campo: string) {
+  getFuncionamientoErrors(campo:string){
     const errors = this.medidorForm.get(campo)?.errors;
-    if (errors?.['required']) {
+    if(errors?.['required']) 
       return 'El campo es requerido';
-    } else if (errors?.['pattern']) {
-      return 'El campo contiene caracteres invalidos';
-    } else if (errors?.['minlength']) {
-      return 'El tamaño minimo debe ser 3';
-    }
     return '';
-  }
-  getLongitudErrors(campo: string) {
-    const errors = this.medidorForm.get(campo)?.errors;
-    if (errors?.['required']) {
-      return 'El campo es requerido';
-    } else if (errors?.['pattern']) {
-      return 'El campo contiene caracteres invalidos';
-    } else if (errors?.['minlength']) {
-      return 'El tamaño minimo debe ser 3';
-    }
-    return '';
-  }
-  getLatitudErrors(campo: string) {
-    const errors = this.medidorForm.get(campo)?.errors;
-    if (errors?.['pattern']) {
-      return 'El campo contiene caracteres invalidos';
-    } 
-    return '';
+    
   }
 }

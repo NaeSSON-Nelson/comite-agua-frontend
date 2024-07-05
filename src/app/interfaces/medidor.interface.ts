@@ -1,36 +1,55 @@
 import { Afiliado, Ubicacion } from "./afiliado.interface";
 import { ColumnsAlways } from "./always.interface";
-import { Barrio, Estado } from "./atributes.enum";
+import { Barrio, Estado, Medicion } from "./atributes.enum";
 import { ComprobantePorPago } from "./pagos-services.interface";
 
 
 export interface Medidor{
   id?:                number;
   nroMedidor?:        string;
-  fechaInstalacion?:  Date;
   lecturaInicial?:    number;
-  ultimaLectura?:     number;
-  ubicacion?:         Ubicacion;
+  lecturaMedidor?:    number;
   marca?:             string;
-  afiliado?:          Afiliado;
-  planillas?:         PlanillaLecturas[];
-  created_at?:        Date;
-  updated_at?:        Date;
-  isActive?:          boolean;
-  estado?:            Estado;
+  funcionamiento?:    string;
+  medidorAsociado?:  MedidorAsociado[];
+  isActive?:           boolean;
+  estado?:             Estado;
+  medicion?:           Medicion;
+}
+export interface MedidorAsociado{
+  id?:                   number;
+  lecturaInicial?:       number;
+  fechaInstalacion?:     Date;
+  estadoMedidorAsociado?:string;
+  lecturaSeguimiento?:   number;
+  planillas?:             PlanillaLecturas[];
+  afiliado?:             Afiliado;
+  medidor?:              Medidor;
+  ubicacion?:            Ubicacion;
+  isActive?:              boolean;
+  estado?:                Estado;
+  registrable?:            boolean;
 }
 export interface MedidorForm{
   id?:                number;
   nroMedidor?:        string;
-  fechaInstalacion?:  Date;
   lecturaInicial?:    number;
   marca?:             string;
-  afiliado?:          Afiliado;
-  barrio?:            Barrio
-  numeroVivienda?:    string;
-  longitud?:          string;
-  latitud?:           string;
   estado?:            Estado;
+  funcionamiento?:    string;
+  medicion?:           Medicion;
+}
+export interface MedidorAsociadoForm{
+  id?:                   number;
+  fechaInstalacion?:     Date;
+  estadoMedidorAsociado?:string;
+  afiliado?:             Afiliado;
+  medidor?:              Medidor;
+
+  barrio?:               Barrio;
+  numeroVivienda?:       string;
+  longitud?:             string;
+  latitud?:              number;
 }
 export interface PlanillaLecturas{
   id?:  number;

@@ -2,7 +2,7 @@ import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http
 import { Injectable } from '@angular/core';
 import { Subject, catchError, map, of, tap } from 'rxjs';
 import { HttpResponseApi, Medidor, Perfil, ResponseResult, ResponseResultData } from 'src/app/interfaces';
-import { MesLectura, PlanillaLecturas } from 'src/app/interfaces/medidor.interface';
+import { MedidorAsociado, MesLectura, PlanillaLecturas } from 'src/app/interfaces/medidor.interface';
 
 import { environment } from 'src/environments/environment';
 @Injectable({
@@ -39,28 +39,28 @@ export class UsuarioFuncionesService {
     )
   }
   getSelectsMedidores(){
-    return this.http.get<HttpResponseApi<Medidor[]>>(`${this.URL_user_medidores}`).pipe(
+    return this.http.get<HttpResponseApi<MedidorAsociado[]>>(`${this.URL_user_medidores}`).pipe(
       map((resp) => {
         // console.log('map',resp);
-        const respuesta:ResponseResultData<Medidor[]>={OK:resp.OK,message:resp.message,statusCode:200,data:resp.data!}
+        const respuesta:ResponseResultData<MedidorAsociado[]>={OK:resp.OK,message:resp.message,statusCode:200,data:resp.data!}
         return respuesta;
       }),
       catchError((err:HttpErrorResponse) => {
-        const errors = err.error as ResponseResultData<Medidor[]>;
+        const errors = err.error as ResponseResultData<MedidorAsociado[]>;
         errors.OK=false;
         return of(errors);
       })
     )
   }
   getMedidor(nroMedidor:string){
-    return this.http.get<HttpResponseApi<Medidor>>(`${this.URL_user_medidores}/${nroMedidor}`).pipe(
+    return this.http.get<HttpResponseApi<MedidorAsociado>>(`${this.URL_user_medidores}/${nroMedidor}`).pipe(
       map((resp) => {
         // console.log('map',resp);
-        const respuesta:ResponseResultData<Medidor>={OK:resp.OK,message:resp.message,statusCode:200,data:resp.data!}
+        const respuesta:ResponseResultData<MedidorAsociado>={OK:resp.OK,message:resp.message,statusCode:200,data:resp.data!}
         return respuesta;
       }),
       catchError((err:HttpErrorResponse) => {
-        const errors = err.error as ResponseResultData<Medidor>;
+        const errors = err.error as ResponseResultData<MedidorAsociado>;
         errors.OK=false;
         return of(errors);
       })

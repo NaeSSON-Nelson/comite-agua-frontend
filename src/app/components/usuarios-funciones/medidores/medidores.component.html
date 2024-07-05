@@ -1,9 +1,9 @@
 <div class="card">
     <label for="selectMedidor"> <h4>Seleccione un medidor de agua:</h4></label>
-    <p-dropdown [options]="selectMedidores" class="m-5" id="selectMedidor" optionLabel="nroMedidor" optionValue="nroMedidor" (onChange)="obtenerMedidor($event)" placeholder="Seleccione su medidor" emptyMessage="Sin medidores"></p-dropdown>
-    <div class="card col-12 grid m-3" *ngIf="medidor">
+    <p-dropdown [options]="selectMedidoresRelacion" class="m-5" id="selectMedidor" optionLabel="nroMedidor" optionValue="nroMedidor" (onChange)="obtenerMedidor($event)" placeholder="Seleccione su medidor" emptyMessage="Sin medidores"></p-dropdown>
+    <div class="card col-12 grid m-3" *ngIf="medidorAsc">
         <div class="col-12">
-            <h4>MEDIDOR {{medidor.nroMedidor}}</h4>
+            <h4>MEDIDOR {{medidorAsc.medidor?.nroMedidor}}</h4>
             <p-divider></p-divider>
             <div class="grid">
                 <div class="col-12"><h5>DATOS DEL MEDIDOR</h5> <p-divider></p-divider></div>
@@ -11,31 +11,31 @@
                     <div class="sm:col-6 col-12">
                         <label class="col-12 mb-2 md:col-2 md:mb-0 text-700 text-lg"> <b>NRO MEDIDOR: </b></label>
                         <div class="col-12 md:col-10">
-                            <p class="text-900 text-left text-lg">{{medidor.nroMedidor | uppercase}}</p>
+                            <p class="text-900 text-left text-lg">{{medidorAsc.medidor?.nroMedidor | uppercase}}</p>
                         </div>
                     </div>
                     <div class="sm:col-6 col-12">
                         <label class="col-12 mb-2 md:col-2 md:mb-0 text-700 text-lg"> <b>MARCA: </b></label>
                         <div class="col-12 md:col-10">
-                            <p class="text-900 text-left text-lg">{{medidor.marca | uppercase}}</p>
+                            <p class="text-900 text-left text-lg">{{medidorAsc.medidor?.marca | uppercase}}</p>
                         </div>
                     </div>
                     <div class="sm:col-6 col-12">
                         <label class="col-12 mb-2 md:col-2 md:mb-0 text-700 text-lg"> <b>F. INSTALACIÓN: </b></label>
                         <div class="col-12 md:col-10">
-                            <p class="text-900 text-left text-lg">{{medidor.fechaInstalacion | date : 'dd-MM-yyyy'}}</p>
+                            <p class="text-900 text-left text-lg">{{medidorAsc.fechaInstalacion | date : 'dd-MM-yyyy'}}</p>
                         </div>
                     </div>
                     <div class="sm:col-6 col-12">
                         <label class="col-12 mb-2 md:col-2 md:mb-0 text-700 text-lg"> <b>LECTURA DE INSTALACION: </b></label>
                         <div class="col-12 md:col-10">
-                            <p class="text-900 text-left text-lg">{{medidor.lecturaInicial }} m3.</p>
+                            <p class="text-900 text-left text-lg">{{medidorAsc.lecturaInicial }} m3.</p>
                         </div>
                     </div>
                     <div class="sm:col-6 col-12">
                         <label class="col-12 mb-2 md:col-2 md:mb-0 text-700 text-lg"> <b>LECTURA REGISTRA: </b></label>
                         <div class="col-12 md:col-10">
-                            <p class="text-900 text-left text-lg">{{medidor.ultimaLectura }} m3.</p>
+                            <p class="text-900 text-left text-lg">{{medidorAsc.lecturaSeguimiento }} m3.</p>
                         </div>
                     </div>
                     

@@ -8,6 +8,7 @@ import { switchMap } from 'rxjs';
 import { patternText } from 'src/app/patterns/forms-patterns';
 import { CommonAppService } from 'src/app/common/common-app.service';
 import * as L from 'leaflet';
+import { PATH_AUTH, PATH_EDIT, PATH_FORBBIDEN, PATH_MODULE_DETAILS, PATH_PERFILES } from 'src/app/interfaces/routes-app';
 
 @Component({
   selector: 'app-perfil-afiliado-form',
@@ -40,73 +41,70 @@ export class PerfilAfiliadoFormComponent {
       const {afiliado}=res;
       this.perfilActual=res;
       if(afiliado){
-        // console.log(afiliado);
-        this.afiliadoForm.setValue({
-          estado:afiliado.estado,
-          barrio:afiliado.ubicacion?.barrio,
-          numeroVivienda:afiliado.ubicacion?.numeroVivienda,
-          longitud:afiliado.ubicacion?.longitud,
-          latitud:afiliado.ubicacion?.latitud,
-        })
+        if(this.routerAct.snapshot.routeConfig?.path?.includes(PATH_EDIT)){
+          this.afiliadoForm.setValue({
+            estado:afiliado.estado,
+            barrio:afiliado.ubicacion?.barrio,
+            numeroVivienda:afiliado.ubicacion?.numeroVivienda,
+            longitud:afiliado.ubicacion?.longitud,
+            latitud:afiliado.ubicacion?.latitud,
+          })
+        }else{
+          this.messageService.add({
+            severity: 'warn',
+            summary: 'Warn Message',
+            detail: 'EL PERFIL YA TIENE UNA AFILIACION',
+            life: 5000,
+          });
+          this.router.navigate([PATH_PERFILES,PATH_MODULE_DETAILS,this.perfilActual.id]);
+        }
       }
     });
-    if (!this.router.url.includes('id')) {
-      this.messageService.add({
-        severity: 'warn',
-        summary: 'Warn Message',
-        detail: 'OCURRIO UN ERROR AL OBTENER LA DATA',
-        life: 5000,
-      });
-      this.router.navigate(['perfiles']);
-      return;
-    } else {
-      this.routerAct.queryParams
-        .pipe(switchMap(({ id }) => this.perfilService.findOnePerfilAfiliado(id)))
-        .subscribe({
-          next: (res) => {
-            if (res.OK === false) {
-              switch (res.statusCode) {
-                case 401:
-                  this.messageService.add({
-                    severity: 'info',
-                    summary: `OCURRIO UN ERROR AL OBTENER LA DATA:${res.error}`,
-                    detail: `${res.message},code: ${res.statusCode}`,
-                    life: 3000,
-                  });
-                  this.router.navigate(['auth', 'login']);
-                  break;
-                case 403:
-                  this.messageService.add({
-                    severity: 'warn',
-                    summary: `OCURRIO UN ERROR AL OBTENER LA DATA:${res.error}`,
-                    detail: `${res.message},code: ${res.statusCode}`,
-                    life: 5000,
-                  });
-                  this.router.navigate(['forbidden']);
-                  break;
-                case 404:
-                  this.messageService.add({
-                    severity: 'warn',
-                    summary: `OCURRIO UN ERROR AL OBTENER LA DATA:${res.error}`,
-                    detail: `${res.message},code: ${res.statusCode}`,
-                    life: 5000,
-                  });
-                  this.router.navigate(['perfiles','perfil-list'])
-                  break;
-                default:
-                  console.log(res);
-                  this.messageService.add({
-                    severity: 'error',
-                    summary: 'Error no controlado',
-                    detail: 'revise la consola',
-                    life: 5000,
-                  });
-                  break;
-              }
-            }
-          },
-        });
-    }
+    if (this.routerAct.snapshot.params['id']){
+      // console.log('es edit');
+      this.perfilService.findOnePerfilAfiliado(this.routerAct.snapshot.params['id']).
+      subscribe((res) => {
+        if (res.OK === false) {
+          switch (res.statusCode) {
+            case 401:
+              this.messageService.add({
+                severity: 'info',
+                summary: `OCURRIO UN ERROR AL OBTENER LA DATA:${res.error}`,
+                detail: `${res.message},code: ${res.statusCode}`,
+                life: 3000,
+              });
+              this.router.navigate([PATH_AUTH]);
+              break;
+            case 403:
+              this.messageService.add({
+                severity: 'warn',
+                summary: `OCURRIO UN ERROR AL OBTENER LA DATA:${res.error}`,
+                detail: `${res.message},code: ${res.statusCode}`,
+                life: 5000,
+              });
+              this.router.navigate([PATH_FORBBIDEN]);
+              break;
+            case 404:
+              this.messageService.add({
+                severity: 'warn',
+                summary: `OCURRIO UN ERROR AL OBTENER LA DATA:${res.error}`,
+                detail: `${res.message},code: ${res.statusCode}`,
+                life: 5000,
+              });
+              this.router.navigate([PATH_PERFILES])
+              break;
+            default:
+              console.log(res);
+              this.messageService.add({
+                severity: 'error',
+                summary: 'Error no controlado',
+                detail: 'revise la consola',
+                life: 5000,
+              });
+              break;
+          }
+        }
+    })}
   }
   afiliadoForm:FormGroup= this.fb.group({
     estado          :[Estado.ACTIVO,[Validators.required]],
@@ -169,9 +167,7 @@ export class PerfilAfiliadoFormComponent {
                   detail: `${res.message}`,
                   icon: 'pi pi-check',
                 });
-                this.router.navigate(['perfiles', 'perfil-details'], {
-                  queryParams: { id: this.perfilActual?.id },
-                });
+                this.router.navigate([PATH_PERFILES, PATH_MODULE_DETAILS,this.perfilActual?.id ]);
               }else{
                 this.messageService.add({
                   severity: 'error',
@@ -195,9 +191,7 @@ export class PerfilAfiliadoFormComponent {
                   detail: res.message,
                   icon: 'pi pi-check',
                 });
-                this.router.navigate(['perfiles', 'perfil-details'], {
-                  queryParams: { id: this.perfilActual?.id },
-                });
+                this.router.navigate([PATH_PERFILES, PATH_MODULE_DETAILS,this.perfilActual?.id]);
               }
               else{
                 this.messageService.add({

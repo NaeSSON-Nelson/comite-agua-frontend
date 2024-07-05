@@ -33,14 +33,14 @@
                 {{customer.nombrePrimero | titlecase}} {{customer.nombreSegundo ||"" |titlecase}} {{customer.apellidoPrimero | titlecase}} {{customer.apellidoSegundo ||"" | titlecase}}
             </p>
             </div>
-            <div class="flex overflow-hidden justify-content-between" [style]="{'min-width':'75%', 'padding':'18px 0 0 0'}" *ngFor="let medidor of customer.afiliado!.medidores">
-                <div class="flex justify-content-start px-3"><p class="fs-text">{{medidor.ubicacion?.barrio}}</p></div>
-                <div class="flex justify-content-start px-3"><p class="fs-text">{{medidor.nroMedidor}}</p></div>
-                <div class="flex align-items-center justify-content-center px-3" *ngIf="medidor.planillas![0].lecturas[0]?.lectura; else sinLectura"><p class="fs-text">{{medidor.planillas![0].lecturas[0].lectura}}</p></div>
+            <div class="flex overflow-hidden justify-content-between" [style]="{'min-width':'75%', 'padding':'18px 0 0 0'}" *ngFor="let asc of customer.afiliado!.medidorAsociado">
+                <div class="flex justify-content-start px-3"><p class="fs-text">{{asc.ubicacion?.barrio}}</p></div>
+                <div class="flex justify-content-start px-3"><p class="fs-text">{{asc.medidor?.nroMedidor}}</p></div>
+                <div class="flex align-items-center justify-content-center px-3" *ngIf="asc.planillas![0].lecturas[0]?.lectura; else sinLectura"><p class="fs-text">{{asc.planillas![0].lecturas[0].lectura}}</p></div>
                 <ng-template #sinLectura> <div class="field flex align-items-center justify-content-center px-3">
                     <p>Sin Lectura</p>
                 </div></ng-template>
-                <div class="flex align-items-center justify-content-center px-3" *ngIf="medidor.planillas![0].lecturas[0]?.lectura; else sinMedidor"> <p class="fs-text">{{medidor.planillas![0].lecturas[0].estadoMedidor || 'SIN NOVEDAD'}}</p></div>
+                <div class="flex align-items-center justify-content-center px-3" *ngIf="asc.planillas![0].lecturas[0]?.lectura; else sinMedidor"> <p class="fs-text">{{asc.planillas![0].lecturas[0].estadoMedidor || 'SIN NOVEDAD'}}</p></div>
                 <ng-template #sinMedidor> 
                     <div class="field flex align-items-center justify-content-center px-3">
                         <p></p>
@@ -49,7 +49,7 @@
                 <div class="flex justify-content-start px-4">
                     <div class="w-full">
                         <p class="fs-text">
-                            {{medidor.ultimaLectura}}
+                            {{asc.lecturaSeguimiento}}
                         </p>
                     </div>
                 </div>

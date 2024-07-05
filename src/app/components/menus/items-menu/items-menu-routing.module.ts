@@ -5,24 +5,29 @@ import { ItemsMenuComponent } from './items-menu/items-menu.component';
 import { ItemMenuDetailsComponent } from './item-menu-details/item-menu-details.component';
 import { ItemMenuFormComponent } from './item-menu-form/item-menu-form.component';
 import { accessResourceGuard } from '../../../guards/access-resource.guard';
+import { PATH_EDIT, PATH_LISTAR, PATH_MODULE_DETAILS, PATH_REGISTRAR } from 'src/app/interfaces/routes-app';
 
 const routes: Routes = [
   {
-    path: 'item-menu-list',
+    path: PATH_LISTAR,
     component: ItemsMenuComponent,
     // canActivate:[accessResourceGuard]
   },
   {
-    path:'item-menu-details',
+    path: `${PATH_MODULE_DETAILS}/:id`,
     component:ItemMenuDetailsComponent,
   },
   {
-    path:'item-menu-register',
+    path: PATH_REGISTRAR,
+    component:ItemMenuFormComponent,
+  },
+  {
+    path: `${PATH_REGISTRAR}/${PATH_EDIT}/:id`,
     component:ItemMenuFormComponent,
   },
   {
     path: '**',
-    redirectTo: 'item-menu-list',
+    redirectTo: PATH_LISTAR,
   },
 ];
 

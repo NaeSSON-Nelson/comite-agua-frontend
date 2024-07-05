@@ -9,6 +9,7 @@ import { patternText } from 'src/app/patterns/forms-patterns';
 import { AsyncValidatorLinkService } from '../validators/async-validator-link.service';
 import { CommonAppService } from 'src/app/common/common-app.service';
 import { Estado } from 'src/app/interfaces';
+import { PATH_AUTH, PATH_EDIT, PATH_FORBBIDEN, PATH_ITEMSMENU, PATH_LISTAR, PATH_MODULE_DETAILS } from 'src/app/interfaces/routes-app';
 
 @Component({
   selector: 'app-item-menu-form',
@@ -41,11 +42,10 @@ export class ItemMenuFormComponent {
       this.itemMenuActual = res;
       this.itemMenuForm.setValue({ ...dataItem });
     });
-    if (!this.router.url.includes('id')) return;
-
-    this.routerAct.queryParams
-      .pipe(switchMap(({ id }) => this.itemsMenuService.findOne(id)))
-      .subscribe((res) => {
+    if (this.routerAct.snapshot.params['id'] && this.routerAct.snapshot.routeConfig?.path?.includes(PATH_EDIT)){
+      // console.log('es edit');
+      this.itemsMenuService.findOne(this.routerAct.snapshot.params['id']).
+      subscribe((res) => {
         if (res.OK === false) {
           switch (res.statusCode) {
             case 401:
@@ -55,7 +55,7 @@ export class ItemMenuFormComponent {
                 detail: `${res.message},code: ${res.statusCode}`,
                 life: 3000,
               });
-              this.router.navigate(['auth', 'login']);
+              this.router.navigate([PATH_AUTH]);
               break;
             case 403:
               this.messageService.add({
@@ -64,7 +64,7 @@ export class ItemMenuFormComponent {
                 detail: `${res.message},code: ${res.statusCode}`,
                 life: 5000,
               });
-              this.router.navigate(['forbidden']);
+              this.router.navigate([PATH_FORBBIDEN]);
               break;
             case 404:
               this.messageService.add({
@@ -73,7 +73,7 @@ export class ItemMenuFormComponent {
                 detail: `${res.message},code: ${res.statusCode}`,
                 life: 5000,
               });
-              this.router.navigate(['items-menu', 'item-menu-list']);
+              this.router.navigate([PATH_ITEMSMENU])
               break;
             default:
               console.log(res);
@@ -86,28 +86,13 @@ export class ItemMenuFormComponent {
               break;
           }
         }
-      });
+      })
+  }
   }
   itemMenuForm: FormGroup = this.fb.group(
     {
       id: [],
-      nombre: [
-        ,
-        [
-          Validators.required,
-          Validators.minLength(3),
-          Validators.pattern(patternText),
-        ],
-      ],
-      linkMenu: [
-        ,
-        [
-          Validators.minLength(3),
-          Validators.required,
-          Validators.pattern(patternText),
-        ],
-      ],
-      visible: [true, Validators.required],
+      linkMenu: [,[Validators.minLength(3),Validators.required,Validators.pattern(patternText),],],
       estado: [Estado.ACTIVO, [Validators.required]],
     },
     {
@@ -158,7 +143,7 @@ export class ItemMenuFormComponent {
                   detail: `${res.message}`,
                   icon: 'pi pi-check',
                 });
-                this.router.navigate(['items-menu', 'item-menu-details'], {
+                this.router.navigate([PATH_ITEMSMENU, PATH_MODULE_DETAILS], {
                   queryParams: { id: this.itemMenuActual?.id },
                 });
               }else{
@@ -185,7 +170,7 @@ export class ItemMenuFormComponent {
                   detail: res.message,
                   icon: 'pi pi-check',
                 });
-                this.router.navigate(['items-menu', 'item-menu-list']);
+                this.router.navigate([PATH_ITEMSMENU,PATH_LISTAR]);
               }else{
                 this.messageService.add({
                   severity: 'error',
@@ -229,18 +214,6 @@ export class ItemMenuFormComponent {
     { name: 'VISIBLE', value: true },
     { name: 'NO VISIBLE', value: false },
   ];
-  getNombreErrors(campo: string) {
-    const errors = this.itemMenuForm.get(campo)?.errors;
-
-    if (errors?.['required']) {
-      return 'El campo es requerido';
-    } else if (errors?.['pattern']) {
-      return 'El campo contiene caracteres invalidos';
-    } else if (errors?.['minlength']) {
-      return 'El tamaño del campo debe ser 2 como minimo';
-    }
-    return '';
-  }
 
   getLinkMenuErrors(campo: string) {
     const errors = this.itemMenuForm.get(campo)?.errors;
@@ -258,13 +231,6 @@ export class ItemMenuFormComponent {
   }
 
   getEstadoErrors(campo: string) {
-    const errors = this.itemMenuForm.get(campo)?.errors;
-    if (errors?.['required']) {
-      return 'El campo es requerido';
-    }
-    return '';
-  }
-  getVisibleErrors(campo: string) {
     const errors = this.itemMenuForm.get(campo)?.errors;
     if (errors?.['required']) {
       return 'El campo es requerido';

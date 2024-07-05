@@ -251,17 +251,17 @@ export class RegistrarLecturasComponent {
   agregarPlanillaParaPago(){
     if(this.data.length>0){
       for(const pe of this.data){
-        for(const medidor of pe.afiliado!.medidores!){
+        for(const asc of pe.afiliado!.medidorAsociado!){
           let lectura:any;
           this.lecturasArray.value.forEach((e:any)=>{
-            if(e.planilla.id === medidor.planillas![0].id) lectura=e;
+            if(e.planilla.id === asc.planillas![0].id) lectura=e;
           })
           if(!lectura){
             const lecturaItem = this.fb.group({
-              lectura:[,[Validators.min(medidor.ultimaLectura!)]],
+              lectura:[,[Validators.min(asc.lecturaSeguimiento!)]],
               estadoMedidor:[,[Validators.pattern(patternText)]],
               planilla:this.fb.group({
-                id:[medidor.planillas![0].id,Validators.required]
+                id:[asc.planillas![0].id,Validators.required]
               })
             })
             this.lecturasArray.push(lecturaItem);

@@ -12,6 +12,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { CommonAppService } from 'src/app/common/common-app.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { switchMap } from 'rxjs';
+import { PATH_AUTH, PATH_EDIT, PATH_FORBBIDEN, PATH_LISTAR, PATH_MODULE_DETAILS, PATH_PERFILES } from 'src/app/interfaces/routes-app';
 
 @Component({
   selector: 'app-perfil-usuario-form',
@@ -43,82 +44,78 @@ export class PerfilUsuarioFormComponent {
       const { usuario } = res;
       this.perfilActual = res;
       if (usuario) {
-        console.log(usuario);
-        const {
-          correoVerify,
-          created_at,
-          id,
-          isActive,
-          password,
-          roles,
-          updated_at,
-          username,
-          ...dataUserForm
-        } = usuario;
-        const rolesForm = roles?.map((rol) => rol.id);
-        this.usuarioForm.setValue({ roles: rolesForm, ...dataUserForm });
-        this.ListItemMenuSelected(roles!);
+        // console.log(usuario);
+        if(this.routerAct.snapshot.routeConfig?.path?.includes(PATH_EDIT)){
+          const {
+            correoVerify,
+            created_at,
+            id,
+            isActive,
+            password,
+            roles,
+            updated_at,
+            username,
+            ...dataUserForm
+          } = usuario;
+          const rolesForm = roles?.map((rol) => rol.id);
+          this.usuarioForm.setValue({ roles: rolesForm, ...dataUserForm });
+          this.ListItemMenuSelected(roles!);
+        }else{
+          this.messageService.add({
+            severity: 'warn',
+            summary: 'Warn Message',
+            detail: 'EL PERFIL YA TIENE UNA CUENTA DE ACCESO',
+            life: 5000,
+          });
+          this.router.navigate([PATH_PERFILES,PATH_MODULE_DETAILS,this.perfilActual.id]);
+        }
       }
     });
-    if (!this.router.url.includes('id')) {
-      this.messageService.add({
-        severity: 'warn',
-        summary: 'Warn Message',
-        detail: 'OCURRIO UN ERROR AL OBTENER LA DATA',
-        life: 5000,
-      });
-      this.router.navigate(['perfiles', 'perfil-list']);
-      return;
-    } else {
-      this.routerAct.queryParams
-        .pipe(
-          switchMap(({ id }) => this.perfilService.findOnePerfilUsuario(id))
-        )
-        .subscribe({
-          next: (res) => {
-            if (res.OK === false) {
-              switch (res.statusCode) {
-                case 401:
-                  this.messageService.add({
-                    severity: 'info',
-                    summary: `OCURRIO UN ERROR AL OBTENER LA DATA:${res.error}`,
-                    detail: `${res.message},code: ${res.statusCode}`,
-                    life: 3000,
-                  });
-                  this.router.navigate(['auth', 'login']);
-                  break;
-                case 403:
-                  this.messageService.add({
-                    severity: 'warn',
-                    summary: `OCURRIO UN ERROR AL OBTENER LA DATA:${res.error}`,
-                    detail: `${res.message},code: ${res.statusCode}`,
-                    life: 5000,
-                  });
-                  this.router.navigate(['forbidden']);
-                  break;
-                case 404:
-                  this.messageService.add({
-                    severity: 'warn',
-                    summary: `OCURRIO UN ERROR AL OBTENER LA DATA:${res.error}`,
-                    detail: `${res.message},code: ${res.statusCode}`,
-                    life: 5000,
-                  });
-                  this.router.navigate(['perfiles', 'perfil-list']);
-                  break;
-                default:
-                  console.log(res);
-                  this.messageService.add({
-                    severity: 'error',
-                    summary: 'Error no controlado',
-                    detail: 'revise la consola',
-                    life: 5000,
-                  });
-                  break;
-              }
-            }
-          },
-        });
-    }
+    if (this.routerAct.snapshot.params['id']){
+      // console.log('es edit');
+      this.perfilService.findOnePerfilUsuario(this.routerAct.snapshot.params['id']).
+      subscribe((res) => {
+        if (res.OK === false) {
+          switch (res.statusCode) {
+            case 401:
+              this.messageService.add({
+                severity: 'info',
+                summary: `OCURRIO UN ERROR AL OBTENER LA DATA:${res.error}`,
+                detail: `${res.message},code: ${res.statusCode}`,
+                life: 3000,
+              });
+              this.router.navigate([PATH_AUTH]);
+              break;
+            case 403:
+              this.messageService.add({
+                severity: 'warn',
+                summary: `OCURRIO UN ERROR AL OBTENER LA DATA:${res.error}`,
+                detail: `${res.message},code: ${res.statusCode}`,
+                life: 5000,
+              });
+              this.router.navigate([PATH_FORBBIDEN]);
+              break;
+            case 404:
+              this.messageService.add({
+                severity: 'warn',
+                summary: `OCURRIO UN ERROR AL OBTENER LA DATA:${res.error}`,
+                detail: `${res.message},code: ${res.statusCode}`,
+                life: 5000,
+              });
+              this.router.navigate([PATH_PERFILES])
+              break;
+            default:
+              console.log(res);
+              this.messageService.add({
+                severity: 'error',
+                summary: 'Error no controlado',
+                detail: 'revise la consola',
+                life: 5000,
+              });
+              break;
+          }
+        }
+    })}
   }
   showTableAsignRoleModalForm: boolean = false;
   showModalTableRoles() {
@@ -182,7 +179,7 @@ export class PerfilUsuarioFormComponent {
                     detail: res.message,
                     icon: 'pi pi-check',
                   });
-                  this.router.navigate(['perfiles', 'perfil-details'], {
+                  this.router.navigate([PATH_PERFILES, PATH_MODULE_DETAILS], {
                     queryParams: { id: this.perfilActual!.id },
                   });
                 } else {
@@ -213,7 +210,7 @@ export class PerfilUsuarioFormComponent {
                     this.dataUser = res.data;
                     this.usuarioCreate = true;
                   } else {
-                    this.router.navigate(['perfiles', 'perfil-details'], {
+                    this.router.navigate([PATH_PERFILES, PATH_MODULE_DETAILS], {
                       queryParams: { id: this.perfilActual!.id },
                     });
                   }

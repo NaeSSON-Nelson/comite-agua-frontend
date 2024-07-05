@@ -7,6 +7,7 @@ import { MenuSelectTableComponent } from './menu-select-table/menu-select-table.
 import { RolesSelectTableComponent } from './roles-select-table/roles-select-table.component';
 import { AfiliadoUserSelectTableComponent } from './afiliado-user-select-table/afiliado-select-table.component';
 import { MapComponent } from './map/map.component';
+import { MedidoresLibresSelectTableComponent } from './medidores-libres-select-table/medidores-libres-select-table.component';
 
 
 
@@ -17,6 +18,7 @@ import { MapComponent } from './map/map.component';
     MenuSelectTableComponent,
     RolesSelectTableComponent,
     MapComponent,
+    MedidoresLibresSelectTableComponent,
   ],
   imports: [
     CommonModule,
@@ -29,6 +31,7 @@ import { MapComponent } from './map/map.component';
     MenuSelectTableComponent,
     RolesSelectTableComponent,
     MapComponent,
+    MedidoresLibresSelectTableComponent,
   ]
 })
 export class HelpersModule { }

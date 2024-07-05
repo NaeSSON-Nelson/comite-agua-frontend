@@ -4,6 +4,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Estado, Perfil } from 'src/app/interfaces';
 import { switchMap } from 'rxjs';
+import { PATH_AFILIADO, PATH_AUTH, PATH_EDIT, PATH_FORBBIDEN, PATH_PERFILES, PATH_REGISTRAR, PATH_USER } from 'src/app/interfaces/routes-app';
 
 @Component({
   selector: 'app-perfil-details',
@@ -28,70 +29,120 @@ export class PerfilDetailsComponent {
       this.perfil = res;
       console.log(res);
     });
-    if (!this.router.url.includes('id')) {
+    // console.log(this.router);
+    // console.log(this.routerAct);
+    // console.log(this.router);
+    // console.log(this.routerAct.snapshot.params);
+    if (!this.routerAct.snapshot.params['id']) {
       this.messageService.add({
         severity: 'warn',
         summary: 'Warn Message',
         detail: 'SE DEBE MANDAR UNA REFERENCIA',
         life: 5000,
       });
-      this.router.navigate(['perfiles']);
+      this.router.navigate([PATH_PERFILES]);
       return;
     } else {
-      this.routerAct.queryParams
-        .pipe(switchMap(({ id }) => this.perfilService.findOne(id)))
-        .subscribe({
-          next: (res) => {
-            if (res.OK === false) {
-              switch (res.statusCode) {
-                case 401:
-                  this.messageService.add({
-                    severity: 'info',
-                    summary: `OCURRIO UN ERROR AL OBTENER LA DATA:${res.error}`,
-                    detail: `${res.message},code: ${res.statusCode}`,
-                    life: 3000,
-                  });
-                  this.router.navigate(['auth', 'login']);
-                  break;
-                case 403:
-                  this.messageService.add({
-                    severity: 'warn',
-                    summary: `OCURRIO UN ERROR AL OBTENER LA DATA:${res.error}`,
-                    detail: `${res.message},code: ${res.statusCode}`,
-                    life: 5000,
-                  });
-                  this.router.navigate(['forbidden']);
-                  break;
-                case 404:
-                  this.messageService.add({
-                    severity: 'warn',
-                    summary: `OCURRIO UN ERROR AL OBTENER LA DATA:${res.error}`,
-                    detail: `${res.message},code: ${res.statusCode}`,
-                    life: 5000,
-                  });
-                  this.router.navigate(['perfiles'])
-                  break;
-                default:
-                  console.log(res);
-                  this.messageService.add({
-                    severity: 'error',
-                    summary: 'Error no controlado',
-                    detail: 'revise la consola',
-                    life: 5000,
-                  });
-                  break;
-              }
+      const id =this.routerAct.snapshot.params['id']
+        // .pipe(switchMap(({ id }) => this.perfilService.findOne(id)))
+        // .subscribe({
+        //   next: (res) => {
+        //     if (res.OK === false) {
+        //       switch (res.statusCode) {
+        //         case 401:
+        //           this.messageService.add({
+        //             severity: 'info',
+        //             summary: `OCURRIO UN ERROR AL OBTENER LA DATA:${res.error}`,
+        //             detail: `${res.message},code: ${res.statusCode}`,
+        //             life: 3000,
+        //           });
+        //           this.router.navigate([PATH_AUTH]);
+        //           break;
+        //         case 403:
+        //           this.messageService.add({
+        //             severity: 'warn',
+        //             summary: `OCURRIO UN ERROR AL OBTENER LA DATA:${res.error}`,
+        //             detail: `${res.message},code: ${res.statusCode}`,
+        //             life: 5000,
+        //           });
+        //           this.router.navigate([PATH_FORBBIDEN]);
+        //           break;
+        //         case 404:
+        //           this.messageService.add({
+        //             severity: 'warn',
+        //             summary: `OCURRIO UN ERROR AL OBTENER LA DATA:${res.error}`,
+        //             detail: `${res.message},code: ${res.statusCode}`,
+        //             life: 5000,
+        //           });
+        //           this.router.navigate([PATH_PERFILES])
+        //           break;
+        //         default:
+        //           console.log(res);
+        //           this.messageService.add({
+        //             severity: 'error',
+        //             summary: 'Error no controlado',
+        //             detail: 'revise la consola',
+        //             life: 5000,
+        //           });
+        //           break;
+        //       }
+        //     }
+        //   },
+        // });
+      this.perfilService.findOne(id).subscribe({
+        next: (res) => {
+          // console.log(res);
+          if (res.OK === false) {
+            switch (res.statusCode) {
+              case 401:
+                this.messageService.add({
+                  severity: 'info',
+                  summary: `OCURRIO UN ERROR AL OBTENER LA DATA:${res.error}`,
+                  detail: `${res.message},code: ${res.statusCode}`,
+                  life: 3000,
+                });
+                this.router.navigate([PATH_AUTH]);
+                break;
+              case 403:
+                this.messageService.add({
+                  severity: 'warn',
+                  summary: `OCURRIO UN ERROR AL OBTENER LA DATA:${res.error}`,
+                  detail: `${res.message},code: ${res.statusCode}`,
+                  life: 5000,
+                });
+                this.router.navigate([PATH_FORBBIDEN]);
+                break;
+              case 404:
+                this.messageService.add({
+                  severity: 'warn',
+                  summary: `OCURRIO UN ERROR AL OBTENER LA DATA:${res.error}`,
+                  detail: `${res.message},code: ${res.statusCode}`,
+                  life: 5000,
+                });
+                this.router.navigate([PATH_PERFILES])
+                break;
+              default:
+                console.log(res);
+                this.messageService.add({
+                  severity: 'error',
+                  summary: 'Error no controlado',
+                  detail: 'revise la consola',
+                  life: 5000,
+                });
+                break;
             }
-          },
-        });
+          }
+        },
+      });
     }
   }
 
   actionData(action: string) {
+    // console.log(this.perfil);
     switch (action) {
       case 'MODIFICAR':
-        this.router.navigate(['perfiles','perfil-register'], {
-          queryParams: { id: this.perfil.id },
+        this.router.navigate([PATH_PERFILES, PATH_REGISTRAR,PATH_EDIT,this.perfil.id], {
+          // queryParams: { id: this.perfil.id },
         });
         break;
 
@@ -161,7 +212,7 @@ export class PerfilDetailsComponent {
         
         case 'AFILIADO':
               if(this.perfil.afiliado===null){
-                this.router.navigate(['perfiles','perfil-afiliado-register'], {
+                this.router.navigate([PATH_PERFILES,PATH_AFILIADO, PATH_REGISTRAR,this.perfil.id], {
                   queryParams: { id: this.perfil.id }})
               }else {
                 this.messageService.add({
@@ -173,8 +224,8 @@ export class PerfilDetailsComponent {
               }
         break;
         case 'USUARIO':
-          if(this.perfil.usuario===null){
-            this.router.navigate(['perfiles','perfil-user-register'], {
+          if(this.perfil.accessAcount === false){
+            this.router.navigate([PATH_PERFILES,PATH_USER, PATH_REGISTRAR,this.perfil.id], {
               queryParams: { id: this.perfil.id },
             });
           }else{
@@ -194,8 +245,7 @@ export class PerfilDetailsComponent {
   actionDataAfiliado(action: string) {
     switch (action) {
       case 'MODIFICAR':
-        this.router.navigate(['perfiles','perfil-afiliado-register'], {
-          queryParams: { id: this.perfil.id },
+        this.router.navigate([PATH_PERFILES,PATH_AFILIADO, PATH_REGISTRAR,PATH_EDIT,this.perfil.id ], {
         });
         break;
 
@@ -271,8 +321,7 @@ export class PerfilDetailsComponent {
   actionDataUsuario(action: string) {
     switch (action) {
       case 'MODIFICAR':
-        this.router.navigate(['perfiles','perfil-user-register'], {
-          queryParams: { id: this.perfil.id },
+        this.router.navigate([PATH_PERFILES,PATH_USER, PATH_REGISTRAR,PATH_EDIT,this.perfil.id], {
         });
         break;
       case 'DESHABILITAR':

@@ -1,36 +1,13 @@
 <div class="grid">
     <form class="col-12" [formGroup]="medidorForm">
       <div class="card">
-          <h4>Registro de un nuevo medidor para afiliado</h4>
+          <h4>Registro de Nuevo Medidor de agua</h4>
           <p-divider></p-divider>
           <div class="p-fluid grid grid mt-5">
-              <div class="col-12 flex justify-content-around">
-                  <div class="flex justify-content-center flex-wrap card-container">
-                      <h5 >Datos del afiliado</h5>
-                  </div>
-              </div>
-              <div class="field col-12 md:col-8">
-                  <label htmlFor="afiliado">Afiliado</label>
-                  <input pInputText id="afiliado" type="text" [disabled]="true" value="{{perfilActual?.nombrePrimero||'' | uppercase}} {{perfilActual?.nombreSegundo||'' | uppercase}} {{perfilActual?.apellidoPrimero||'' | uppercase}} {{perfilActual?.apellidoSegundo||'' | uppercase}}" class="appearance-none text-color text-base" />
-              </div> 
-              <div class="field col-12 md:col-6">
-                  <label htmlFor="CI">Cedula de Identidad</label>
-                  <input pInputText id="CI" type="text" [disabled]="true" [value]="perfilActual?.CI || ''"  class="appearance-none text-color text-base" />
-              </div>  
-              <div class="field col-12 md:col-6">
-                  <label htmlFor="barrio">Barrio</label>
-                  <input pInputText id="barrio" type="text" [disabled]="true" [value]="perfilActual?.afiliado?.ubicacion?.barrio"  class="appearance-none text-color text-base" />
-              </div>  
-              <div class="field col-12 md:col-6">
-                  <label htmlFor="contactos">Contactos</label>
-                  <input pInputText id="contactos" type="text" [disabled]="true" [value]="perfilActual?'SIN CONTACTOS':''"  class="appearance-none text-color text-base" />
-              </div>  
-  
               <div class="col-12" >
-                  <h5>Datos del Medidor de Agua Potable</h5>
+                  <h5>Datos Requeridos del Medidor de Agua Potable</h5>
                   <p-divider></p-divider>
                   <div class="grid mt-5 p-fluid">
-                    
                   <div class="field col-12 md:col-6 m-3">
                     <span class="p-float-label p-input-icon-right">
                       <input
@@ -50,24 +27,27 @@
                       >{{ getNroMedidorErrors("nroMedidor") }}
                     </small>
                   </div>
+                  
                   <div class="field col-12 md:col-4 m-3">
                     <span class="p-float-label">
-                      <p-calendar
-                        formControlName="fechaInstalacion"
-                        [showIcon]="true"
-                        dateFormat="dd/mm/yy"
-                        [readonlyInput]="true"
-                        dataType="date"
-                        [ngClass]="inputValid('fechaInstalacion')"
-                      >
-                      </p-calendar>
-                      <label for="fechaInstalacion">Fecha de Instalacion del medidor</label>
+                      <p-dropdown
+                        inputId="funcionamiento"
+                        [autoDisplayFirst]="false"
+                        [options]="tiposFun"
+                        formControlName="funcionamiento"
+                        optionLabel="name"
+                        optionValue="value"
+                        placeholder="Esta en funcionamiento?"
+                        [ngClass]="inputValid('funcionamiento')"
+                      ></p-dropdown>
+          
+                      <label for="funcionamiento">En funcionamiento?</label>
                     </span>
                     <small
-                      id="fechaInstalacion-help"
+                      id="funcionamiento-help"
                       class="p-error block"
-                      *ngIf="campoValido('fechaInstalacion')"
-                      >{{ getFechaInstalacionErrors("fechaInstalacion") }}
+                      *ngIf="campoValido('funcionamiento')"
+                      >{{ getFuncionamientoErrors("funcionamiento") }}
                     </small>
                   </div>
                   <div class="field col-12 md:col-6 m-3">
@@ -89,6 +69,29 @@
                       >{{ getLecturaInicialErrors("lecturaInicial") }}
                     </small>
                   </div>
+                  
+                  <div class="field col-12 md:col-4 m-3">
+                    <span class="p-float-label">
+                      <p-dropdown
+                        inputId="estado"
+                        [autoDisplayFirst]="false"
+                        [options]="commonAppService.mediciones"
+                        formControlName="medicion"
+                        optionLabel="name"
+                        optionValue="value"
+                        placeholder="Select Medicion medidor"
+                        [ngClass]="inputValid('medicion')"
+                      ></p-dropdown>
+          
+                      <label for="medicion">Tipo de Medicion de agua (*)</label>
+                    </span>
+                    <small
+                      id="medicion-help"
+                      class="p-error block"
+                      *ngIf="campoValido('medicion')"
+                      >{{ getMedicionErrors("medicion") }}
+                    </small>
+                  </div>
                   <div class="field col-12 md:col-6 m-3">
                     <span class="p-float-label">
                       <input
@@ -105,84 +108,6 @@
                       class="p-error block"
                       *ngIf="campoValido('marca')"
                       >{{ getMarcaErrors("marca") }}
-                    </small>
-                  </div>
-                  <div class="field col-12 md:col-6 m-3">
-                    <span class="p-float-label">
-                        <p-dropdown
-                        formControlName="barrio"
-                        [options]="commonAppService.barriosForm"
-                        [ngClass]="inputValid('barrio')"
-                        optionValue="value"
-                        optionLabel="name"
-                        
-                        placeholder="Select barrio del medidor"
-                      ></p-dropdown>
-                      <label for="barrio">Barrio como ubicacion de instalacion(*)</label>
-                    </span>
-                    <small
-                      id="barrio-help"
-                      class="p-error block"
-                      *ngIf="campoValido('barrio')"
-                      >{{ getBarrioErrors("barrio") }}
-                    </small>
-                  </div>
-                  <div class="field col-12 md:col-4">
-                    <span class="p-float-label">
-                      <input
-                        type="text"
-                        id="numeroVivienda"
-                        pInputText
-                        formControlName="numeroVivienda"
-                        [ngClass]="inputValid('numeroVivienda')"
-                      />
-                      <label for="numeroVivienda">Numero de Vivienda del afiliado</label>
-                    </span>
-                    <small
-                      id="apellidoPrimero-help"
-                      class="p-error block"
-                      *ngIf="campoValido('numeroVivienda')"
-                      >{{ getNumeroViviendaErrors("numeroVivienda") }}
-                    </small>
-                  </div>
-                  <div class="col-12 flex justify-content-center">
-                    <p-button icon="pi pi-map-marker" styleClass="p-button-rounded p-button-secondary p-button-text p-button-raised" (onClick)="showMap=true"></p-button>
-                  </div>
-          
-                  <div class="field col-12 md:col-6">
-                    <span class="p-float-label">
-                      <input
-                        type="text"
-                        id="longitud"
-                        pInputText
-                        formControlName="longitud"
-                        [ngClass]="inputValid('longitud')"
-                      />
-                      <label for="longitud">Longitud</label>
-                    </span>
-                    <small
-                      id="longitud-help"
-                      class="p-error block"
-                      *ngIf="campoValido('longitud')"
-                      >{{ getLongitudErrors("longitud") }}
-                    </small>
-                  </div>
-                  <div class="field col-12 md:col-6">
-                    <span class="p-float-label">
-                      <input
-                        type="text"
-                        id="latitud"
-                        pInputText
-                        formControlName="latitud"
-                        [ngClass]="inputValid('latitud')"
-                      />
-                      <label for="latitud">Latitud</label>
-                    </span>
-                    <small
-                      id="latitud-help"
-                      class="p-error block"
-                      *ngIf="campoValido('latitud')"
-                      >{{ getLatitudErrors("latitud") }}
                     </small>
                   </div>
                   <div class="field col-12 md:col-3 m-3">
@@ -224,10 +149,3 @@
       </div>
     </form>
   </div>
-  <app-map-coord *ngIf="showMap"
-  (sendLatLong)="coordenadas($event)"
-  [latLong]="coordenadasLatLng"
-  [visible]="showMap"
-  [buttonInsert]="true"
-  (closeModal)="cerrarMapa($event)"
-  ></app-map-coord>

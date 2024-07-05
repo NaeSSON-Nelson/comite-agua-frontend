@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { UsuarioFuncionesService } from '../usuario-funciones.service';
 import { Medidor } from 'src/app/interfaces';
-import { PlanillaLecturas } from 'src/app/interfaces/medidor.interface';
+import { MedidorAsociado, PlanillaLecturas } from 'src/app/interfaces/medidor.interface';
 import { MessageService } from 'primeng/api';
 
 @Component({
@@ -11,8 +11,8 @@ import { MessageService } from 'primeng/api';
 })
 export class MedidoresComponent {
 
-  selectMedidores:Medidor[]=[];
-  medidor:Medidor|null =null;
+  selectMedidoresRelacion:MedidorAsociado[]=[];
+  medidorAsc:MedidorAsociado|null =null;
   planillasSelect:any=[];
   planillaSelected:PlanillaLecturas|null=null;
   titleLecturas='Debe seleccionar una año de gestion'
@@ -43,7 +43,7 @@ export class MedidoresComponent {
   getSelectsMedidores(){
     this.usuarioFunciones.getSelectsMedidores().subscribe(res=>{
       if(res.OK){
-        this.selectMedidores=res.data!;
+        this.selectMedidoresRelacion=res.data!;
       }
     })
   }
@@ -53,8 +53,8 @@ export class MedidoresComponent {
     this.usuarioFunciones.getMedidor(event.value).subscribe(res=>{
       // console.log(res);
       if(res.OK){
-        this.medidor=res.data!;
-        this.planillasSelect = this.medidor.planillas?.map(plan=>{
+        this.medidorAsc=res.data!;
+        this.planillasSelect = this.medidorAsc.planillas?.map(plan=>{
           return {
             label:plan.gestion.toString(),
             value:plan.id
