@@ -24,14 +24,15 @@ export class MapComponent {
   private initMap(){
     this._map=L.map('map',{
       center: [ this.latLong?.lat ||-21.4734,this.latLong?.lng||-64.8026],
-      zoom: 15
+      zoom: 15,
+      
     })
     
     const tiles = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 18,
       minZoom: 3,
       attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-
+      
     });
     tiles.addTo(this._map);
     const marker = L.marker({lat:this.latLong?.lat ||-21.4734,lng:this.latLong?.lng||-64.8026},{draggable:true,pane:'markerPane',title:'Ubicacion!'})

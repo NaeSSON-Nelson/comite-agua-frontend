@@ -23,7 +23,7 @@
                 <p-dropdown
                     inputId="medidor"
                     [autoDisplayFirst]="false"
-                    [options]="perfil.afiliado?.medidorAsociado"
+                    [options]="medidoresGes()"
                     optionLabel="nroMedidor"
                     optionValue="nroMedidor"
                     placeholder="Select Medidor"
@@ -41,7 +41,7 @@
                     [autoDisplayFirst]="false"
                     [options]="planillas"
                     optionLabel="gestion"
-                    optionValue="id"
+                    optionValue="value"
                     [emptyMessage]="messagePlanillas"
                     placeholder="Select Gestion"
                     (onChange)="obtenerLecturas($event)"

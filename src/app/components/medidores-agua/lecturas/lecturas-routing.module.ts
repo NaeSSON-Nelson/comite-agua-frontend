@@ -8,9 +8,6 @@ import { ReportesComponent } from './reportes/reportes.component';
 const routes: Routes = [
   {
     path:'',
-    component:LecturasComponent,
-  },{
-    path: 'lecturas-all-register',
     component: RegistrarLecturasComponent,
   },
   {

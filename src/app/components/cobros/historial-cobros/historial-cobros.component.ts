@@ -4,6 +4,7 @@ import { Perfil } from 'src/app/interfaces';
 import { CobrosService } from '../cobros.service';
 import { MesLectura, PlanillaLecturas } from 'src/app/interfaces/medidor.interface';
 import { CommonAppService } from 'src/app/common/common-app.service';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-historial-cobros',
@@ -22,7 +23,7 @@ export class HistorialCobrosComponent {
   eventVisible:EventEmitter<boolean> = new EventEmitter<boolean>();
 
   perfil:Perfil|null=null;
-  planillas:PlanillaLecturas[]=[];
+  planillas:any[]=[];
   lecturas:MesLectura[]=[];
   lecturasSelected:MesLectura[]=[];
   medidoresDeudas:TreeNode<any> []=[];
@@ -57,7 +58,13 @@ export class HistorialCobrosComponent {
     console.log(event);
     if(event.value){
       this.cobrosService.getGestionesMedidor(this.perfil!.id!,event.value).subscribe(res=>{
-        this.planillas=res.data || [];
+        this.planillas=res.data?.map(asc=>{
+          return {
+            gestion:asc.gestion+'',
+            value:asc.id,
+          }
+        }) || [];
+        console.log(this.planillas);
         this.nroMedidor=event.value;
         if(this.planillas.length===0) this.messagePlanillas='NO HAY PLANILLAS';
         if(this.lecturas.length>0)
@@ -79,6 +86,7 @@ export class HistorialCobrosComponent {
           this.showTable=true;
         }else{
           this.tableReport=`No hay cobros de la fecha seleccionada`
+          this.showTable=false;
         }
       })
     }
@@ -86,5 +94,11 @@ export class HistorialCobrosComponent {
   generarPdf(){
     console.log(this.lecturasSelected);
     this.commonAppService.comprobantesPdfGenerated(this.lecturasSelected,this.perfil!)
+  }
+  medidoresGes(){
+    if(this.perfil){
+      return this.perfil.afiliado!.medidorAsociado!.map(asc=>asc.medidor!);
+    }
+    return []
   }
 }
