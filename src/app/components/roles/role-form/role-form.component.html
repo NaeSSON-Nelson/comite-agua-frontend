@@ -46,7 +46,7 @@
                 >{{ getNivelErrors("nivel") }}
               </small>
             </div>
-            <div class="field col-12 md:col-4">
+            <div class="field col-12 md:col-4" *ngIf="!this.roleActual?.id">
               <span class="p-float-label">
                 <p-dropdown
                   inputId="estado"
@@ -78,6 +78,7 @@
                         <th>Code</th>
                         <th>Nombre</th>
                         <th>Enlace de Item</th>
+                        <th>Estado</th>
                         <th style="width: 5rem"></th>
                     </tr>
                 </ng-template>
@@ -86,6 +87,10 @@
                         <td>{{ customer.id }}</td>
                         <td>{{ customer.nombre }}</td>
                         <td>{{ customer.linkMenu }}</td>
+                        <td>
+                          <p-tag [severity]="customer.isActive?'success':'danger'" [value]="customer.estado"></p-tag>
+                       
+                        </td>
                         <td>
                             <button type="button" pButton pRipple icon="pi pi-times" class="p-button-danger p-button-rounded" (click)="deleteItemMenu(customer.id)"></button>
                         </td>
@@ -111,7 +116,7 @@
                 pRipple
                 class="p-button-primary"
                 [label]="roleActual?.id?'Modificar Rol':'Registrar Rol'"
-                [disabled]="roleForm.pending"
+                [disabled]="roleForm.pending || !formValid"
                 (click)="validForm()"
               ></button>
             </div>

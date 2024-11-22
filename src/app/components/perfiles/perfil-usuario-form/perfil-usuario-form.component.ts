@@ -11,7 +11,7 @@ import { PerfilService } from '../perfil.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { CommonAppService } from 'src/app/common/common-app.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { switchMap } from 'rxjs';
+import { Subscription, switchMap } from 'rxjs';
 import { PATH_AUTH, PATH_EDIT, PATH_FORBBIDEN, PATH_LISTAR, PATH_MODULE_DETAILS, PATH_PERFILES } from 'src/app/interfaces/routes-app';
 
 @Component({
@@ -33,18 +33,14 @@ export class PerfilUsuarioFormComponent {
     private routerAct: ActivatedRoute
   ) {}
   ngOnInit(): void {
-    // if(this.clienteModificar?.id){
-    //   this.proveedorForm.setValue(this.clienteModificar);
-    // }
-    // this.routerAct.paramMap.subscribe((params)=>{
-    //   console.log(params);
-    // })
-    this.perfilService.perfil.subscribe((res) => {
-      // console.log(res);
+    
+    this.subscription=this.perfilService.perfil.subscribe((res) => {
+      
       const { usuario } = res;
       this.perfilActual = res;
+      // console.log(usuario);
       if (usuario) {
-        // console.log(usuario);
+        this.usuarioForm.removeControl('estado');
         if(this.routerAct.snapshot.routeConfig?.path?.includes(PATH_EDIT)){
           const {
             correoVerify,
@@ -55,6 +51,7 @@ export class PerfilUsuarioFormComponent {
             roles,
             updated_at,
             username,
+            estado,
             ...dataUserForm
           } = usuario;
           const rolesForm = roles?.map((rol) => rol.id);
@@ -179,9 +176,8 @@ export class PerfilUsuarioFormComponent {
                     detail: res.message,
                     icon: 'pi pi-check',
                   });
-                  this.router.navigate([PATH_PERFILES, PATH_MODULE_DETAILS], {
-                    queryParams: { id: this.perfilActual!.id },
-                  });
+                  this.router.navigate([PATH_PERFILES, PATH_MODULE_DETAILS,this.perfilActual?.id]);
+              
                 } else {
                   this.messageService.add({
                     severity: 'error',
@@ -210,9 +206,8 @@ export class PerfilUsuarioFormComponent {
                     this.dataUser = res.data;
                     this.usuarioCreate = true;
                   } else {
-                    this.router.navigate([PATH_PERFILES, PATH_MODULE_DETAILS], {
-                      queryParams: { id: this.perfilActual!.id },
-                    });
+                    this.router.navigate([PATH_PERFILES, PATH_MODULE_DETAILS,this.perfilActual?.id]);
+              
                   }
                 } else {
                   this.messageService.add({
@@ -299,5 +294,15 @@ export class PerfilUsuarioFormComponent {
       return 'debe asignar al menos un rol a la cuenta';
     }
     return '';
+  }
+  subscription!:Subscription;
+  ngOnDestroy(): void {
+    //Called once, before the instance is destroyed.
+    //Add 'implements OnDestroy' to the class.
+    this.subscription.unsubscribe();
+  }
+
+  get formValid(){
+    return this.usuarioForm.valid && this.usuarioForm.touched && !this.usuarioForm.pristine
   }
 }

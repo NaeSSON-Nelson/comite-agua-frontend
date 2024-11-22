@@ -6,6 +6,8 @@ import { ItemMenuDetailsComponent } from './item-menu-details/item-menu-details.
 import { PrimeNgCrudModule } from '../../../prime-ng-crud/prime-ng-crud.module';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ItemsMenuRoutingModule } from './items-menu-routing.module';
+import { TagModule } from 'primeng/tag';
+import { ToolbarModule } from 'primeng/toolbar';
 
 
 
@@ -20,6 +22,8 @@ import { ItemsMenuRoutingModule } from './items-menu-routing.module';
     ItemsMenuRoutingModule,
     PrimeNgCrudModule,
     ReactiveFormsModule,
+    TagModule,
+    ToolbarModule,
   ]
 })
 export class ItemsMenuModule { }

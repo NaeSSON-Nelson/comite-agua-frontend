@@ -27,29 +27,6 @@
                       >{{ getNroMedidorErrors("nroMedidor") }}
                     </small>
                   </div>
-                  
-                  <div class="field col-12 md:col-4 m-3">
-                    <span class="p-float-label">
-                      <p-dropdown
-                        inputId="funcionamiento"
-                        [autoDisplayFirst]="false"
-                        [options]="tiposFun"
-                        formControlName="funcionamiento"
-                        optionLabel="name"
-                        optionValue="value"
-                        placeholder="Esta en funcionamiento?"
-                        [ngClass]="inputValid('funcionamiento')"
-                      ></p-dropdown>
-          
-                      <label for="funcionamiento">En funcionamiento?</label>
-                    </span>
-                    <small
-                      id="funcionamiento-help"
-                      class="p-error block"
-                      *ngIf="campoValido('funcionamiento')"
-                      >{{ getFuncionamientoErrors("funcionamiento") }}
-                    </small>
-                  </div>
                   <div class="field col-12 md:col-6 m-3">
                     <span class="p-float-label">
                       <input
@@ -110,7 +87,7 @@
                       >{{ getMarcaErrors("marca") }}
                     </small>
                   </div>
-                  <div class="field col-12 md:col-3 m-3">
+                  <div class="field col-12 md:col-3 m-3" *ngIf="!medidorActual?.id">
                     <span class="p-float-label">
                       <p-dropdown
                         inputId="estado"
@@ -141,7 +118,7 @@
                     pRipple
                     class="p-button-primary"
                     [label]="medidorActual?'Modificar Medidor de Agua':'Registrar Nuevo medidor'"
-                    [disabled]="medidorForm.pending"
+                    [disabled]="medidorForm.pending || !formValid"
                     (click)="validForm()"
                   ></button>
                 </div>

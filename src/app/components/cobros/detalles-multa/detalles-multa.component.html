@@ -1,0 +1,73 @@
+<p-dialog
+header="Detalles de Multa registrada" 
+[(visible)]="visible" [modal]="true" [style]="{ width: '68vw' }" [draggable]="false" [resizable]="false" [baseZIndex]="1251" [closeOnEscape]="false"
+(onHide)="eventVisible.emit(false)">
+<div class="grid m-2 py-3" *ngIf="multa">
+    <div class="col-6 grid">
+   <div class="col-12 md:col-6">
+        <div class="text-900 text-lg mb-2 font-medium text-right">NUMERO DE MULTA</div>
+        <p class="text-700 line-height-3 text-right">{{multa.id}}<p>
+    </div>
+        <div class="col-12 md:col-6">
+        <div class="text-900 text-lg mb-2 font-medium text-center">MOTIVO</div>
+        <p class="text-700 line-height-3 text-center">{{multa.motivo}}</p>
+    </div>
+        <div class="col-12 md:col-6">
+        <div class="text-900 text-lg mb-2 font-medium text-right">MONTO DE PAGO</div>
+        <p class="text-700 line-height-3 text-right">{{multa.monto}} {{multa.moneda}}.<p>
+    </div>
+        <div class="col-12 md:col-6">
+        <div class="text-900 text-lg mb-2 font-medium text-right">ESTADO DE PAGO</div>
+        <p class="text-700 line-height-3 text-right">{{multa.pagado?'PAGADO':'NO PAGADO'}}<p>
+    </div>
+</div>
+    <ng-container *ngIf="multa.comprobante">
+        <div class="col-6 grid">
+            <h5 class="col-12 text-center">COMPROBANTE DE PAGO DE MULTA</h5>
+            <div class="col-12 md:col-6">
+                <div class="text-900 text-lg mb-2 font-medium text-right">MONTO PAGADO</div>
+                <p class="text-700 line-height-3 text-right"> {{multa.comprobante.montoPagado | currency : multa.comprobante.moneda}}</p>
+            </div>
+            <div class="col-12 md:col-6">
+                <div class="text-900 text-lg mb-2 font-medium text-right">METODO DE PAGO</div>
+                <p class="text-700 line-height-3 text-right"> {{multa.comprobante.metodoPago}}</p>
+            </div>
+            <div class="col-12 md:col-6">
+                <div class="text-900 text-lg mb-2 font-medium text-right">FECHA DE PAGO</div>
+                <p class="text-700 line-height-3 text-right"> {{multa.comprobante.fechaEmitida | date :'dd/MM/yyyy'}}</p>
+            </div>
+            <div class="col-12 md:col-6">
+                <div class="text-900 text-lg mb-2 font-medium text-right">ENTIDAD DE PAGO</div>
+                <p class="text-700 line-height-3 text-right"> {{multa.comprobante.entidadPago}}</p>
+            </div>
+        </div>
+    </ng-container>
+    
+    <div class="grid col-12">
+        <p-table [value]="multa.lecturasMultadas" [tableStyle]="{ 'min-width': '50rem' }">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th>GESTION</th>
+                    <th>MES DE LECTURACION</th>
+                    <th>LECTURA REGISTRADA</th>
+                    <th>CONSUMO DEL MES</th>
+                    <th>MONTO DE PAGO</th>
+                    <th>ESTADO DEL PAGO</th>
+                    <th>LIMITE PARA PAGO</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-lectura>
+                <tr>
+                    <td>{{ lectura.planilla.gestion }}</td>
+                    <td>{{ lectura.PlanillaMesLecturar }}</td>
+                    <td>{{ lectura.lectura }} {{lectura.medicion}}</td>
+                    <td>{{ lectura.consumoTotal }} {{lectura.medicion}}.</td>
+                    <td>{{ lectura.pagar.monto }} {{lectura.pagar.moneda}}.</td>
+                    <td>{{ lectura.pagar.pagado?'PAGADO':'NO PAGADO' }}</td>
+                    <td>{{ lectura.pagar.fechaLimitePago | date :'dd/MM/yyyy'}}</td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</div>
+</p-dialog>

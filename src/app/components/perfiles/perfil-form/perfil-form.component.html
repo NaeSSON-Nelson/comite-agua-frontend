@@ -1,9 +1,9 @@
 <div class="grid">
   <form class="col-12" [formGroup]="perfilForm">
     <div class="card">
-      <h5>
-        {{ perfilActual?.id ? "Datos de Perfil Actuales" : "Registro de nuevo usuario" }}
-      </h5>
+      <h4 class="text-center">
+        {{ perfilActual?.id ? "DATOS DE PERFIL ACTUAL" : "REGISTRAR NUEVO PERFIL" }}
+      </h4>
       <div class="p-fluid p-formgrid grid mt-5">
         <div class="field col-12 md:col-6">
           <span class="p-float-label">
@@ -155,9 +155,10 @@
         <div class="field col-12 md:col-3">
           <span class="p-float-label">
             <input
-              type="text"
               id="contacto"
               pInputText
+              type="text"
+               
               formControlName="contacto"
               [ngClass]="inputValid('contacto')"
             />
@@ -170,7 +171,7 @@
             >{{ getContactoErrors("contacto") }}
           </small>
         </div>
-        <div class="field col-12 md:col-4">
+        <div class="field col-12 md:col-3">
           <span class="p-float-label">
             <p-calendar
               formControlName="fechaNacimiento"
@@ -181,7 +182,7 @@
               [ngClass]="inputValid('fechaNacimiento')"
             >
             </p-calendar>
-            <label for="fechaNacimiento">Fecha de Nacimiento</label>
+            <label for="fechaNacimiento">Fecha de Nacimiento (*)</label>
           </span>
           <small
             id="fechaNacimiento-help"
@@ -191,7 +192,7 @@
           </small>
         </div>
 
-        <div class="field col-12 md:col-3">
+        <div class="field col-12 md:col-3" *ngIf="!this.perfilActual?.id">
           <span class="p-float-label">
             <p-dropdown
               inputId="estado"
@@ -215,11 +216,12 @@
         </div>
       </div>
     </div>
-    <div class="card" *ngIf="!perfilActual?.id">
+    <div class="grid card"  *ngIf="!perfilActual?.id">
+    <div class="col-12 md:col-6">
       <p>¿Es un Afiliado?</p>
       <p-divider></p-divider>
       <div class="grid">
-        <div class="col-2">
+        <div class="col-3">
           <p-selectButton
             [options]="stateOptions"
             optionLabel="label"
@@ -228,11 +230,11 @@
           ></p-selectButton>
         </div>
         <div
-          class="col-12 p-fluid p-formgrid grid mt-5"
+          class="col-12 p-fluid p-formgrid grid"
           [formGroup]="afiliadoForm"
           *ngIf="addAfiliado"
         >
-          <div class="field col-12 md:col-3">
+          <div class="field col-12 md:col-6 md:mt-3">
             <span class="p-float-label">
               <p-dropdown
                 inputId="barrio"
@@ -254,7 +256,7 @@
               >{{ getAfiliadoBarrioErrors("barrio") }}
             </small>
           </div>
-          <div class="field col-12 md:col-4">
+          <div class="field col-12 md:col-6 md:mt-3">
             <span class="p-float-label">
               <input
                 type="text"
@@ -282,43 +284,7 @@
               <p>latitud: {{this.afiliadoForm.get('latitud')?.value}} longitud: {{this.afiliadoForm.get('longitud')?.value}}</p>
             </div>
           </div>
-          <!-- <div class="field col-12 md:col-6">
-            <span class="p-float-label">
-              <input
-                type="text"
-                id="longitud"
-                pInputText
-                formControlName="longitud"
-                [ngClass]="inputValidAfiliado('longitud')"
-              />
-              <label for="longitud">Longitud</label>
-            </span>
-            <small
-              id="longitud-help"
-              class="p-error block"
-              *ngIf="campoValidoAfiliado('longitud')"
-              >{{ getAfiliadoLongitudErrors("longitud") }}
-            </small>
-          </div>
           <div class="field col-12 md:col-6">
-            <span class="p-float-label">
-              <input
-                type="text"
-                id="latitud"
-                pInputText
-                formControlName="latitud"
-                [ngClass]="inputValidAfiliado('latitud')"
-              />
-              <label for="latitud">Latitud</label>
-            </span>
-            <small
-              id="latitud-help"
-              class="p-error block"
-              *ngIf="campoValidoAfiliado('latitud')"
-              >{{ getAfiliadoLatitudErrors("latitud") }}
-            </small>
-          </div> -->
-          <div class="field col-12 md:col-3">
             <span class="p-float-label">
               <p-dropdown
                 inputId="estado"
@@ -343,11 +309,11 @@
         </div>
       </div>
     </div>
-    <div class="card" *ngIf="!perfilActual?.id">
+   <div class="col-12 md:col-6">
       <p>Cuenta de acceso al sistema</p>
       <p-divider></p-divider>
       <div class="grid">
-        <div class="col-2">
+        <div class="col-3">
           <p-selectButton
             [options]="stateOptions"
             optionLabel="label"
@@ -356,11 +322,10 @@
           ></p-selectButton>
         </div>
         <div
-          class="col-12 p-fluid p-formgrid grid mt-5"
+          class="col-12 p-fluid p-formgrid grid"
           [formGroup]="usuarioForm"
           *ngIf="addUsuario">
-          <div class="col-12"><p>El usuario y contraseña de Acceso seran entregados en la creacion del perfil</p></div>
-          <div class="field col-12 md:col-6">
+         <div class="field col-12 md:col-6 md:mt-3">
             <span class="p-float-label">
               <input
                 type="text"
@@ -378,7 +343,7 @@
               >{{ getUsuarioCorreoErrors("correo") }}
             </small>
           </div>
-          <div class="field col-12 md:col-3">
+          <div class="field col-12 md:col-6 md:mt-3">
               <span class="p-float-label">
                 <p-dropdown
                   inputId="estado"
@@ -400,6 +365,7 @@
                 >{{ getUsuarioEstadoErrors("estado") }}
               </small>
             </div>
+            <div class="col-12"><p class="font-italic">El usuario y contraseña de Acceso seran entregados en la creacion del perfil (*)</p></div> 
             <div class="col-12">
                 <h5>Roles de Acceso al usuario</h5>
                 <p-divider></p-divider>
@@ -445,16 +411,17 @@
         
       </div>
     </div>
+  </div>
     <div class="card">
       <div class="col p-fluid">
-        <div class="col-12 md:flex md:justify-content-center">
+        <div class="col-12 md:col-6 md:col-offset-3 md:flex md:justify-content-center">
           <button
             type="button"
             pButton
             pRipple
             class="p-button-primary"
             [label]="perfilActual?.id ? 'Modificar Perfil' : 'Registrar Perfil'"
-            [disabled]="perfilForm.pending"
+            [disabled]="!formValid"
             (click)="validForm()"
           ></button>
         </div>

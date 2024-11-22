@@ -1,0 +1,64 @@
+
+<p-dialog header="Seleccionar campos para exportar" [(visible)]="visible" 
+              [style]="{width: '50vw'}" [modal]="true">
+              <div class="mb-4">
+                <h3>Seleccione las columnas a exportar:</h3>
+                <div class="grid">
+                  <div *ngFor="let col of columns" class="col-12 md:col-6">
+                    <p-checkbox 
+                      [(ngModel)]="col.selected" 
+                      [binary]="true" 
+                      [label]="col.header"
+                      [disabled]="isRequiredField(col.field)">
+                    </p-checkbox>
+                  </div>
+                </div>
+              </div>
+        
+              <div class="mb-4">
+                <h3>Añadir columna personalizada:</h3>
+                <div class="p-fluid grid">
+                  <div class="col-5">
+                    <input pInputText [(ngModel)]="newColumnHeader" placeholder="Título de la columna">
+                  </div>
+                  <div class="col-2">
+                    <button pButton type="button" label="Añadir" (click)="addCustomColumn()"></button>
+                  </div>
+                </div>
+              </div>
+              <div class="mb-4 grid p-fluid">
+                <div class="col-4">
+                  <h3>Filtrar por:</h3>
+                  <p-multiSelect 
+                  [options]="optionsFilter" [(ngModel)]="optionFilterSelected" optionLabel="name" [filter]="false"
+                  ></p-multiSelect>
+                </div>
+                <div class="col-4">
+                  <h3>Ordenar por:</h3>
+                  <p-dropdown 
+                  [options]="orderBy"   [(ngModel)]="orderBySelected" optionLabel="name" [filter]="false" 
+                  ></p-dropdown>
+                </div>
+                <div class="col-4" *ngIf="orderBySelected">
+                  <h3>Tipo de orden:</h3>
+                  <p-dropdown 
+                  [options]="orderTypeBy"  [(ngModel)]="orderTypeBySelected" dropdownIcon="icon"  optionLabel="name" [filter]="false"
+                  ></p-dropdown>
+                </div>
+                <div class="grid col-12 mt-2">
+                  <div *ngFor="let filter of optionFilterSelected" class="col-12 md:col-6">
+                    <p-checkbox 
+                      [(ngModel)]="filter.filterValue" 
+                      [binary]="true" 
+                      [label]="filter.name">
+                    </p-checkbox>
+                  </div>
+                </div>
+              </div>
+        
+              <ng-template pTemplate="footer">
+                <button pButton type="button" label="Exportar PDF" (click)="cargarData('PDF')" [disabled]="columnsLengthSelected>6"></button>
+                <button pButton type="button" label="Exportar Excel" (click)="cargarData('EXCEL')" class="ml-2"></button>
+                <button pButton type="button" label="Cerrar" (click)="close()" class="p-button-secondary ml-2"></button>
+              </ng-template>
+    </p-dialog>

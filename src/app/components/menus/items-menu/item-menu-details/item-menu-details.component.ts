@@ -27,6 +27,7 @@ export class ItemMenuDetailsComponent {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
     this.itemsMenuService.itemMenu.subscribe((res) => {
+      console.log('resto',res);
       this.itemMenu = res;
     });
     if (!this.routerAct.snapshot.params['id']) {

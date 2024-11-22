@@ -42,6 +42,7 @@
                   <th>Code</th>
                   <th>Nombre de Item</th>
                   <th>Enlace de Item</th>
+                  <th>Estado de Item</th>
                 </tr>
               </ng-template>
               <ng-template pTemplate="body" let-customer let-index>
@@ -49,6 +50,8 @@
                   <td>{{ customer.id }}</td>
                   <td>{{ customer.nombre }}</td>
                   <td>{{ customer.linkMenu }}</td>
+                  <td>     <p-tag [severity]="customer.isActive?'success':'danger'" [value]="customer.estado"></p-tag>
+                  </td>
                 </tr>
               </ng-template>
             </p-table>
@@ -78,6 +81,7 @@
               pRipple
               label="Deshabilitar"
               class="p-button-warning"
+              *ngIf="role.isActive;else inhabilitado"
               (click)="actionData('DESHABILITAR')"
             ></button>
           </div>

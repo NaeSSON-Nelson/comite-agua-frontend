@@ -50,18 +50,18 @@
               <!-- <th style="width: 4rem">
             </th> -->
 
-              <th style="min-width: 200px">NOMBRE</th>
               <th style="min-width: 200px">ENLACE</th>
+              <th style="min-width: 200px">ESTADO</th>
             </tr>
           </ng-template>
           <ng-template pTemplate="body" let-employee let-rowIndex="rowIndex">
             <tr [pSelectableRow]="employee" [pSelectableRowIndex]="rowIndex">
-              <!-- <td>
-                    <p-tableRadioButton  [value]="employee" ></p-tableRadioButton >
-                    </td> -->
-
-              <td>{{ employee.nombre }}</td>
+              
               <td>{{ employee.linkMenu }}</td>
+              <td>
+                <p-tag [severity]="employee.isActive?'success':'danger'" [value]="employee.estado"></p-tag>
+                       
+              </td>
             </tr>
           </ng-template>
         </p-table>

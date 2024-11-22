@@ -1,9 +1,9 @@
 <div class="layout-wrapper" [ngClass]="containerClass">
   <app-topbar [usuario]="usuario" [roles]="roles" (userLevelEmit)="userLevel = $event" [userLevel]="userLevel"></app-topbar>
-  <div class="layout-sidebar" *ngIf="usuario && userLevel>0 && userLevel>30">
+  <div class="layout-sidebar">
     <app-sidebar></app-sidebar>
   </div>
-  <div class="layout-main-container" [ngClass]="containerMain">
+  <div class="layout-main-container" >
     <div class="layout-main">
       <router-outlet></router-outlet>
     </div>

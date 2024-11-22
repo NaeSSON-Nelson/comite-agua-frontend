@@ -4,7 +4,7 @@ import { AfiliadoForm, Estado, Perfil } from 'src/app/interfaces';
 import { PerfilService } from '../perfil.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ActivatedRoute, Router } from '@angular/router';
-import { switchMap } from 'rxjs';
+import { Subscription, switchMap } from 'rxjs';
 import { patternText } from 'src/app/patterns/forms-patterns';
 import { CommonAppService } from 'src/app/common/common-app.service';
 import * as L from 'leaflet';
@@ -36,14 +36,15 @@ export class PerfilAfiliadoFormComponent {
     // this.routerAct.paramMap.subscribe((params)=>{
     //   console.log(params);
     // })
-    this.perfilService.perfil.subscribe((res) => {
+   this.subscription= this.perfilService.perfil.subscribe((res) => {
       // console.log(res);
       const {afiliado}=res;
       this.perfilActual=res;
       if(afiliado){
+        this.afiliadoForm.removeControl('estado')
         if(this.routerAct.snapshot.routeConfig?.path?.includes(PATH_EDIT)){
           this.afiliadoForm.setValue({
-            estado:afiliado.estado,
+            // estado:afiliado.estado,
             barrio:afiliado.ubicacion?.barrio,
             numeroVivienda:afiliado.ubicacion?.numeroVivienda,
             longitud:afiliado.ubicacion?.longitud,
@@ -209,8 +210,11 @@ export class PerfilAfiliadoFormComponent {
     });
   }
   coordenadas($event:any){
+    console.log('coordenedas resividas',$event);
     this.afiliadoForm.get('latitud')?.setValue($event.lat);
     this.afiliadoForm.get('longitud')?.setValue($event.lng);
+    this.afiliadoForm.markAllAsTouched();
+    this.afiliadoForm.markAsDirty();
   }
   get coordenadasLatLng(){
     return new L.LatLng(this.afiliadoForm.get('latitud')?.value ||-21.4734,this.afiliadoForm.get('longitud')?.value ||-64.8026);
@@ -288,5 +292,14 @@ export class PerfilAfiliadoFormComponent {
       return 'El campo es requerido';
     }
     return '';
+  }
+  subscription!:Subscription;
+  ngOnDestroy(): void {
+    //Called once, before the instance is destroyed.
+    //Add 'implements OnDestroy' to the class.
+    this.subscription.unsubscribe();
+  }
+  get formValid(){
+    return this.afiliadoForm.valid && this.afiliadoForm.touched && !this.afiliadoForm.pristine
   }
 }

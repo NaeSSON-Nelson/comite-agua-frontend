@@ -30,7 +30,7 @@
                 <small id="linkMenu-help">Use el guion "-" para separar</small>
             </ng-template>
           </div>
-          <div class="field col-12 md:col-4">
+          <div class="field col-12 md:col-4" *ngIf="!itemMenuActual?.id">
             <span class="p-float-label">
               <p-dropdown
                 inputId="estado"
@@ -59,7 +59,7 @@
               pRipple
               class="p-button-primary"
               [label]="itemMenuActual?.id?'Modificar Item Menu':'Registrar Item Menu'"
-              [disabled]="itemMenuForm.pending"
+              [disabled]="!formValid || itemMenuForm.pending"
               (click)="validForm()"
             ></button>
           </div>

@@ -6,9 +6,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AfiliadoForm, Estado, Perfil, PerfilForm, ResponseCreatePerfil, Role, UsuarioForm } from 'src/app/interfaces';
 import { patternCI, patternSpanishInline, patternText } from 'src/app/patterns/forms-patterns';
 import { CommonAppService } from 'src/app/common/common-app.service';
-import { switchMap } from 'rxjs';
+import { Subscription, switchMap } from 'rxjs';
 import * as L from 'leaflet'
 import { PATH_AUTH, PATH_EDIT, PATH_FORBBIDEN, PATH_MODULE_DETAILS, PATH_PERFILES } from 'src/app/interfaces/routes-app';
+import { LayoutService } from 'src/app/layout/layout.service';
 @Component({
   selector: 'app-perfil-form',
   templateUrl: './perfil-form.component.html',
@@ -20,6 +21,7 @@ export class PerfilFormComponent {
     private fb: FormBuilder,
     private readonly perfilService: PerfilService,
     private confirmationService: ConfirmationService,
+    public layoutService:LayoutService,
     public commonServiceApp:CommonAppService,
     private messageService: MessageService,
     private router: Router,
@@ -31,12 +33,14 @@ export class PerfilFormComponent {
   addAfiliado:boolean=false;
   addUsuario:boolean=false;
   showMap:boolean=false;
+  subscription!:Subscription;
   ngOnInit(): void {
-    this.perfilService.perfil.subscribe((res) => {
-      const { usuario,afiliado,accessAcount,created_at,updated_at,id,isActive,contacto,tipoPerfil,...dataPerfil } = res;
+    this.subscription=this.perfilService.perfil.subscribe((res) => {
+      const { usuario,estado,afiliado,accessAcount,created_at,updated_at,id,isActive,contacto,defaultClientImage,fechaNacimiento,tipoPerfil,profileImageUri,urlImage,...dataPerfil } = res;
       console.log(res);
+      this.perfilForm.removeControl('estado');
       this.perfilActual=res;
-        this.perfilForm.setValue({...dataPerfil,contacto});
+        this.perfilForm.setValue({...dataPerfil,contacto,fechaNacimiento:new Date(fechaNacimiento!)});
     });
     // console.log(this.router);
     // console.log(this.routerAct);
@@ -105,8 +109,8 @@ export class PerfilFormComponent {
     direccion:        [,[Validators.pattern(patternText)]],
     genero:           [,[Validators.required, Validators.pattern(patternText)]],
     fechaNacimiento:  [,[Validators.required]],
-    contacto:         ['+591 ',[Validators.pattern(/^\+[591]{3}\s[0-9]{8}$/g)]],
-    estado:           [Estado.ACTIVO,[Validators.required]],
+    contacto:         [,[Validators.pattern(/^\d{6,8}$/),Validators.minLength(6),Validators.maxLength(8)]],
+    estado:           [,[Validators.required]],
   })
 
   afiliadoForm:FormGroup= this.fb.group({
@@ -214,7 +218,7 @@ export class PerfilFormComponent {
   dataUser!:ResponseCreatePerfil;
   registrarFormulario(form: PerfilForm) {
     this.confirmationService.confirm({
-      message: `¿Está seguro de Registrar?`,
+      message: `¿Está seguro de ${this.perfilActual?.id ?'Modificar los datos del perfil':' Registrar el nuevo perfil'}?`,
       header: 'Confirmar Acción',
       icon: 'pi pi-info-circle',
       accept: () => {
@@ -526,10 +530,22 @@ export class PerfilFormComponent {
   }
   getContactoErrors(campo:string) {
     const errors = this.perfilForm.get(campo)?.errors;
-    console.log(errors);
-    if (errors?.['pattern']) {
-      return 'Debe seguir el patron: +591 XXXXXXXX';
+    if(errors?.['pattern']){
+      return `solo se aceptan caracteres numéricos`
+    }else if(errors?.['minlength']){
+      return `tamaño mínimo de ${errors?.['minlength'].requiredLength} caracteres`;
+    }else if(errors?.['maxlength']){
+      return `tamaño máximo de ${errors?.['maxlength'].requiredLength} caracteres`;
     }
     return '';
+  }
+  ngOnDestroy(): void {
+    //Called once, before the instance is destroyed.
+    //Add 'implements OnDestroy' to the class.
+    this.subscription.unsubscribe();
+  }
+
+  get formValid(){
+    return this.perfilForm.valid && this.perfilForm.touched && !this.perfilForm.pristine
   }
 }

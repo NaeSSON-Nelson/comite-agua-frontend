@@ -1,6 +1,8 @@
 import { Afiliado, Ubicacion } from "./afiliado.interface";
 import { ColumnsAlways } from "./always.interface";
 import { Barrio, Estado, Medicion } from "./atributes.enum";
+import { MultaServicio } from "./multas-servicio.interface";
+import { PaginatorFind } from "./Paginator.interface";
 import { ComprobantePorPago } from "./pagos-services.interface";
 
 
@@ -10,7 +12,7 @@ export interface Medidor{
   lecturaInicial?:    number;
   lecturaMedidor?:    number;
   marca?:             string;
-  funcionamiento?:    string;
+  funcionamiento?:    boolean;
   medidorAsociado?:  MedidorAsociado[];
   isActive?:           boolean;
   estado?:             Estado;
@@ -29,6 +31,7 @@ export interface MedidorAsociado{
   isActive?:              boolean;
   estado?:                Estado;
   registrable?:            boolean;
+  multasAsociadas?:       MultaServicio[];
 }
 export interface MedidorForm{
   id?:                number;
@@ -36,7 +39,6 @@ export interface MedidorForm{
   lecturaInicial?:    number;
   marca?:             string;
   estado?:            Estado;
-  funcionamiento?:    string;
   medicion?:           Medicion;
 }
 export interface MedidorAsociadoForm{
@@ -54,15 +56,21 @@ export interface MedidorAsociadoForm{
 export interface PlanillaLecturas{
   id?:  number;
   gestion: number;
-  lecturas: MesLectura[];
+  registrable?:boolean;
+  lecturas: PlanillaMesLectura[];
 }
-export interface MesLectura extends ColumnsAlways{
-  id?: number;
-  lectura?: number;
-  consumoTotal?: number;
-  estadoMedidor?: string;
-  mesLecturado?:string;
-  pagar?:ComprobantePorPago;
+export interface PlanillaMesLectura extends ColumnsAlways{
+  id?:                 number;
+  lectura?:            number;
+  consumoTotal?:       number;
+  estadoMedidor?:      string;
+  PlanillaMesLecturar?:string;
+  tarifaGenerada?:     boolean;
+  isMulta?:            boolean;
+  medicion?:           Medicion;
+  pagar?:              ComprobantePorPago;
+  multa?:              MultaServicio;
+  planilla?:           PlanillaLecturas;
 }
 export interface AnioSeguimientoLecturas extends ColumnsAlways{
   id?:number;
@@ -72,13 +80,13 @@ export interface AnioSeguimientoLecturas extends ColumnsAlways{
 export interface MesSeguimientoRegistroLectura extends ColumnsAlways{
   id?:number;
   mes:string;
-  fechaRegistroLectura:Date;
-  fechaFinRegistroLectura:Date;
+  fechaRegistroLecturas:Date;
+  fechaFinRegistroLecturas:Date;
 }
-export interface LecturasOptions{
-  mes?:string|null;
-  gestion?:number|null;
-  barrio?:Barrio | null;
+export interface LecturasOptions extends PaginatorFind{
+  mes?:string;
+  gestion?:number;
+  barrio?:Barrio;
 }
 export interface PlanillaForm{
   id:number;

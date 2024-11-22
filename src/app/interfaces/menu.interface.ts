@@ -1,5 +1,5 @@
 import { ColumnsAlways } from "./always.interface";
-import { Estado } from "./atributes.enum";
+import { Estado } from './atributes.enum';
 
 export interface Menu extends ColumnsAlways{
   id?:          number;
@@ -17,6 +17,8 @@ export interface MenuForm {
 export interface ItemMenu extends ColumnsAlways{
   id?:          number;
   linkMenu?:    string;
+  estado?:      Estado;
+  isActive?:    boolean;
 }
 export interface ItemToMenu extends ColumnsAlways{
   id?:          number;

@@ -1,7 +1,30 @@
 <div class="grid">
     <div class="col-12">
         <div class="card px-6 py-6">
-            <p-table #dt [value]="data"    [rowHover]="true">
+            <p-toolbar styleClass="mb-4 gap-2">
+                <ng-template pTemplate="left">
+                    <div class="my-2">
+                        <button pButton pRipple label="Registrar nuevo perfil" icon="pi pi-plus" class="p-button-success mr-2" (click)="registerNewPerfil()" ></button>
+                        <button pButton pRipple label="Exportar" icon="pi pi-upload" class="p-button-help" (click)="pdfGeneratorVisible=true" [disabled]="this.data.length===0"></button>
+                    </div>
+                </ng-template>
+            </p-toolbar>
+            <p-table #dt 
+            dataKey="id"
+            [value]="data"
+            [rowHover]="true" 
+            [paginator]="true"
+            [rows]="10"
+            [lazy]="true" 
+            (onLazyLoad)="loadCustomers($event)"
+            [totalRecords]="dataPaginator.size||0"
+            [globalFilterFields]="['nombres', 'ci']"
+            [customSort]="true"
+            [showCurrentPageReport]="true"
+            [tableStyle]="{ 'min-width': '50rem' }"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+            [rowsPerPageOptions]="[10, 25, 50]"
+            >
                 <ng-template pTemplate="caption">
                     <form class="flex flex-column md:flex-row md:justify-content-between md:align-items-center"
                     [formGroup]="searchForm"
@@ -9,7 +32,7 @@
                         <h5 class="m-0">{{titleTable}}</h5>
                         <span class="block mt-2 md:mt-0 p-input-icon-left">
                             <i class="pi pi-search"></i>
-                            <input pInputText type="text" inputId="termino"  placeholder="Search..." formControlName="termino" class="w-full sm:w-auto" (input)="search($event)" />
+                            <input pInputText type="text" inputId="termino"  placeholder="Search..." formControlName="termino" class="w-full sm:w-auto" (input)="dt.filterGlobal($event.target, 'contains')" />
                             <small
                                 id="termino-help"
                                 class="p-error block"
@@ -21,19 +44,18 @@
                 </ng-template>
                 <ng-template pTemplate="header">
                     <tr>
-                        
-                        <th >Code</th>
-                        <th >Nombres</th>
-                        <th>Cedula de Identidad</th>
+                        <th pSortableColumn="id">ID <p-sortIcon field="id"></p-sortIcon></th>
+                        <th pSortableColumn="nombres" style="width:20%">Nombres <p-sortIcon field="nombres"></p-sortIcon></th>
+                        <th pSortableColumn="ci" style="width:20%">CI <p-sortIcon field="CI"></p-sortIcon></th>
                         <th >Contacto</th>
                         <!-- <th >Barrio</th> -->
-                        <th >Estado</th>
-                        <th></th>
+                        <th pSortableColumn="estado" style="width:20%">Estado<p-sortIcon field="Estado"></p-sortIcon></th>
+                        <th>Acciones</th>
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-customer>
-                    <tr>
-                        <td style="width:14%; min-width:10rem;"><span class="p-column-title">Code</span>
+                    <tr >
+                        <td><span class="p-column-title">Code</span>
                             {{customer.id}}
                         </td>
                         <td style="width:14%; min-width:10rem;">
@@ -46,14 +68,10 @@
                         </td>
                         <td style="width:14%; min-width:8rem;">
                             <span class="p-column-title">contactos</span>
-                           {{'SIN CONTACTOS'}}
+                           {{customer.contacto ||'SIN CONTACTO'}}
                         </td>
-                        <!-- <td style="width:14%; min-width:10rem;">
-                            <span class="p-column-title">barrio</span>
-                            {{customer.barrio}}
-                        </td> -->
                         <td style="width:14%; min-width: 10rem;"><span class="p-column-title">ESTADO</span>
-                            <span [class]="'product-badge'">{{customer.estado}}</span>
+                            <p-tag [severity]="customer.isActive?'success':'danger'" [value]="customer.estado"></p-tag>
                         </td>
                         <td  style="width:14%; min-width: 10rem;">
                             <div class="flex p-fluid">
@@ -65,10 +83,13 @@
                         </td>
                     </tr>
                 </ng-template>
+                
             </p-table>
         </div>
     </div>
-    <div class="col-12 card flex justify-content-center" *ngIf="data.length>0" >
-        <p-paginator (onPageChange)="onPageChange($event)" [first]="dataPaginator.offset ||0" [totalRecords]="dataPaginator.size!" [rows]="dataPaginator.limit||10" [rowsPerPageOptions]="[10, 20, 50]"></p-paginator>
-    </div>
 </div>
+<app-perfil-pdf
+*ngIf="pdfGeneratorVisible"
+[visible]="pdfGeneratorVisible"
+(closeDisplayModalTable)="pdfGeneratorVisible = $event"
+></app-perfil-pdf>

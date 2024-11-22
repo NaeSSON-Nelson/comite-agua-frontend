@@ -27,6 +27,7 @@ import { LoginComponent } from './auth/login/login.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { ErrorApiInterceptor } from './interceptors/error-api.interceptor';
+import { AsociacionesMedidoresModule } from './components/asociaciones-medidores/asociaciones-medidores.module';
 
 
 
@@ -46,14 +47,15 @@ import { ErrorApiInterceptor } from './interceptors/error-api.interceptor';
     ReactiveFormsModule,
     // //UNA SOLUCION AL ERROR: NOW?
     AuthModule,
-    // ItemsMenuModule,
-    // MenusModule,
-    // RolesModule,
-    // MedidoresAguaModule,
-    // PerfilesModule,
-    // LecturasModule,
-    // UsuariosFuncionesModule,
-    // CobrosModule,
+    ItemsMenuModule,
+    MenusModule,
+    RolesModule,
+    MedidoresAguaModule,
+    PerfilesModule,
+    LecturasModule,
+    UsuariosFuncionesModule,
+    CobrosModule,
+    AsociacionesMedidoresModule,
   ],
   providers: [
     MessageService,

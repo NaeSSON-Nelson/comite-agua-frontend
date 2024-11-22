@@ -27,9 +27,7 @@ export class ReportesComponent {
     private routerAct: ActivatedRoute
   ) {};
   lecturasOptions:LecturasOptions={
-    gestion:null,
-    mes:null,
-   // barrio:Barrio._20DeMarzo,
+    
   }
   ngOnInit(): void {
     

@@ -41,18 +41,23 @@ export class LayoutService {
   };
   private overlayOpen = new Subject<any>();
   // private _user$:Subject<Usuario> = new Subject<Usuario>()
-  private _user$:EventEmitter<Usuario | null> = new EventEmitter<Usuario | null>();
+  private _user$: EventEmitter<Usuario | null> =
+    new EventEmitter<Usuario | null>();
   overLayOpen$ = this.overlayOpen.asObservable();
-  constructor() {
-    // this.userObserver.
-  }
-  get user(){
+
+  private configUpdate = new Subject<AppConfig>();
+
+  configUpdate$ = this.configUpdate.asObservable();
+
+  overlayOpen$ = this.overlayOpen.asObservable();
+
+  get user() {
     return this._user$.asObservable();
   }
-  get userObserver(){
+  get userObserver() {
     return this._user$;
   }
-  
+
   onMenuToggle() {
     if (this.isOverlay()) {
       this.state.overlayMenuActive = !this.state.overlayMenuActive;
@@ -72,10 +77,31 @@ export class LayoutService {
       }
     }
   }
+
+  showProfileSidebar() {
+    this.state.profileSidebarVisible = !this.state.profileSidebarVisible;
+    if (this.state.profileSidebarVisible) {
+      this.overlayOpen.next(null);
+    }
+  }
+
+  showConfigSidebar() {
+    this.state.configSidebarVisible = true;
+  }
+
+  isOverlay() {
+    return this.config.menuMode === 'overlay';
+  }
+
   isDesktop() {
     return window.innerWidth > 991;
   }
-  isOverlay() {
-    return this.config.menuMode === 'overlay';
+
+  isMobile() {
+    return !this.isDesktop();
+  }
+
+  onConfigUpdate() {
+    this.configUpdate.next(this.config);
   }
 }

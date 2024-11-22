@@ -34,11 +34,11 @@ export class LecturasService {
   AllPerfilesLecturas(parameters:LecturasOptions){
     // console.log(parameters);
     // let { size, ...dataPaginator } = paginator;
-    
+    const {estado,gestion,size,mes,...dataFinders}=parameters;
     return this.http
       .get<HttpResponseApiArray<Perfil>>(`${this.URL_lecturas}/perfiles`, {
        
-        params:{barrio:parameters.barrio || ''}
+        params:{...dataFinders}
       })
       .pipe(
         tap((resp) => {
@@ -124,5 +124,8 @@ export class LecturasService {
                 return of(errors);
               })
             );
+  }
+  limiteRegistrosLecturas(){
+    return this.http.get<HttpResponseApi<AnioSeguimientoLecturas>>(`${this.URL_lecturas}/time`);
   }
 }

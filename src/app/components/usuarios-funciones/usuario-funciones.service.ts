@@ -2,7 +2,7 @@ import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http
 import { Injectable } from '@angular/core';
 import { Subject, catchError, map, of, tap } from 'rxjs';
 import { HttpResponseApi, Medidor, Perfil, ResponseResult, ResponseResultData } from 'src/app/interfaces';
-import { MedidorAsociado, MesLectura, PlanillaLecturas } from 'src/app/interfaces/medidor.interface';
+import { MedidorAsociado, PlanillaMesLectura, PlanillaLecturas } from 'src/app/interfaces/medidor.interface';
 
 import { environment } from 'src/environments/environment';
 @Injectable({
@@ -103,14 +103,14 @@ export class UsuarioFuncionesService {
     )
   }
   getLectura(id:number){
-    return this.http.get<HttpResponseApi<MesLectura>>(`${this.URL_user_medidores}/lecturas/${id}`).pipe(
+    return this.http.get<HttpResponseApi<PlanillaMesLectura>>(`${this.URL_user_medidores}/lecturas/${id}`).pipe(
       map((resp) => {
         // console.log('map',resp);
-        const respuesta:ResponseResultData<MesLectura>={OK:resp.OK,message:resp.message,statusCode:200,data:resp.data!}
+        const respuesta:ResponseResultData<PlanillaMesLectura>={OK:resp.OK,message:resp.message,statusCode:200,data:resp.data!}
         return respuesta;
       }),
       catchError((err:HttpErrorResponse) => {
-        const errors = err.error as ResponseResultData<MesLectura>;
+        const errors = err.error as ResponseResultData<PlanillaMesLectura>;
         errors.OK=false;
         return of(errors);
       })

@@ -8,7 +8,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { patternSpanishInline } from 'src/app/patterns/forms-patterns';
 import { PaginatorFind } from 'src/app/interfaces/Paginator.interface';
 import { PaginatorState } from 'primeng/paginator';
-import { PATH_AUTH, PATH_FORBBIDEN, PATH_MODULE_DETAILS, PATH_ROLES } from 'src/app/interfaces/routes-app';
+import { PATH_AUTH, PATH_FORBBIDEN, PATH_MODULE_DETAILS, PATH_REGISTRAR, PATH_ROLES } from 'src/app/interfaces/routes-app';
 
 @Component({
   selector: 'app-roles',
@@ -19,7 +19,7 @@ import { PATH_AUTH, PATH_FORBBIDEN, PATH_MODULE_DETAILS, PATH_ROLES } from 'src/
 export class RolesComponent {
   data: Role[] = [];
   titleTable = 'Lista de Roles';
-  debouncer: Subject<string> = new Subject<string>();
+  // debouncer: Subject<string> = new Subject<string>();
   constructor(
     private readonly rolesService: RolesService,
     private readonly messageService: MessageService,
@@ -38,29 +38,6 @@ export class RolesComponent {
       this.dataPaginator.size=res.size;
       this.data = res.data;
     });
-    
-    this.routerAct.queryParams.subscribe((res) => {
-      if (res) {
-        this.dataPaginator = { ...res };
-        if(res['q']) {
-          this.searchForm.get('termino')?.setValue(res['q']);
-          this.debouncer.next(res['q'])}
-      }
-    });
-    this.debouncer.pipe(debounceTime(300)).subscribe((res) => {
-      // console.log(res);
-      if (res) {
-        this.dataPaginator = { q: res,offset:0,
-          limit:10 };
-        this.router.navigate(['.'],{queryParams:{q:res},relativeTo:this.routerAct})
-      } else {
-        this.dataPaginator = {offset:0,
-          limit:10};
-        this.router.navigate(['.'],{queryParams:{},relativeTo:this.routerAct})
-      }
-      this.findAll();
-    });
-    this.findAll();
   }
   searchForm:FormGroup= this.fb.group({
     termino:[,[Validators.pattern(patternSpanishInline),Validators.minLength(1)]]
@@ -133,13 +110,7 @@ export class RolesComponent {
       this.searchForm.get(campo)?.reset();
     }
   }
-  search($event: any) {
-    // console.log($event.target.value);
-    this.searchForm.markAllAsTouched();
-    if(this.searchForm.invalid) return;
-
-    this.debouncer.next($event.target.value);
-  }
+  
   onPageChange($event: PaginatorState) {
     // console.log($event);
     this.dataPaginator.offset = $event.first;
@@ -156,5 +127,27 @@ export class RolesComponent {
       return 'El tamaño minimo es 1'
     }
     return '';
+  }
+
+  
+  loadCustomers(filters:any){
+
+    if(this.searchForm.invalid) return;
+    if(filters.sortField){
+      this.dataPaginator.sort=filters.sortField;
+      this.dataPaginator.order= filters.sortOrder===1 ?'ASC': 'DESC';
+    }
+    this.dataPaginator.offset=filters.first
+    this.dataPaginator.limit=filters.rows
+    if(filters.globalFilter){
+      if(filters.globalFilter.value.length===0)
+      delete this.dataPaginator.q
+      else this.dataPaginator.q = filters.globalFilter.value
+    }
+    this.findAll();
+  }
+  registrarNew(){
+    
+    this.router.navigate([PATH_ROLES, PATH_REGISTRAR],);
   }
 }

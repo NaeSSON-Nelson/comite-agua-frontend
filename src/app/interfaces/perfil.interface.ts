@@ -19,6 +19,9 @@ export interface Perfil extends ColumnsAlways{
     contacto?       :string;
     usuario?        :Usuario;
     afiliado?       :Afiliado;
+    profileImageUri?:string;
+    urlImage?       :string;
+    defaultClientImage?:boolean;    
 }
 export interface PerfilForm{
     

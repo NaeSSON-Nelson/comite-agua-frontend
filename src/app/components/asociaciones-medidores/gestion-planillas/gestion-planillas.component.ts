@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { MedidoresAguaService } from '../medidores-agua.service';
-import { Medidor, MedidorAsociado, MesLectura } from 'src/app/interfaces';
+import { MedidoresAguaService } from '../../medidores-agua/medidores-agua.service';
+import { Medidor, MedidorAsociado, PlanillaMesLectura } from 'src/app/interfaces';
+import { AsociacionesService } from '../asociaciones.service';
 
 @Component({
   selector: 'app-gestion-planillas',
@@ -16,22 +17,22 @@ export class GestionPlanillasComponent {
   @Input()
   medidor!:MedidorAsociado;
   planillas:any[]=[];
-  lecturas:MesLectura[]=[];
+  lecturas:PlanillaMesLectura[]=[];
   titleLecturas='Debe seleccionar una año de gestion'
   @Output()
   closePlanilla:EventEmitter<boolean> = new EventEmitter<boolean>();
-  constructor(private readonly medidorService:MedidoresAguaService){}
+  constructor(private readonly asociacionService:AsociacionesService){}
   ngOnInit(): void {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
-    
+    // console.log(this.medidor);
   }
   close(){
     this.visible=false;
     this.closePlanilla.emit(this.visible);
   }
   mostrarDetalles(){
-    this.medidorService.listarPlanillasMedidor(this.medidor.id!).subscribe(res=>{
+    this.asociacionService.listarPlanillasMedidor(this.medidor.id!).subscribe(res=>{
       // console.log(res);
       this.planillas = res.map(res=>{
         return{
@@ -43,7 +44,7 @@ export class GestionPlanillasComponent {
   }
   mostrarLecturas(event:any){
     // console.log(event.value);
-    this.medidorService.listarLecturasPlanilla(event.value).subscribe(res=>{
+    this.asociacionService.listarLecturasPlanilla(event.value).subscribe(res=>{
       // console.log(res);
       this.lecturas=res;
       if(res.length===0){
@@ -64,12 +65,7 @@ export class GestionPlanillasComponent {
   justifyOptions: any[] = [
     { icon: 'pi pi-list', justify: 'Left' , },
     { icon: 'pi pi-credit-card', justify: 'Right' },];
-    options($event:any,indice:number){
-      console.log($event);
-      if($event.index===0){
-        this.detallesLectura(indice);
-      }else if($event.index===1){
+    options(indice:number){
         this.comprobanteLectura(indice);
-      }
     }
 }

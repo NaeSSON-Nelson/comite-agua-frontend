@@ -1,7 +1,7 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Subject, catchError, map, of, tap } from 'rxjs';
-import { DataResult, HttpResponseApi, HttpResponseApiArray, LecturasOptions, MesLectura, PaginatorFind, Perfil, ResponseResult } from 'src/app/interfaces';
+import { DataResult, HttpResponseApi, HttpResponseApiArray, LecturasOptions, PlanillaMesLectura, PaginatorFind, Perfil, ResponseResult } from 'src/app/interfaces';
 import { ComprobantePorPago } from 'src/app/interfaces/pagos-services.interface';
 import { environment } from 'src/environments/environment';
 
@@ -15,20 +15,11 @@ export class PagosService {
 
   constructor(private http: HttpClient) { }
   obtenerComprobantePorPagar(idLectura:number){
-    return this.http.get<HttpResponseApi<MesLectura>>(`${this.URL_comprobantes_pagos}/${idLectura}`)
+    return this.http.get<HttpResponseApi<PlanillaMesLectura>>(`${this.URL_comprobantes_pagos}/${idLectura}`)
     .pipe(
       map(res=>res.data!)
     )
   }
-  obtenerAfiliadosSinTarifa(){
-    return this.http.get<HttpResponseApi<Perfil[]>>(`${this.URL_lecturas}/comprobantes/perfiles`).pipe(
-      // map(res=>res.data!)
-    )
-  }
-  generarComprobantes(){
-    return this.http.get<HttpResponseApi<ComprobantePorPago[]>>(`${this.URL_comprobantes_pagos}/generar`)
-            .pipe(
-              // map(res=>res.data!)
-            )
-  }
+  
+  
 }

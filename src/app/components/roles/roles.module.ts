@@ -7,6 +7,8 @@ import { RolesRoutingModule } from './roles-routing.module';
 import { ReactiveFormsModule } from '@angular/forms';
 import { PrimeNgCrudModule } from 'src/app/prime-ng-crud/prime-ng-crud.module';
 import { HelpersModule } from 'src/app/helpers/helpers.module';
+import { ToolbarModule } from 'primeng/toolbar';
+import { TagModule } from 'primeng/tag';
 
 
 
@@ -22,6 +24,8 @@ import { HelpersModule } from 'src/app/helpers/helpers.module';
     ReactiveFormsModule,
     PrimeNgCrudModule,
     HelpersModule,
+    ToolbarModule,
+    TagModule,
   ]
 })
 export class RolesModule { }

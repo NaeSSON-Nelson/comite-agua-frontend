@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Subject, debounceTime } from 'rxjs';
+import { Subject, Subscription, debounceTime } from 'rxjs';
 import { PaginatorFind, Perfil } from 'src/app/interfaces';
 import { PerfilService } from '../perfil.service';
 import { MessageService } from 'primeng/api';
@@ -7,7 +7,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { patternSpanishInline } from 'src/app/patterns/forms-patterns';
 import { PaginatorState } from 'primeng/paginator';
-import { PATH_AUTH, PATH_FORBBIDEN, PATH_MODULE_DETAILS, PATH_PERFILES } from 'src/app/interfaces/routes-app';
+import { PATH_AUTH, PATH_FORBBIDEN, PATH_MODULE_DETAILS, PATH_PERFILES, PATH_REGISTRAR } from 'src/app/interfaces/routes-app';
 
 @Component({
   selector: 'app-perfiles',
@@ -17,8 +17,10 @@ import { PATH_AUTH, PATH_FORBBIDEN, PATH_MODULE_DETAILS, PATH_PERFILES } from 's
 })
 export class PerfilesComponent {
   data: Perfil[] = [];
-  titleTable = 'Perfiles registrados';
-  debouncer: Subject<string> = new Subject<string>();
+  titleTable = 'LISTA DE PERFILES';
+  loading:boolean=false;
+  pdfGeneratorVisible:boolean=false;
+  // debouncer: Subject<string> = new Subject<string>();
   constructor(
     private readonly perfilService: PerfilService,
     private readonly messageService: MessageService,
@@ -28,38 +30,14 @@ export class PerfilesComponent {
   ) {}
 
   ngOnInit(): void {
-    //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
-    //Add 'implements OnInit' to the class.
-    this.perfilService.perfiles.subscribe((res) => {
+    
+    this.subscription=this.perfilService.perfiles.subscribe((res) => {
       this.dataPaginator.limit=res.limit;
       this.dataPaginator.offset=res.offset;
       this.dataPaginator.order=res.order;
       this.dataPaginator.size=res.size;
       this.data = res.data;
     });
-    
-    this.routerAct.queryParams.subscribe((res) => {
-      if (res) {
-        this.dataPaginator = { ...res };
-        if(res['q']) {
-          this.searchForm.get('termino')?.setValue(res['q']);
-          this.debouncer.next(res['q'])}
-      }
-    });
-    this.debouncer.pipe(debounceTime(300)).subscribe((res) => {
-      // console.log(res);
-      if (res) {
-        this.dataPaginator = { q: res,offset:0,
-          limit:10 };
-        this.router.navigate(['.'],{queryParams:{q:res},relativeTo:this.routerAct})
-      } else {
-        this.dataPaginator = {offset:0,
-          limit:10};
-        this.router.navigate(['.'],{queryParams:{},relativeTo:this.routerAct})
-      }
-      this.findAll();
-    });
-    this.findAll();
   }
   searchForm:FormGroup= this.fb.group({
     termino:[,[Validators.pattern(patternSpanishInline),Validators.minLength(1)]]
@@ -68,11 +46,29 @@ export class PerfilesComponent {
   dataPaginator: PaginatorFind = {
     offset:0,
     limit:50,
+    order:'ASC',
+    sort:'id',
   };
+  loadCustomers(filters:any){
+
+    if(this.searchForm.invalid) return;
+    console.log('customers',filters);
+    if(filters.sortField){
+      this.dataPaginator.sort=filters.sortField;
+      this.dataPaginator.order= filters.sortOrder===1 ?'ASC': 'DESC';
+    }
+    this.dataPaginator.offset=filters.first
+    this.dataPaginator.limit=filters.rows
+    if(filters.globalFilter){
+      if(filters.globalFilter.value.length===0)
+      delete this.dataPaginator.q
+      else this.dataPaginator.q = filters.globalFilter.value
+    }
+    this.findAll();
+  }
   findAll() {
-    this.perfilService.findAll(this.dataPaginator).subscribe({
+     this.perfilService.findAll(this.dataPaginator).subscribe({
       next: (res) => {
-        // console.log(res);
         if (res.OK === false) {
           switch (res.statusCode) {
             case 401:
@@ -108,6 +104,7 @@ export class PerfilesComponent {
       
     });
   }
+  
   dataDetail(id: number) {
     this.router.navigate([PATH_PERFILES, PATH_MODULE_DETAILS,id],);
   }
@@ -134,18 +131,12 @@ export class PerfilesComponent {
       this.searchForm.get(campo)?.reset();
     }
   }
-  search($event: any) {
-    // console.log($event.target.value);
-    this.searchForm.markAllAsTouched();
-    if(this.searchForm.invalid) return;
-
-    this.debouncer.next($event.target.value);
-  }
+  
   onPageChange($event: PaginatorState) {
     // console.log($event);
     this.dataPaginator.offset = $event.first;
     this.dataPaginator.limit = $event.rows;
-    this.findAll();
+    // this.findAll();
   }
 
   getTerminoErrors(campo:string){
@@ -158,5 +149,15 @@ export class PerfilesComponent {
       return 'El tamaño minimo es 1'
     }
     return '';
+  }
+  registerNewPerfil(){
+    
+    this.router.navigate([PATH_PERFILES, PATH_REGISTRAR],);
+  }
+  subscription!:Subscription;
+  ngOnDestroy(): void {
+    //Called once, before the instance is destroyed.
+    //Add 'implements OnDestroy' to the class.
+    this.subscription.unsubscribe();
   }
 }

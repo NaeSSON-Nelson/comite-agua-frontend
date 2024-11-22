@@ -34,7 +34,8 @@ export class RoleFormComponent {
   ngOnInit(): void {
     this.rolesService.role.subscribe((res) => {
       console.log(res);
-      const { menus,created_at,updated_at,isActive, ...dataRole } = res;
+      const { menus,created_at,updated_at,isActive,estado, ...dataRole } = res;
+      this.roleForm.removeControl('estado')
       this.listMenusSelected=menus!;
       this.ListMenuSelected(menus!);
 
@@ -285,5 +286,9 @@ export class RoleFormComponent {
       return 'El campo es requerido';
     }
     return '';
+  }
+
+  get formValid(){
+    return this.roleForm.valid && this.roleForm.touched && !this.roleForm.pristine
   }
 }

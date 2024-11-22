@@ -1,0 +1,8 @@
+/* tbody:hover td[rowspan], */
+/* tr:hover td { */
+  /* Durch Aufteilung in zwei Bodys geht es, dass die zusammengefügten Zellen markiert werden! */
+  /* background-color: lightblue; */
+/* } */
+/* tr:hover td.left-side {
+    background-color: lightblue;
+} */

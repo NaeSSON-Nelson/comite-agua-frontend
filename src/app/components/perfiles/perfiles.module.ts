@@ -11,8 +11,14 @@ import { PrimeNgCrudModule } from 'src/app/prime-ng-crud/prime-ng-crud.module';
 import { PerfilesRoutingModule } from './perfiles-routing.module';
 import { UsuarioCreatedComponent } from './usuario-created/usuario-created.component';
 import {TagModule} from 'primeng/tag'
+import {Toolbar, ToolbarModule} from 'primeng/toolbar';
+import { PerfilPdfComponent } from './perfil-pdf/perfil-pdf.component'
+import { InplaceModule } from 'primeng/inplace';
+import { ImageModule } from 'primeng/image';
+import {FileUploadModule} from 'primeng/fileupload';
+import { MapAfiliadoDetailsComponent } from './map-afiliado-details/map-afiliado-details.component'
 
-
+import { MultiSelectModule } from 'primeng/multiselect';
 @NgModule({
   declarations: [
     PerfilesComponent,
@@ -20,7 +26,9 @@ import {TagModule} from 'primeng/tag'
     PerfilDetailsComponent,
     PerfilUsuarioFormComponent,
     PerfilAfiliadoFormComponent,
-    UsuarioCreatedComponent
+    UsuarioCreatedComponent,
+    PerfilPdfComponent,
+    MapAfiliadoDetailsComponent,
   ],
   imports: [
     CommonModule,
@@ -28,7 +36,12 @@ import {TagModule} from 'primeng/tag'
     HelpersModule,
     PrimeNgCrudModule,
     PerfilesRoutingModule,
+    ToolbarModule,
     TagModule,
+    InplaceModule,
+    ImageModule,
+    FileUploadModule,
+    MultiSelectModule,
   ],
   exports:[
 

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { MedidoresAguaService } from '../medidores-agua.service';
+import { MedidoresAguaService } from '../../medidores-agua/medidores-agua.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Afiliado } from 'src/app/interfaces/afiliado.interface';
@@ -27,6 +27,7 @@ export class AfiliadoMedidoresDetailsComponent {
   medidorAsociadoSelected!: MedidorAsociado;
   medidoresPerfil:any[]=[];
   planillaVisible:boolean=false;
+  gestionesVisible:boolean=false;
   asociaFormVisible:boolean=false;
   showMedidoresLibresVisible:boolean=false;
   medidorSelect:Medidor|null=null;
@@ -38,10 +39,10 @@ export class AfiliadoMedidoresDetailsComponent {
       this.perfil = res;
       if(res.afiliado){
         this.medidoresPerfil=[];
-        for(const med of res.afiliado.medidorAsociado!)
+        for(const asc of res.afiliado.medidorAsociado!)
         this.medidoresPerfil.push({
-          name:`${med.medidor?.nroMedidor}${med.isActive?'':' (deshabilitado)'}`,
-          value:med
+          name:`${asc.medidor?.nroMedidor}${asc.isActive?'':' (deshabilitado)'}`,
+          value:asc
         })
       }
     });
@@ -156,4 +157,6 @@ export class AfiliadoMedidoresDetailsComponent {
     this.formAsociar=true;
     this.asociaFormVisible=true;
   }
+  visibleReportLecturas:boolean=false;
+  
 }

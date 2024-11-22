@@ -7,6 +7,8 @@ import { MenusRoutingModule } from './menus-routing.module';
 import { PrimeNgCrudModule } from 'src/app/prime-ng-crud/prime-ng-crud.module';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HelpersModule } from 'src/app/helpers/helpers.module';
+import { TagModule } from 'primeng/tag';
+import { ToolbarModule } from 'primeng/toolbar';
 
 
 
@@ -22,6 +24,8 @@ import { HelpersModule } from 'src/app/helpers/helpers.module';
     PrimeNgCrudModule,
     ReactiveFormsModule,
     HelpersModule,
+    TagModule,
+    ToolbarModule,
   ]
 })
 export class MenusModule { }

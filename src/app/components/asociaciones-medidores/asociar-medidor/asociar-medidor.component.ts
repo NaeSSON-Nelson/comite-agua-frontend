@@ -1,11 +1,12 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { MedidoresAguaService } from '../medidores-agua.service';
+import { MedidoresAguaService } from '../../medidores-agua/medidores-agua.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Estado, Medidor, MedidorAsociado, MedidorAsociadoForm, Perfil } from 'src/app/interfaces';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CommonAppService } from 'src/app/common/common-app.service';
 import { Subscription } from 'rxjs';
 import * as L from 'leaflet';
+import { AsociacionesService } from '../asociaciones.service';
 @Component({
   selector: 'app-asociar-medidor',
   templateUrl: './asociar-medidor.component.html',
@@ -34,7 +35,7 @@ export class AsociarMedidorComponent {
   private sub!:Subscription;
   // private debouncerSub!:Subscription;
   constructor(
-    private readonly medidoresService: MedidoresAguaService,
+    private readonly asociacionService: AsociacionesService,
     private readonly messageService: MessageService,
     private readonly confirmationService: ConfirmationService,
     public readonly commonAppService:CommonAppService,
@@ -42,8 +43,8 @@ export class AsociarMedidorComponent {
   ngOnInit(): void {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
-    this.sub=this.medidoresService.medidorAsociado.subscribe(res=>{
-      console.log(res);
+    this.sub=this.asociacionService.medidorAsociado.subscribe(res=>{
+     
       this.loading=false;
       this.asociacion=res;
     })
@@ -122,7 +123,7 @@ export class AsociarMedidorComponent {
       icon: 'pi pi-info-circle',
       accept: () => {
         if (this.asociacion) {
-          this.medidoresService.updateAsociacion(this.asociacion.id!, form).subscribe({
+          this.asociacionService.update(this.asociacion.id!, form).subscribe({
             next: (res) => {
               if(res.OK){
 
@@ -150,7 +151,7 @@ export class AsociarMedidorComponent {
             },
           });
         } else
-          this.medidoresService.createAsociacion(form).subscribe({
+          this.asociacionService.create(form).subscribe({
             next: (res) => {
               if(res.OK){
                 this.messageService.add({
@@ -178,7 +179,7 @@ export class AsociarMedidorComponent {
   findAsociacion(){
     if(this.asociacionSelect){
       this.loading=true;
-      this.medidoresService.findOneAsociacion(this.asociacionSelect.id!).subscribe(res=>{
+      this.asociacionService.findOne(this.asociacionSelect.id!).subscribe(res=>{
         // console.log(res);
       })
     }else{
@@ -207,8 +208,8 @@ export class AsociarMedidorComponent {
           header: 'Confirmar Acción',
           icon: 'pi pi-info-circle',
           accept: () => {
-            this.medidoresService
-              .updateStatusAsociacion(this.asociacion.id!, { estado: Estado.DESHABILITADO })
+            this.asociacionService
+              .updateStatus(this.asociacion.id!, { estado: Estado.DESHABILITADO })
               .subscribe({
                 next: (res) => {
                   this.messageService.add({
@@ -239,8 +240,8 @@ export class AsociarMedidorComponent {
           header: 'Confirmar Acción',
           icon: 'pi pi-info-circle',
           accept: () => {
-            this.medidoresService
-              .updateStatusAsociacion(this.asociacion.id!, { estado: Estado.ACTIVO })
+            this.asociacionService
+              .updateStatus(this.asociacion.id!, { estado: Estado.ACTIVO })
               .subscribe({
                 next: (res) => {
                   this.messageService.add({
@@ -271,6 +272,7 @@ export class AsociarMedidorComponent {
     }
   }
   activarForm(){
+    // this.asociacionForm.removeControl('estado');
     this.afiliado.setValue({
       id:this.asociacion.afiliado?.id
     })
@@ -279,8 +281,8 @@ export class AsociarMedidorComponent {
     })
     this.asociacionForm.setValue({
       registrable:this.asociacion.registrable,
-      fechaInstalacion:this.asociacion.fechaInstalacion,
-      estado:this.asociacion.estado,
+      fechaInstalacion:new Date(this.asociacion.fechaInstalacion!),
+      estado:this.asociacion.estado,    
       estadoMedidorAsociado:this.asociacion.estadoMedidorAsociado,
       ubicacion:{
         barrio:this.asociacion.ubicacion?.barrio,
@@ -351,9 +353,14 @@ export class AsociarMedidorComponent {
   coordenadas($event:any){
     this.ubicacionForm.get('latitud')?.setValue($event.lat);
     this.ubicacionForm.get('longitud')?.setValue($event.lng);
+    this.ubicacionForm.markAllAsTouched();
+    this.ubicacionForm.markAsDirty();
   }
-  get coordenadasLatLng(){
+  get coordenadasLatLngForm(){
     return new L.LatLng(this.ubicacionForm.get('latitud')?.value ||-21.4734,this.ubicacionForm.get('longitud')?.value ||-64.8026);
+  }
+  get coordenadasLatLngDetails(){
+    return new L.LatLng(this.asociacion.ubicacion?.latitud,this.asociacion.ubicacion?.longitud);
   }
 
   
@@ -427,5 +434,19 @@ export class AsociarMedidorComponent {
       return 'La fecha debe seguir el orden: dd/mm/yyyy';
     }
     return '';
+  }
+
+  visibleMapAfiliado:boolean=false;
+  mostrarMapAfiliado(){
+    if(this.asociacion?.ubicacion?.longitud && this.asociacion?.ubicacion?.latitud){
+      this.visibleMapAfiliado=true;
+    }else{
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'Warn Message',
+        detail: 'No se proporcionó los datos de georreferenciación',
+        life: 5000,
+      });
+    }
   }
 }

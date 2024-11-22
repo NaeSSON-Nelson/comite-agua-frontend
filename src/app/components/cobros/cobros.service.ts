@@ -1,19 +1,21 @@
 import { HttpHeaders, HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Subject, catchError, map, of, tap } from 'rxjs';
-import { DataResult, HttpResponseApi, HttpResponseApiArray, PaginatorFind, Perfil, ResponseResult, ResponseResultData } from 'src/app/interfaces';
-import { MesLectura, PlanillaLecturas } from 'src/app/interfaces/medidor.interface';
+import { DataResult, HttpResponseApi, HttpResponseApiArray, MultaServicio, PaginatorFind, Perfil, ResponseResult, ResponseResultData } from 'src/app/interfaces';
+import { PlanillaMesLectura, PlanillaLecturas, MedidorAsociado } from 'src/app/interfaces/medidor.interface';
 import { ComprobantePago, PagosForm } from 'src/app/interfaces/pagos-services.interface';
 import { environment } from 'src/environments/environment';
+import { ComprobanteDePagoDeMultas } from '../../interfaces/multas-servicio.interface';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CobrosService {
 
-  URL_deudas:string = environment.apiURrl+'/pagos-de-servicio'
-  URL_comprobantes:string = environment.apiURrl +'/comprobantes'
-  
+  URL_deudas:string = environment.apiURrl+'/pagos-de-servicio';
+  URL_comprobantes:string = environment.apiURrl +'/comprobantes';
+  URL_multas:string = environment.apiURrl+'/multas-de-servicio';
+
   private _perfiles$: Subject<DataResult<Perfil>>;
   private _perfil$: Subject<Perfil>;
 
@@ -87,12 +89,12 @@ export class CobrosService {
       );
   }
   registrarPagos(pagosForm:PagosForm){
-    return this.http.post<HttpResponseApi<ComprobantePago>>(`${this.URL_deudas}/register`,pagosForm,{
+    return this.http.post<HttpResponseApi<{planillasPagadas:PlanillaLecturas[],multasPagadas:ComprobanteDePagoDeMultas[]}>>(`${this.URL_deudas}/register`,pagosForm,{
      
     }).pipe(
       map((resp) => {
         // console.log('map',resp);
-        const respuesta: ResponseResultData<ComprobantePago> = {
+        const respuesta: ResponseResultData<{planillasPagadas:PlanillaLecturas[],multasPagadas:ComprobanteDePagoDeMultas[]}> = {
           OK: resp.OK,
           message: resp.message,
           statusCode: 200,
@@ -177,11 +179,11 @@ export class CobrosService {
     )
   }
   getLecturasPlanillas(nroMedidor:string,idPlanilla:number){
-    return this.http.get<HttpResponseApi<MesLectura[]>>(`${this.URL_deudas}/cobros/historial/${nroMedidor}/${idPlanilla}`).pipe(
+    return this.http.get<HttpResponseApi<PlanillaMesLectura[]>>(`${this.URL_deudas}/cobros/historial/${nroMedidor}/${idPlanilla}`).pipe(
       map((resp) => {
         // console.log('map',resp);
         resp.data
-        const respuesta: ResponseResultData<MesLectura[]> = {
+        const respuesta: ResponseResultData<PlanillaMesLectura[]> = {
           OK: resp.OK,
           message: resp.message,
           statusCode: 200,
@@ -190,10 +192,45 @@ export class CobrosService {
         return respuesta;
       }),
       catchError((err: HttpErrorResponse) => {
-        const errors = err.error as ResponseResultData<MesLectura[]>;
+        const errors = err.error as ResponseResultData<PlanillaMesLectura[]>;
         errors.OK = false;
         return of(errors);
       })
     )
+  }
+
+
+  //MULTAS
+
+  ObtenerMultasHistorial(perfilId:number,query:PaginatorFind){
+    const {size,estado,q,order,...finders}=query;
+    return this.http.get<HttpResponseApiArray<MultaServicio>>(`${this.URL_multas}/historial/${perfilId}`,
+      {params:{...finders}}
+    ).pipe();
+  }
+  obtenerLecturasConRetrasoPago(perfilId:number,medidorAscId:number){
+    return this.http.get<HttpResponseApi<MedidorAsociado>>(`${this.URL_multas}/lecturas-retrasos/${perfilId}/${medidorAscId}`);
+  }
+  obtenerMedidoresAsociadosSelect(perfilId:number){
+    return this.http.get<HttpResponseApi<MedidorAsociado[]>>(`${this.URL_multas}/medidores-perfil/${perfilId}`);
+    
+  }
+
+  registrarMulta(form:any){
+    return this.http.post<HttpResponseApi<any>>(`${this.URL_multas}/create`,form).pipe()
+  }
+  obtenerMultasActivas(perfilId:number){
+    return this.http.get<HttpResponseApi<any[]>>(`${this.URL_multas}/activos/${perfilId}`).pipe();
+  }
+  findMulta(multaId:number){
+    return this.http.get<HttpResponseApi<MultaServicio>>(`${this.URL_multas}/multa-perfil/${multaId}`).pipe();
+  }
+  findMultas(perfilId:number,multasId:number[]){
+    return this.http.get<HttpResponseApi<MultaServicio[]>>(`${this.URL_multas}/multas-perfil/${perfilId}`,{
+      params:{multas:JSON.stringify(multasId)}
+    }).pipe();
+  }
+  registrarPagoMultas(form:any[]){
+    return this.http.post<HttpResponseApi<MultaServicio[]>>(`${this.URL_multas}/pago`,form).pipe();
   }
 }

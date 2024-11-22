@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { Barrio, LecturasOptions, MesLectura, MesSeguimientoRegistroLectura, Perfil } from 'src/app/interfaces';
+import { Barrio, LecturasOptions, PlanillaMesLectura, MesSeguimientoRegistroLectura, Perfil } from 'src/app/interfaces';
 import { LecturasService } from '../../lecturas.service';
 import { CommonAppService } from 'src/app/common/common-app.service';
 
@@ -13,7 +13,7 @@ export class LecturasRegistradasComponent {
   @Input()
   visible=false;
   data:Perfil[]=[];
-  lecturas:MesLectura[]=[];
+  lecturas:PlanillaMesLectura[]=[];
   //titleLecturas='Debe seleccionar una año de gestion'
   title=`Registro de Lectura `;
   @Output()
@@ -32,9 +32,7 @@ export class LecturasRegistradasComponent {
   }
   @Input()
   lecturasOptions:LecturasOptions={
-    gestion:null,
-    mes:null,
-    //barrio:Barrio._20DeMarzo,
+    
   }
   close(){
     this.visible=false;

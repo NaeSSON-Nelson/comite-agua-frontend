@@ -18,10 +18,9 @@
         style="border-radius: 53px"
       >
         <div class="text-center mb-5">
-          <div class="text-900 text-3xl font-medium mb-3">Welcome</div>
-          <span class="text-600 font-medium">Sign in to continue</span>
+          <div class="text-900 text-3xl font-medium mb-3">Bievenido</div>
+          <span class="text-600 font-medium">Inicie sesión para continuar</span>
         </div>
-
         <form [formGroup]="loginForm" class="grid p-fluid mt-3">
           <div class="field col-12">
             <span class="p-float-label">
@@ -33,7 +32,7 @@
                 [ngClass]="inputValid('username')"
                 autofocus
               />
-              <label for="username">Username</label>
+              <label for="username">Usuario (*)</label>
             </span>
             <small
               id="username-help"
@@ -51,7 +50,7 @@
                 [feedback]="false"
                 [ngClass]="inputValid('password')"
               ></p-password>
-              <label for="password">password</label>
+              <label for="password">contraseña (*)</label>
             </span>
             <small
             id="password-help"

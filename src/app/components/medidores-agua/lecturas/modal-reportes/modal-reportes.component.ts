@@ -3,6 +3,8 @@ import { PagosService } from '../../pagos.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { LecturasService } from '../lecturas.service';
 import { LecturasOptions, Perfil } from 'src/app/interfaces';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MedidoresAguaService } from '../../medidores-agua.service';
 
 @Component({
   selector: 'app-modal-reportes',
@@ -25,22 +27,40 @@ export class ModalReportesComponent {
   title:string='';
   @Output()
   event:EventEmitter<boolean> = new EventEmitter<boolean>()
-  constructor(private pagosService:PagosService,
+  constructor(private medidoresService:MedidoresAguaService,
     private lecturasService:LecturasService,
     private readonly messageService: MessageService,
-    private readonly confirmationService:ConfirmationService,){}
+    private readonly confirmationService:ConfirmationService,
+    private readonly fb:FormBuilder,
+  ){}
   total=0;
+  tarifasForm:FormGroup=this.fb.group({
+    lecturas:this.fb.array([])
+  })
+  get lecturaArray(){
+    return this.tarifasForm.get('lecturas') as FormArray;
+  }
   showAfiliados(){
-    this.pagosService.obtenerAfiliadosSinTarifa().subscribe(res=>{
+    this.loading=true;
+    this.medidoresService.obtenerAfiliadosSinTarifa().subscribe(res=>{
+      
       if(res.OK){
-        this.perfiles=res.data!;
+        this.perfiles=res.data!.data;
       }
       this.title=res.message;
-      // console.log(res);
       this.loading=false;
     })
   }
   showConfirm() {
+    if(this.lecturaArray.length===0){
+      this.messageService.add({
+        severity: 'warn',
+        summary: `ERROR EN TARIFAS`,
+        detail: `DEBE HABER 1 PERFIL SELECCIONADO COMO MINIMO`,
+        life: 5000,
+      });
+      return;
+    }
     if (!this.visible) {
         this.messageService.add({ key: 'confirm', sticky: true, severity: 'warn', summary: '¿Esta seguro de realizar el proceso?', detail: 'Se creara reportes de ese mes' });
         this.visible = true;
@@ -49,28 +69,15 @@ export class ModalReportesComponent {
   onConfirm() {
     this.messageService.clear('confirm');
     this.visible = false;
-    this.pagosService.generarComprobantes().subscribe(res=>{
+    this.medidoresService.generarComprobantesSelected(this.tarifasForm.value).subscribe(res=>{
       if(res.OK){
-
-        this.total=res.data!.length;
-        
-        if(res.data!.length===0){
-          this.messageService.add({
-          severity: 'info',
-          summary: 'Respuesta del servidor',
-          detail: `No se encontro ninguna lectura para generar reporte, total: ${this.total}`,
-          life: 5000,
-          icon: 'pi pi-times',
-        });
-      }else{
         this.messageService.add({
           severity: 'success',
-          summary: 'Generacion de comprobantes exitoso!',
-          detail: `Se generaron un total de: ${this.total} de comprobantes`,
+          summary: 'Ocurrio un error al generar los comprobantes',
+          detail: `${res.message}`,
           icon: 'pi pi-check',
         });
-        this.event.emit(false);
-      }
+        this.showAfiliados();
     }else{
       this.messageService.add({
         severity: 'error',
@@ -85,5 +92,29 @@ export class ModalReportesComponent {
   onReject() {
       this.messageService.clear('confirm');
       this.visible = false;
+  }
+  selectPlanilla(perfiles:Perfil[]){
+    // console.log('selecteds',event);
+
+    for(const per of perfiles){
+      for(const asc of per.afiliado?.medidorAsociado!){
+        console.log(asc);
+        const value = (this.lecturaArray.value as Array<any>).find(res=> res.id===asc.planillas![0].lecturas[0].id)
+        if(!value){
+          const item = this.fb.group({
+            id:[asc.planillas![0].lecturas[0].id,Validators.required]
+          })
+          this.lecturaArray.push(item);
+        }
+      }
+    }
+  }
+  unselectPlanilla(event:any){
+    for(const asc of event.data.afiliado?.medidorAsociado!){
+      const index = (this.lecturaArray.value as Array<any>).findIndex(res=>res.id ===asc.planillas[0].lecturas[0].id);
+      if(index!==-1){
+        this.lecturaArray.removeAt(index);
+      }
+    }
   }
 }

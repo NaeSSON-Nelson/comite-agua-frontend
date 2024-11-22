@@ -1,0 +1,48 @@
+<p-dialog header="PLANILLA DE LA GESTION" [(visible)]="visible" [modal]="true" [style]="layout" [draggable]="false" [resizable]="false" (onHide)="eventVisible.emit(false)" [baseZIndex]="900"
+(onShow)="findGestion()"
+>
+<ng-container  *ngIf="layoutVisible; else spinner">
+    <div class="card grid" *ngIf="!formGestionVisible; else formG">
+        <div class="col-12 field grid">
+            <label class="text-900">Gestion:</label>
+            <div class="col">
+                <p class="text-600 line-height-3 text-right text-xl">{{gestion?.gestion}}</p>
+            </div>
+        </div>
+        <div class="col-12 field grid">
+            <label class="text-900">Registrable:</label>
+            <div class="col">
+                <p class="text-600 line-height-3 text-right text-xl">{{gestion?.registrable?'SI':'NO'}}</p>
+            </div>
+        </div>
+    <div class="col-12 grid">
+        <div class="col-12 md:col">
+            <button  pButton [label]="gestion?.registrable?'Quitar registrable':'Habilitar registrable'" class="p-button-secondary p-button-rounded" (click)="updateRegistrable()"></button>
+        <p *ngIf="typeGestion==='ACTUAL'" class="font-italic">* Dejara de estar presente en el modulo de registrar lecturas</p>
+        </div>
+        <div class="col-12 md:col">
+            <button  pButton label="Cerrar ventana" class="p-button-secondary p-button-rounded" (click)="visible=false"></button>
+        </div>
+    </div>
+</div>
+</ng-container>
+<ng-template #spinner>
+    <div class="card">
+        <p-progressSpinner></p-progressSpinner>
+    </div>
+</ng-template>
+
+<ng-template #formG>
+    <form class="card grid m-5">
+        <p-button label="GENERAR PLANILLA DE GESTION ACTUAL" (onClick)="registrarForm()" ></p-button>
+        <small
+            id="registrable-help"
+            class="p-error block pt-3"
+            *ngIf="campoValido('asociacion')"
+            >{{ idAsociacionErrores("asociacion") }}
+        </small>
+        <p class="text-sm font-italic text-700 text-justify pt-3">*Se debe generar la planilla de gestion actual para que se pueda registrar las lecturas del mes del medidor asociado</p>
+    </form>
+</ng-template>
+
+</p-dialog>

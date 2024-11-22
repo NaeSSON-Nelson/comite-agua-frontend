@@ -8,14 +8,22 @@ import { PrimeNgCrudModule } from 'src/app/prime-ng-crud/prime-ng-crud.module';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TreeTableModule } from 'primeng/treetable';
 import { HistorialCobrosComponent } from './historial-cobros/historial-cobros.component';
-
-
+import {TabViewModule} from 'primeng/tabview';
+import { FormMultasRegisterComponent } from './form-multas-register/form-multas-register.component';
+import { FormMultasLecturasSelectComponent } from './form-multas-lecturas-select/form-multas-lecturas-select.component'
+import {InputTextareaModule} from 'primeng/inputtextarea';
+import { DetallesMultaComponent } from './detalles-multa/detalles-multa.component';
+import { FormRegistrarPagoMultasSelectedComponent } from './form-registrar-pago-multas-selected/form-registrar-pago-multas-selected.component'
 @NgModule({
   declarations: [
     CobrosComponent,
     DeudasPerfilComponent,
     FormRegisterDeudasComponent,
     HistorialCobrosComponent,
+    FormMultasRegisterComponent,
+    FormMultasLecturasSelectComponent,
+    DetallesMultaComponent,
+    FormRegistrarPagoMultasSelectedComponent,
   ],
   imports: [
     CommonModule,
@@ -23,6 +31,8 @@ import { HistorialCobrosComponent } from './historial-cobros/historial-cobros.co
     CobrosRoutingModule,
     PrimeNgCrudModule,
     TreeTableModule,
+    TabViewModule,
+    InputTextareaModule
   ]
 })
 export class CobrosModule { }

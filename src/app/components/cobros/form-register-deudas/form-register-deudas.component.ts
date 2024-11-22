@@ -1,9 +1,12 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CobrosService } from '../cobros.service';
-import { ComprobantePorPago, PagosForm } from 'src/app/interfaces/pagos-services.interface';
+import { ComprobantePorPago, GestionesPorCobrar, PagosForm } from 'src/app/interfaces/pagos-services.interface';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { patternCI, } from 'src/app/patterns/forms-patterns';
+import { CommonAppService } from 'src/app/common/common-app.service';
+import { PlanillaLecturas } from 'src/app/interfaces/medidor.interface';
+import { ComprobanteDePagoDeMultas, Perfil, ResponseResultData } from 'src/app/interfaces';
 
 @Component({
   selector: 'app-form-register-deudas',
@@ -14,10 +17,10 @@ import { patternCI, } from 'src/app/patterns/forms-patterns';
 export class FormRegisterDeudasComponent {
 
   @Input()
-  porPagar:any[]=[];
+  porPagar:GestionesPorCobrar[]=[];
   // loading:boolean=false;
   @Input()
-  idPerfil:number=-1;
+  perfil!:Perfil;
   @Input()
   totalPagar:number=0;
   @Input()
@@ -25,7 +28,7 @@ export class FormRegisterDeudasComponent {
   visibleRegisters:boolean=false;
   closable:boolean=true;
   @Output()
-  porPagarPagadosEmit:EventEmitter<any[]> = new EventEmitter<any[]>();
+  porPagarPagadosEmit:EventEmitter<GestionesPorCobrar[]> = new EventEmitter<any[]>();
   @Output()
   eventVisible:EventEmitter<boolean> = new EventEmitter<boolean>();
   @Output()
@@ -34,13 +37,13 @@ export class FormRegisterDeudasComponent {
     private readonly cobrosService:CobrosService,
     private readonly messageService: MessageService,
     private readonly confirmationService:ConfirmationService,
+    private readonly commonAppService:CommonAppService,
     private fb: FormBuilder){}
     pagarForm: FormGroup = this.fb.group(
       {
         perfilId:     [,Validators.required],
-        titular:      [,[Validators.required,Validators.minLength(1)]],
-        ciTitular:    [,[Validators.required,Validators.pattern(patternCI),Validators.minLength(1)]],
-        comprobantes: this.fb.array([],Validators.required),
+         comprobantes: this.fb.array([],Validators.required),
+         multas:this.fb.array([]),
       }
     );
   ngOnInit(): void {
@@ -49,32 +52,39 @@ export class FormRegisterDeudasComponent {
   changesModal(){
     this.pagarForm.reset();
     this.comprobantesArray.clear();
-    this.pagarForm.get('perfilId')?.setValue(this.idPerfil);
-    this.porPagar.forEach(por=>{
-      const comproValid = this.fb.group({
-        id:[por.idComprobante,Validators.required]
+    this.pagarForm.get('perfilId')?.setValue(this.perfil.id);
+    for(const gest of this.porPagar){
+      gest.comprobantes.forEach(por=>{
+        const comproValid = this.fb.group({
+          id:[por.idComprobante,Validators.required]
+        })
+        this.comprobantesArray.push(comproValid);
+      });
+      gest.multas.forEach(mult=>{
+        const multValid = this.fb.group({
+          id:[mult.id,Validators.required],
+        })
+        this.multasArray.push(multValid);
       })
-      this.comprobantesArray.push(comproValid);
-    })
+    }
   }
   validForm(){
    console.log(this.pagarForm); 
    console.log(this.pagarForm.value); 
+   console.log(this.porPagar);
    this.pagarForm.markAllAsTouched()
    if(this.pagarForm.invalid) {
     return};
 
-   const {titular,ciTitular,perfilId,comprobantes} = this.pagarForm.value;
+   const {perfilId,comprobantes,multas} = this.pagarForm.value;
     // console.log(titular,ciTitular,perfilId,comprobantes);
     // console.log(this.comprobantesArray.value.map((res:any)=>res.id));
     this.registrarPagos({
-    ciTitular,titular,perfilId,comprobantes:comprobantes.map((res:any)=>res.id)
+    perfilId,comprobantes:comprobantes.map((res:any)=>res.id),multas:multas.map((res:any)=>res.id)
    })
-  // console.log(this.pagarForm.value);
   }
   cerrando(event:any){
-    console.log(event);
-    this.eventVisible.emit(false)
+    this.eventVisible.emit(true)
   }
   registrarPagos(pagosForm:PagosForm){
     this.confirmationService.confirm({
@@ -92,14 +102,45 @@ export class FormRegisterDeudasComponent {
     });
    
   }
+
+  printPDFDetailsPago(){
+    this.imprimido=this.commonAppService.generarReciboDePago(this.logosRecibos.planillasPagadas,this.perfil)
+
+    // this.closeModal();
+  }
+  imprimido:boolean=false;
+  closePrintRecibos(){
+    if(!this.imprimido){
+      this.confirmationService.confirm({
+        message: 'ESTA SEGURO DE CERRAR LA VENTANA SIN HABER IMPRIMIDO LOS RECIBOS?',
+        header: 'CONFIRMAR ACCION DE CIERRE',
+        icon: 'pi pi-info-circle',
+        accept: () => {
+          this.visibleRegisters=false;
+          this.closeModal();
+        }
+    });      
+    }else{
+      this.visibleRegisters=false;
+      this.closeModal();
+    }
+  }
+  closeModal(){
+    this.totalPagar=0;
+    this.logosRecibos={multasPagadas:[],planillasPagadas:[]};
+    this.porPagarPagadosEmit.emit([]);
+    this.pagado.emit(false)
+    this.visible=false;
+
+  };
+  logosRecibos:{planillasPagadas:PlanillaLecturas[],multasPagadas:ComprobanteDePagoDeMultas[]}={multasPagadas:[],planillasPagadas:[]};
   sendRegister(pagosForm:PagosForm){
     this.cobrosService.registrarPagos(pagosForm).subscribe(res=>{
       console.log(res);
       if(res.OK){
         this.messageService.add({ severity: 'success', summary:'REGISTRO DE PAGOS', detail: res.message });
-        this.porPagarPagadosEmit.emit([]);
-        this.pagado.emit(false)
-        this.visible=false;
+        this.logosRecibos=(res as ResponseResultData<{planillasPagadas:PlanillaLecturas[],multasPagadas:ComprobanteDePagoDeMultas[]}>).data!;
+        this.visibleRegisters=true;
       }else{
         switch (res.statusCode) {
           case 400:
@@ -116,6 +157,9 @@ export class FormRegisterDeudasComponent {
   }
   get comprobantesArray(){
     return this.pagarForm.controls['comprobantes']  as FormArray;
+  }
+  get multasArray(){
+    return this.pagarForm.controls['multas']  as FormArray;
   }
   limpiarCampo(campo: string) {
     if (
@@ -157,5 +201,26 @@ export class FormRegisterDeudasComponent {
       return 'El campo es obligatorio'
     }
     return '';
+  }
+  lastMulta(comp:any,multas:any[]){
+    
+    return false;
+  };
+  tieneMultas(){
+    for(const gestion of this.porPagar){
+      if(gestion.multas.length>0) return true;
+    }
+    return false;
+  }
+  multaColor(rowData:any){
+    if(rowData.isMulta){
+      for(const pagar of this.porPagar){
+        for(const multa of pagar.multas)
+          if(multa.id === rowData.multa.id){
+            return `text-center ${multa.multaColor}`
+          }
+        }
+    }
+    return 'text-center'
   }
 }

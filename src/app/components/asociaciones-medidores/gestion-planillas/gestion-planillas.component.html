@@ -26,27 +26,23 @@
           <tr>
             <th></th>
             <th>Mes Lecturado</th>
-            <th>lectura Registrada.</th>
-            <th>Consumo Total.</th>
+            <th>lectura Registrada ({{medidor.medidor?.medicion ||''}}).</th>
+            <th>Consumo Total ({{medidor.medidor?.medicion ||''}}).</th>
             <th>Estado del medidor registrada</th>
             <th>Estado de registro</th>
             <th></th>
           </tr>
       </ng-template>
-      <ng-template pTemplate="body" let-product let-rowIndex="rowIndex">
+      <ng-template pTemplate="body" let-product let-index="rowIndex">
           <tr>
-            <td>{{rowIndex +1}}</td>
-            <td>{{product.mesLecturado}}</td>
+            <td>{{index +1}}</td>
+            <td>{{product.PlanillaMesLecturar}}</td>
             <td>{{product.lectura}}</td>
             <td>{{product.consumoTotal}}</td>
             <td>{{product.estadoMedidor || 'SIN REGISTRO DE ESTADO'}}</td>
             <td>{{product.estado}}</td>
             <td>
-              <p-selectButton [options]="justifyOptions" optionLabel="icon" (onOptionClick)="options($event,product.id)">
-                <ng-template let-item pTemplate>
-                    <i [class]="item.icon"></i>
-                </ng-template>
-            </p-selectButton>
+              <p-button icon="pi pi-list" (onClick)="options(product.id)" styleClass="p-button-rounded"></p-button>
             </td>
           </tr>
       </ng-template>
@@ -64,16 +60,10 @@
     
   </div>
 </p-dialog>
-<app-detalles-lectura
-*ngIf="visibleLecturaModal"
-[visible]="visibleLecturaModal"
-(eventVisible)="visibleLecturaModal = $event"
-[idLectura]="idLectura"
-></app-detalles-lectura>
 <app-comprobante-lectura
 *ngIf="visibleComprobanteModal"
 [visible]="visibleComprobanteModal"
 (eventVisible)="visibleComprobanteModal = $event"
 [idLectura]="idLectura"
-
+[medicion]="medidor.medidor?.medicion ||''"
 ></app-comprobante-lectura>

@@ -1,4 +1,4 @@
-<p-dialog header="Historial de cobros por medidor:" [(visible)]="visible" [modal]="true" [style]="{ width: '95vw' }" [draggable]="false" [resizable]="false" [baseZIndex]="900" [closeOnEscape]="false" (onHide)="eventVisible.emit(false)">
+<p-dialog header="PANEL DE SEGUIMIENTO DE TARIFAS" [(visible)]="visible" [modal]="true" [style]="{ width: '95vw' }" [draggable]="false" [resizable]="false" [baseZIndex]="900" [closeOnEscape]="false" (onHide)="eventVisible.emit(false)">
     <div class="card m-3" *ngIf="perfil">
         <div class=" col-12 grid">
             <ng-container >
@@ -17,6 +17,14 @@
             </ng-container>
         </div>
         <p-divider></p-divider>
+        <div class="col-12 grid nested-grid">
+            <p-tabView class="col-12 mt-3" [style]="{'min-width':'250px','min-height':'200px'}" [(activeIndex)]="activeIndex"  (onChange)="cambioDeLaDo()" >
+                <p-tabPanel>
+                    <ng-template pTemplate="header">
+                        <div *ngIf="activeIndex!==0"><span>COBROS <i class="pi pi-book" style="font-size: 1rem"></i></span></div>
+                        <div *ngIf="activeIndex===0"><span>Historial de cobros realizados</span></div>
+                    </ng-template> 
+                    <div class="m-5" *ngIf="activeIndex===0">
         <div class="col-12 grid p-fluid">
             <div class="field col-12 md:col-3">
                 <span class="p-float-label">
@@ -67,8 +75,6 @@
                         <th>consumo (m3.)</th>
                         <th>consumo (bs.)</th>
                         <th>Estado pago</th>
-                        <th>Titular pago</th>
-                        <th>CI titular</th>
                         <th>Monto cancelado (Bs.)</th>
                         <th>Metodo de pago (tipo)</th>
                         <th>Fecha registrada</th>
@@ -85,8 +91,6 @@
                         <td>{{product.consumoTotal}}</td>
                         <td>{{product.pagar.monto}}</td>
                         <td>{{product.pagar.estadoComprobate}}</td>
-                        <td>{{product.pagar.comprobante.titular}}</td>
-                        <td>{{product.pagar.comprobante.ciTitular}}</td>
                         <td>{{product.pagar.comprobante.montoPagado}}</td>
                         <td>{{product.pagar.comprobante.metodoPago}}</td>
                         <td>{{product.pagar.comprobante.fechaEmitida | date :'dd-MM-yyyy HH:MM'}}</td>
@@ -98,6 +102,122 @@
         <ng-template #sinLecturas>
             <div class="col-12"><p><i>{{tableReport}}</i></p></div>
         </ng-template>
-        
+            </div>
+        </p-tabPanel>
+                <p-tabPanel #tpMultas>
+                    <ng-template pTemplate="header">
+                        <div *ngIf="activeIndex!==1"><span>MULTAS <i class="pi pi-book" style="font-size: 1rem"></i></span></div>
+                        <div *ngIf="activeIndex===1"><span>Multas de pagos de tarifa de lecturas con retraso de 90 dias</span></div>
+                    </ng-template> 
+                    <div class="grid" *ngIf="activeIndex===1">
+                        <div class="col-12">
+                            <p-button label="Añadir nueva Multa" (onClick)="visibleMultasForm=true"></p-button>
+                            <p-button label="Pagar Multas seleccionadas" (onClick)="visiblePagarMultaForm=true" [disabled]="multasSeleccionadas.length===0"></p-button>
+                        
+                        </div>
+                        <div class="col-12 px-2">
+                            <i class="pi pi-spin pi-spinner" style="font-size: 2rem" *ngIf="loadingMultasSpinner"></i>
+                            <p>{{multasMessage}}</p>
+                            <p-table [value]="multasPorPagar" [(selection)]="multasSeleccionadas" dataKey="id" [tableStyle]="{'min-width': '50rem'}" *ngIf="hayMultas">
+                            <ng-template pTemplate="header">
+                                <tr>
+                                    <th style="width: 4rem">
+                                        <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                                    </th>
+                                    <th>NRO MULTA</th>
+                                    <th>MOTIVO</th>
+                                    <th>LECTURAS VINCULADAS A LA MULTA</th>
+                                    <th>DETALLES DE LECTURAS DE MULTA:</th>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-multa>
+                                <tr>
+                                    <td>
+                                        <p-tableCheckbox [value]="multa"></p-tableCheckbox>
+                                    </td>
+                                    <td>{{multa.id}}</td>
+                                    <td>{{multa.motivo}}</td>
+                                    <td>{{multa.lecturasMultadasTotal}}</td>
+                                    <td> <p-button label="Detalles" (onClick)="multaDetalles(multa)"></p-button></td>
+                                </tr>
+                            </ng-template>
+                        </p-table>
+                        </div>
+                    </div>
+                </p-tabPanel>
+                <p-tabPanel>
+                    <ng-template pTemplate="header">
+                        <div *ngIf="activeIndex!==2"><span>HISTORIAL <i class="pi pi-book" style="font-size: 1rem"></i></span></div>
+                        <div *ngIf="activeIndex===2"><span>HISTORIAL DE MULTAS</span></div>
+                    </ng-template> 
+                    <div class="grid" *ngIf="activeIndex===2">
+                            <div class="col-12">
+                                <h4>HISTORIAL DE MULTAS REGISTRADAS</h4>
+                                <p-divider></p-divider>
+                            </div>
+                            <div class="col-12 px-2">
+                                <i class="pi pi-spin pi-spinner" style="font-size: 2rem" *ngIf="loadingMultasSpinner"></i>
+                                <p>{{multasMessage}}</p>
+                                <p-table [value]="multasPorPagar"  dataKey="id" [tableStyle]="{'min-width': '50rem'}" *ngIf="hayMultas"
+                                
+                                            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+                                            [rowsPerPageOptions]="[10, 25, 50]"
+                                            [rowHover]="true" 
+                                            [paginator]="true"
+                                            [rows]="10"
+                                            [lazy]="true" 
+                                            (onLazyLoad)="loadCustomers($event)"
+                                            [totalRecords]="dataPaginator.size||0"
+                                            [customSort]="true"
+                                            [showCurrentPageReport]="true"
+                                >
+                                <ng-template pTemplate="header">
+                                    <tr>
+                                        <th>NRO MULTA</th>
+                                        <th>MOTIVO</th>
+                                        <th>DETALLES DE LECTURAS DE MULTA:</th>
+                                    </tr>
+                                </ng-template>
+                                <ng-template pTemplate="body" let-multa>
+                                    <tr>
+                                        
+                                        <td>{{multa.id}}</td>
+                                        <td>{{multa.motivo}}</td>
+                                        <td> <p-button label="Detalles" (onClick)="multaDetalles(multa)"></p-button></td>
+                                    </tr>
+                                </ng-template>
+                            </p-table>
+                            </div>
+                    </div>
+                </p-tabPanel>
+                <p-tabPanel>
+                    <p>
+                        At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa
+                        qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus.
+                    </p>
+                </p-tabPanel>
+            </p-tabView>
+        </div>
+        <ng-container *ngIf="visibleHistorial">
+        </ng-container>
     </div>
 </p-dialog>
+<app-form-multas-register
+*ngIf="visibleMultasForm"
+[visible] ="visibleMultasForm"
+[perfil]="perfil"
+(eventVisible)="eventReloadFormMulta($event)"
+></app-form-multas-register>
+<app-detalles-multa
+*ngIf="visibleDetallesMulta"
+[visible]="visibleDetallesMulta"
+(eventVisible)="visibleDetallesMulta=$event"
+[multaId]="multaIdSelect"
+></app-detalles-multa>
+<app-form-registrar-pago-multas-selected
+*ngIf="visiblePagarMultaForm"
+[visible]="visiblePagarMultaForm"
+(eventVisible)="formPagarMultasVisible($event)"
+[perfil]="perfil"
+[multasSelected]="multasSeleccionadas"
+></app-form-registrar-pago-multas-selected>

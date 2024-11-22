@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { MesLectura } from 'src/app/interfaces';
-import { MedidoresAguaService } from '../medidores-agua.service';
+import { PlanillaMesLectura } from 'src/app/interfaces';
+import { AsociacionesService } from '../asociaciones.service';
 
 @Component({
   selector: 'app-detalles-lectura',
@@ -16,15 +16,15 @@ export class DetallesLecturaComponent {
   visible:boolean=false;
   @Output()
   eventVisible:EventEmitter<boolean> = new EventEmitter<boolean>();
-  lectura:MesLectura|null=null;
-  constructor(private medidorService:MedidoresAguaService){}
+  lectura:PlanillaMesLectura|null=null;
+  constructor(private asociacionService:AsociacionesService){}
   ngOnInit(): void {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
     this.obtenerLecuraDetalles();
   }
   obtenerLecuraDetalles(){
-    this.medidorService.obtenerLectura(this.idLectura).subscribe(res=>{
+    this.asociacionService.obtenerLectura(this.idLectura).subscribe(res=>{
       this.lectura=res;
       console.log(res);
     })

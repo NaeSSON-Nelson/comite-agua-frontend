@@ -3,7 +3,7 @@
         <i class="pi pi-spin pi-spinner" style="font-size: 2rem" *ngIf="loading"></i>
     <div class="col-12 grid" *ngIf="asociacion">
             <div class="col-12 md:col-4">
-                <img src="../../../../assets/img/default_client.jpg" class="" alt="User profile" [style]="{'max-width':'248px'}">
+                <img [src]="asociacion.afiliado?.perfil?.urlImage || ''" class="" alt="User profile" [style]="{'max-width':'248px'}">
             </div>
         <div class="col-12 md:col-8">
             <h5 class="flex justify-content-center">Afiliado Vinculado</h5>
@@ -19,18 +19,19 @@
                 </div>
                 <div class="field col-12 md:col-6">
                     <label htmlFor="contacto">Contacto</label>
-                    <input pInputText id="contacto" type="text" [disabled]="true" value="SIN CONTACTOS" class="appearance-none text-color text-base" />
+                    <input pInputText id="contacto" type="text" [disabled]="true" [value]="asociacion.afiliado?.perfil?.contacto || 'SIN CONTACTO'" class="appearance-none text-color text-base" />
                 </div>
-                <div class="field col-12 md:col-6">
-                    <label htmlFor="estado">Estado</label>
-                    <input pInputText id="estado" type="text" [disabled]="true" [value]="asociacion.afiliado?.perfil?.estado" class="appearance-none text-color text-base" />
-                </div>
+                <div class="col-12 md:col-6 mb-3">
+                  <label class="block text-900 font-medium mb-2">Estado de perfil</label>
+                 <p-tag [severity]="asociacion.afiliado?.isActive?'success':'danger'" [value]="asociacion.afiliado?.perfil?.estado"></p-tag>
+                              
+              </div>
             </div>
         </div>
     </div>
     <div class="col-12 grid"  *ngIf="asociacion">
         <div class="col-12 md:col-8">
-            <h5 class="flex justify-content-center">Medidor {{'Por vincular'}}</h5>
+            <h5 class="flex justify-content-center">Medidor {{asociacion.medidor ?'VINCULADO':'POR VINCULAR'}}</h5>
             <p-divider ></p-divider>
             <div class="grid p-fluid">
                 <div class="field col-12 md:col-6">
@@ -41,10 +42,11 @@
                     <label htmlFor="CI">Tipo Medición</label>
                     <input pInputText id="CI" type="text" [disabled]="true" [value]="asociacion.medidor?.medicion" class="appearance-none text-color text-base" />
                 </div>
-                <div class="field col-12 md:col-6">
-                    <label htmlFor="estado">Estado</label>
-                    <input pInputText id="estado" type="text" [disabled]="true" [value]="asociacion.medidor?.estado" class="appearance-none text-color text-base" />
-                </div>
+                <div class="col-12 md:col-6 mb-3">
+                  <label class="block text-900 font-medium mb-2">Estado medidor de agua</label>
+                 <p-tag [severity]="asociacion.medidor?.isActive?'success':'danger'" [value]="asociacion.medidor?.estado"></p-tag>
+                              
+              </div>
             </div>
         </div>
     </div>
@@ -59,10 +61,6 @@
           <div class="field col-12 md:col-6">
               <label htmlFor="estadoMedidorAsociado">Estado de actividad</label>
               <input pInputText id="estadoMedidorAsociado" type="text" [disabled]="true" [value]="asociacion.estadoMedidorAsociado" class="appearance-none text-color text-base" />
-          </div>
-          <div class="field col-12 md:col-6">
-              <label htmlFor="estado">Estado</label>
-              <input pInputText id="estado" type="text" [disabled]="true" [value]="asociacion.estado" class="appearance-none text-color text-base" />
           </div>
           <div class="field col-12 md:col-6">
               <label htmlFor="fechaInstalacion">Fecha de Instalacion</label>
@@ -81,16 +79,27 @@
               <input pInputText id="registrable" type="text" [disabled]="true" [value]="asociacion.registrable?'SI':'NO'" class="appearance-none text-color text-base" />
           </div>
           <div class="field col-12 md:col-6">
-              <label htmlFor="registrable">Estado</label>
-              <input pInputText id="registrable" type="text" [disabled]="true" [value]="asociacion.estado" class="appearance-none text-color text-base" />
-          </div>
-          <div class="field col-12 md:col-6">
               <label htmlFor="barrio">Barrio Ubicacion Medidor</label>
               <input pInputText id="barrio" type="text" [disabled]="true" [value]="asociacion.ubicacion?.barrio" class="appearance-none text-color text-base" />
           </div>
           <div class="field col-12 md:col-6">
               <label htmlFor="numeroVivienda">Numero de vivienda</label>
               <input pInputText id="numeroVivienda" type="text" [disabled]="true" [value]="asociacion.ubicacion?.numeroVivienda ||'NINGUNO'" class="appearance-none text-color text-base" />
+          </div>
+          <div class="col-12 md:col-6 mb-3">
+            <label class="block text-900 font-medium mb-2">Estado de asociación</label>
+           <p-tag [severity]="asociacion.isActive?'success':'danger'" [value]="asociacion.estado"></p-tag>
+        </div>
+        <div class=" col-12 md:col-6">
+          <div class="text-center p-3 border-round-sm h-full font-bold">
+            <label class="font-bold">Ubicación georreferencial</label>
+            <div class="col-12 flex flex-column justify-content-center">
+            <p-button icon="pi pi-map-marker" styleClass="p-button-rounded p-button-secondary p-button-text p-button-raised" (onClick)="mostrarMapAfiliado()"></p-button>
+            </div>
+          </div>
+          </div>
+          <div class="col-12" *ngIf="!asociacion.isActive">
+            <p class="font-italic text-red-700">* La asociación se encuentra deshabilitada</p>
           </div>
       </div>
     </div>
@@ -104,8 +113,12 @@
           <div class="p-fluid grid">
             <div class="col-4">
               <div class="text-center p-3 border-round-sm h-full font-bold">
-                <div class="col-12 flex justify-content-center">
+                <div class="col-12 flex flex-column justify-content-center">
                   <p-button icon="pi pi-map-marker" styleClass="p-button-rounded p-button-secondary p-button-text p-button-raised" (onClick)="showMap=true"></p-button>
+                  <p>coordenadas</p>
+                  <div class="text-400">
+                    <p>Ltd: {{ubicacionForm.get('latitud')?.value || asociacionSelect?.ubicacion?.latitud}}, Lng: {{ubicacionForm.get('longitud')?.value || asociacionSelect?.ubicacion?.longitud}}</p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -120,7 +133,7 @@
                           formControlName="numeroVivienda"
                           [ngClass]="inputValidUbicacion('numeroVivienda')"
                         />
-                        <label for="numeroVivienda">Numero de medidor</label>
+                        <label for="numeroVivienda">Numero de Vivienda ubicada</label>
                       </span>
                       <small
                         id="numeroVivienda-help"
@@ -212,7 +225,7 @@
                       >{{ getEstadoMedidorAsociadoErrors("estadoMedidorAsociado") }}
                     </small>
                   </div>
-                  <div class="field col-12 md:col-6">
+                  <!-- <div class="field col-12 md:col-6">
                     <span class="p-float-label">
                       <p-dropdown
                         inputId="estado"
@@ -233,7 +246,7 @@
                       *ngIf="campoValido('estado')"
                       >{{ getEstadoErrors("estado") }}
                     </small>
-                  </div>
+                  </div> -->
                 </div>
               </div>
           </div>
@@ -270,7 +283,7 @@
     <div class="card grid">
       <div class="col-12 grid" *ngIf="perfilSelect">
         <div class="col-12 md:col-4">
-            <img src="../../../../assets/img/default_client.jpg" class="" alt="User profile" [style]="{'max-width':'248px'}">
+            <img [src]="perfilSelect.urlImage" class="" alt="User profile" [style]="{'max-width':'248px'}">
         </div>
         <div class="col-12 md:col-8">
             <h5 class="flex justify-content-center">Afiliado por Vincular</h5>
@@ -326,8 +339,12 @@
           <div class="p-fluid grid">
             <div class="col-4">
               <div class="text-center p-3 border-round-sm h-full font-bold">
-                <div class="col-12 flex justify-content-center">
+                <div class="col-12 flex flex-column justify-content-center">
                   <p-button icon="pi pi-map-marker" styleClass="p-button-rounded p-button-secondary p-button-text p-button-raised" (onClick)="showMap=true"></p-button>
+                  <p>coordenadas</p>
+                  <div class="text-400" *ngIf="ubicacionForm.get('latitud')?.value">
+                    <p>Ltd: {{ubicacionForm.get('latitud')?.value}}, Lng: {{ubicacionForm.get('longitud')?.value}}</p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -342,7 +359,7 @@
                           formControlName="numeroVivienda"
                           [ngClass]="inputValidUbicacion('numeroVivienda')"
                         />
-                        <label for="numeroVivienda">Numero de medidor</label>
+                        <label for="numeroVivienda">Numero de Vivienda ubicada</label>
                       </span>
                       <small
                         id="numeroVivienda-help"
@@ -472,8 +489,16 @@
 
 <app-map-coord *ngIf="showMap"
 (sendLatLong)="coordenadas($event)"
-[latLong]="coordenadasLatLng"
+[latLong]="coordenadasLatLngForm"
 [visible]="showMap"
 [buttonInsert]="true"
 (closeModal)=" showMap = $event"
 ></app-map-coord>
+
+
+<app-map-afiliado
+*ngIf="visibleMapAfiliado"
+[visible]="visibleMapAfiliado"
+[defaultCenter]="coordenadasLatLngDetails"
+(eventVisible)="visibleMapAfiliado =$event"
+></app-map-afiliado>

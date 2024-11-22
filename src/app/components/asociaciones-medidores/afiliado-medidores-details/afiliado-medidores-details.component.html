@@ -1,11 +1,11 @@
-<div class="grid">
+<div class="grid" >
     <div class="col-12">
         <div class="card">
-            <h5>Afiliado</h5>
-            <div class="grid" *ngIf="perfil">
+            <h4>Modulo de Asociaciones de medidores de agua con Afiliación</h4>
+            <div class="grid mt-3" *ngIf="perfil">
                 <div class="col-12 grid">
                     <div class="col-12 md:col-4">
-                        <img src="../../../../assets/img/default_client.jpg" class="" alt="User profile" [style]="{'max-width':'248px'}">
+                        <img [src]="perfil.urlImage" class="" alt="User profile" [style]="{'max-width':'248px'}">
                     </div>
                     <div class="col-12 md:col-8">
                         <h5 class="flex justify-content-center">Afiliado Vinculado</h5>
@@ -20,12 +20,14 @@
                             </div>
                             <div class="field col-12 md:col-6">
                                 <label htmlFor="contacto">Contacto</label>
-                                <input pInputText id="contacto" type="text" [disabled]="true" value="SIN CONTACTOS" class="appearance-none text-color text-base" />
+                                <input pInputText id="contacto" type="text" [disabled]="true" [value]="perfil.contacto || 'SIN CONTACTO'" class="appearance-none text-color text-base" />
                             </div>
-                            <div class="field col-12 md:col-6">
-                                <label htmlFor="estado">Estado</label>
-                                <input pInputText id="estado" type="text" [disabled]="true" [value]="perfil.estado" class="appearance-none text-color text-base" />
+                            <div class="col-12 md:col-6 mb-3">
+                                <label class="block text-900 font-medium mb-2">Estado de Asociación</label>
+                               <p-tag [severity]="perfil.isActive?'success':'danger'" [value]="perfil.estado"></p-tag>
+                                            
                             </div>
+                            
                         </div>
                     </div>
                 </div>
@@ -51,7 +53,7 @@
                     </div>
                     <p-divider ></p-divider>
                     <div class="flex justify-content-around" *ngIf="medidorAsociadoSelected">
-                        <h5>Medidor {{medidorAsociadoSelected.medidor!.nroMedidor |uppercase}} Asociado seleccionado</h5>
+                        <h5>Medidor {{medidorAsociadoSelected.medidor!.nroMedidor |uppercase}} Asociado seleccionado {{medidorAsociadoSelected.isActive?'':'(DESHABILITADO)'}}</h5>
                     </div>
                     <div class="grid p-fluid mt-3" *ngIf="medidorAsociadoSelected; else noData">
                         <div class="field col-12 md:col">
@@ -68,16 +70,22 @@
                             <input pInputText id="last" type="text" [disabled]="true" value="{{medidorAsociadoSelected.lecturaSeguimiento}} {{medidorAsociadoSelected.medidor?.medicion}}" class="appearance-none text-color text-base" />
                         </div>
                         <div class="field col-12 md:col">
-                            <label htmlFor="estado">ESTADO</label>
-                            <input pInputText id="estado" type="text" [disabled]="true" [value]="medidorAsociadoSelected.estado?'ACTIVO':'INACTIVO'" class="appearance-none text-color text-base" />
+                            <label class="block text-900 font-medium mb-2">Estado de Asociación</label>
+                            <input pInputText id="last" type="text" [disabled]="true" value="{{medidorAsociadoSelected.estadoMedidorAsociado}}" class="appearance-none text-color text-base" />    
                         </div>
                     </div>
                     <div class="grid p-fluid md:justify-content-center mt-3 " *ngIf="medidorAsociadoSelected">
                         <div class="col-12 md:col-3 md:flex md:justify-content-center">
-                            <button pButton pRipple label="Detalles de la asociacion" class="p-button-success" (click)="actionData('DETALLES')"></button>
+                            <button pButton pRipple label="Detalles de la asociacion" class="p-button-success" icon="pi pi-book" (click)="actionData('DETALLES')"></button>
                         </div>
                         <div class="col-12 md:col-3 md:flex md:justify-content-center">
-                            <button pButton pRipple label="Historia de Lecturas" class="p-button-info" (click)="showPlanillas()"></button>
+                            <button pButton pRipple label="Gestiones de Asociación" class="p-button-info"  icon="pi pi-book" (click)="gestionesVisible =true"></button>
+                        </div>
+                        <div class="col-12 md:col-3 md:flex md:justify-content-center">
+                            <button pButton pRipple label="Historia de Lecturas" class="p-button-secondary"  icon="pi pi-book" (click)="showPlanillas()"></button>
+                        </div>
+                        <div class="col-12 md:col-3 md:flex md:justify-content-center">
+                            <button pButton pRipple label="Reportes de Lecturas" class="p-button-warning" icon="pi pi-chart-line" (click)="visibleReportLecturas=true"></button>
                         </div>
                     </div>
                     <ng-template #noData>
@@ -111,3 +119,16 @@
 (onDataSelected)="medidorSelectedOpt($event)"
 (closeDisplayModalTable)="showMedidoresLibresVisible = $event"
 ></app-medidores-libres-select-table>
+<app-gestiones
+*ngIf="gestionesVisible"
+[visible]="gestionesVisible"
+[idAsociacion]="medidorAsociadoSelected.id!"
+(closePlanilla)="gestionesVisible = $event"
+></app-gestiones>
+
+<app-report-lecturas
+*ngIf="visibleReportLecturas"
+[visible]="visibleReportLecturas"
+[medidor]="medidorAsociadoSelected"
+(closePlanilla)="visibleReportLecturas = $event"
+></app-report-lecturas>

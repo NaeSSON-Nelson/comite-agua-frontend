@@ -1,46 +1,93 @@
 <div class="grid">
   <div class="col-12">
     <div class="card" *ngIf="medidor">
-        <h5>CARACTERÍSTICAS DEL MEDIDOR {{medidor.nroMedidor}}</h5>
+      <div class="col-12">
+        <div class="flex flex-row flex-wrap">
+          <h5>CARACTERÍSTICAS DEL MEDIDOR {{medidor.nroMedidor}}</h5>
+				</div>
+				<div class="flex flex-row-reverse flex-wrap">
+						<p-button icon="pi pi-user" label="Afiliado Asociado" *ngIf="medidor.funcionamiento" styleClass="p-button-rounded p-button-info mr-2"  (click)="detailAsociacion()"></p-button>
+					<p-button icon="pi pi-lock" styleClass="p-button-rounded p-button-danger mr-2" alt="Deshabilitar registro" *ngIf="medidor.isActive; else inhabilitado" (click)="actionData('DESHABILITAR')"></p-button>
+					<p-button icon="pi pi-pencil" styleClass="p-button-rounded p-button-warning  mr-2" alt="Modificar datos"(click)="actionData('MODIFICAR')" ></p-button>
+					<ng-template #inhabilitado>
+						<p-button icon="pi pi-lock-open" styleClass="p-button-rounded p-button-success mr-2" alt="habilitar registro" (click)="actionData('HABILITAR')" ></p-button>
+					</ng-template>
+				</div>
+			</div>
         <p-divider></p-divider>
         <div class="p-fluid p-formgrid grid mb-3" >
-            <div class="field col-12 md:col-3">
+            <div class="field col-12 md:col-4">
                 <label htmlFor="nroMedidor">Numero de Medidor</label>
                 <input pInputText type="text"[disabled]="true" id="nroMedidor" [value]="medidor.nroMedidor | uppercase" class="appearance-none text-color text-base"/>
             </div>
-            <div class="field col-12 md:col-3">
+            <div class="field col-12 md:col-4">
                 <label htmlFor="marca">Marca</label>
                 <input pInputText type="text"[disabled]="true" id="marca" [value]="medidor.marca | uppercase" class="appearance-none text-color text-base"/>
             </div>
-            <div class="field col-12 md:col-3">
+            <div class="field col-12 md:col-4">
                 <label htmlFor="estado">estado</label>
                 <input pInputText type="text"[disabled]="true" id="estado" [value]="medidor.estado" class="appearance-none text-color text-base"/>
             </div>
         </div>
         <div class="p-fluid p-formgrid grid" >
-            <div class="field col-12 md:col-3">
+            <div class="field col-12 md:col-4">
                 <label htmlFor="funcionamiento">Funcionamiento</label>
-                <input pInputText type="text"[disabled]="true" id="funcionamiento" [value]="medidor.funcionamiento || 'SIN FUNCIONAMIENTO' | uppercase " class="appearance-none text-color text-base"/>
-            </div>
-            <div class="field col-12 md:col-3">
+                <input pInputText type="text"[disabled]="true" id="funcionamiento" [value]="medidor.funcionamiento?'EN FUNCIONAMIENTO':'SIN FUNCIONAMIENTO' " class="appearance-none text-color text-base"/>
+                <p class="font-italic">* Se actualiza automaticamente cuando hay cambios en la asociacion actual</p>
+              </div>
+            <div class="field col-12 md:col-4">
                 <label htmlFor="lecturaInicial">Lectura de Registro Inicial</label>
                 <input pInputText type="text"[disabled]="true" id="lecturaInicial" [value]="medidor.lecturaInicial" class="appearance-none text-color text-base"/>
             </div>
-            <div class="field col-12 md:col-3">
+            <div class="field col-12 md:col-4">
                 <label htmlFor="lecturaMedidor">Ultima Lectura del medidor</label>
                 <input pInputText type="text"[disabled]="true" id="lecturaMedidor" [value]="medidor.lecturaMedidor" class="appearance-none text-color text-base"/>
             </div>
+            <div class="col-12 md:col-6" *ngIf="!medidor.isActive">
+              <p class="font-italic text-red-700">* El registro se encuentra deshabilitado <i class="pi pi-exclamation-triangle"></i></p>
+            </div>
         </div>
     </div>
-    <div class="card">
+    <div class="card" *ngIf="medidor">
+      <h4>Asociaciones del Medidor de agua</h4>
+      <i class="pi pi-spin pi-spinner" style="font-size: 3rem" *ngIf="loadingAsociacion"></i>
+      <p-table [value]="dataAsociados" [tableStyle]="{ 'min-width': '50rem' }" *ngIf="dataAsociados.length>0;else sinAsociacion">
+        <ng-template pTemplate="header">
+            <tr>
+                <th>INDICE</th>
+                <th>N° de Asociacion</th>
+                <th>Estado de asociación</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-asociacion let-index="rowIndex">
+            <tr>
+                <td>{{ index+1 }}</td>
+                <td>{{ asociacion.id }}</td>
+                <td>{{ asociacion.estadoMedidorAsociado ||'SIN ESTADO DE ASOCIACION' }}</td>
+                <td><p-tag [severity]="asociacion.isActive?'success':'danger'" [value]="asociacion.estado"></p-tag></td>
+                <td>
+                  <p-button styleClass="p-button-rounded p-button-info" icon="pi pi-book" (onClick)="asociacionDetails(asociacion)"></p-button>
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+    <ng-template #sinAsociacion>
+      <p class="font-italic">{{asociacionTitle}}</p>
+    </ng-template>
+    
+    </div>
+    <!-- <div class="card">
         <h5>Opciones sobre El registro</h5>
         <p-divider></p-divider>
         <div class="grid p-fluid md:justify-content-center" *ngIf="medidor ">
-          <div class="col-12 md:col-3 md:flex md:justify-content-center" *ngIf="medidor.medidorAsociado && medidor.medidorAsociado!.length>0">
+          <div class="col-12 md:col-3 md:flex md:justify-content-center" *ngIf="medidor.medidorAsociado && medidor.medidorAsociado.length>0">
             <button
               pButton
               pRipple
-              label="Ir Perfil Asociado"
+              label="Ir Perfil Asociado activo"
               class="p-button-info"
               (click)="detailAsociacion()"
             ></button>
@@ -78,6 +125,12 @@
             </div>
           </ng-template>
         </div>
-      </div>
+      </div> -->
   </div>
 </div>
+<app-asociacion-medidor-details
+*ngIf="visibleAsociacionDetails"
+[visibile]="visibleAsociacionDetails"
+[asociadoId]="idAsociaod"
+(eventVisible)="visibleAsociacionDetails = $event"
+></app-asociacion-medidor-details>

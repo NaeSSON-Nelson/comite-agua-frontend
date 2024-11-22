@@ -20,6 +20,7 @@ export class HelpersTablesService {
   URL_roles: string = environment.apiURrl + '/roles';
   URL_afiliados: string = environment.apiURrl + '/afiliados';
   URL_medidores: string = environment.apiURrl + '/medidores-agua';
+  URL_asociaciones:string = environment.apiURrl+'/asociaciones'
 
   private headers = new HttpHeaders().set(
     'authorization',
@@ -133,7 +134,7 @@ export class HelpersTablesService {
   findAllMedidoresWithoutAsociacion(paginator:PaginatorFind){
     let {size,...dataPaginator } = paginator;
     return this.http
-      .get<HttpResponseApiArray<Medidor>>(`${this.URL_medidores}/asociacion`,{headers:this.headers,params:{...dataPaginator}})
+      .get<HttpResponseApiArray<Medidor>>(`${this.URL_asociaciones}/sin-asociaciones`,{headers:this.headers,params:{...dataPaginator}})
       .pipe(
         tap((resp)=>{
           

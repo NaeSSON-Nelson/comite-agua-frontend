@@ -4,7 +4,7 @@ import { Subject, catchError, map, of, tap } from 'rxjs';
 import { PaginatorFind } from 'src/app/interfaces/Paginator.interface';
 import { Afiliado } from 'src/app/interfaces/afiliado.interface';
 import { DataResult, HttpResponseApi, HttpResponseApiArray } from 'src/app/interfaces/http-respones.interface';
-import { Medidor, MedidorAsociado, MedidorAsociadoForm, MesLectura, PlanillaLecturas } from 'src/app/interfaces/medidor.interface';
+import { Medidor, MedidorAsociado, MedidorAsociadoForm, PlanillaMesLectura, PlanillaLecturas } from 'src/app/interfaces/medidor.interface';
 import { environment } from 'src/environments/environment';
 import { ResponseResult } from '../../interfaces/http-respones.interface';
 import { Perfil } from 'src/app/interfaces';
@@ -15,20 +15,17 @@ import { Perfil } from 'src/app/interfaces';
 export class MedidoresAguaService {
 
   private URL_medidores:string = environment.apiURrl + '/medidores-agua';
-  private URL_medidor_asociado:string = this.URL_medidores + '/asociacion';
   private URL_planillas:string = this.URL_medidores +'/planillas';
   private URL_lecturas:string = this.URL_medidores +'/lecturas';
  
   private _AfiliadosWidthMedidores$:Subject<DataResult<Perfil>>;
   private _afiliadoWithMedidores$:Subject<Perfil>;
   private _medidor$:Subject<Medidor>;
-  private _medidorAsociado$:Subject<MedidorAsociado>;
   private _medidores$:Subject<DataResult<Medidor>>;
   constructor(private http: HttpClient) {
     this._AfiliadosWidthMedidores$= new Subject<DataResult<Perfil>>();
     this._afiliadoWithMedidores$ = new Subject<Perfil>();
     this._medidor$ = new Subject<Medidor>();
-    this._medidorAsociado$ = new Subject<MedidorAsociado>();
     this._medidores$ = new Subject<DataResult<Medidor>>();
   }
 
@@ -44,9 +41,7 @@ export class MedidoresAguaService {
   get medidores(){
     return this._medidores$.asObservable();
   }
-  get medidorAsociado(){
-    return this._medidorAsociado$.asObservable();
-  }
+ 
   // MEDIDORES
   findAll(paginator:PaginatorFind) {
   //  console.log(paginator);
@@ -230,103 +225,22 @@ export class MedidoresAguaService {
       })
     );
   }
-  findOneAsociacion(idAsociacion:number){
-    return this.http.get<HttpResponseApi<MedidorAsociado>>(`${this.URL_medidor_asociado}/${idAsociacion}`).pipe(
-      tap((resp)=>{
-        if(resp.OK){
-          this._medidorAsociado$.next(resp.data!)
-        }
-      }),
-      map((resp) => {
-        // console.log('map',resp);
-        const respuesta:ResponseResult={OK:resp.OK,message:resp.message,statusCode:200}
-        return respuesta;
-      }),
-      catchError((err:HttpErrorResponse) => {
-        const errors = err.error as ResponseResult;
-        errors.OK=false;
-        return of(errors);
-      })
+  obtenerAfiliadosSinTarifa(){
+    return this.http.get<HttpResponseApi<DataResult<Perfil>>>(`${this.URL_lecturas}/comprobantes/perfiles`).pipe(
+      // map(res=>res.data!)
     )
   }
-  createAsociacion(asociacionForm:MedidorAsociadoForm){
-    return this.http.post<HttpResponseApi<ResponseResult>>(`${this.URL_medidor_asociado}`,asociacionForm)
-    .pipe(
-      map((resp) => {
-        // console.log('map',resp);
-        const respuesta:ResponseResult={OK:resp.OK,message:resp.message,statusCode:201}
-        return respuesta;
-      }),
-      catchError((err:HttpErrorResponse) => {
-        const errors = err.error as ResponseResult;
-        errors.OK=false;
-        return of(errors);
-      })
-    );
-  }
-
-  updateAsociacion(id:number,data:MedidorAsociado){
-    return this.http
-      .patch<HttpResponseApi<Perfil>>(`${this.URL_medidor_asociado}/${id}`,data,)
-      .pipe(
-        tap((resp)=>{
-          if(resp.OK){
-            this._afiliadoWithMedidores$.next(resp.data!)
-          }
-        }),
-        map((resp) => {
-          // console.log('map',resp);
-          const respuesta:ResponseResult={OK:resp.OK,message:resp.message,statusCode:200}
-          return respuesta;
-        }),
-        catchError((err:HttpErrorResponse) => {
-          const errors = err.error as ResponseResult;
-          errors.OK=false;
-          return of(errors);
-        })
-      );
-  }
-  updateStatusAsociacion(idAsociacion:number,data:MedidorAsociado){
-    return this.http.patch<HttpResponseApi<MedidorAsociado>>(`${this.URL_medidor_asociado}/status/${idAsociacion}`,data).
-    pipe(
-      tap((resp)=>{
-        if(resp.OK){
-          // this._afiliadoWithMedidores$.next(resp.data!)
-          this._afiliadoWithMedidores$.next(resp.data!);
-        }
-      }),
-      map((resp) => {
-        // console.log('map',resp);
-        const respuesta:ResponseResult={OK:resp.OK,message:resp.message,statusCode:200}
-        return respuesta;
-      }),
-      catchError((err:HttpErrorResponse) => {
-        const errors = err.error as ResponseResult;
-        errors.OK=false;
-        return of(errors);
-      }))
-  }
-  //TODO: PLANILLAS DE LECTURAS DE UN MEDIDOR
-  listarPlanillasMedidor(idAsociacion:number){
-    return this.http.get<HttpResponseApi<MedidorAsociado>>(`${this.URL_planillas}/${idAsociacion}`)
+  generarComprobantesSelected(form:any){
+    return this.http.post<ResponseResult>(`${this.URL_medidores}/comprobantes-por-pagar`,form)
             .pipe(
-              map(resp=>{
-                  return resp.data?.planillas || [];
-              })
-            );
-  }
-  listarLecturasPlanilla(idPlanilla:number){
-    return this.http.get<HttpResponseApi<PlanillaLecturas>>(`${this.URL_lecturas}/${idPlanilla}`)
-            .pipe(
-              map(resp=>{
-                  return resp.data?.lecturas || [];
-              })
-            );
-  }
-  obtenerLectura(idLectura:number){
-    return this.http.get<HttpResponseApi<MesLectura>>(`${this.URL_lecturas}/comprobantes/${idLectura}`)
-            .pipe(
-              map(res=>res.data!)
+              // map(res=>res.data!)
             )
+  }
+  obtenerAsociacionesMedidor(idMedidor:number){
+    return this.http.get<HttpResponseApi<MedidorAsociado[]>>(`${this.URL_medidores}/asociaciones/${idMedidor}`);
+  }
+  findAsociacionDetails(idAsociacion:number){
+    return this.http.get<HttpResponseApi<MedidorAsociado>>(`${this.URL_medidores}/asociacion/${idAsociacion}`);
+    
   }
 }

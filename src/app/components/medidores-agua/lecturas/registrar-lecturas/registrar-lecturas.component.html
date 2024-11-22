@@ -1,151 +1,193 @@
-<div class="grid card">
-    <!-- <div class="col-12">
-        <div class="card">
-            <p-divider></p-divider>
-            <h4>Año de Gestion de lecturas:</h4>
-            <div class="grid mt-5 p-fluid">
-                <div class="col-4">
-                    <p-dropdown [options]="gestiones"  (onChange)="changeYear($event)" placeholder="Seleccione un año"></p-dropdown>
-                </div>
-            </div>
-            <p-divider></p-divider>
-            <h5>Mes de Registros de lecturas</h5>
-            <div class="grid mt-3 p-fluid" *ngIf="meses.length>0">
-                <div class="col-4">
-                    <p-dropdown [options]="meses" optionLabel="mes" optionValue="mes" placeholder="Seleccione un mes del daño" (onChange)="changeMonth($event)"></p-dropdown>
-                </div>
-            </div>
-            <p-divider></p-divider>
-            <div class="grid mt-5">
-                <div class="col-12"></div>
-                <div class="col-3">
-                    <p-button (onClick)="buscarLecturas()" label="Mostrar lecturas de gestion" [disabled]=" lecturasOptions.gestion===null || lecturasOptions.mes===null" styleClass="p-button-raised p-button-secondary"></p-button>
-                </div>
-            </div>
-        </div>
-    </div> -->
+<div class="grid card">    
     <div class="col-12">
-        <h4>REGISTRO DE LECTURAS DE MEDIDORES DE AGUA DE LOS AFILIADOS</h4>
-        <div class="card" [formGroup]="lecturasForm" *ngIf="showForm;else finalizado">
-            <div class="grid">
-                <h5 class="col">REGISTROS DE MEDIDORES POR BARRIO:
-                    <p-dropdown [options]="commonAppService.barrios" optionLabel="name" optionValue="value" (onChange)="changeBarrio($event)"></p-dropdown>
-                </h5>
-                <button pButton pRipple label="Generar Comprobantes" (click)="visibleGenerar = true" class="p-button-primary"></button>
-            </div>
-            <p-divider></p-divider>
-            <div class="card" *ngIf="data.length>0; else sinData">
-                <div class="m-2 flex flex-row justify-content-around flex-wrap">
-                    <div class="flex align-items-center justify-content-center px-3"[style]="{'width':'25%'}"><h5>{{'AFILIADOS'}}</h5></div>
-                    <div class="flex align-items-center justify-content-center px-3"[style]="{'width':'75%'}"><h5>{{'DETALLES DE MEDIDORES'}}</h5></div>
-                </div>
-                <div class="flex justify-content-end flex-wrap">
-                    <div class="flex justify-content-around" [style]="{'width':'75%'}">
-                        <div class="flex align-items-center justify-content-center font-bold">Barrio Medidor.</div>
-                        <div class="flex align-items-center justify-content-center font-bold">Nro Medidor.</div>
-                        <div class="flex align-items-center justify-content-center font-bold">Lectura Marcada</div>
-                        <div class="flex align-items-center justify-content-center font-bold">Estado del medidor.</div>
-                    </div>
-                </div>
-                <div *ngFor="let customer of data" class="card grid nested-grid">
-                    <div class="col-3 px-3">
-                    <p class="fs-text">
-                        {{customer.nombrePrimero | titlecase}} {{customer.nombreSegundo ||"" |titlecase}} {{customer.apellidoPrimero | titlecase}} {{customer.apellidoSegundo ||"" | titlecase}}
-                    </p>
-                    </div>
-                    <div class="col-9" *ngIf="lecturados" formArrayName="registros" >
-                        <div class="grid" [style]="{'min-width':'75%', 'padding':'18px 0 0 0'}" *ngFor="let asc of customer.afiliado!.medidorAsociado">
-                        <div class="col-3 px-3"><p class="fs-text">{{asc.ubicacion?.barrio}}</p></div>
-                        <div class="col-3 px-3"><p class="fs-text">{{asc.medidor?.nroMedidor}}</p></div>
-                        <ng-container *ngFor="let lecturaForm of lecturasArray.controls; let i=index">
-                            <ng-container *ngIf="lecturaForm.get('planilla')?.value.id === asc.planillas![0].id" [formGroupName]="i">
-                            <div class="field col-3 align-items-center justify-content-center px-3">
-                                <span class="p-float-label">
-                                    <p-inputNumber
-                                    id="lectura"
-                                    placeholder="Anterior lectura: {{asc.lecturaSeguimiento}}"
-                                    formControlName="lectura"
-                                    [ngClass]="inputArrayValid('lectura',i)"
-                                    ></p-inputNumber>
-                                    <label for="lectura">Lectura</label>
-                                    <small
-                                            id="longitud-help"
-                                            class="p-error block"
-                                            *ngIf="campoArrayValido('lectura',i)"
-                                            >{{ getLecturaErrors("lectura",i) }}
-                                            </small>
-                                </span>
-                            </div>
-                            <div class="field col-3 px-3">
-                                <span class="p-float-label">
-                                    <input
-                                    type="text"
-                                    id="estadoMedidor"
-                                    pInputText
-                                    formControlName="estadoMedidor"
-                                    [ngClass]="inputArrayValid('estadoMedidor',i)"
-                                    (change)="addRequiredLectura('estadoMedidor',i)"
-                                    />
-                                    <label for="estadoMedidor">Estado medidor (Opcional)</label>
-                                    <small
-                                            id="longitud-help"
-                                            class="p-error block"
-                                            *ngIf="campoArrayValido('estadoMedidor',i)"
-                                            >{{ getEstadoMedidorErrors("estadoMedidor",i) }}
-                                            </small>
-                                </span>
-                            </div>
-                            </ng-container>
-                        </ng-container>
-                    </div>
-                    </div>
-                
-                </div>
-                <div class="col-12 md:flex md:justify-content-center ">
-                    <button
-                    type="button"
-                    pButton
-                    pRipple
-                    class="p-button-primary"
-                    label="registrar lecturas"
-                    [disabled]="lecturasForm.pending || lecturasArray.length===0"
-                    (click)="validForm()"
-                    ></button>
-                </div> 
-
-            </div>
-            <ng-template #sinData>
-                <p><i>NO HAY AFILIADOS DEL BARRIO {{lecturasOptions.barrio}} SIN REGISTRO DE LECTURA DEL MES {{lecturasOptions.mes}}</i></p>
-            </ng-template>
+      <h3>REGISTRO DE LECTURAS A LAS PLANILLAS DE LOS MEDIDORES DE AGUA</h3>
+      <p-button label="Genar Tarifas por pagar" (onClick)="visibleGenerar=true"></p-button>
+      <form class="card" [formGroup]="lecturasForm" *ngIf="showForm;else finalizado">
+        <div class="col-12 grid">
+          <div class="col-12" *ngIf="limite">
+            <h5>FECHA LIMITE:</h5>
+            <p>Inicio: {{limite.meses![0].fechaRegistroLecturas  | date: 'dd-MM-yyyy'}}</p>
+            <p>FIN: {{limite.meses![0].fechaFinRegistroLecturas  | date: 'dd-MM-yyyy'}}</p>
             
-                <!-- <div class="col-12 grid">
-                        <div class="col-3 border-1">Afiliado</div>
-                        <div class="col-3 border-1">Cedula de Identidad</div>
-                        <div class="col-3 border-1">Medidor</div>
-                        <div class="col-3 border-1">Lectura del mes</div>
-                    </div>
-                <div class="col-12 grid" *ngFor="let perfil of data">
-                    <div class="col-3 border-1">{{perfil.nombrePrimero | titlecase}} {{perfil.nombreSegundo ||"" |titlecase}} {{perfil.apellidoPrimero | titlecase}} {{perfil.apellidoSegundo ||"" | titlecase}}</div>
-                    <div class="col-3 border-1">{{perfil.CI}}</div>
-                    <div class="col-6 border-1">
-                        <div class="grid "*ngFor="let medidor of perfil.afiliado?.medidores">
-                            <div class="col border-1">{{medidor.nroMedidor}}</div>
-                            <div class="col border-1">
-                                <p-inputNumber  (onBlur)="addLectura(medidor.planillas![0],$event)"></p-inputNumber>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    
-                </div>
-            -->
-
+          </div>
+          <div class="col-3">
+            <span class="p-float-label">
+              <p-dropdown [options]="sortList" optionLabel="name" optionValue="value" (onChange)="applySort($event)" [showClear]="true"  placeholder="Filtrar:" optionLabel="name" inputId="float-label"></p-dropdown>
+              <label for="float-label">Filtrar por: </label>
+          </span>
+          </div>
+          <div class="col-3" *ngIf="sortValue.length>0">
+            <span class="p-float-label">
+              <p-dropdown [options]="sortValue" optionLabel="name" optionValue="value" (onChange)="applySortValue($event)" [showClear]="true"  placeholder="valor:" optionLabel="name" inputId="float-label"></p-dropdown>
+              <label for="float-label">Valor: </label>
+          </span>
+          </div>
+          <div class="col-3">
+            <p-button label="Aplicar filtros" [disabled]="filterDisabled" (onClick)="getAllLecturas()"></p-button>
+          </div>
+          <div class="col-3">
+            <p-button label="Reiniciar" (onClick)="resetList()" styleClass="p-button-help"></p-button>
+          </div>
         </div>
-        <ng-template #finalizado>
-            <p><i>{{titleError}}</i></p>
+        <p-divider></p-divider>
+        <div class="col-12">
+
+      <p-table  #dt 
+      dataKey="id"
+      [value]="data" 
+      [tableStyle]="{'min-width': '50rem'}"  
+      [lazy]="true" 
+      [rows]="lecturasOptions.limit"
+      [paginator]="true"
+      (onLazyLoad)="loadCustomers($event)"
+      [totalRecords]="lecturasOptions.size||0"
+      (sortFunction)="applySorteo($event)"
+      [showCurrentPageReport]="true"
+      currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+      [rowsPerPageOptions]="[10,50,100]"
+      [customSort]="true"
+      *ngIf="data.length>0 || showForm; else sinData">
+      <ng-template pTemplate="caption">
+        <form class="flex flex-column md:flex-row md:justify-content-between md:align-items-center"
+        [formGroup]="searchForm"
+        >
+            <span class="block mt-2 md:mt-0 p-input-icon-left">
+                <i class="pi pi-search"></i>
+                <input pInputText type="text" inputId="termino"  placeholder="Search..." formControlName="termino" class="w-full sm:w-auto" (input)="dt.filterGlobal($event.target, 'contains')" />
+                <small
+                    id="termino-help"
+                    class="p-error block"
+                    *ngIf="campoValido('termino')"
+                    >{{ getTerminoErrors("termino") }}
+                </small>
+            </span>
+        </form>
+    </ng-template>
+        <ng-template pTemplate="header">
+          <tr>
+            <th  style="width:25%">Afiliados</th>
+            <th style="width:25%">Barrio</th>
+            <th style="width:25%">Nro Medidor de agua</th>
+            <th style="width:25%" colspan="2" class="justify-content-center">Registros</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-perfil>
+          <ng-container *ngIf="lecturados" formArrayName="registros">
+          <tr *ngIf="perfil.afiliado.medidorAsociado.length<2; else segundaForma">
+            <td> {{perfil.nombrePrimero | titlecase}} {{perfil.nombreSegundo ||"" |titlecase}} {{perfil.apellidoPrimero | titlecase}} {{perfil.apellidoSegundo ||"" | titlecase}}</td>
+            <td>{{perfil.afiliado.ubicacion.barrio}}</td>
+            <td>{{perfil.afiliado.medidorAsociado[0].medidor.nroMedidor}}</td>
+            <ng-container *ngFor="let lecturaForm of lecturasArray.controls; let formIndexI=index">
+              <ng-container *ngIf="lecturaForm.get('planilla')?.value.id === perfil.afiliado.medidorAsociado[0].planillas![0].id" [formGroupName]="formIndexI">
+                <td class="field align-items-center justify-content-center">
+                    <span class="p-float-label">
+                        <p-inputNumber
+                        id="lectura"
+                        placeholder="Anterior lectura: {{perfil.afiliado.medidorAsociado[0].lecturaSeguimiento}} {{perfil.afiliado.medidorAsociado[0].medidor.medicion}}"
+                        suffix=" {{perfil.afiliado.medidorAsociado[0].medidor.medicion}}."
+                        formControlName="lectura"
+                        [ngClass]="inputArrayValid('lectura',formIndexI)"
+                        ></p-inputNumber>
+                        <label for="lectura">Lectura</label>
+                        <small
+                                id="longitud-help"
+                                class="p-error block"
+                                *ngIf="campoArrayValido('lectura',formIndexI)"
+                                >{{ getLecturaErrors("lectura",formIndexI) }}
+                                </small>
+                    </span>
+                  </td>
+                <td class="field">
+                    <span class="p-float-label">
+                        <input
+                        type="text"
+                        id="estadoMedidor"
+                        pInputText
+                        formControlName="estadoMedidor"
+                        [ngClass]="inputArrayValid('estadoMedidor',formIndexI)"
+                        (change)="addRequiredLectura('estadoMedidor',formIndexI)"
+                        />
+                        <label for="estadoMedidor">Estado medidor (Opcional)</label>
+                        <small
+                                id="longitud-help"
+                                class="p-error block"
+                                *ngIf="campoArrayValido('estadoMedidor',formIndexI)"
+                                >{{ getEstadoMedidorErrors("estadoMedidor",formIndexI) }}
+                                </small>
+                    </span>
+                  </td>
+                </ng-container>
+            </ng-container>
+            
+          </tr>
+          <ng-template #segundaForma>
+          <tr  *ngFor="let asociacion of perfil.afiliado.medidorAsociado;let i=index" >
+            <td class="left-side" [rowSpan]="perfil.afiliado.medidorAsociado.length" *ngIf="i===0"> {{perfil.nombrePrimero | titlecase}} {{perfil.nombreSegundo ||"" |titlecase}} {{perfil.apellidoPrimero | titlecase}} {{perfil.apellidoSegundo ||"" | titlecase}}</td>
+            <td>{{asociacion.ubicacion.barrio}}</td>
+            <td>{{asociacion.medidor.nroMedidor}}</td>
+            
+            <ng-container *ngFor="let lecturaForm of lecturasArray.controls; let formIndexJ=index">
+              <ng-container *ngIf="lecturaForm.get('planilla')?.value.id === asociacion.planillas![0].id" [formGroupName]="formIndexJ">
+                <td class="field">
+                    <span class="p-float-label mt-2">
+                        <p-inputNumber
+                        id="lectura"
+                        placeholder="Anterior lectura: {{asociacion.lecturaSeguimiento}} {{asociacion.medidor.medicion}}"
+                        suffix=" {{asociacion.medidor.medicion}}."
+                        formControlName="lectura"
+                        [ngClass]="inputArrayValid('lectura',formIndexJ)"
+                        ></p-inputNumber>
+                        <label for="lectura">Lectura</label>
+                        <small
+                                id="longitud-help"
+                                class="p-error block"
+                                *ngIf="campoArrayValido('lectura',formIndexJ)"
+                                >{{ getLecturaErrors("lectura",formIndexJ) }}
+                                </small>
+                    </span>
+                  </td>
+                <td class="field ">
+                    <span class="p-float-label mt-2">
+                        <input
+                        type="text"
+                        id="estadoMedidor"
+                        pInputText
+                        formControlName="estadoMedidor"
+                        [ngClass]="inputArrayValid('estadoMedidor',formIndexJ)"
+                        (change)="addRequiredLectura('estadoMedidor',formIndexJ)"
+                        />
+                        <label for="estadoMedidor">Estado medidor (Opcional)</label>
+                        <small
+                                id="longitud-help"
+                                class="p-error block"
+                                *ngIf="campoArrayValido('estadoMedidor',formIndexJ)"
+                                >{{ getEstadoMedidorErrors("estadoMedidor",formIndexJ) }}
+                                </small>
+                    </span>
+                  </td>
+                </ng-container>
+            </ng-container>
+          </tr>
         </ng-template>
         
+      </ng-container>
+        </ng-template>
+        
+    </p-table>
+  </div>
+  <div class="col-12">
+    <p-button label="Registrar lecturas" (onClick)="validForm()"></p-button>
+  </div>
+    <ng-template #sinData>
+      <p><i>NO HAY AFILIADOS DEL BARRIO {{lecturasOptions.barrio}} SIN REGISTRO DE LECTURA DEL MES {{lecturasOptions.mes}}</i></p>
+    </ng-template>
+    
+  </form>
+  <ng-template #finalizado>
+      <p><i>{{titleError}}</i></p>
+  </ng-template>
     </div>
+
 </div>
 <app-modal-reportes
 *ngIf="visibleGenerar"

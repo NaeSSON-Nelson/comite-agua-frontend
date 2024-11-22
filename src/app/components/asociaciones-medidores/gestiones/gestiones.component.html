@@ -1,0 +1,74 @@
+<p-dialog
+  header="Gestiones de Planillas de la asociacion"
+  [modal]="true"
+  [(visible)]="visible"
+  [breakpoints]="{ '960px': '75vw' }"
+  [style]="{ width: '75vw','min-height':'50vw',margin:'10px' }"
+  [baseZIndex]="750"
+  [draggable]="false"
+  (onHide)="closePlanilla.emit(false)"
+  (onShow)="showGestiones()"
+  [closeOnEscape]="false"
+  
+>
+  <p-divider></p-divider>
+  <div class="grid m-5 p-fluid">
+    <h5 class="col-12"> GESTIONES DE PLANILLAS PASADAS</h5>
+    <p-button
+    class="col-4 col-offset-3"
+    styleClass="p-button-primary p-button-rounded"
+    label="Gestion actual"
+    icon="pi pi-calendar"
+    (onClick)="openAdminGes()"
+    ></p-button>
+    <div class="col-12">
+      <p-divider></p-divider>
+      <p-table 
+            #dt 
+            dataKey="id"
+            [value]="data"
+            [rowHover]="true" 
+            [paginator]="true"
+            [rows]="10"
+            [lazy]="true" 
+            (onLazyLoad)="loadCustomers($event)"
+            [totalRecords]="dataPaginator.size||0"
+            [globalFilterFields]="['nombres', 'ci']"
+            [showCurrentPageReport]="true"
+            [tableStyle]="{ 'min-width': '50rem' }"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+            [rowsPerPageOptions]="[10, 25, 50]"
+           
+      >
+        <ng-template pTemplate="header" let-columns>
+          <tr>
+            <th></th>
+            <th>Gestion</th>
+            <th>estado</th>
+            <th>Registrable</th>
+            <th>funciones</th>
+          </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-product let-rowIndex="rowIndex">
+          <tr>
+            <td>{{rowIndex +1}}</td>
+            <td>{{product.gestion}}</td>
+            <td><p-tag [severity]="product.isActive?'success':'danger'" [value]="product.estado"></p-tag></td>
+            <td>{{product.registrable?'SI':'NO'}}</td>
+            <td>
+              <button (click)="select(product)" pButton label="Mostrar" icon="pi pi-book" class="p-button-primary"></button>
+            </td>
+          </tr>
+      </ng-template>
+      </p-table>
+    </div>
+  </div>
+</p-dialog>
+<app-admin-gestion
+*ngIf="visibleAdminGestion"
+[gest]="gestionSelected?.gestion || -1"
+[typeGestion]="typeGestionAdmin"
+[idAsociacion]="idAsociacion"
+[visible]="visibleAdminGestion"
+(eventVisible)="closeAdminGestiones($event)"
+></app-admin-gestion>

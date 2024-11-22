@@ -4,6 +4,7 @@ import { LayoutComponent } from './layout/layout.component';
 import { ForbiddenComponent } from './common/forbidden/forbidden.component';
 import { validarTokenGuard } from './guards/validar-token.guard';
 import {
+  PATH_ASOCIACIONES,
   PATH_AUTH,
   PATH_COBROS,
   PATH_DASHBOARD,
@@ -66,6 +67,14 @@ const routes: Routes = [
               import(
                 './components/medidores-agua/medidores-agua-routing.module'
               ).then((m) => m.MedidoresAguaRoutingModule),
+            canActivate: [validarTokenGuard],
+          },
+          {
+            path: PATH_ASOCIACIONES,
+            loadChildren: () =>
+              import(
+                './components/asociaciones-medidores/asociaciones-routing.module'
+              ).then((m) => m.AsociacionesRoutingModule),
             canActivate: [validarTokenGuard],
           },
           {

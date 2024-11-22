@@ -9,7 +9,7 @@ import { patternSpanishInline } from 'src/app/patterns/forms-patterns';
 import { PaginatorFind } from 'src/app/interfaces/Paginator.interface';
 import { PaginatorState } from 'primeng/paginator';
 import { Perfil } from 'src/app/interfaces';
-import { PATH_AFILIADO, PATH_AUTH, PATH_FORBBIDEN, PATH_MEDIDORES, PATH_MODULE_DETAILS } from 'src/app/interfaces/routes-app';
+import { PATH_AFILIADO, PATH_ASOCIACIONES, PATH_AUTH, PATH_FORBBIDEN, PATH_MEDIDORES, PATH_MODULE_DETAILS } from 'src/app/interfaces/routes-app';
 
 @Component({
   selector: 'app-medidores',
@@ -68,7 +68,7 @@ export class MedidoresComponent {
 
   dataPaginator: PaginatorFind = {
     offset:0,
-    limit:20,
+    limit:10,
   };
   findAll() {
     this.medidorService.findAllAfiliados(this.dataPaginator).subscribe({
@@ -108,7 +108,7 @@ export class MedidoresComponent {
     });
   }
   dataDetail(id: number) {
-    this.router.navigate([PATH_MEDIDORES,PATH_AFILIADO, PATH_MODULE_DETAILS,id]);
+    this.router.navigate([PATH_MEDIDORES,PATH_ASOCIACIONES, PATH_MODULE_DETAILS,id]);
   }
   campoValido(nombre: string) {
     return (

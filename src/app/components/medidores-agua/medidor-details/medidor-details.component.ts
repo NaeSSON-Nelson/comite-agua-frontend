@@ -2,8 +2,8 @@ import { Component } from '@angular/core';
 import { MedidoresAguaService } from '../medidores-agua.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Estado, Medidor } from 'src/app/interfaces';
-import { PATH_AFILIADO, PATH_AUTH, PATH_EDIT, PATH_FORBBIDEN, PATH_MEDIDORES, PATH_MODULE_DETAILS, PATH_REGISTRAR } from 'src/app/interfaces/routes-app';
+import { Estado, Medidor, MedidorAsociado } from 'src/app/interfaces';
+import { PATH_AFILIADO, PATH_ASOCIACIONES, PATH_AUTH, PATH_EDIT, PATH_FORBBIDEN, PATH_MEDIDORES, PATH_MODULE_DETAILS, PATH_REGISTRAR } from 'src/app/interfaces/routes-app';
 
 @Component({
   selector: 'app-medidor-details',
@@ -23,8 +23,9 @@ export class MedidorDetailsComponent {
   medidor!:Medidor;
   ngOnInit(): void {
    this.medidoresService.medidor.subscribe(res=>{
-    console.log('MEDIDOR: ',res);
+    
     this.medidor=res;
+    this.obtenerAsociaciones();
    })
    if (!this.routerAct.snapshot.params['id']) {
     this.messageService.add({
@@ -40,7 +41,6 @@ export class MedidorDetailsComponent {
       
     this.medidoresService.findOneMedidor(id).subscribe({
       next: (res) => {
-        // console.log(res);
         if (res.OK === false) {
           switch (res.statusCode) {
             case 401:
@@ -161,9 +161,34 @@ export class MedidorDetailsComponent {
     }
   }
   detailAsociacion(){
-    const id = this.medidor.medidorAsociado?.map(val=>val.afiliado!.perfil!.id)
-    console.log('id perfil',id);
-    if(id?.length!>0)
-    this.router.navigate([PATH_MEDIDORES,PATH_AFILIADO,PATH_MODULE_DETAILS,id![0]])
+    const afi = this.medidor.medidorAsociado?.find(res=>res.afiliado?.perfil?.id);
+    // console.log('id perfil',id);
+    if(afi)
+    this.router.navigate([PATH_ASOCIACIONES,PATH_MODULE_DETAILS,afi.afiliado?.perfil?.id])
+  }
+  dataAsociados:MedidorAsociado[]=[];
+  loadingAsociacion:boolean=false;
+  asociacionTitle:string='';
+  obtenerAsociaciones(){
+    this.loadingAsociacion=true;
+    this.asociacionTitle='';
+    this.medidoresService.obtenerAsociacionesMedidor(this.medidor.id!).subscribe(res=>{
+     
+      if(res.OK){
+        this.dataAsociados=res.data!;
+        this.loadingAsociacion=false;
+        if(res.data!.length===0)
+        this.asociacionTitle='El medidor de agua no tiene asociaciones';
+      }else{
+        this.asociacionTitle='Error'
+        this.loadingAsociacion=false;
+      }
+    })
+  }
+  visibleAsociacionDetails:boolean=false;
+  idAsociaod:number=-1;
+  asociacionDetails(asociacion:MedidorAsociado){
+    this.idAsociaod=asociacion.id!;
+    this.visibleAsociacionDetails=true;
   }
 }

@@ -50,7 +50,7 @@ export class PerfilService {
     return this._afiliadoSelected$.asObservable();
   }
   findAll(paginator: PaginatorFind) {
-    console.log(paginator);
+    // console.log(paginator);
     let { size, ...dataPaginator } = paginator;
     return this.http
       .get<HttpResponseApiArray<Perfil>>(`${this.URL_perfil}`, {
@@ -60,7 +60,7 @@ export class PerfilService {
         tap((resp) => {
           if (resp.OK) {
             this._perfiles$.next(resp.data);
-            console.log(resp.data);
+            // console.log(resp.data);
           }
         }),
         map((resp) => {
@@ -79,7 +79,20 @@ export class PerfilService {
         })
       );
   }
-
+  findPerfilesExport(pag:any){
+    const {size,q,estado,...dataPaginator}=pag;
+    return this.http.get<HttpResponseApi<Perfil[]>>(`${this.URL_perfil}/export`
+      ,{params:{...dataPaginator}}
+    )
+    .pipe();
+  }
+  uploadImageProfile(file: File,id:number) {
+    const formParams = new FormData();
+    formParams.append('file', file);
+    formParams.append('id',id.toString());
+    return this.http.post<any>(`${this.URL_perfil}/upload-image-user`, formParams,{
+    })
+  }
   findOne(id: number) {
     return this.http
       .get<HttpResponseApi<Perfil>>(`${this.URL_perfil}/${id}`)

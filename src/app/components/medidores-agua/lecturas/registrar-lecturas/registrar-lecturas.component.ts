@@ -5,26 +5,18 @@ import { LecturasService } from '../lecturas.service';
 import { MessageService, ConfirmationService } from 'primeng/api';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AnioSeguimientoLecturas, Gestion, LecturasOptions, MesLectura, lecturasRegisterForm } from 'src/app/interfaces/medidor.interface';
-import { patternText } from 'src/app/patterns/forms-patterns';
+import { AnioSeguimientoLecturas, Gestion, LecturasOptions, PlanillaMesLectura, lecturasRegisterForm } from 'src/app/interfaces/medidor.interface';
+import { patternSpanishInline, patternText } from 'src/app/patterns/forms-patterns';
 import { CommonAppService } from '../../../../common/common-app.service';
 
 @Component({
   selector: 'app-registrar-lecturas',
   templateUrl: './registrar-lecturas.component.html',
-  styles: [
-    `
-    .fs-text{
-      font-size: 1.15rem
-    }`
-  ]
+  styleUrls:['./registrar-lecturas.component.css']
 })
 export class RegistrarLecturasComponent {
   data: Perfil[] = [];
-  gestiones:any[]=[];
-  meses:any[]=[];
-  // titleTable = 'Lista de afiliados con sus medidores de agua';
-  // debouncer: Subject<string> = new Subject<string>();
+  limite!:AnioSeguimientoLecturas
   constructor(
     private readonly lecturasService: LecturasService,
     private readonly messageService: MessageService,
@@ -34,36 +26,88 @@ export class RegistrarLecturasComponent {
     private router: Router,
     private routerAct: ActivatedRoute
   ) {}
-  
+  orderList=[
+    {name:'ASC',value:'ASC'},
+    {name:'DESC',value:'DESC'},
+  ]
+  sortList=[
+    {name:'Barrio',value:'barrio'},
+  ]
+  sortValue:any[]=[];
   lecturasOptions:LecturasOptions={
-    barrio: null
+    limit:10,
+    offset:0,
+    sort:'id',
+    order:'ASC',
+  }
+  filterType:any;
+  filterDisabled:boolean=true;
+  applySort(event:any){
+    console.log(event);
+    if(event.value === "barrio") {
+      this.filterType=event.value;
+      this.sortValue=this.commonAppService.barrios;
+    }else if(event.value === null){
+      this.sortValue=[];
+      this.filterType=null;
+      this.filterDisabled=true;
+      this.lecturasOptions={
+        limit:10,
+        offset:0,
+        sort:'id',
+        order:'ASC',
+      }
+    }
+    console.log(this.sortValue);
+    console.log(this.commonAppService.barrios);
+  }
+  applySortValue(event:any){
+    console.log(event);
+    if(event.value ===null){
+      this.filterDisabled=true;
+      this.lecturasOptions={
+        limit:10,
+        offset:0,
+        sort:'id',
+        order:'ASC',
+      }
+    }else if(this.filterType ==='barrio'){
+      this.lecturasOptions['barrio'] = event.value;
+      this.filterDisabled=false;
+    }
+    else{
+      console.log('OPTION NOT FOUND');
+    }
+  }
+  resetList(){
+    this.sortValue=[];
+    this.filterType=null;
+    this.filterDisabled=true;
+    this.lecturasOptions={
+      limit:10,
+      offset:0,
+      sort:'id',
+      order:'ASC',
+    }
+    this.getAllLecturas();
   }
   ngOnInit(): void {
     this.lecturasService.perfilesLecturas.subscribe({
       next:(res)=>{
-        console.log(res);
+        console.log('data:',res);
+        this.lecturasOptions.limit=res.limit;
+        this.lecturasOptions.offset=res.offset;
+        // this.lecturasOptions.order=res.order;
+        this.lecturasOptions.size=res.size;
         this.data=res.data;
       }
     })
-    // this.lecturasService.aniosSeguimiento.subscribe({
-    //   next:res=>{ 
-    //     // this.gestiones=res;
-    //     // console.log(res);
-    //     this.gestiones=res.map(ges=>{
-    //       return {
-    //         label:  ges.anio?.toString(),
-    //         value:ges.anio,
-    //         meses:ges.meses,
-    //       }
-    //     })
-    //   }
-    // })
-    // this.getSeguimientos();
+    
+    this.getLimiteRegistros();
     this.getAllLecturas();
   }
   lecturasForm:FormGroup=this.fb.group({
-    // anio:     [this.lecturasOptions.gestion,[Validators.required,Validators.min(2000)]],
-    // mes:      [this.lecturasOptions.mes,[Validators.required]],
+    
     registros: this.fb.array([]),
   });
   get lecturasArray(){
@@ -85,7 +129,8 @@ export class RegistrarLecturasComponent {
     };
     const lecturasRegister:lecturasRegisterForm =this.lecturasForm.value;
     lecturasRegister.registros = this.lecturasArray.value.filter((filt:any)=>filt.lectura)
-    // console.log('send lectur',lecturasRegister);
+    console.log('send lectur',lecturasRegister)
+    // return;
     this.registrarFormulario(lecturasRegister);
   }
   registrarFormulario(formulario:lecturasRegisterForm){
@@ -134,6 +179,26 @@ export class RegistrarLecturasComponent {
   showForm=false;
   loading=false;
   titleError ='';
+  loadCustomers(filters:any){
+    console.log('filter',filters);
+    this.lecturasOptions.offset=filters.first
+    this.lecturasOptions.limit=filters.rows
+    if(filters.globalFilter){
+      if(filters.globalFilter.value.length===0)
+      delete this.lecturasOptions.q
+      else this.lecturasOptions.q = filters.globalFilter.value
+    }
+    this.getAllLecturas();
+  }
+  applySorteo(sorteo:any){
+    console.log('sorteo',sorteo);
+  }
+  getLimiteRegistros(){
+    this.lecturasService.limiteRegistrosLecturas().subscribe(res=>{
+      console.log('limite: ',res);
+      if(res.OK) this.limite=res.data!;
+    })
+  }
   getAllLecturas() {
     this.lecturasService.AllPerfilesLecturas(this.lecturasOptions).subscribe({
       next: (res) => {
@@ -214,40 +279,8 @@ export class RegistrarLecturasComponent {
       }
     })
   }
-  // changeYear(event:any){
-  //   // console.log(event);
-  //   const gestion=this.gestiones.find(ges=>ges.value===event.value);
-  //   // console.log(gestion);
-  //   if(gestion) {
-  //     this.lecturasOptions={
-  //       gestion:gestion.value,
-  //       mes:null,
-  //       barrio:Barrio._20DeMarzo
-  //     }
-  //     this.lecturasForm.get('anio')?.setValue(gestion.value);
-  //     this.meses=gestion.meses
-  //     this.showLecturas=false;
-  //   }
-  // }
-  // changeMonth(event:any){
-  //   // console.log(event);
-  //   this.lecturasOptions.mes=event.value;
-  //   this.lecturasForm.get('mes')?.setValue(event.value);
-    
-  //   this.showLecturas=false;
-  // }
   showLecturas=false;
-  // buscarLecturas(){
-  //   if(this.lecturasOptions.gestion===null || this.lecturasOptions.mes===null){
-  //     this.messageService.add({
-  //       severity: 'info',
-  //       summary: `DEBE SELECCIONAR EL AÑO Y MES DE GESTION!!`,
-  //       life: 3000,
-  //     });
-  //     return
-  //   }
-  //   this.getAllLecturas();
-  // }
+ 
   agregarPlanillaParaPago(){
     if(this.data.length>0){
       for(const pe of this.data){
@@ -262,7 +295,9 @@ export class RegistrarLecturasComponent {
               estadoMedidor:[,[Validators.pattern(patternText)]],
               planilla:this.fb.group({
                 id:[asc.planillas![0].id,Validators.required]
-              })
+              }),
+              medicion:[asc.medidor?.medicion,Validators.required],
+              id:[ asc.planillas![0].lecturas[0].id,Validators.required]
             })
             this.lecturasArray.push(lecturaItem);
           }
@@ -321,5 +356,43 @@ if(nombre ==='estadoMedidor'){
       return `caracteres no validos`
     }
     return ''
+  }
+  searchForm:FormGroup= this.fb.group({
+    termino:[,[Validators.pattern(patternSpanishInline),Validators.minLength(1)]]
+  },{updateOn:'change'});
+
+  campoValido(nombre: string) {
+    return (
+      this.searchForm.controls[nombre].errors &&
+      this.searchForm.controls[nombre].touched
+    );
+  }
+  inputValid(nombre: string) {
+    return this.searchForm.controls[nombre].errors &&
+      this.searchForm.controls[nombre].touched
+      ? 'ng-invalid ng-dirty'
+      : this.searchForm.controls[nombre].valid &&
+        this.searchForm.controls[nombre].touched
+      ? 'ng-valid ng-dirty'
+      : '';
+  }
+  limpiarCampo(campo: string) {
+    if (
+      !this.searchForm.get(campo)?.pristine &&
+      this.searchForm.get(campo)?.value?.length === 0
+    ) {
+      this.searchForm.get(campo)?.reset();
+    }
+  }
+  getTerminoErrors(campo:string){
+    const errors = this.searchForm.get(campo)?.errors;
+
+    if(errors?.['pattern']){
+      console.log(errors);
+      return 'El buscador contiene caracteres no validos'
+    }else if(errors?.['minlength']){
+      return 'El tamaño minimo es 1'
+    }
+    return '';
   }
 }

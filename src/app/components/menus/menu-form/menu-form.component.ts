@@ -32,8 +32,9 @@ export class MenuFormComponent {
     
     this.menusService.menu.subscribe((res) => {
       // console.log(res);
-      const { itemsMenu,created_at,updated_at,isActive, ...dataMenu } = res;
+      const { itemsMenu,created_at,estado,updated_at,isActive, ...dataMenu } = res;
       this.menuActual = res;
+      this.menuForm.removeControl('estado')
       this.menuForm.setValue({
         ...dataMenu,
         itemsMenu:[]
@@ -219,7 +220,7 @@ export class MenuFormComponent {
       const itemsForm=this.fb.group({
         itemMenuId:[item.itemMenu!.id,[Validators.required,Validators.min(1)]],
         nombre: [item.nombre,[Validators.required,Validators.minLength(3),Validators.pattern(patternText),]],
-        visible:[true],
+        visible:[item.visible],
       })
       // this.listItemsSelected.push(item);
       this.itemsMenuForm.push(itemsForm);

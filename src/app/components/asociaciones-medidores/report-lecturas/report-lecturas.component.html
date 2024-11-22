@@ -1,0 +1,40 @@
+<p-dialog
+  [header]="titleHeader"
+  [modal]="true"
+  [(visible)]="visible"
+  [breakpoints]="{ '960px': '75vw' }"
+  [style]="{ width: '75vw','min-height':'50vw',margin:'10px' }"
+  [baseZIndex]="750"
+  [draggable]="false"
+  [closeOnEscape]="false"
+  (onHide)="closePlanilla.emit(false)"
+>
+  <div class="card p-fluid">
+    <h4>REPORTE EN LINEA</h4>
+    <p-divider></p-divider>
+    <div class="grid">
+
+      <div class="col-6">
+        <label for="">Seleccione un año de gestion disponible:</label>
+        <p-dropdown [options]="planillas" placeholder="Seleccione un año" (onChange)="mostrarLecturas(plan)" #plan ></p-dropdown>
+      </div>
+      <div class="col-6" *ngIf="dropDownLabel">
+        <label for="">Tipo reporte:</label>
+        <p-dropdown [options]="typeChart"  placeholder="Tipo" (onChange)="changeTypeChart($event)" #dropwdownReportType ></p-dropdown>
+      </div>
+    </div>
+    <p-divider></p-divider>
+    <div class="col-12 mt-3" *ngIf="visibleReportsModal">
+      <div class="flex flex-wrap flex-row-reverse">
+        <p-button icon="pi pi-image" styleClass="p-button-rounded p-button-secondary p-button-outlined m-3" (onClick)="saveImage(barChart)"></p-button>
+      </div>
+      <p-chart  [type]="chartType" [data]="data" [options]="options" #barChart [plugins]="[topLine]">
+        <ng-template pTemplate="body" >
+
+        </ng-template>
+        
+
+      </p-chart>
+    </div>
+  </div>
+</p-dialog>

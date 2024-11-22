@@ -1,30 +1,43 @@
 <div class="grid">
     <div class="col-12" *ngIf="perfil">
-        <div class="card">
-            <h5>Detalles de Perfil</h5>
-            <div class="p-fluid p-formgrid grid" >
-                <div class="md:col-offset-3 col-12 md:col-6 flex justify-content-center">
-                    <img src="../../../../assets/img/default_client.jpg" class="" alt="User profile" [style]="{'max-width':'248px'}">
-                </div>
+        <div class="card grid">
+			<div class="col-12">
+				<div class="flex flex-row flex-wrap">
+					<h4 class="text-center">Detalles de Perfil</h4>
+				</div>
+				<div class="flex flex-row-reverse flex-wrap">
+					<p-button icon="pi pi-user-plus" *ngIf="!perfil.accessAcount" styleClass="p-button-rounded  p-button-info mr-2" alt="Deshabilitar registro"  (click)="actionData('USUARIO')"></p-button>
+					<p-button icon="pi pi-plus" label="Afiliacion" *ngIf="!perfil.afiliado" styleClass="p-button-rounded p-button-success mr-2" alt="Deshabilitar registro" (click)="actionData('AFILIADO')"></p-button>
+					<p-button icon="pi pi-lock" styleClass="p-button-rounded p-button-danger mr-2" alt="Deshabilitar registro" *ngIf="perfil.isActive; else inhabilitado" (click)="actionData('DESHABILITAR')"></p-button>
+					<p-button icon="pi pi-pencil" styleClass="p-button-rounded p-button-warning  mr-2" alt="Modificar datos"(click)="actionData('MODIFICAR')" ></p-button>
+					<ng-template #inhabilitado>
+						<p-button icon="pi pi-lock-open" styleClass="p-button-rounded p-button-success mr-2" alt="habilitar registro" (click)="actionData('HABILITAR')" ></p-button>
+					</ng-template>
+				</div>
+			</div>
+			<div class="col-12 md:col-4">
+                <img [src]="perfil.urlImage ||''" class="" alt="User profile" [style]="{'max-width':'248px'}">
+				<p-button
+				icon="pi pi-user-edit" styleClass="p-button-rounded p-button-success p-button-outlined mx-3" (onClick)="visibleImageForm= true"
+				></p-button>
+			</div>
+            <div class="p-fluid p-formgrid grid col-12 md:col-8" >
+				
 				<div class="field col-12 md:col-6">
-					<label htmlFor="nombrePrimero">Primer Nombre</label>
-					<input pInputText id="nombrePrimero" type="text" [disabled]="true" [value]="perfil.nombrePrimero | uppercase" class="appearance-none text-color text-base" />
+					<label htmlFor="nombres">Nombres</label>
+					<input pInputText id="nombres" type="text" [disabled]="true" value="{{perfil.nombrePrimero | uppercase}} {{perfil.nombreSegundo ||'' | uppercase}}" class="appearance-none text-color text-base" />
 				</div>
 				<div class="field col-12 md:col-6">
-					<label htmlFor="nombreSegundo">Segundo Nombre</label>
-					<input pInputText id="nombreSegundo" type="text" [disabled]="true" [value]="perfil.nombreSegundo ||'' | uppercase " class="appearance-none text-color text-base"/>
-				</div>
-				<div class="field col-12 md:col-6">
-					<label htmlFor="apellidoPrimero">Primer Apellido</label>
-					<input pInputText id="apellidoPrimero" type="text" [disabled]="true" [value]="perfil.apellidoPrimero | uppercase" class="appearance-none text-color text-base"/>
-				</div>
-				<div class="field col-12 md:col-6">
-					<label htmlFor="apellidoSegundo">Segundo Apellido</label>
-					<input pInputText type="text"[disabled]="true" id="apellidoSegundo" [value]="perfil.apellidoSegundo ||'' | uppercase " class="appearance-none text-color text-base"/>
+					<label htmlFor="apellidos">Apellidos</label>
+					<input pInputText id="apellidos" type="text" [disabled]="true" value="{{perfil.apellidoPrimero | uppercase}} {{perfil.apellidoSegundo||'' | uppercase}}" class="appearance-none text-color text-base"/>
 				</div>
 				<div class="field col-12 md:col-3">
 					<label htmlFor="CI">Cedula de Identidad</label>
 					<input pInputText type="text"[disabled]="true" id="CI" [value]="perfil.CI" class="appearance-none text-color text-base"/>
+				</div>
+				<div class="field col-12 md:col-3">
+					<label htmlFor="CI">Nro. de Contacto</label>
+					<input pInputText type="text"[disabled]="true" id="CI" [value]="perfil.contacto" class="appearance-none text-color text-base"/>
 				</div>
 				<div class="field col-12 md:col-3">
 					<label htmlFor="genero">Genero</label>
@@ -46,100 +59,120 @@
 					<label htmlFor="tipoPerfil">Estado</label>
 					<input pInputText type="text"[disabled]="true" id="estado" [value]="perfil.estado" class="appearance-none text-color text-base"/>
 					
-					<p-tag icon="pi pi-exclamation-triangle" severity="danger" value="danger" value="ESTE PERFIL ESTA DESHABILITADO" class="mt-2" *ngIf=" perfil.isActive === false"></p-tag>
+					<!-- <p-tag icon="pi pi-exclamation-triangle" severity="danger" value="danger" value="ESTE PERFIL ESTA DESHABILITADO" class="mt-2" *ngIf=" perfil.isActive === false"></p-tag> -->
+				</div>
+				<div class="col-12 md:col-6" *ngIf="!perfil.isActive">
+					<p class="font-italic text-red-700">* El registro se encuentra deshabilitado <i class="pi pi-exclamation-triangle"></i></p>
 				</div>
 			</div>
         </div>
-		<div class="card" *ngIf="perfil.afiliado">
-			<h5>Afiliacion</h5>
-			<div class="p-fluid p-formgrid grid">
-
-				<div class="field col-12 md:col-6">
-					<label htmlFor="nombrePrimero">Barrio</label>
-					<input pInputText id="nombrePrimero" type="text" [disabled]="true" [value]="perfil.afiliado.ubicacion?.barrio || ''" class="appearance-none text-color text-base" />
-				</div>
-				<div class="field col-12 md:col-6">
-					<label htmlFor="nombrePrimero">Numero de vivienda</label>
-					<input pInputText id="nombrePrimero" type="text" [disabled]="true" [value]="perfil.afiliado.ubicacion?.numeroVivienda || 'SIN NUMERO DE VIVIENDA'" class="appearance-none text-color text-base" />
-				</div>
-				<div class="field col-12 md:col-6">
-					<label htmlFor="nombrePrimero">Estado de afiliacion</label>
-					<input pInputText id="nombrePrimero" type="text" [disabled]="true" [value]="perfil.afiliado.estado || ''" class="appearance-none text-color text-base" />
-				</div>
-				<p>LOCALIZACION EN CONSTRUCCION</p>
-			</div>
-			<h5>Opciones</h5>
-			<div class="grid p-fluid md:justify-content-center">
-				<div class="col-12 md:col-3 md:flex md:justify-content-center">
-					<button pButton pRipple label="Modificar Datos" class="p-button-success" (click)="actionDataAfiliado('MODIFICAR')"></button>
-				</div>
-				<div class="col-12 md:col-3 md:flex md:justify-content-center" *ngIf="perfil.afiliado.isActive; else inhabilitado">
-					<button pButton pRipple label="Deshabilitar" class="p-button-warning" (click)="actionDataAfiliado('DESHABILITAR')"></button>
-				</div>
-				<ng-template #inhabilitado>
-					<div class="col-12 md:col-3 md:flex md:justify-content-center">
-						<button pButton pRipple label="Habilitar" class="p-button-info" (click)="actionDataAfiliado('HABILITAR')"></button>
+		<div class="card grid" *ngIf="perfil.afiliado || perfil.usuario">
+			<div class="col-12 md:col-6 grid" *ngIf="perfil.afiliado">
+				<div class="col-12">
+					<div class="flex flex-row flex-wrap">
+						<h5>DATOS DE AFILIACION</h5>
 					</div>
-				</ng-template>
-			</div>
-		</div>
-		<div class="card" *ngIf="perfil.usuario">
-			<h5>Informacion de Acceso al sistema</h5>
-			<div class="p-fluid p-formgrid grid">
-
-				<div class="field col-12 md:col-6">
-					<label htmlFor="nombrePrimero">Username</label>
-					<input pInputText id="nombrePrimero" type="text" [disabled]="true" [value]="perfil.usuario.username || ''" class="appearance-none text-color text-base" />
-				</div>
-				<div class="field col-12 md:col-6">
-					<label htmlFor="nombrePrimero">correo electronico</label>
-					<input pInputText id="nombrePrimero" type="text" [disabled]="true" [value]="perfil.usuario.correo || ' SIN CORREO ELECTRONICO'" class="appearance-none text-color text-base" />
-				</div>
-				<div class="field col-12 md:col-6">
-					<label htmlFor="nombrePrimero">Estado de la cuenta</label>
-					<input pInputText id="nombrePrimero" type="text" [disabled]="true" [value]="perfil.usuario.estado || ''" class="appearance-none text-color text-base" />
-				</div>
-				<div class="field col-12 md:col-6">
-					<label htmlFor="roles">Roles</label>
-					<input pInputText id="roles" type="text" [disabled]="true" [value]="perfil.usuario.roles?.toString() || 'SIN ROLES'" class="appearance-none text-color text-base" />
-				</div>
-			</div>
-			<h5>Opciones</h5>
-			<div class="grid p-fluid md:justify-content-center">
-				<div class="col-12 md:col-3 md:flex md:justify-content-center">
-					<button pButton pRipple label="Modificar Datos" class="p-button-success" (click)="actionDataUsuario('MODIFICAR')"></button>
-				</div>
-				<div class="col-12 md:col-3 md:flex md:justify-content-center" *ngIf="perfil.usuario.isActive; else inhabilitado">
-					<button pButton pRipple label="Deshabilitar" class="p-button-warning" (click)="actionDataUsuario('DESHABILITAR')"></button>
-				</div>
-				<ng-template #inhabilitado>
-					<div class="col-12 md:col-3 md:flex md:justify-content-center">
-						<button pButton pRipple label="Habilitar" class="p-button-info" (click)="actionDataUsuario('HABILITAR')"></button>
+					<div class="flex flex-row-reverse flex-wrap">
+						<p-button icon="pi pi-lock" styleClass="p-button-rounded p-button-danger mr-2" alt="Deshabilitar registro" *ngIf="perfil.afiliado.isActive; else inhabilitado" (click)="actionDataAfiliado('DESHABILITAR')"></p-button>
+						<p-button icon="pi pi-pencil" styleClass="p-button-rounded p-button-warning  mr-2" alt="Modificar datos"(click)="actionDataAfiliado('MODIFICAR')" ></p-button>
+						<ng-template #inhabilitado>
+							<p-button icon="pi pi-lock-open" styleClass="p-button-rounded p-button-success mr-2" alt="habilitar registro" (click)="actionDataAfiliado('HABILITAR')" ></p-button>
+						</ng-template>
 					</div>
-				</ng-template>
-			</div>
-		</div>
-		<div class="card">
-			<h5>Opciones de Perfil</h5>
-			<div class="grid p-fluid md:justify-content-center" *ngIf="perfil">
-				<div class="col-12 md:col-3 md:flex md:justify-content-center">
-					<button pButton pRipple label="Modificar Perfil de usuario" class="p-button-success" (click)="actionData('MODIFICAR')"></button>
 				</div>
-				<div class="col-12 md:col-3 md:flex md:justify-content-center" *ngIf="perfil.isActive; else inhabilitado">
-					<button pButton pRipple label="Deshabilitar perfil de usuario" class="p-button-warning" (click)="actionData('DESHABILITAR')"></button>
-				</div>
-				<div class="col-12 md:col-3 md:flex md:justify-content-center" *ngIf="!perfil.afiliado;">
-					<button pButton pRipple label="Añadir afiliacion" class="p-button-secondary" (click)="actionData('AFILIADO')"></button>
-				</div>
-				<div class="col-12 md:col-3 md:flex md:justify-content-center" *ngIf="!perfil.accessAcount;">
-					<button pButton pRipple label="añadir cuenta de usuario" class="p-button-help" (click)="actionData('USUARIO')"></button>
-				</div>
-				<ng-template #inhabilitado>
-					<div class="col-12 md:col-3 md:flex md:justify-content-center">
-						<button pButton pRipple label="Habilitar perfil de usuario" class="p-button-info" (click)="actionData('HABILITAR')"></button>
+				<p-divider class="col-12"></p-divider>
+				<div class="p-fluid p-formgrid grid col-12">
+					<div class="field col-12 md:col-6">
+						<label htmlFor="nombrePrimero">Barrio</label>
+						<input pInputText id="nombrePrimero" type="text" [disabled]="true" [value]="perfil.afiliado.ubicacion?.barrio || ''" class="appearance-none text-color text-base" />
 					</div>
-				</ng-template>
+					<div class="field col-12 md:col-6">
+						<label htmlFor="nombrePrimero">Numero de vivienda</label>
+						<input pInputText id="nombrePrimero" type="text" [disabled]="true" [value]="perfil.afiliado.ubicacion?.numeroVivienda || 'SIN NUMERO DE VIVIENDA'" class="appearance-none text-color text-base" />
+					</div>
+					<div class="field col-12 md:col-6">
+						<label htmlFor="nombrePrimero">Estado de afiliacion</label>
+						<input pInputText id="nombrePrimero" type="text" [disabled]="true" [value]="perfil.afiliado.estado || ''" class="appearance-none text-color text-base" />
+					</div>
+					<div class=" col-12 md:col">
+						<div class="text-center p-3 border-round-sm h-full font-bold">
+						  <div class="col-12 flex flex-column justify-content-center">
+							<p-button icon="pi pi-map-marker" styleClass="p-button-rounded p-button-secondary p-button-text p-button-raised" (onClick)="mostrarMapAfiliado()"></p-button>
+						  </div>
+						</div>
+					  </div>
+				</div>
+				<div class="col-12 md:col-6" *ngIf="!perfil.afiliado.isActive">
+					<p class="font-italic text-red-700">* El registro se encuentra deshabilitado <i class="pi pi-exclamation-triangle"></i></p>
+				</div>
+			</div>
+			<div class="col-12 md:col-6 grid" *ngIf="perfil.usuario">
+				<div class="col-12">
+					<div class="flex flex-row flex-wrap">
+						<h5>DATOS DE USUARIO</h5>
+					</div>
+					<div class="flex flex-row-reverse flex-wrap">
+						<p-button icon="pi pi-lock" styleClass="p-button-rounded p-button-danger mr-2"  alt="Deshabilitar registro" (click)="actionDataUsuario('DESHABILITAR')" *ngIf="perfil.usuario.isActive; else inhabilitado" ></p-button>
+						<p-button icon="pi pi-pencil" styleClass="p-button-rounded p-button-warning mr-2" alt="Modificar datos" (click)="actionDataUsuario('MODIFICAR')"></p-button>
+						<ng-template #inhabilitado>
+							<p-button icon="pi pi-lock-open" styleClass="p-button-rounded p-button-success mr-2" alt="habilitar registro"  (click)="actionDataUsuario('HABILITAR')"></p-button>
+						</ng-template>
+					</div>
+				</div>
+				<p-divider class="col-12"></p-divider>
+				<div class="p-fluid p-formgrid grid">
+					<div class="field col-12 md:col-6">
+						<label htmlFor="username">Usuario</label>
+						<input pInputText id="username" type="text" [disabled]="true" [value]="perfil.usuario.username || ''" class="appearance-none text-color text-base" />
+					</div>
+					<div class="field col-12 md:col-6">
+						<label htmlFor="correo">correo electronico</label>
+						<input pInputText id="correo" type="text" [disabled]="true" [value]="perfil.usuario.correo || ' SIN CORREO ELECTRONICO'" class="appearance-none text-color text-base" />
+					</div>
+					<div class="field col-12 md:col-6">
+						<label htmlFor="estadouser">Estado de la cuenta</label>
+						<input pInputText id="estadouser" type="text" [disabled]="true" [value]="perfil.usuario.estado || ''" class="appearance-none text-color text-base" />
+					</div>
+					<div class="field col-12 md:col-6">
+						<label htmlFor="roles">Roles</label>
+						<input pInputText id="roles" type="text" [disabled]="true" [value]="perfil.usuario.roles?.toString() || 'SIN ROLES'" class="appearance-none text-color text-base" />
+					</div>
+				</div>
+				<div class="col-12 md:col-6" *ngIf="!perfil.usuario.isActive">
+					<p class="font-italic text-red-700">* El registro se encuentra deshabilitado <i class="pi pi-exclamation-triangle"></i></p>
+				</div>
 			</div>
 		</div>
     </div>
 </div>
+
+<p-dialog header="Header" [(visible)]="visibleImageForm" [modal]="true" [style]="{ width: '50vw' }" [draggable]="false" [resizable]="false" (onHide)="visibleImageForm=false">
+    <div class="card flex justify-content-center">
+		<p-fileUpload accept=".jpeg,.jpg,.png" 
+		[disabled]="IsLoading"
+		[maxFileSize]="1000*1000*10" [fileLimit]="1" 
+		[customUpload]="true"
+		mode="advanced"
+		[files]="imageUpload" 
+		(uploadHandler)="submitImage($event)" 
+		>
+			<ng-template pTemplate="toolbar">
+				<div class="py-3">Upload 3 Files</div>
+			</ng-template>
+			<ng-template let-file pTemplate="file">
+				<div>Custom UI to display a file</div>
+			</ng-template>
+			<ng-template pTemplate="content" let-files>
+				<div>Additional content.</div>
+			</ng-template>
+		</p-fileUpload>
+	</div>
+
+</p-dialog>
+
+<app-map-afiliado
+*ngIf="visibleMapAfiliado"
+[visible]="visibleMapAfiliado"
+[defaultCenter]="coordenadasLatLng"
+(eventVisible)="visibleMapAfiliado =$event"
+></app-map-afiliado>

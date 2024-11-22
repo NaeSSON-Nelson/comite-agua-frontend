@@ -1,7 +1,30 @@
 <div class="grid">
     <div class="col-12">
         <div class="card px-6 py-6">
-            <p-table #dt [value]="data" [rowHover]="true">
+            <p-toolbar styleClass="mb-4 gap-2">
+                <ng-template pTemplate="left">
+                    <div class="my-2">
+                        <button pButton pRipple label="Registrar nuevo medidor de agua" icon="pi pi-plus" class="p-button-success mr-2" (click)="registrarForm()" ></button>
+                    </div>
+                </ng-template>
+            </p-toolbar>
+            <p-table #dt
+            
+            dataKey="id"
+            [value]="data"
+            [rowHover]="true" 
+            [paginator]="true"
+            [rows]="10"
+            [lazy]="true" 
+            (onLazyLoad)="loadCustomers($event)"
+            [totalRecords]="dataPaginator.size||0"
+            [customSort]="true"
+            [showCurrentPageReport]="true"
+            [tableStyle]="{ 'min-width': '50rem' }"
+            currentPageReportTemplate="Mostrando del {first} al {last} de {totalRecords} entries"
+            [rowsPerPageOptions]="[10, 25, 50]"
+            
+            >
                 <ng-template pTemplate="caption">
                     <form class="flex flex-column md:flex-row md:justify-content-between md:align-items-center"
                     [formGroup]="searchForm"
@@ -9,7 +32,7 @@
                         <h5 class="m-0">{{titleTable}}</h5>
                         <span class="block mt-2 md:mt-0 p-input-icon-left">
                             <i class="pi pi-search"></i>
-                            <input pInputText type="text" inputId="termino"  placeholder="Search..." formControlName="termino" class="w-full sm:w-auto" (input)="search($event)" />
+                            <input pInputText type="text" inputId="termino"  placeholder="Search..." formControlName="termino" class="w-full sm:w-auto"  (input)="dt.filterGlobal($event.target, 'contains')"/>
                             <small
                                 id="termino-help"
                                 class="p-error block"
@@ -40,15 +63,15 @@
                         </td>
                         <td style="width:14%; min-width:10rem;"><span class="p-column-title">Ci</span>
                             <span class="p-column-title">Estado</span>
-                            {{customer.estado}}
+                            <p-tag [severity]="customer.isActive?'success':'danger'" [value]="customer.estado"></p-tag>
                         </td>
                         <td style="width:14%; min-width:8rem;">
                             <span class="p-column-title">Funcionamiento</span>
-                           {{customer.funcionamiento || 'SIN FUNCIONAMIENTO'}}
+                           {{customer.funcionamiento?'EN FUNCIONAMIENTO':'SIN FUNCIONAMIENTO'}}
                         </td>
                         <td  style="width:14%; min-width: 10rem;">
                             <div class="flex p-fluid">
-                                <button pButton pRipple icon="pi pi-plus" label="mas..." class="p-button-rounded p-button-info mr-2"
+                                <button pButton pRipple icon="pi pi-book" class="p-button-rounded p-button-info mr-2"
                                 (click)="dataDetail(customer.id)"
                                 ></button>                                
                             </div>
@@ -61,8 +84,5 @@
                 
             </p-table>
         </div>
-    </div>
-    <div class="col-12 card flex justify-content-center" *ngIf="data.length>0" >
-        <p-paginator (onPageChange)="onPageChange($event)" [first]="dataPaginator.offset ||0" [totalRecords]="dataPaginator.size!" [rows]="dataPaginator.limit||10" [rowsPerPageOptions]="[20,50,100]"></p-paginator>
     </div>
 </div>

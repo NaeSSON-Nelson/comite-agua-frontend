@@ -1,0 +1,48 @@
+<p-dialog
+header="FORMULARIO DE REGISTRO DE NUEVA MULTA DE SERVICIO"
+[(visible)]="visible" [modal]="true" [style]="{ width: '90vw' }" [draggable]="false" [resizable]="false" [baseZIndex]="1300" [closeOnEscape]="false"
+(visibleChange)="eventVisible.emit(false)"
+>
+<div class="card">
+    <h3>LECTURAS CON RETRASO DE PAGO DE SERVICIO CON MAS DE 90 DIAS</h3>
+    <p-divider></p-divider>
+    <div class="col-12 grid p-fluid">
+        <div class="field col-12 md:col-3">
+            <span class="p-float-label">
+            <p-dropdown
+                inputId="medidor"
+                [autoDisplayFirst]="false"
+                [options]="medidoresList"
+                optionLabel="medidor.nroMedidor"
+                optionValue="id"
+                placeholder="Select Medidor"
+                (onChange)="selectMedidor($event)"
+            ></p-dropdown>
+            <label for="medidor">Seleccione el medidor Asociado:</label>
+            </span>
+        </div>
+        <div class="col-12" *ngIf="planillastreeNode.length>0">
+            <p-treeTable [value]="planillastreeNode" (onNodeSelect)="addSelect($event)" (onNodeUnselect)="dropSelect($event)" [columns]="cols" selectionMode="checkbox"  selectionMode="multiple" [scrollable]="true" [tableStyle]="{'min-width':'50rem'}" >
+                    
+                <ng-template pTemplate="header" let-columns>
+                    <tr>
+                        <th *ngFor="let col of columns">
+                            {{ col.header }}
+                        </th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-rowNode let-rowData="rowData" let-columns="columns">
+                    <tr>
+                        <td *ngFor="let col of columns; let i = index">
+                            <p-treeTableToggler [rowNode]="rowNode" *ngIf="i === 0" ></p-treeTableToggler>
+                            <p-treeTableCheckbox [value]="rowNode" *ngIf="i === 0"></p-treeTableCheckbox>
+                            {{ rowData[col.field] }}
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-treeTable>
+            <p-button label="Seleccionar lecturas" (onClick)="subirLecturas()"></p-button>
+        </div>
+    </div>
+</div>
+</p-dialog>

@@ -35,16 +35,16 @@ export class MedidorFormComponent {
   ngOnInit(): void {
     
     this.medidoresService.medidor.subscribe((res) => {
-      console.log(res);
+      // console.log(res);
+      this.medidorActual=res;
+      this.medidorForm.removeControl('estado');
       this.medidorForm.setValue({
         nroMedidor:res.nroMedidor,
         lecturaInicial:res.lecturaInicial,
-        estado:res.estado,
+        // estado:res.estado,
         medicion:res.medicion,
         marca:res.marca,
-        funcionamiento:res.funcionamiento,
       })
-      this.medidorActual=res;
     });
     if (this.routerAct.snapshot.params['id'] && this.routerAct.snapshot.routeConfig?.path?.includes(PATH_EDIT)){
       this.medidoresService.findOneMedidor(this.routerAct.snapshot.params['id']).
@@ -99,7 +99,7 @@ export class MedidorFormComponent {
       estado:            [Estado.ACTIVO],
       medicion:          [,Validators.required],
       marca:             [,[Validators.required,Validators.pattern(patternText),Validators.minLength(1)]],
-      funcionamiento:     [,Validators.required]
+
     },
     {
       updateOn: 'blur',
@@ -151,9 +151,7 @@ export class MedidorFormComponent {
                   detail: `${res.message}`,
                   icon: 'pi pi-check',
                 });
-                this.router.navigate([PATH_MEDIDORES, PATH_MODULE_DETAILS,this.medidorActual?.id], {
-                  // queryParams: { id: this.perfilActual?.id },
-                });
+                this.router.navigate([PATH_MEDIDORES, PATH_MODULE_DETAILS,this.medidorActual?.id]);
               }else{
                 this.messageService.add({
                   severity: 'error',
@@ -275,11 +273,7 @@ export class MedidorFormComponent {
       return 'El campo es requerido';
     return '';
   }
-  getFuncionamientoErrors(campo:string){
-    const errors = this.medidorForm.get(campo)?.errors;
-    if(errors?.['required']) 
-      return 'El campo es requerido';
-    return '';
-    
+  get formValid(){
+    return this.medidorForm.valid && this.medidorForm.touched && !this.medidorForm.pristine
   }
 }

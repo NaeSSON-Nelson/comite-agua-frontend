@@ -4,7 +4,7 @@ import { ItemMenu } from 'src/app/interfaces/menu.interface';
 import { ItemsMenuService } from '../items-menu.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ActivatedRoute, Router } from '@angular/router';
-import { switchMap } from 'rxjs';
+import { Subscription, switchMap } from 'rxjs';
 import { patternText } from 'src/app/patterns/forms-patterns';
 import { AsyncValidatorLinkService } from '../validators/async-validator-link.service';
 import { CommonAppService } from 'src/app/common/common-app.service';
@@ -29,7 +29,7 @@ export class ItemMenuFormComponent {
     private router: Router,
     private routerAct: ActivatedRoute
   ) {}
-
+  subscription!:Subscription;
   ngOnInit(): void {
     // if(this.clienteModificar?.id){
     //   this.proveedorForm.setValue(this.clienteModificar);
@@ -37,9 +37,10 @@ export class ItemMenuFormComponent {
     // this.routerAct.paramMap.subscribe((params)=>{
     //   console.log(params);
     // })
-    this.itemsMenuService.itemMenu.subscribe((res) => {
-      const { created_at, isActive, updated_at, ...dataItem } = res;
+   this.subscription= this.itemsMenuService.itemMenu.subscribe((res) => {
+      const { created_at, isActive, estado,updated_at, ...dataItem } = res;
       this.itemMenuActual = res;
+      this.itemMenuForm.removeControl('estado')
       this.itemMenuForm.setValue({ ...dataItem });
     });
     if (this.routerAct.snapshot.params['id'] && this.routerAct.snapshot.routeConfig?.path?.includes(PATH_EDIT)){
@@ -88,6 +89,11 @@ export class ItemMenuFormComponent {
         }
       })
   }
+  }
+  ngOnDestroy(): void {
+    //Called once, before the instance is destroyed.
+    //Add 'implements OnDestroy' to the class.
+    this.subscription.unsubscribe();
   }
   itemMenuForm: FormGroup = this.fb.group(
     {
@@ -143,9 +149,8 @@ export class ItemMenuFormComponent {
                   detail: `${res.message}`,
                   icon: 'pi pi-check',
                 });
-                this.router.navigate([PATH_ITEMSMENU, PATH_MODULE_DETAILS], {
-                  queryParams: { id: this.itemMenuActual?.id },
-                });
+                
+                this.router.navigate([PATH_ITEMSMENU, PATH_MODULE_DETAILS,this.itemMenuActual?.id]);
               }else{
                 this.messageService.add({
                   severity: 'error',
@@ -170,7 +175,7 @@ export class ItemMenuFormComponent {
                   detail: res.message,
                   icon: 'pi pi-check',
                 });
-                this.router.navigate([PATH_ITEMSMENU,PATH_LISTAR]);
+                this.router.navigate([PATH_ITEMSMENU]);
               }else{
                 this.messageService.add({
                   severity: 'error',
@@ -236,5 +241,8 @@ export class ItemMenuFormComponent {
       return 'El campo es requerido';
     }
     return '';
+  }
+  get formValid(){
+    return this.itemMenuForm.valid && this.itemMenuForm.touched && !this.itemMenuForm.pristine
   }
 }

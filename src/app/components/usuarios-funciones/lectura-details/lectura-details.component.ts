@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { UsuarioFuncionesService } from '../usuario-funciones.service';
-import { MesLectura } from 'src/app/interfaces';
+import { PlanillaMesLectura } from 'src/app/interfaces';
 
 @Component({
   selector: 'app-lectura-details',
@@ -14,7 +14,7 @@ export class LecturaDetailsComponent {
   visible:boolean=false;
   @Output()
   eventVisible:EventEmitter<boolean> = new EventEmitter<boolean>();
-  lectura:MesLectura|null=null;
+  lectura:PlanillaMesLectura|null=null;
   constructor(private readonly usuarioService:UsuarioFuncionesService){
   }
   ngOnInit(): void {

@@ -1,0 +1,134 @@
+<p-dialog header="Detalles de Asociacion" 
+[(visible)]="visibile" [modal]="true" 
+[style]="{ width: '68vw' }" [draggable]="false" 
+[resizable]="false" (onHide)="eventVisible.emit(false)" [baseZIndex]="900">
+<div class="card grid" *ngIf="asociacion">
+    <div class="col-12 grid"> <!--asociacion-->
+        <div class="col-12"> <h4>Datos de Asociacion</h4></div>
+        <!-- <div class="col-12 md:col-6">
+            <div class="text-900 text-xl mb-2 font-medium text-right">N° de Asociación</div>
+            <p class="text-700 line-height-3 text-right">{{asociacion.id}}</p>
+        </div> -->
+        <div class="md:col-6 mb-3 col-12">
+            <label class="block text-900 font-medium mb-2">N° de Asociación</label>
+            <div>{{ asociacion.id }}</div>
+        </div>
+        <div class="col-12 md:col-6 mb-3">
+            <label class="block text-900 font-medium mb-2">Estado de Asociación</label>
+           <p-tag [severity]="asociacion.isActive?'success':'danger'" [value]="asociacion.estado"></p-tag>
+                        
+        </div>
+        <div class="col-12 mb-3"> <h5>Datos vinculados de medidor de agua</h5></div>
+        <div class="col-12 md:col-6 mb-3">
+            <label class="block text-900 font-medium mb-2">N° de medidor de agua</label>
+            <div>{{ asociacion.medidor?.nroMedidor }}</div>
+        </div>
+        <div class="col-12 md:col-6 mb-3">
+            <label class="block text-900 font-medium mb-2">Lectura de Inicio de Asociación</label>
+            <div>{{ asociacion.lecturaInicial }} {{asociacion.medidor?.medicion}}.</div>
+        </div>
+        <div class="col-12 md:col-6 mb-3">
+            <label class="block text-900 font-medium mb-2">Lectura de Seguimiento de Asociación</label>
+            <div>{{ asociacion.lecturaSeguimiento }}  {{asociacion.medidor?.medicion}}.</div>
+        </div>
+        <div class="col-12 md:col-6 mb-3">
+            <label class="block text-900 font-medium mb-2">Fecha de Instalación</label>
+            <div>{{ asociacion.fechaInstalacion | date :'d/MM/yyyy' }}</div>
+        </div>
+        <div class="col-12 mb-3"> <h5>Ubicacion de instalacion del medidor asociado</h5></div>
+        <div class="col-12 md:col-3 mb-3">
+            <label class="block text-900 font-medium mb-2">Barrio</label>
+            <div>{{ asociacion.ubicacion?.barrio }}</div>
+        </div>
+        <div class="col-12 md:col-3 mb-3">
+            <label class="block text-900 font-medium mb-2">N° de Vivienda</label>
+            <div>{{ asociacion.ubicacion?.numeroVivienda ||'SIN NUMERO DE VIVIENDA' }}</div>
+        </div>
+        <div class=" col-12 md:col">
+            <div class="text-center p-3 border-round-sm h-full font-bold">
+                <div class="col-12 flex flex-column justify-content-center">
+                  <label class="block text-900 font-medium mb-2">Ubicacion georreferencial</label>
+                <p-button icon="pi pi-map-marker" styleClass="p-button-rounded p-button-secondary p-button-text p-button-raised" (onClick)="mostrarMapAsociado()"></p-button>
+              </div>
+            </div>
+          </div>
+          <div class="col-12">
+            <p-tabView>
+                <p-tabPanel header="Afiliado vinculado">
+                    <div class="col-12 mt-3 grid">
+                        <div class="col-12 md:col-4 md:p-3">
+                            <img [src]="asociacion.afiliado!.perfil!.urlImage ||''" class=" m-2" alt="User profile" [style]="{'max-width':'168px'}">
+                        </div>
+                        <div class="md:col-8 col-12 grid">
+                            <div class="col-12 md:col-6 mb-3">
+                                <label class="block text-900 font-medium mb-2">N° de Afiliacion</label>
+                            <div>{{ asociacion.afiliado?.id }}</div>
+                            </div>
+                            <div class="col-12 md:col-6 mb-3">
+                                <label class="block text-900 font-medium mb-2">N° de Perfil</label>
+                            <div>{{ asociacion.afiliado?.perfil?.id }}</div>
+                            </div>
+                        <div class="col-12 md:col-6 mb-3">
+                            <label class="block text-900 font-medium mb-2">Nombres</label>
+                            <div>{{ asociacion.afiliado?.perfil?.nombrePrimero |uppercase }} {{ asociacion.afiliado?.perfil?.nombreSegundo +' '||'' |uppercase }}{{ asociacion.afiliado?.perfil?.apellidoPrimero |uppercase  }} {{ asociacion.afiliado?.perfil?.apellidoSegundo || '' |uppercase  }}</div>
+                        </div>
+                        <div class="col-12 md:col-6 mb-3">
+                            <label class="block text-900 font-medium mb-2">Cedula de Identidad</label>
+                            <div>{{ asociacion.afiliado?.perfil?.CI }}</div>
+                        </div>
+                        <div class="col-12 md:col-6 mb-3">
+                            <label class="block text-900 font-medium mb-2">N° de Contacto</label>
+                            <div>{{ asociacion.afiliado?.perfil?.contacto }}</div>
+                        </div>
+                        <div class="col-12 md:col-3 mb-3">
+                            <label class="block text-900 font-medium mb-2">Estado de Afiliacion</label>
+                           <p-tag [severity]="asociacion.afiliado?.isActive?'success':'danger'" [value]="asociacion.afiliado?.estado"></p-tag>
+                        </div>
+                        <div class="col-12 md:col-3 mb-3">
+                            <label class="block text-900 font-medium mb-2">Estado de Perfil</label>
+                            <p-tag [severity]="asociacion.afiliado?.perfil?.isActive?'success':'danger'" [value]="asociacion.afiliado?.perfil?.estado"></p-tag>
+                        
+                        </div>
+                    </div>
+                    </div>
+                </p-tabPanel>
+                <p-tabPanel header="Multas de asociación">
+                    <p-table [value]="asociacion.multasAsociadas!" [tableStyle]="{ 'min-width': '50rem' }" *ngIf="asociacion.multasAsociadas!.length>0;else sinMultas">
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th>ID</th>
+                                <th>Motivo</th>
+                                <th>Monto</th>
+                                <th>Pagado</th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-multa>
+                            <tr>
+                                <td>{{ multa.id }}</td>
+                                <td>{{ multa.motivo }}</td>
+                                <td>{{ multa.monto }} {{multa.moneda}}.</td>
+                                <td>{{ multa.pagado?'PAGADO':'NO PAGADO' }}</td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                    <ng-template #sinMultas>
+                        <p class="font-italic">La asociación no tiene multas *</p>
+                    </ng-template>
+                    
+                </p-tabPanel>
+            </p-tabView>
+          </div>
+    </div>
+</div>
+
+</p-dialog>
+
+
+
+<app-map-afiliado
+*ngIf="visibleMapAsociado"
+[visible]="visibleMapAsociado"
+[defaultCenter]="coordenadasLatLng"
+
+(eventVisible)="visibleMapAsociado =$event">
+</app-map-afiliado>

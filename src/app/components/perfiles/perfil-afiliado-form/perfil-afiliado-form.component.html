@@ -86,7 +86,7 @@
             >{{ getAfiliadoLatitudErrors("latitud") }}
           </small>
         </div>
-        <div class="field col-12 md:col-3">
+        <div class="field col-12 md:col-3" *ngIf="!this.perfilActual?.id">
           <span class="p-float-label">
             <p-dropdown
               inputId="estado"
@@ -115,7 +115,7 @@
               pRipple
               class="p-button-primary"
               [label]="perfilActual?.afiliado?.id ? 'Modificar Afiliacion' : 'Asignar afiliacion'"
-              [disabled]="afiliadoForm.pending"
+              [disabled]="!formValid"
               (click)="validForm()"
             ></button>
           </div>

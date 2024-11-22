@@ -1,4 +1,4 @@
-<p-dialog header="{{'Detalles de la lectura registrada del Mes ' + lectura?.mesLecturado}}" [(visible)]="visible" [modal]="true" [style]="{ width: '50vw' }" [draggable]="false" [resizable]="false" (onHide)="eventVisible.emit(false)" [baseZIndex]="900">
+<p-dialog header="{{'Detalles de la lectura registrada del Mes ' + lectura?.PlanillaMesLecturar}}" [(visible)]="visible" [modal]="true" [style]="{ width: '50vw' }" [draggable]="false" [resizable]="false" (onHide)="eventVisible.emit(false)" [baseZIndex]="900">
     <h4>LECTURA</h4>
     <div class="card grid" *ngIf="lectura">
         <div class="sm:col-6 col-12">

@@ -35,6 +35,7 @@ export class ItemMenuSelectTableComponent {
       this.dataPaginator.order = res.order;
       this.dataPaginator.size = res.size;
       this.data = res.data;
+      console.log(res);
     });
 
      this.debouncerSub=this.debouncer.pipe(debounceTime(300)).subscribe((res) => {
@@ -65,7 +66,8 @@ export class ItemMenuSelectTableComponent {
   findAll() {
     this.helperService.findAllItemsMenus(this.dataPaginator).subscribe({
       next: (res) => {
-        if (!res) {
+        console.log(res);
+        if (!res.OK) {
           this.messageService.add({
             severity: 'warn',
             summary: 'Warn Message',

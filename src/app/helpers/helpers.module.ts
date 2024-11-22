@@ -8,6 +8,8 @@ import { RolesSelectTableComponent } from './roles-select-table/roles-select-tab
 import { AfiliadoUserSelectTableComponent } from './afiliado-user-select-table/afiliado-select-table.component';
 import { MapComponent } from './map/map.component';
 import { MedidoresLibresSelectTableComponent } from './medidores-libres-select-table/medidores-libres-select-table.component';
+import { MapChangesComponent } from './leaflet-map/leaflet-map';
+import { TagModule } from 'primeng/tag';
 
 
 
@@ -19,11 +21,13 @@ import { MedidoresLibresSelectTableComponent } from './medidores-libres-select-t
     RolesSelectTableComponent,
     MapComponent,
     MedidoresLibresSelectTableComponent,
+    MapChangesComponent,
   ],
   imports: [
     CommonModule,
     ReactiveFormsModule,
     PrimeNgCrudModule,
+    TagModule,
   ],
   exports:[
     AfiliadoUserSelectTableComponent,
@@ -32,6 +36,7 @@ import { MedidoresLibresSelectTableComponent } from './medidores-libres-select-t
     RolesSelectTableComponent,
     MapComponent,
     MedidoresLibresSelectTableComponent,
+    MapChangesComponent,
   ]
 })
 export class HelpersModule { }

@@ -111,6 +111,7 @@ export class ItemsMenuService {
       .pipe(
         tap((resp)=>{
           if(resp.OK){
+            console.log(resp);
             this._itemMenuSelected$.next(resp.data!)
           }
         }),
