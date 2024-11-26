@@ -198,7 +198,9 @@ export class CobrosService {
       })
     )
   }
-
+  obtenerLecturaPago(lecturaId:number){
+    return this.http.get<HttpResponseApi<PlanillaMesLectura>>(`${this.URL_deudas}/comprobantes/${lecturaId}`).pipe();
+  }
 
   //MULTAS
 

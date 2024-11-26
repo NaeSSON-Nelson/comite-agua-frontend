@@ -10,6 +10,7 @@ import { ReportesComponent } from './reportes/reportes.component';
 import { LecturasRegistradasComponent } from './reportes/lecturas-registradas/lecturas-registradas.component';
 import { ModalReportesComponent } from './modal-reportes/modal-reportes.component';
 import {ToastModule} from 'primeng/toast'
+import { GenerarListRegistroLecturasComponent } from './generar-list-registro-lecturas/generar-list-registro-lecturas.component';
 
 
 @NgModule({
@@ -19,7 +20,8 @@ import {ToastModule} from 'primeng/toast'
     LecturasMedidorComponent,
     ReportesComponent,
     LecturasRegistradasComponent,
-    ModalReportesComponent
+    ModalReportesComponent,
+    GenerarListRegistroLecturasComponent,
   ],
   imports: [
     CommonModule,

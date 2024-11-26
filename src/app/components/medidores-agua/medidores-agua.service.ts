@@ -243,4 +243,7 @@ export class MedidoresAguaService {
     return this.http.get<HttpResponseApi<MedidorAsociado>>(`${this.URL_medidores}/asociacion/${idAsociacion}`);
     
   }
+  obtenerAsociadiosMedidoresExport(){
+    return this.http.get<HttpResponseApi<MedidorAsociado[]>>(`${this.URL_medidores}/export`).pipe();
+  }
 }

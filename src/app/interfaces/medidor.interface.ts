@@ -32,6 +32,9 @@ export interface MedidorAsociado{
   estado?:                Estado;
   registrable?:            boolean;
   multasAsociadas?:       MultaServicio[];
+  manzano?                :string;
+  numeroManzano?          :number;
+  nroLote?                :number;
 }
 export interface MedidorForm{
   id?:                number;
@@ -87,6 +90,7 @@ export interface LecturasOptions extends PaginatorFind{
   mes?:string;
   gestion?:number;
   barrio?:Barrio;
+  manzano?:string;
 }
 export interface PlanillaForm{
   id:number;

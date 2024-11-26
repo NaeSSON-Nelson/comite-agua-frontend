@@ -24,16 +24,9 @@ export class PerfilDetailsComponent {
 
   perfil!: Perfil;
   ngOnInit(): void {
-    //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
-    //Add 'implements OnInit' to the class.
     this.subscription=this.perfilService.perfil.subscribe((res) => {
       this.perfil = res;
-      console.log(res);
     });
-    // console.log(this.router);
-    // console.log(this.routerAct);
-    // console.log(this.router);
-    // console.log(this.routerAct.snapshot.params);
     if (!this.routerAct.snapshot.params['id']) {
       this.messageService.add({
         severity: 'warn',
@@ -45,52 +38,6 @@ export class PerfilDetailsComponent {
       return;
     } else {
       this.findPerfil();
-      // const id =this.routerAct.snapshot.params['id']
-        
-      // this.perfilService.findOne(id).subscribe({
-      //   next: (res) => {
-      //     if (res.OK === false) {
-      //       switch (res.statusCode) {
-      //         case 401:
-      //           this.messageService.add({
-      //             severity: 'info',
-      //             summary: `OCURRIO UN ERROR AL OBTENER LA DATA:${res.error}`,
-      //             detail: `${res.message},code: ${res.statusCode}`,
-      //             life: 3000,
-      //           });
-      //           this.router.navigate([PATH_AUTH]);
-      //           break;
-      //         case 403:
-      //           this.messageService.add({
-      //             severity: 'warn',
-      //             summary: `OCURRIO UN ERROR AL OBTENER LA DATA:${res.error}`,
-      //             detail: `${res.message},code: ${res.statusCode}`,
-      //             life: 5000,
-      //           });
-      //           this.router.navigate([PATH_FORBBIDEN]);
-      //           break;
-      //         case 404:
-      //           this.messageService.add({
-      //             severity: 'warn',
-      //             summary: `OCURRIO UN ERROR AL OBTENER LA DATA:${res.error}`,
-      //             detail: `${res.message},code: ${res.statusCode}`,
-      //             life: 5000,
-      //           });
-      //           this.router.navigate([PATH_PERFILES])
-      //           break;
-      //         default:
-      //           console.log(res);
-      //           this.messageService.add({
-      //             severity: 'error',
-      //             summary: 'Error no controlado',
-      //             detail: 'revise la consola',
-      //             life: 5000,
-      //           });
-      //           break;
-      //       }
-      //     }
-      //   },
-      // });
     }
   }
 
@@ -451,5 +398,9 @@ export class PerfilDetailsComponent {
       });
     }
   }
-  
+  visiblePagoAfiliacion:boolean=false;
+
+
+
+
 }

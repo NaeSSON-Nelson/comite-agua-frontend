@@ -274,6 +274,9 @@ export class PerfilService {
         })
       );
   }
+  updatePagarAfiliado(idPerfil:number,form:Afiliado){
+    return this.http.patch<HttpResponseApi<null>>(`${this.URL_afiliado}/pago/${idPerfil}`,form).pipe();
+  }
   updateAfiliadoStatus(idPerfil: number, form: Afiliado) {
     return this.http
       .patch<HttpResponseApi<Afiliado>>(
@@ -380,5 +383,16 @@ export class PerfilService {
           return of(errors);
         })
       );
+  }
+
+  obtenerDatosPago(perfilId:number){
+    return this.http.get<HttpResponseApi<Afiliado>>(`${this.URL_afiliado}/pago/${perfilId}`).pipe();
+  }
+
+  registrarPagoPresencial(form:Afiliado){
+    return this.http.post<HttpResponseApi<Afiliado>>(`${this.URL_afiliado}/pagar/presencial`,form).pipe();
+  }
+  registrarPagoDeposito(form:Afiliado){
+    return this.http.post<HttpResponseApi<null>>(`${this.URL_afiliado}/pagar/deposito`,form).pipe();
   }
 }

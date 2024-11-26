@@ -17,8 +17,9 @@ import { InplaceModule } from 'primeng/inplace';
 import { ImageModule } from 'primeng/image';
 import {FileUploadModule} from 'primeng/fileupload';
 import { MapAfiliadoDetailsComponent } from './map-afiliado-details/map-afiliado-details.component'
-
+import { RadioButtonModule } from 'primeng/radiobutton';
 import { MultiSelectModule } from 'primeng/multiselect';
+import { PagoAfiliacionComponent } from './pago-afiliacion/pago-afiliacion.component';
 @NgModule({
   declarations: [
     PerfilesComponent,
@@ -29,6 +30,7 @@ import { MultiSelectModule } from 'primeng/multiselect';
     UsuarioCreatedComponent,
     PerfilPdfComponent,
     MapAfiliadoDetailsComponent,
+    PagoAfiliacionComponent,
   ],
   imports: [
     CommonModule,
@@ -42,6 +44,7 @@ import { MultiSelectModule } from 'primeng/multiselect';
     ImageModule,
     FileUploadModule,
     MultiSelectModule,
+    RadioButtonModule,
   ],
   exports:[
 

@@ -75,6 +75,9 @@ export class AsociarMedidorComponent {
     estado:[],
     ubicacion: this.fb.group({
       barrio: [,Validators.required],
+      manzano:[,Validators.required],
+      numeroManzano:[,[Validators.required,Validators.min(1)]],
+      nroLote:[,[Validators.required,Validators.min(1)]],
       latitud: [],
       longitud: [],
       numeroVivienda: [],
@@ -420,9 +423,42 @@ export class AsociarMedidorComponent {
     
   }
   getRegistrableErrors(campo:string){
+    const errors = this.asociacionForm.get(campo)?.errors;
+    if(errors?.['required']){
+      return `El campo es requerido`;
+    }
     return '';
   }
   getBarrioErrors(campo:string){
+    
+    const errors = this.ubicacionForm.get(campo)?.errors;
+    if(errors?.['required'])
+      return `El campo es requerido`
+    return '';
+  }
+  getManzanoErrors(campo:string){
+    
+    const errors = this.ubicacionForm.get(campo)?.errors;
+    if(errors?.['required'])
+      return `El campo es requerido`
+    return '';
+  }
+  getNroManzanoErrors(campo:string){
+    
+    const errors = this.ubicacionForm.get(campo)?.errors;
+    if(errors?.['required'])
+      return `El campo es requerido`;
+    else if(errors?.['min'])
+      return `El n° minimo es ${errors?.['min'].required}`;
+    return '';
+  }
+  getNroLoteErrors(campo:string){
+    
+    const errors = this.ubicacionForm.get(campo)?.errors;
+    if(errors?.['required'])
+      return `El campo es requerido`;
+    else if(errors?.['min'])
+      return `El n° minimo es ${errors?.['min'].required}`;
     return '';
   }
   getFechaInstalacionErrors(campo: string) {

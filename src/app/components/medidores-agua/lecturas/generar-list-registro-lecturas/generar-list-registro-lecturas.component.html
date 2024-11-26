@@ -1,0 +1,35 @@
+
+<p-dialog header="Seleccionar campos para exportar" [(visible)]="visible" 
+              [style]="{width: '50vw'}" [modal]="true">
+              <div class="mb-4">
+                <h3>Seleccione las columnas a exportar:</h3>
+                <div class="grid">
+                  <div *ngFor="let col of columns" class="col-12 md:col-6">
+                    <p-checkbox 
+                      [(ngModel)]="col.selected" 
+                      [binary]="true" 
+                      [label]="col.header"
+                      [disabled]="isRequiredField(col.field)">
+                    </p-checkbox>
+                  </div>
+                </div>
+              </div>
+        
+              <div class="mb-4">
+                <h3>Añadir columna personalizada:</h3>
+                <div class="p-fluid grid">
+                  <div class="col-5">
+                    <input pInputText [(ngModel)]="newColumnHeader" placeholder="Título de la columna">
+                  </div>
+                  <div class="col-2">
+                    <button pButton type="button" label="Añadir" (click)="addCustomColumn()"></button>
+                  </div>
+                </div>
+              </div>
+              
+        
+              <ng-template pTemplate="footer">
+                <button pButton type="button" label="Exportar PDF" (click)="exportPDF()"></button>
+                <button pButton type="button" label="Cerrar" (click)="visible=false" class="p-button-secondary ml-2"></button>
+              </ng-template>
+    </p-dialog>

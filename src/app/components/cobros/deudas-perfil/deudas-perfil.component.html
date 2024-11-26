@@ -1,19 +1,19 @@
-<p-dialog header="Perfil de cobros:" [(visible)]="visible" [modal]="true" [style]="{ width: '90vw' }" [draggable]="false" [resizable]="false" (onHide)="eventVisible.emit(false)" [baseZIndex]="900" [closeOnEscape]="false">
+<p-dialog header="MODULO DE SELECCION DE COBROS DEL SERVICIO" [(visible)]="visible" [modal]="true" [style]="{ width: '90vw' }" [draggable]="false" [resizable]="false" (onHide)="eventVisible.emit(false)" [baseZIndex]="900" [closeOnEscape]="false">
     
-    <div class="card m-3">
+    <div class="card m-1">
         <div class=" col-12 grid">
             <ng-container *ngIf="perfil">
             <div class="col-12 md:col-6">
-                    <div class="text-900 text-xl mb-2 font-medium text-right">AFILIADO</div>
-                    <p class="text-700 line-height-3 text-right">{{perfil.nombrePrimero | titlecase}} {{perfil.nombreSegundo ||'' |titlecase}} {{perfil.apellidoPrimero | titlecase}} {{perfil.apellidoSegundo ||'' | titlecase}}</p>        
+                    <div class="text-900 text-2xl mb-2 font-medium text-right">AFILIADO</div>
+                    <p class="text-700 line-height-3 text-xl text-right">{{perfil.nombrePrimero | titlecase}} {{perfil.nombreSegundo ||'' |titlecase}} {{perfil.apellidoPrimero | titlecase}} {{perfil.apellidoSegundo ||'' | titlecase}}</p>        
                 </div>
                 <div class="col-12 md:col-3">
-                    <div class="text-900 text-xl mb-2 font-medium text-right">Cedula de Identidad</div>
-                    <p class="text-700 line-height-3 text-right">{{perfil.CI}}</p>
+                    <div class="text-900 text-2xl mb-2 font-medium text-right">Cedula de Identidad</div>
+                    <p class="text-700 line-height-3 text-xl text-right">{{perfil.CI}}</p>
                 </div>
                 <div class="col-12 md:col-3">
-                    <div class="text-900 text-xl mb-2 font-medium text-right">BARRIO</div>
-                    <p class="text-700 line-height-3 text-right">{{perfil.afiliado?.ubicacion?.barrio}}</p>
+                    <div class="text-900 text-2xl mb-2 font-medium text-right">BARRIO</div>
+                    <p class="text-700 line-height-3 text-xl text-right">{{perfil.afiliado?.ubicacion?.barrio}}</p>
                 </div>
             </ng-container>
         </div>
@@ -64,21 +64,36 @@
                     </ng-template>
                 </p-treeTable>
             </ng-container>
-            
-            
         </div>
-        
-        <div class="col-12 grid">
-            <button pButton pRipple label="Registrar Pagos" [disabled]="gestionesPorCobrar.length===0" class="p-button-success" (click)="registrarDeudas()"></button>
+    </div>
+        <!-- <div class="flex flex-wrap m-3 flex-row-reverse">
             <div class="col-12 md:col-3">
                 <div class="text-900 text-xl mb-2 font-medium text-right">TOTAL POR PAGAR:</div>
                 <p class="text-700 line-height-3 text-right">{{total}} Bs.</p>
             </div>
-        </div>
-    </div>
+            <button pButton pRipple label="Registrar Pagos" [disabled]="gestionesPorCobrar.length===0" class="p-button-success" (click)="registrarDeudas()"></button>
+        </div> -->
+
+         
+      <ng-template pTemplate="footer">
+        <div class="dialog-footer">
+            <div class="footer-actions">
+                <p-button 
+                label="Registrar deudas seleccionadas" 
+                styleClass="p-button-success"
+                [disabled]="gestionesPorCobrar.length===0"
+                (click)="registrarDeudas()"
+                ></p-button>
+            </div>
+            <div class="col-12 md:col-6 footer-info">
+                <div class="text-900 text-xl font-bold text-right mx-2">Total a pagar:</div>
+                <p class="text-900 text-lg text-right font-medium">{{total |currency: 'Bs.'}}</p>
+            </div>
+          </div>
+      </ng-template>
  </p-dialog>
  <app-form-register-deudas
- 
+ *ngIf="visiblePagar"
  [porPagar]="gestionesPorCobrar"
  [visible]="visiblePagar"
  [perfil]="perfil"

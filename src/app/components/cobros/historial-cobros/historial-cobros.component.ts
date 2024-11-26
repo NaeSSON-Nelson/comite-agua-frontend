@@ -193,4 +193,11 @@ export class HistorialCobrosComponent {
     // }
     this.obtenerHistorialMultas();
   }
+  visibleDetallesLecturaPago:boolean=false;
+  idLecturaSelectedDetalles:number=-1;
+  selectLectura(event:any){
+    console.log(event);
+    this.idLecturaSelectedDetalles=event.id;
+    this.visibleDetallesLecturaPago=true;
+  }
 }

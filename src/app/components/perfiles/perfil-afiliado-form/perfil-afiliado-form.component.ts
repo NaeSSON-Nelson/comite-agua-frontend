@@ -49,6 +49,9 @@ export class PerfilAfiliadoFormComponent {
             numeroVivienda:afiliado.ubicacion?.numeroVivienda,
             longitud:afiliado.ubicacion?.longitud,
             latitud:afiliado.ubicacion?.latitud,
+            manzano:afiliado.ubicacion?.manzano,
+            numeroManzano:afiliado.ubicacion?.numeroManzano,
+            nroLote:afiliado.ubicacion?.nroLote,
           })
         }else{
           this.messageService.add({
@@ -111,8 +114,11 @@ export class PerfilAfiliadoFormComponent {
     estado          :[Estado.ACTIVO,[Validators.required]],
     barrio          :[,[Validators.required]],
     numeroVivienda  :[,[Validators.pattern(patternText),Validators.minLength(3)]],
-    longitud        :[,],
-    latitud         :[,],
+    manzano         :[,[Validators.required]],
+    numeroManzano   :[,[Validators.required,Validators.min(1)]],
+    nroLote         :[,[Validators.required,Validators.min(1)]],
+    longitud        :[],
+    latitud         :[],
   })
   validForm() {
     this.afiliadoForm.markAllAsTouched();
@@ -290,6 +296,36 @@ export class PerfilAfiliadoFormComponent {
     
     if (errors?.['required']) {
       return 'El campo es requerido';
+    }
+    return '';
+  }
+
+  
+  getAfiliadoManzanoErrors(campo:string){
+    const errors = this.afiliadoForm.get(campo)?.errors;
+    if (errors?.['required']) {
+      return 'El campo es requerido';
+    } 
+    return '';
+
+  }
+  getAfiliadoNumeroManzanoErrors(campo:string){
+    const errors = this.afiliadoForm.get(campo)?.errors;
+    console.log(errors);
+    if (errors?.['required']) {
+      return 'El campo es requerido';
+    }else if(errors?.['min']){
+      return `El minimo de numero de manzano es:`
+    }
+    return '';
+  }
+  getAfiliadoNroLoteErrors(campo:string){
+    const errors = this.afiliadoForm.get(campo)?.errors;
+    console.log(errors);
+    if (errors?.['required']) {
+      return 'El campo es requerido';
+    }else if(errors?.['min']){
+      return `El minimo de numero de lote es:`
     }
     return '';
   }

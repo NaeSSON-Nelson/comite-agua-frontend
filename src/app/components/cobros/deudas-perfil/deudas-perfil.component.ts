@@ -16,6 +16,29 @@ interface GestionTree{
   selector: 'app-deudas-perfil',
   templateUrl: './deudas-perfil.component.html',
   styles: [
+    `
+    
+    .dialog-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px;
+      width: 100%;
+    }
+
+    .footer-info {
+      display: flex;
+      align-items: center;
+      color: #6b7280;
+      margin-right:15%
+    }
+
+    .footer-actions {
+      display: flex;
+      justify-content: center;
+      width: 100%;
+    }
+    `
   ]
 })
 export class DeudasPerfilComponent {

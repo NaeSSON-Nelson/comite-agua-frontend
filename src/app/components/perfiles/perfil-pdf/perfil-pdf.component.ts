@@ -618,7 +618,7 @@ exportExcel() {
   }
 
 }
-interface ExportColumn {
+export interface ExportColumn {
   field: string;
   header: string;
   selected: boolean;

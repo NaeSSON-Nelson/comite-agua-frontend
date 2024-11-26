@@ -115,10 +115,16 @@ export class PerfilFormComponent {
 
   afiliadoForm:FormGroup= this.fb.group({
     estado          :[Estado.ACTIVO,[Validators.required]],
+    monto           :[,[Validators.required,Validators.min(0)]],
+    moneda          :[,Validators.required],
     barrio          :[,[Validators.required]],
+    manzano         :[,[Validators.required]],
+    numeroManzano   :[,[Validators.required,Validators.min(1)]],
+    nroLote         :[,[Validators.required,Validators.min(1)]],
     numeroVivienda  :[,[Validators.pattern(patternText),Validators.minLength(3)]],
     longitud        :[],
     latitud         :[],
+
   })
   usuarioForm: FormGroup = this.fb.group({
     roles           :this.fb.array([], [Validators.required]),
@@ -495,6 +501,34 @@ export class PerfilFormComponent {
     }
     return '';
   }
+  getAfiliadoManzanoErrors(campo:string){
+    const errors = this.afiliadoForm.get(campo)?.errors;
+    if (errors?.['required']) {
+      return 'El campo es requerido';
+    } 
+    return '';
+
+  }
+  getAfiliadoNumeroManzanoErrors(campo:string){
+    const errors = this.afiliadoForm.get(campo)?.errors;
+    console.log(errors);
+    if (errors?.['required']) {
+      return 'El campo es requerido';
+    }else if(errors?.['min']){
+      return `El minimo de numero de manzano es:`
+    }
+    return '';
+  }
+  getAfiliadoNroLoteErrors(campo:string){
+    const errors = this.afiliadoForm.get(campo)?.errors;
+    console.log(errors);
+    if (errors?.['required']) {
+      return 'El campo es requerido';
+    }else if(errors?.['min']){
+      return `El minimo de numero de lote es:`
+    }
+    return '';
+  }
   getAfiliadoEstadoErrors(campo: string) {
     const errors = this.afiliadoForm.get(campo)?.errors;
     
@@ -537,6 +571,22 @@ export class PerfilFormComponent {
     }else if(errors?.['maxlength']){
       return `tamaño máximo de ${errors?.['maxlength'].requiredLength} caracteres`;
     }
+    return '';
+  }
+  getAfiliadoMontoErrors(campo:string){
+    const errors = this.afiliadoForm.get(campo)?.errors;
+    if(errors?.['required']){
+      return `El campo es requerido`
+    } else if(errors?.['min']){
+      return `El monto es minimo es ${errors?.['min'].min}`
+    }
+    return '';
+  }
+  getAfiliadoMonedaErrors(campo:string){
+    const errors = this.afiliadoForm.get(campo)?.errors;
+    if(errors?.['required']){
+      return `El campo es requerido`
+    } 
     return '';
   }
   ngOnDestroy(): void {

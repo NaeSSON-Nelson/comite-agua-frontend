@@ -1,31 +1,38 @@
 <div class="grid card">    
     <div class="col-12">
-      <h3>REGISTRO DE LECTURAS A LAS PLANILLAS DE LOS MEDIDORES DE AGUA</h3>
-      <p-button label="Genar Tarifas por pagar" (onClick)="visibleGenerar=true"></p-button>
-      <form class="card" [formGroup]="lecturasForm" *ngIf="showForm;else finalizado">
+      <h3 class="text-center my-5">REGISTRO DE LECTURAS A LAS PLANILLAS DE LOS MEDIDORES DE AGUA</h3>
+      <!-- <p-button label="Genar Tarifas por pagar" (onClick)="visibleGenerar=true"></p-button> -->
+      <form class="card mt-3 mb-2" [formGroup]="lecturasForm" *ngIf="showForm;else finalizado">
         <div class="col-12 grid">
-          <div class="col-12" *ngIf="limite">
-            <h5>FECHA LIMITE:</h5>
-            <p>Inicio: {{limite.meses![0].fechaRegistroLecturas  | date: 'dd-MM-yyyy'}}</p>
-            <p>FIN: {{limite.meses![0].fechaFinRegistroLecturas  | date: 'dd-MM-yyyy'}}</p>
-            
+          <div class="col-12 grid" *ngIf="limite">
+            <div class="col-12 my-5">
+              <h5 class="text-center">REGISTRO DE LECTURA DEL MES {{limite.meses![0].mes}} DE LA GESTION {{limite.anio}}</h5>
+            </div>
+            <div class="col-12 md:col-6">
+              <h5>FECHA LIMITE:</h5>
+              <p>Inicio: {{limite.meses![0].fechaRegistroLecturas  | date: 'dd/MM/yyyy'}}</p>
+              <p>FIN: {{limite.meses![0].fechaFinRegistroLecturas  | date: 'dd/MM/yyyy'}}</p>
+            </div>
+            <div class="col-12 md:col-6 flex flex-wrap flex-wrap-reverse">
+              <p-button label="Exportar Afiliados para lecturar" (onClick)="visibleRegistrarLecturarExport=true"></p-button>
+            </div>
           </div>
-          <div class="col-3">
+          <div class="col-12 md:col-3">
             <span class="p-float-label">
               <p-dropdown [options]="sortList" optionLabel="name" optionValue="value" (onChange)="applySort($event)" [showClear]="true"  placeholder="Filtrar:" optionLabel="name" inputId="float-label"></p-dropdown>
               <label for="float-label">Filtrar por: </label>
           </span>
           </div>
-          <div class="col-3" *ngIf="sortValue.length>0">
+          <div class="col-12 md:col-3" *ngIf="sortValue.length>0">
             <span class="p-float-label">
               <p-dropdown [options]="sortValue" optionLabel="name" optionValue="value" (onChange)="applySortValue($event)" [showClear]="true"  placeholder="valor:" optionLabel="name" inputId="float-label"></p-dropdown>
               <label for="float-label">Valor: </label>
           </span>
           </div>
-          <div class="col-3">
+          <div class="col-12 md:col-3">
             <p-button label="Aplicar filtros" [disabled]="filterDisabled" (onClick)="getAllLecturas()"></p-button>
           </div>
-          <div class="col-3">
+          <div class="col-12 md:col-3">
             <p-button label="Reiniciar" (onClick)="resetList()" styleClass="p-button-help"></p-button>
           </div>
         </div>
@@ -35,7 +42,7 @@
       <p-table  #dt 
       dataKey="id"
       [value]="data" 
-      [tableStyle]="{'min-width': '50rem'}"  
+      [tableStyle]="{'min-width': '20rem'}"  
       [lazy]="true" 
       [rows]="lecturasOptions.limit"
       [paginator]="true"
@@ -46,6 +53,7 @@
       currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
       [rowsPerPageOptions]="[10,50,100]"
       [customSort]="true"
+      [loading]="loading"
       *ngIf="data.length>0 || showForm; else sinData">
       <ng-template pTemplate="caption">
         <form class="flex flex-column md:flex-row md:justify-content-between md:align-items-center"
@@ -65,18 +73,22 @@
     </ng-template>
         <ng-template pTemplate="header">
           <tr>
-            <th  style="width:25%">Afiliados</th>
-            <th style="width:25%">Barrio</th>
-            <th style="width:25%">Nro Medidor de agua</th>
-            <th style="width:25%" colspan="2" class="justify-content-center">Registros</th>
+            <th class="text-center"  style="width:5px">ID</th>
+            <th class="text-center"  style="width:25%">Afiliados</th>
+            <th class="text-center" style="width:25%">Barrio</th>
+            <th class="text-center" style="width:25%">Nro Medidor de agua</th>
+            <th class="text-center" style="width:10%">Manzano</th>
+            <th class="text-center" style="width:25%" colspan="2">Registrar las Lecturas</th>
           </tr>
         </ng-template>
         <ng-template pTemplate="body" let-perfil>
           <ng-container *ngIf="lecturados" formArrayName="registros">
           <tr *ngIf="perfil.afiliado.medidorAsociado.length<2; else segundaForma">
-            <td> {{perfil.nombrePrimero | titlecase}} {{perfil.nombreSegundo ||"" |titlecase}} {{perfil.apellidoPrimero | titlecase}} {{perfil.apellidoSegundo ||"" | titlecase}}</td>
-            <td>{{perfil.afiliado.ubicacion.barrio}}</td>
-            <td>{{perfil.afiliado.medidorAsociado[0].medidor.nroMedidor}}</td>
+            <td class="text-center">{{perfil.id}}</td>
+            <td class="text-center"> {{perfil.nombrePrimero | titlecase}} {{perfil.nombreSegundo ||"" |titlecase}} {{perfil.apellidoPrimero | titlecase}} {{perfil.apellidoSegundo ||"" | titlecase}}</td>
+            <td class="text-center">{{perfil.afiliado.ubicacion.barrio}}</td>
+            <td class="text-center">{{perfil.afiliado.medidorAsociado[0].medidor.nroMedidor}}</td>
+            <td class="text-center">{{perfil.afiliado.medidorAsociado[0].ubicacion.manzano}}-{{perfil.afiliado.medidorAsociado[0].ubicacion.numeroManzano}} <br/> N°Lote: {{perfil.afiliado.medidorAsociado[0].ubicacion.nroLote}}</td>
             <ng-container *ngFor="let lecturaForm of lecturasArray.controls; let formIndexI=index">
               <ng-container *ngIf="lecturaForm.get('planilla')?.value.id === perfil.afiliado.medidorAsociado[0].planillas![0].id" [formGroupName]="formIndexI">
                 <td class="field align-items-center justify-content-center">
@@ -121,11 +133,12 @@
             
           </tr>
           <ng-template #segundaForma>
-          <tr  *ngFor="let asociacion of perfil.afiliado.medidorAsociado;let i=index" >
-            <td class="left-side" [rowSpan]="perfil.afiliado.medidorAsociado.length" *ngIf="i===0"> {{perfil.nombrePrimero | titlecase}} {{perfil.nombreSegundo ||"" |titlecase}} {{perfil.apellidoPrimero | titlecase}} {{perfil.apellidoSegundo ||"" | titlecase}}</td>
-            <td>{{asociacion.ubicacion.barrio}}</td>
-            <td>{{asociacion.medidor.nroMedidor}}</td>
-            
+          <tr *ngFor="let asociacion of perfil.afiliado.medidorAsociado;let i=index" >
+            <td class="text-center" [rowSpan]="perfil.afiliado.medidorAsociado.length" *ngIf="i===0">{{perfil.id}}</td>
+            <td class="text-center left-side" [rowSpan]="perfil.afiliado.medidorAsociado.length" *ngIf="i===0"> {{perfil.nombrePrimero | titlecase}} {{perfil.nombreSegundo ||"" |titlecase}} {{perfil.apellidoPrimero | titlecase}} {{perfil.apellidoSegundo ||"" | titlecase}}</td>
+            <td class="text-center">{{asociacion.ubicacion.barrio}}</td>
+            <td class="text-center">{{asociacion.medidor.nroMedidor}}</td>
+            <td class="text-center">{{asociacion.ubicacion.manzano}}-{{asociacion.ubicacion.numeroManzano}} <br/> N°Lote:{{asociacion.ubicacion.nroLote}}</td>
             <ng-container *ngFor="let lecturaForm of lecturasArray.controls; let formIndexJ=index">
               <ng-container *ngIf="lecturaForm.get('planilla')?.value.id === asociacion.planillas![0].id" [formGroupName]="formIndexJ">
                 <td class="field">
@@ -175,8 +188,8 @@
         
     </p-table>
   </div>
-  <div class="col-12">
-    <p-button label="Registrar lecturas" (onClick)="validForm()"></p-button>
+  <div class="col-12 flex justify-content-center flex-wrap">
+    <p-button label="Registrar lecturas" styleClass="flex align-items-center justify-content-center" (onClick)="validForm()"></p-button>
   </div>
     <ng-template #sinData>
       <p><i>NO HAY AFILIADOS DEL BARRIO {{lecturasOptions.barrio}} SIN REGISTRO DE LECTURA DEL MES {{lecturasOptions.mes}}</i></p>
@@ -189,8 +202,8 @@
     </div>
 
 </div>
-<app-modal-reportes
-*ngIf="visibleGenerar"
-[visibleModal]="visibleGenerar"
-(event)="visibleGenerar = $event"
-></app-modal-reportes>
+<app-generar-list-registro-lecturas
+*ngIf="visibleRegistrarLecturarExport"
+[visible]="visibleRegistrarLecturarExport"
+(eventVisible)="visibleRegistrarLecturarExport =$event"
+></app-generar-list-registro-lecturas>

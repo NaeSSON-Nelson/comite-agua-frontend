@@ -3,16 +3,16 @@
         <div class=" col-12 grid">
             <ng-container >
             <div class="col-12 md:col-6">
-                    <div class="text-900 text-xl mb-2 font-medium text-right">AFILIADO</div>
-                    <p class="text-700 line-height-3 text-right">{{perfil.nombrePrimero | titlecase}} {{perfil.nombreSegundo ||'' |titlecase}} {{perfil.apellidoPrimero | titlecase}} {{perfil.apellidoSegundo ||'' | titlecase}}</p>        
+                    <div class="text-900 text-2xl mb-2 font-medium text-right">AFILIADO</div>
+                    <p class="text-700 line-height-3 xl text-right">{{perfil.nombrePrimero | titlecase}} {{perfil.nombreSegundo ||'' |titlecase}} {{perfil.apellidoPrimero | titlecase}} {{perfil.apellidoSegundo ||'' | titlecase}}</p>        
                 </div>
                 <div class="col-12 md:col-3">
-                    <div class="text-900 text-xl mb-2 font-medium text-right">Cedula de Identidad</div>
+                    <div class="text-900 text-2xl mb-2 font-medium text-right">Cedula de Identidad</div>
                     <p class="text-700 line-height-3 text-right">{{perfil.CI}}</p>
                 </div>
                 <div class="col-12 md:col-3">
-                    <div class="text-900 text-xl mb-2 font-medium text-right">BARRIO</div>
-                    <p class="text-700 line-height-3 text-right">{{perfil.afiliado?.ubicacion?.barrio}}</p>
+                    <div class="text-900 text-2xl mb-2 font-medium text-right">BARRIO</div>
+                    <p class="text-700 line-height-3 xl text-right">{{perfil.afiliado?.ubicacion?.barrio}}</p>
                 </div>
             </ng-container>
         </div>
@@ -59,42 +59,42 @@
             </div>
         </div>
         <div class="col-12" *ngIf="lecturas.length>0 && showTable; else sinLecturas">
+            <h5>REGISRO DE LECTURAS DE GESTION</h5>
             <p-table [value]="lecturas" [tableStyle]="{'min-width': '50rem'}"
-            [(selection)]="lecturasSelected">
-                <ng-template pTemplate="caption">
+            
+            >
+                <!-- <ng-template pTemplate="caption">
                     <div class="grid">
                         <button pButton pRipple icon="pi pi-book" class="p-button-rounded p-button-info mr-2"
                                 (click)="generarPdf()" [disabled]="lecturasSelected.length===0"></button>
                     </div>
-                </ng-template>
+                </ng-template> -->
                 <ng-template pTemplate="header" let-columns>
                     <tr>
-                        <th>PDF</th>
-                        <th>Mes </th>
-                        <th>Lectura (m3.)</th>
-                        <th>consumo (m3.)</th>
-                        <th>consumo (bs.)</th>
-                        <th>Estado pago</th>
-                        <th>Monto cancelado (Bs.)</th>
-                        <th>Metodo de pago (tipo)</th>
-                        <th>Fecha registrada</th>
-                        <th>Entidad de pago</th>
+                        <th class="text-center">Mes </th>
+                        <th class="text-center">Lectura (m3.)</th>
+                        <th class="text-center">consumo (m3.)</th>
+                        <th class="text-center">consumo (bs.)</th>
+                        <th class="text-center">Estado pago</th>
+                        <th class="text-center">Monto cancelado (Bs.)</th>
+                        <th class="text-center">Acciones</th>
+                        <!-- <th class="text-center">Metodo de pago (tipo)</th>
+                        <th class="text-center">Fecha registrada</th>
+                        <th class="text-center">Entidad de pago</th> -->
                     </tr>
                 </ng-template>
                 <ng-template pTemplate="body" let-product let-columns="columns">
                     <tr>
-                        <td>
-                            <p-tableCheckbox [value]="product"></p-tableCheckbox>
-                        </td>
-                        <td>{{product.mesLecturado}}</td>
-                        <td>{{product.lectura}}</td>
-                        <td>{{product.consumoTotal}}</td>
-                        <td>{{product.pagar.monto}}</td>
-                        <td>{{product.pagar.estadoComprobate}}</td>
-                        <td>{{product.pagar.comprobante.montoPagado}}</td>
-                        <td>{{product.pagar.comprobante.metodoPago}}</td>
-                        <td>{{product.pagar.comprobante.fechaEmitida | date :'dd-MM-yyyy HH:MM'}}</td>
-                        <td>{{product.pagar.comprobante.entidadPago}}</td>
+                        <td class="text-center">{{product.PlanillaMesLecturar}}</td>
+                        <td class="text-center">{{product.lectura}}</td>
+                        <td class="text-center">{{product.consumoTotal}}</td>
+                        <td class="text-center">{{product.pagar.monto}}</td>
+                        <td class="text-center">{{product.pagar.estadoComprobate}}</td>
+                        <td class="text-center">{{product.pagar.comprobante.montoPagado}}</td>
+                        <td><p-button icon="pi pi-book" styleClass="p-button-rounded" (onClick)="selectLectura(product)"></p-button></td>
+                        <!-- <td class="text-center">{{product.pagar.comprobante.metodoPago}}</td>
+                        <td class="text-center">{{product.pagar.comprobante.fechaEmitida | date :'dd-MM-yyyy HH:MM'}}</td>
+                        <td class="text-center">{{product.pagar.comprobante.entidadPago}}</td> -->
                     </tr>
                 </ng-template>
             </p-table>   
@@ -221,3 +221,9 @@
 [perfil]="perfil"
 [multasSelected]="multasSeleccionadas"
 ></app-form-registrar-pago-multas-selected>
+<app-detalles-lecutura-pago
+    *ngIf="visibleDetallesLecturaPago"
+    [visible]="visibleDetallesLecturaPago"
+    [idLectura]="idLecturaSelectedDetalles"
+    (eventVisible)="visibleDetallesLecturaPago=$event"
+></app-detalles-lecutura-pago>

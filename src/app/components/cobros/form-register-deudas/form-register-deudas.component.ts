@@ -83,17 +83,11 @@ export class FormRegisterDeudasComponent {
     perfilId,comprobantes:comprobantes.map((res:any)=>res.id),multas:multas.map((res:any)=>res.id)
    })
   }
-  cerrando(event:any){
-    this.eventVisible.emit(true)
-  }
+
   registrarPagos(pagosForm:PagosForm){
     this.confirmationService.confirm({
-      message: `¿Está seguro de registras las lecturas?<br>
-      Titular: ${this.pagarForm.get('titular')?.value}<br>
-      CI: ${this.pagarForm.get('ciTitular')?.value}<br>
-      Total a registrar : ${this.totalPagar} Bs. <br>
-      `,
-      
+      message: `¿Está seguro de registrar los pagos de las lecturas ${this.tieneMultas()?'Y las multas Seleccionadas?':'seleccionadas?'}?<br>
+      Total a registrar : <p class="font-bold">${this.totalPagar} Bs. </p><br>`,
       header: 'Confirmar Registro de deuda',
       icon: 'pi pi-info-circle',
       accept:()=>{
@@ -104,7 +98,7 @@ export class FormRegisterDeudasComponent {
   }
 
   printPDFDetailsPago(){
-    this.imprimido=this.commonAppService.generarReciboDePago(this.logosRecibos.planillasPagadas,this.perfil)
+    this.imprimido=this.commonAppService.generarReciboDePagoLecturasOrMultas(this.logosRecibos.planillasPagadas,this.perfil,this.logosRecibos.multasPagadas)
 
     // this.closeModal();
   }

@@ -1,22 +1,25 @@
-<p-dialog header="{{'Detalles de lectura Mes ' + lectura?.PlanillaMesLecturar}}" [(visible)]="visible" [modal]="true" [style]="{ width: '68vw' }" [draggable]="false" [resizable]="false" (onHide)="eventVisible.emit(false)" [baseZIndex]="900">
-    <div class="card m-3">
+<p-dialog header="Detalles de Pago de Lectura de medidor de agua" 
+[(visible)]="visible" [modal]="true" [style]="{ width: '68vw' }" 
+[draggable]="false" [resizable]="false" (onHide)="eventVisible.emit(false)" 
+[baseZIndex]="900" (onShow)="obtenerLecturaPago()">
+    <div class="card m-3" *ngIf="lectura">
         <div class="col-12 grid">
             <div class="col-12 md:col-6">
                 <div class="text-900 text-xl mb-2 font-medium text-right">Fecha de Lectura Registrada</div>
-                <p class="text-700 line-height-3 text-right">{{lectura?.created_at| date: 'dd/MM/yyyy'}}</p>
+                <p class="text-700 line-height-3 text-right">{{lectura.created_at| date: 'dd/MM/yyyy'}}</p>
             </div>
             <div class="col-12 md:col-6">
                 <div class="text-900 text-xl mb-2 font-medium text-right">Lectura del Medidor registrada</div>
-                <p class="text-700 line-height-3 text-right">{{lectura?.lectura}} {{medicion}}</p>
+                <p class="text-700 line-height-3 text-right">{{lectura.lectura}} {{lectura.medicion}}</p>
                 
             </div>
             <div class="col-12 md:col-6">
                 <div class="text-900 text-xl mb-2 font-medium text-right">Estado del Medidor de agua al momento de registrar Lectura</div>
-                <p class="text-700 line-height-3 text-right">{{lectura?.estadoMedidor || 'SIN REGISTRO'}}</p>
+                <p class="text-700 line-height-3 text-right">{{lectura.estadoMedidor || 'SIN REGISTRO'}}</p>
             </div>
             <div class="col-12 md:col-6">
-                <div class="text-900 text-xl mb-2 font-medium text-right">Consumo de agua del mes {{lectura?.PlanillaMesLecturar}}</div>
-                <p class="text-700 line-height-3 text-right">{{lectura?.consumoTotal}} {{medicion}}</p>
+                <div class="text-900 text-xl mb-2 font-medium text-right">Consumo de agua del mes {{lectura.PlanillaMesLecturar}}</div>
+                <p class="text-700 line-height-3 text-right">{{lectura.consumoTotal}} {{lectura.medicion}}</p>
             </div>
             
         </div>

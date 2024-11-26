@@ -83,16 +83,19 @@
 				<p-divider class="col-12"></p-divider>
 				<div class="p-fluid p-formgrid grid col-12">
 					<div class="field col-12 md:col-6">
-						<label htmlFor="nombrePrimero">Barrio</label>
-						<input pInputText id="nombrePrimero" type="text" [disabled]="true" [value]="perfil.afiliado.ubicacion?.barrio || ''" class="appearance-none text-color text-base" />
+						<label htmlFor="barrio">Barrio</label>
+						<input pInputText id="barrio" type="text" [disabled]="true" [value]="perfil.afiliado.ubicacion?.barrio || ''" class="appearance-none text-color text-base" />
 					</div>
 					<div class="field col-12 md:col-6">
-						<label htmlFor="nombrePrimero">Numero de vivienda</label>
-						<input pInputText id="nombrePrimero" type="text" [disabled]="true" [value]="perfil.afiliado.ubicacion?.numeroVivienda || 'SIN NUMERO DE VIVIENDA'" class="appearance-none text-color text-base" />
+						<label htmlFor="nroVivienda">Numero de vivienda</label>
+						<input pInputText id="nroVivienda" type="text" [disabled]="true" [value]="perfil.afiliado.ubicacion?.numeroVivienda || 'SIN NUMERO DE VIVIENDA'" class="appearance-none text-color text-base" />
 					</div>
 					<div class="field col-12 md:col-6">
-						<label htmlFor="nombrePrimero">Estado de afiliacion</label>
-						<input pInputText id="nombrePrimero" type="text" [disabled]="true" [value]="perfil.afiliado.estado || ''" class="appearance-none text-color text-base" />
+						<label htmlFor="estado">Estado de afiliacion</label>
+						<input pInputText id="estado" type="text" [disabled]="true" [value]="perfil.afiliado.estado || ''" class="appearance-none text-color text-base" />
+					</div>
+					<div class="field col-12 md:col-6 md:mt-5">
+						<p-button label="Pago de afiliacion" (onClick)="visiblePagoAfiliacion = true"></p-button>
 					</div>
 					<div class=" col-12 md:col">
 						<div class="text-center p-3 border-round-sm h-full font-bold">
@@ -176,3 +179,9 @@
 [defaultCenter]="coordenadasLatLng"
 (eventVisible)="visibleMapAfiliado =$event"
 ></app-map-afiliado>
+<app-pago-afiliacion
+*ngIf="visiblePagoAfiliacion"
+[visible]="visiblePagoAfiliacion"
+[perfil]="perfil"
+(eventVisible)="visiblePagoAfiliacion = $event"
+></app-pago-afiliacion>

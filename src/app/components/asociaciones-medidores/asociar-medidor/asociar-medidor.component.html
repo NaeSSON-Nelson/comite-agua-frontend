@@ -163,6 +163,57 @@
                         >{{ getBarrioErrors("barrio") }}
                       </small>
                     </div>
+                    <div class="field col-12 md:col-4 md:mt-3">
+                      <span class="p-float-label">
+                        <input
+                          type="text"
+                          id="manzano"
+                          pInputText
+                          formControlName="manzano"
+                          [ngClass]="inputValid('manzano')"
+                        />
+                        <label for="manzano">Manzano (*)</label>
+                      </span>
+                      <small
+                        id="manzano-help"
+                        class="p-error block"
+                        *ngIf="campoValido('manzano')"
+                        >{{ getManzanoErrors("manzano") }}
+                      </small>
+                    </div>
+                    <div class="field col-12 md:col-4 md:mt-3">
+                      <span class="p-float-label">
+                        <p-inputNumber
+                          inputId="numeroManzano"
+                          formControlName="numeroManzano"
+                          [ngClass]="inputValid('numeroManzano')"
+                        ></p-inputNumber>
+                        <label for="numeroManzano">N° Manzano (*)</label>
+                      </span>
+                      <small
+                        id="numeroManzano-help"
+                        class="p-error block"
+                        *ngIf="campoValido('numeroManzano')"
+                        >{{ getNroManzanoErrors("numeroManzano") }}
+                      </small>
+                    </div>
+                    <div class="field col-12 md:col-4 md:mt-3">
+                      <span class="p-float-label">
+                        <p-inputNumber
+                          inputId="nroLote"
+                          formControlName="nroLote"
+                          [ngClass]="inputValid('nroLote')"
+                        ></p-inputNumber>
+                        <label for="nroLote">N° Lote (*)</label
+                        >
+                      </span>
+                      <small
+                        id="nroLote-help"
+                        class="p-error block"
+                        *ngIf="campoValido('nroLote')"
+                        >{{ getNroLoteErrors("nroLote") }}
+                      </small>
+                    </div>
                   </div>
                   <div class="grid p-fluid">
                   <div class="field col-12 md:col-6">
@@ -387,6 +438,57 @@
                         class="p-error block"
                         *ngIf="campoValidoUbicacion('barrio')"
                         >{{ getBarrioErrors("barrio") }}
+                      </small>
+                    </div>
+                    <div class="field col-12 md:col-4 md:mt-3">
+                      <span class="p-float-label">
+                        <input
+                          type="text"
+                          id="manzano"
+                          pInputText
+                          formControlName="manzano"
+                          [ngClass]="inputValidUbicacion('manzano')"
+                        />
+                        <label for="manzano">Manzano (*)</label>
+                      </span>
+                      <small
+                        id="manzano-help"
+                        class="p-error block"
+                        *ngIf="campoValidoUbicacion('manzano')"
+                        >{{ getManzanoErrors("manzano") }}
+                      </small>
+                    </div>
+                    <div class="field col-12 md:col-4 md:mt-3">
+                      <span class="p-float-label">
+                        <p-inputNumber
+                          inputId="numeroManzano"
+                          formControlName="numeroManzano"
+                          [ngClass]="inputValidUbicacion('numeroManzano')"
+                        ></p-inputNumber>
+                        <label for="numeroManzano">N° Manzano (*)</label>
+                      </span>
+                      <small
+                        id="numeroManzano-help"
+                        class="p-error block"
+                        *ngIf="campoValidoUbicacion('numeroManzano')"
+                        >{{ getNroManzanoErrors("numeroManzano") }}
+                      </small>
+                    </div>
+                    <div class="field col-12 md:col-4 md:mt-3">
+                      <span class="p-float-label">
+                        <p-inputNumber
+                          inputId="nroLote"
+                          formControlName="nroLote"
+                          [ngClass]="inputValidUbicacion('nroLote')"
+                        ></p-inputNumber>
+                        <label for="nroLote">N° Lote (*)</label
+                        >
+                      </span>
+                      <small
+                        id="nroLote-help"
+                        class="p-error block"
+                        *ngIf="campoValidoUbicacion('nroLote')"
+                        >{{ getNroLoteErrors("nroLote") }}
                       </small>
                     </div>
                   </div>

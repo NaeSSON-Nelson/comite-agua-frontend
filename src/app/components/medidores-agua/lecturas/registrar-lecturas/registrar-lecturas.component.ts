@@ -32,6 +32,7 @@ export class RegistrarLecturasComponent {
   ]
   sortList=[
     {name:'Barrio',value:'barrio'},
+    {name:'Manzanos',value:'manzanos'},
   ]
   sortValue:any[]=[];
   lecturasOptions:LecturasOptions={
@@ -42,12 +43,21 @@ export class RegistrarLecturasComponent {
   }
   filterType:any;
   filterDisabled:boolean=true;
+  
   applySort(event:any){
     console.log(event);
     if(event.value === "barrio") {
       this.filterType=event.value;
       this.sortValue=this.commonAppService.barrios;
-    }else if(event.value === null){
+    }else if(event.value ==='manzanos'){
+      this.filterType=event.value;
+      this.lecturasService.obtenerTiposManzanos().subscribe(res=>{
+        if(res.OK){
+          this.sortValue=res.data!;
+        }
+      })
+    }
+    else if(event.value === null){
       this.sortValue=[];
       this.filterType=null;
       this.filterDisabled=true;
@@ -59,7 +69,7 @@ export class RegistrarLecturasComponent {
       }
     }
     console.log(this.sortValue);
-    console.log(this.commonAppService.barrios);
+    // console.log(this.commonAppService.barrios);
   }
   applySortValue(event:any){
     console.log(event);
@@ -74,11 +84,34 @@ export class RegistrarLecturasComponent {
     }else if(this.filterType ==='barrio'){
       this.lecturasOptions['barrio'] = event.value;
       this.filterDisabled=false;
+    } else if(this.filterType ==='manzanos'){
+      this.lecturasOptions['manzano'] = event.value;
+      this.filterDisabled=false;
+
     }
     else{
       console.log('OPTION NOT FOUND');
     }
   }
+  // obtenerTiposManzanos(){
+  //   const tipos:string[]=[];
+  //   for(const perfil of this.data){
+  //     if(!tipos.includes(perfil.afiliado!.ubicacion!.manzano!)){
+  //       tipos.push(perfil.afiliado!.ubicacion!.manzano!);
+  //     }
+  //     for(const asc of perfil!.afiliado!.medidorAsociado!)
+  //     if(!tipos.includes(asc!.ubicacion!.manzano!)){
+  //       tipos.push(asc.ubicacion!.manzano!);
+  //     }
+  //   }
+  //   console.log('tipos',tipos);
+  //   return tipos.map(manzano=>{
+  //     return{
+  //       name:manzano.toUpperCase(),
+  //       value:manzano 
+  //     }
+  //   });
+  // }
   resetList(){
     this.sortValue=[];
     this.filterType=null;
@@ -108,7 +141,7 @@ export class RegistrarLecturasComponent {
   }
   lecturasForm:FormGroup=this.fb.group({
     
-    registros: this.fb.array([]),
+    registros: this.fb.array([],[Validators.required]),
   });
   get lecturasArray(){
     return this.lecturasForm.get('registros') as FormArray;
@@ -119,16 +152,27 @@ export class RegistrarLecturasComponent {
     console.log(this.lecturasForm.value);
     if(this.lecturasForm.invalid) {
       this.messageService.add({
-        severity: 'info',
+        severity: 'warn',
         summary: 'HAY MEDIDORES MARCADOS SIN LECTURA',
         detail: 'REVISE LOS DEMAS BARRIOS',
         life:2850,
         icon: 'pi pi-check',
       });
-      return
+      return;
     };
     const lecturasRegister:lecturasRegisterForm =this.lecturasForm.value;
     lecturasRegister.registros = this.lecturasArray.value.filter((filt:any)=>filt.lectura)
+    if(lecturasRegister.registros.length===0){
+      this.messageService.add({
+        severity: 'info',
+        summary: 'NO SE INGRESO NINGUNA LECTURA!',
+        detail: 'Debe llenar almenos un campo de lectura',
+        life:5000,
+        icon: 'pi pi-check',
+      });
+      return;
+
+    }
     console.log('send lectur',lecturasRegister)
     // return;
     this.registrarFormulario(lecturasRegister);
@@ -180,6 +224,7 @@ export class RegistrarLecturasComponent {
   loading=false;
   titleError ='';
   loadCustomers(filters:any){
+    // if(filters.globalFilter.value.length) return;
     console.log('filter',filters);
     this.lecturasOptions.offset=filters.first
     this.lecturasOptions.limit=filters.rows
@@ -200,8 +245,10 @@ export class RegistrarLecturasComponent {
     })
   }
   getAllLecturas() {
+    this.loading=true;
     this.lecturasService.AllPerfilesLecturas(this.lecturasOptions).subscribe({
       next: (res) => {
+        this.loading=false;
         if (res.OK === false) {
           switch (res.statusCode) {
             case 400:
@@ -358,7 +405,7 @@ if(nombre ==='estadoMedidor'){
     return ''
   }
   searchForm:FormGroup= this.fb.group({
-    termino:[,[Validators.pattern(patternSpanishInline),Validators.minLength(1)]]
+    termino:[,[Validators.pattern(patternSpanishInline),Validators.minLength(3)]]
   },{updateOn:'change'});
 
   campoValido(nombre: string) {
@@ -391,8 +438,10 @@ if(nombre ==='estadoMedidor'){
       console.log(errors);
       return 'El buscador contiene caracteres no validos'
     }else if(errors?.['minlength']){
-      return 'El tamaño minimo es 1'
+      return 'El tamaño minimo es 3'
     }
     return '';
   }
+  visibleRegistrarLecturarExport:boolean=false;
+
 }

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Barrio, Estado, Genero, PlanillaMesLectura, Perfil, TipoPerfil, MultaServicio } from '../interfaces';
+import { Barrio, Estado, Genero, PlanillaMesLectura, Perfil, TipoPerfil, MultaServicio, ComprobanteDePagoDeMultas } from '../interfaces';
 import { Medicion, Monedas, Nivel } from '../interfaces/atributes.enum';
 import * as IPdf from 'pdfmake/interfaces'
 import * as pdfMake from "pdfmake/build/pdfmake";
@@ -606,11 +606,11 @@ export class CommonAppService {
     return true;
   }
   generarReciboDePagoDeMultas(multas:MultaServicio[],afiliado:Perfil){
-    const imageRecibo:IPdf.Column={
+    const imageRecibo:IPdf.Column={ //IMAGE DE ASOCIACION RECIBO
       image:IMAGE_APPLAT,
       width: 200,
     };
-    const tituloRecibo:IPdf.Column[]=[
+    const tituloRecibo:IPdf.Column[]=[ //TITULO DE RECIBO DE COBRO DE SERVICIO
       {
         text: 'RECIBO DE COBRO DE SERVICIO DE AGUA POTABLE',
         color: '#333333',
@@ -645,7 +645,7 @@ export class CommonAppService {
         ],
       },
     ];
-    const fromToColumns:IPdf.Column[]=[
+    const fromToColumns:IPdf.Column[]=[ // DE QUEIN A QUIEN SE REALIZO EL COBRO
       {
         text: 'CAJA',
         color: '#aaaaab',
@@ -665,7 +665,7 @@ export class CommonAppService {
     ]
     const user = this.authService.user;
 
-    const YourNameClientNameColumns:IPdf.Column[]=[
+    const YourNameClientNameColumns:IPdf.Column[]=[ // NOMBRES
       {
         text: `${user.username ||'username'} \n ASOCIACIÓN DE AGUA POTABLE LOMA ALTA DE TOMATITAS`,
         bold: true,
@@ -1018,5 +1018,905 @@ export class CommonAppService {
   }
   addRowPdf(){
     return []
+  }
+
+  generarReciboDePagoPorAfiliacion(afiliado:Perfil){
+    const imageRecibo:IPdf.Column={
+      image:IMAGE_APPLAT,
+      width: 200,
+    };
+    const tituloRecibo:IPdf.Column[]=[
+      {
+        text: 'RECIBO DE COBRO DE SERVICIO DE AGUA POTABLE',
+        color: '#333333',
+        // width: '*',
+        fontSize: 20,
+        bold: true,
+        alignment: 'center',
+        margin: [0, 0, 0, 15],
+      },
+      {
+        stack: [
+          {
+            columns: [
+              {
+                text: 'Fecha Creada',
+                color: '#aaaaab',
+                bold: true,
+                width: '*',
+                fontSize: 9,
+                alignment: 'right',
+              },
+              {
+                text: `${afiliado.afiliado?.fechaPago}`,
+                bold: true,
+                color: '#333333',
+                fontSize: 9,
+                alignment: 'right',
+                width: 100,
+              },
+            ],
+          },
+        ],
+      },
+    ];
+    const fromToColumns:IPdf.Column[]=[
+      {
+        text: 'CAJA',
+        color: '#aaaaab',
+        bold: true,
+        fontSize: 8,
+        alignment: 'left',
+        margin: [0, 5, 0, 5],
+      },
+      {
+        text: 'AFILIADO DE PAGO',
+        color: '#aaaaab',
+        bold: true,
+        fontSize: 8,
+        alignment: 'left',
+        margin: [0, 5, 0, 5],
+      },
+    ]
+    const YourNameClientNameColumns:IPdf.Column[]=[
+      {
+        text: 'Your Name \n Your Company Inc.',
+        bold: true,
+        color: '#333333',
+        alignment: 'left',
+        fontSize:12
+      },
+      {
+        text: `${afiliado.apellidoPrimero?.toLocaleUpperCase()} ${afiliado.apellidoSegundo?afiliado.apellidoSegundo?.charAt(0).toLocaleUpperCase()+'.':''}\n${afiliado.nombrePrimero?.toLocaleUpperCase()} ${afiliado.nombreSegundo ? afiliado.nombreSegundo?.toLocaleUpperCase():''}`,
+        bold: true,
+        color: '#333333',
+        alignment: 'left',
+        fontSize:12
+      },
+    ];
+    const tituloDetallesRecibo:IPdf.Column=
+    {
+      width: '100%',
+      alignment: 'center',
+      text: 'DETALLES DE LA TARIFA DE PAGO',
+      bold: true,
+      margin: [0, 5, 0, 5],
+      fontSize: 12,
+    }
+
+    const bodyTable:IPdf.TableCell[][]=[
+      [
+        {
+          text: 'MOTIVO',
+          fillColor: '#eaf2f5',
+          border: [false, true, false, true],
+          margin: [0, 5, 0, 5],
+          textTransform: 'uppercase',
+          fontSize:9,
+        },
+        {
+          text: 'CANTIDAD',
+          border: [false, true, false, true],
+          // alignment: 'right',
+          fillColor: '#eaf2f5',
+          margin: [0, 5, 0, 5],
+          textTransform: 'uppercase',
+          fontSize:9
+        },
+        {
+          text: 'MONTO',
+          border: [false, true, false, true],
+          // alignment: 'right',
+          fillColor: '#eaf2f5',
+          margin: [0, 5, 0, 5],
+          textTransform: 'uppercase',
+          fontSize:9
+        },
+      ],
+    ];
+    let totalPago=0;
+    const cell:IPdf.TableCell[]=[];
+    cell.push(
+    {
+      text: 'Pago de Afiliacion',
+      border: [false, false, false, true],
+      margin: [0, 5, 0, 5],
+      alignment: 'left',
+    },
+    {
+      text: '1',
+      border: [false, false, false, true],
+      margin: [0, 5, 0, 5],
+      alignment: 'left',
+    },
+    {
+      text: `${afiliado.afiliado?.monedaRecibido} ${afiliado.afiliado?.montoRecibido}`,
+      border: [false, false, false, true],
+      margin: [0, 5, 0, 5],
+      alignment: 'left',
+    },
+  )
+  totalPago+=afiliado.afiliado?.montoRecibido!;
+  bodyTable.push(cell);
+   
+    const dd:IPdf.TDocumentDefinitions = {
+      content: [
+        {
+          columns: [
+            imageRecibo,
+            tituloRecibo,
+          ],
+        },
+        {
+          columns: fromToColumns,
+        },
+        {
+          columns:YourNameClientNameColumns,
+        },tituloDetallesRecibo,
+        {
+          layout: {
+            defaultBorder: false,
+            hLineWidth: function(i, node) {
+              return 1;
+            },
+            vLineWidth: function(i, node) {
+              return 1;
+            },
+            hLineColor: function(i, node) {
+              if (i === 1 || i === 0) {
+                return '#bfdde8';
+              }
+              return '#eaeaea';
+            },
+            vLineColor: function(i, node) {
+              return '#eaeaea';
+            },
+            hLineStyle: function(i, node) {
+              // if (i === 0 || i === node.table.body.length) {
+              return null;
+              //}
+            },
+            // vLineStyle: function (i, node) { return {dash: { length: 10, space: 4 }}; },
+            paddingLeft: function(i, node) {
+              return 2;
+            },
+            paddingRight: function(i, node) {
+              return 2;
+            },
+            paddingTop: function(i, node) {
+              return 1;
+            },
+            paddingBottom: function(i, node) {
+              return 1;
+            },
+            fillColor: function(rowIndex, node, columnIndex) {
+              return '#fff';
+            },
+          },
+          table: {
+            headerRows: 1,
+            widths: ['*', '*','*'],
+            body: bodyTable,
+          },
+        },
+        '\n',
+        {
+          layout: {
+            defaultBorder: false,
+            hLineWidth: function(i, node) {
+              return 1;
+            },
+            vLineWidth: function(i, node) {
+              return 1;
+            },
+            hLineColor: function(i, node) {
+              return '#eaeaea';
+            },
+            vLineColor: function(i, node) {
+              return '#eaeaea';
+            },
+            hLineStyle: function(i, node) {
+              // if (i === 0 || i === node.table.body.length) {
+              return null;
+              //}
+            },
+            // vLineStyle: function (i, node) { return {dash: { length: 10, space: 4 }}; },
+            paddingLeft: function(i, node) {
+              return 3;
+            },
+            paddingRight: function(i, node) {
+              return 3;
+            },
+            paddingTop: function(i, node) {
+              return 2;
+            },
+            paddingBottom: function(i, node) {
+              return 2;
+            },
+            fillColor: function(rowIndex, node, columnIndex) {
+              return '#fff';
+            },
+          },
+          table: {
+            headerRows: 1,
+            widths: ['*', 'auto'],
+            body: [
+              [
+                {
+                  text: 'TOTAL DE COBRO',
+                  bold: true,
+                  fontSize: 12,
+                  // alignment: 'right',
+                  border: [false, false, false, true],
+                  margin: [0, 5, 0, 5],
+                },
+                {
+                  text: `${totalPago} ${afiliado.afiliado?.moneda}.`,
+                  bold: true,
+                  fontSize: 12,
+                  // alignment: 'right',
+                  border: [false, false, false, true],
+                  fillColor: '#f5f5f5',
+                  margin: [0, 5, 0, 5],
+                },
+              ],
+            ],
+          },
+        },
+      ],
+      styles: {
+        notesTitle: {
+          fontSize: 10,
+          bold: true,
+          margin: [0, 50, 0, 3],
+        },
+        notesText: {
+          fontSize: 10,
+        },
+      },
+      defaultStyle: {
+        // columnGap: 20,
+        //font: 'Quicksand',
+      },
+      pageSize:'A5',
+      pageOrientation:'landscape',
+      pageMargins:[25,25],
+    //   pageBreakBefore: function(currentNode, followingNodesOnPage, nodesOnNextPage, previousNodesOnPage) {
+    //     return currentNode.headlineLevel === 1 && followingNodesOnPage.length === 0;
+    //  },
+    
+    };
+    const pdf =pdfMake.createPdf(dd);
+    pdf.print({autoPrint:true,});
+    pdf.open();
+    return true;
+  }
+  generarReciboDePagoLecturasOrMultas(planillas:PlanillaLecturas[],perfil:Perfil,multas?:ComprobanteDePagoDeMultas[]){
+
+    const imageRecibo:IPdf.Column={
+      image:IMAGE_APPLAT,
+      width: 200,
+    };
+    const tituloRecibo:IPdf.Column[]=[
+      {
+        text: 'RECIBO DE COBRO DE SERVICIO DE AGUA POTABLE',
+        color: '#333333',
+        // width: '*',
+        fontSize: 20,
+        bold: true,
+        alignment: 'center',
+        margin: [0, 0, 0, 15],
+      },
+      {
+        stack: [
+          {
+            columns: [
+              {
+                text: 'Fecha Creada',
+                color: '#aaaaab',
+                bold: true,
+                width: '*',
+                fontSize: 9,
+                alignment: 'right',
+              },
+              {
+                text: `${planillas[0].lecturas[0].pagar?.comprobante.created_at}`,
+                bold: true,
+                color: '#333333',
+                fontSize: 9,
+                alignment: 'right',
+                width: 100,
+              },
+            ],
+          },
+        ],
+      },
+    ];
+    const fromToColumns:IPdf.Column[]=[
+      {
+        text: 'CAJA',
+        color: '#aaaaab',
+        bold: true,
+        fontSize: 8,
+        alignment: 'left',
+        margin: [0, 5, 0, 5],
+      },
+      {
+        text: 'AFILIADO DE PAGO',
+        color: '#aaaaab',
+        bold: true,
+        fontSize: 8,
+        alignment: 'left',
+        margin: [0, 5, 0, 5],
+      },
+    ]
+    const YourNameClientNameColumns:IPdf.Column[]=[
+      {
+        text: 'Your Name \n Your Company Inc.',
+        bold: true,
+        color: '#333333',
+        alignment: 'left',
+        fontSize:12
+      },
+      {
+        text: `${perfil.apellidoPrimero?.toLocaleUpperCase()} ${perfil.apellidoSegundo?perfil.apellidoSegundo?.charAt(0).toLocaleUpperCase()+'.':''}\n${perfil.nombrePrimero?.toLocaleUpperCase()} ${perfil.nombreSegundo ? perfil.nombreSegundo?.toLocaleUpperCase():''}`,
+        bold: true,
+        color: '#333333',
+        alignment: 'left',
+        fontSize:12
+      },
+    ];
+    const tituloDetallesRecibo:IPdf.Column=
+    {
+      width: '100%',
+      alignment: 'center',
+      text: 'DETALLES DE LA TARIFA DE PAGO',
+      bold: true,
+      margin: [0, 5, 0, 5],
+      fontSize: 12,
+    }
+
+    const bodyTable:IPdf.TableCell[][]=[
+      [
+        {
+          text: 'GESTION',
+          fillColor: '#eaf2f5',
+          border: [false, true, false, true],
+          margin: [0, 5, 0, 5],
+          textTransform: 'uppercase',
+          fontSize:9,
+        },
+        {
+          text: 'MES',
+          border: [false, true, false, true],
+          // alignment: 'right',
+          fillColor: '#eaf2f5',
+          margin: [0, 5, 0, 5],
+          textTransform: 'uppercase',
+          fontSize:9
+        },
+        {
+          text: 'LECTURA REGISTRADA',
+          border: [false, true, false, true],
+          // alignment: 'right',
+          fillColor: '#eaf2f5',
+          margin: [0, 5, 0, 5],
+          textTransform: 'uppercase',
+          fontSize:9
+        },
+        {
+          text: 'CONSUMIDO',
+          border: [false, true, false, true],
+          // alignment: 'right',
+          fillColor: '#eaf2f5',
+          margin: [0, 5, 0, 5],
+          textTransform: 'uppercase',
+          fontSize:9
+        },
+        {
+          text: 'TARIFA',
+          border: [false, true, false, true],
+          // alignment: 'right',
+          fillColor: '#eaf2f5',
+          margin: [0, 5, 0, 5],
+          textTransform: 'uppercase',
+          fontSize:9
+        },
+      ],
+    ];
+    let totalPago=0;
+    for(const {gestion,lecturas} of planillas){
+      for(let i=0;i<lecturas.length;i++){
+        const cell:IPdf.TableCell[]=[];
+        if(i===0)
+          if(lecturas.length>1){
+              cell.push({
+                text: gestion,
+                border: [false, false, false, true],
+                margin: [0, 5, 0, 5],
+                alignment: 'left',
+                rowSpan:lecturas.length,
+              })
+            }else{
+              cell.push({
+                text: gestion,
+                border: [false, false, false, true],
+                margin: [0, 5, 0, 5],
+                alignment: 'left',
+              })
+            }
+          else cell.push({text:''})
+          cell.push(
+            {
+              text: lecturas[i].PlanillaMesLecturar,
+              border: [false, false, false, true],
+              margin: [0, 5, 0, 5],
+            }
+            ,{
+              text:`${lecturas[i].lectura } ${lecturas[i].medicion}`,
+              border: [false, false, false, true],
+              margin: [0, 5, 0, 5],
+            }
+            ,{
+              text:`${lecturas[i].consumoTotal} ${lecturas[i].medicion}`,
+              border: [false, false, false, true],
+              margin: [0, 5, 0, 5],
+            }
+            ,{
+              text:`${lecturas[i].pagar?.comprobante.montoPagado} ${lecturas[i].pagar?.comprobante.moneda}`,
+              border: [false, false, false, true],
+              margin: [0, 5, 0, 5],
+            }
+          )
+          totalPago+=lecturas[i].pagar?.monto!;
+          bodyTable.push(cell)
+      }
+    }
+    let totalMultas:number=0;
+    let contentMulta:IPdf.Content=[];
+    if(multas && multas.length>0){ //PDF  DE MULTA
+      contentMulta=[];
+      contentMulta.push(
+        {
+          columns: [
+            imageRecibo,
+            [{
+              text: 'RECIBO DE COBRO DE SERVICIO DE AGUA POTABLE',
+              color: '#333333',
+              // width: '*',
+              fontSize: 20,
+              bold: true,
+              alignment: 'center',
+              margin: [0, 0, 0, 15],
+            },
+            {
+              stack: [
+                {
+                  columns: [
+                    {
+                      text: 'Fecha Creada',
+                      color: '#aaaaab',
+                      bold: true,
+                      width: '*',
+                      fontSize: 9,
+                      alignment: 'right',
+                    },
+                    {
+                      text: `${multas[0].fechaEmitida}`,
+                      bold: true,
+                      color: '#333333',
+                      fontSize: 9,
+                      alignment: 'right',
+                      width: 100,
+                    },
+                  ],
+                },
+              ],
+            }],
+          ],
+        },
+        {
+          columns: [
+            {
+              text: 'CAJA',
+              color: '#aaaaab',
+              bold: true,
+              fontSize: 8,
+              alignment: 'left',
+              margin: [0, 5, 0, 5],
+            },
+            {
+              text: 'AFILIADO DE PAGO',
+              color: '#aaaaab',
+              bold: true,
+              fontSize: 8,
+              alignment: 'left',
+              margin: [0, 5, 0, 5],
+            },
+          ],
+        },
+        {
+          columns:[
+            {
+              text: 'Your Name \n Your Company Inc.',
+              bold: true,
+              color: '#333333',
+              alignment: 'left',
+              fontSize:12
+            },
+            {
+              text: `${perfil.apellidoPrimero?.toLocaleUpperCase()} ${perfil.apellidoSegundo?perfil.apellidoSegundo?.charAt(0).toLocaleUpperCase()+'.':''}\n${perfil.nombrePrimero?.toLocaleUpperCase()} ${perfil.nombreSegundo ? perfil.nombreSegundo?.toLocaleUpperCase():''}`,
+              bold: true,
+              color: '#333333',
+              alignment: 'left',
+              fontSize:12
+            },
+          ],
+        },
+        {
+          // width: '100%',
+          
+          alignment: 'center',
+          text: 'DETALLES DE LA TARIFA DE PAGO',
+          bold: true,
+          margin: [0, 5, 0, 5],
+          fontSize: 12,
+        },
+        {
+          table: {
+            headerRows: 1,
+            widths: ['*', '*','*','*'],
+            body: 
+            [
+              [
+                {
+                  text: 'N° de Multa',
+                  fillColor: '#eaf2f5',
+                  border: [false, true, false, true],
+                  margin: [0, 5, 0, 5],
+                  textTransform: 'uppercase',
+                  alignment:'center',
+                  fontSize:9,
+                },
+                {
+                  text: 'N° Recibo de pago de multa',
+                  border: [false, true, false, true],
+                  // alignment: 'right',
+                  fillColor: '#eaf2f5',
+                  margin: [0, 5, 0, 5],
+                  textTransform: 'uppercase',
+                  alignment:'center',
+                  fontSize:9
+                },
+                {
+                  text: 'Motivo de pago',
+                  border: [false, true, false, true],
+                  // alignment: 'right',
+                  fillColor: '#eaf2f5',
+                  margin: [0, 5, 0, 5],
+                  textTransform: 'uppercase',
+                  alignment:'center',
+                  fontSize:9
+                },
+                {
+                  text: 'Cobro Cancelado',
+                  border: [false, true, false, true],
+                  // alignment: 'right',
+                  fillColor: '#eaf2f5',
+                  alignment:'center',
+                  margin: [0, 5, 0, 5],
+                  textTransform: 'uppercase',
+                  fontSize:9
+                },
+              ],
+              ...multas.map(pagoMulta=>{
+                const row:IPdf.TableCell[]=[];
+                totalMultas+=Number.parseFloat(pagoMulta.montoPagado+'');
+                row.push(
+                {
+                  text: pagoMulta.multaServicio.id,
+                  border: [false, false, false, true],
+                  margin: [0, 5, 0, 5],
+                  alignment:'center',
+                },
+                {
+                  text: pagoMulta.id,
+                  border: [false, false, false, true],
+                  margin: [0, 5, 0, 5],
+                  alignment:'center',
+                },
+                {
+                  text: pagoMulta.multaServicio.motivo,
+                  border: [false, false, false, true],
+                  margin: [0, 5, 0, 5],
+                  alignment:'center',
+                },
+                {
+                  text: `${pagoMulta.montoPagado} ${pagoMulta.moneda}.`,
+                  border: [false, false, false, true],
+                  margin: [0, 5, 0, 5],
+                  alignment:'center',
+                })
+                return row;
+              })
+              ]
+          },
+          layout: {
+            defaultBorder: false,
+            hLineWidth: function(i, node) {
+              return 1;
+            },
+            vLineWidth: function(i, node) {
+              return 1;
+            },
+            hLineColor: function(i, node) {
+              if (i === 1 || i === 0) {
+                return '#bfdde8';
+              }
+              return '#eaeaea';
+            },
+            vLineColor: function(i, node) {
+              return '#eaeaea';
+            },
+            hLineStyle: function(i, node) {
+              // if (i === 0 || i === node.table.body.length) {
+              return null;
+              //}
+            },
+            // vLineStyle: function (i, node) { return {dash: { length: 10, space: 4 }}; },
+            paddingLeft: function(i, node) {
+              return 2;
+            },
+            paddingRight: function(i, node) {
+              return 2;
+            },
+            paddingTop: function(i, node) {
+              return 1;
+            },
+            paddingBottom: function(i, node) {
+              return 1;
+            },
+            fillColor: function(rowIndex, node, columnIndex) {
+              return '#fff';
+            },
+          }
+        },
+        '\n',
+        {
+          layout: {
+            defaultBorder: false,
+            hLineWidth: function(i, node) {
+              return 1;
+            },
+            vLineWidth: function(i, node) {
+              return 1;
+            },
+            hLineColor: function(i, node) {
+              return '#eaeaea';
+            },
+            vLineColor: function(i, node) {
+              return '#eaeaea';
+            },
+            hLineStyle: function(i, node) {
+              // if (i === 0 || i === node.table.body.length) {
+              return null;
+              //}
+            },
+            // vLineStyle: function (i, node) { return {dash: { length: 10, space: 4 }}; },
+            paddingLeft: function(i, node) {
+              return 3;
+            },
+            paddingRight: function(i, node) {
+              return 3;
+            },
+            paddingTop: function(i, node) {
+              return 2;
+            },
+            paddingBottom: function(i, node) {
+              return 2;
+            },
+            fillColor: function(rowIndex, node, columnIndex) {
+              return '#fff';
+            },
+          },
+          table: {
+            headerRows: 1,
+            widths: ['*', 'auto'],
+            body: [
+              [
+                {
+                  text: 'TOTAL DE COBRO DE MULTAS',
+                  bold: true,
+                  fontSize: 12,
+                  // alignment: 'right',
+                  border: [false, false, false, true],
+                  margin: [0, 5, 0, 5],
+                },
+                {
+                  text: `${totalMultas} ${multas[0].moneda}.`,
+                  bold: true,
+                  fontSize: 12,
+                  // alignment: 'right',
+                  border: [false, false, false, true],
+                  fillColor: '#f5f5f5',
+                  margin: [0, 5, 0, 5],
+                },
+              ],
+            ],
+          },
+          
+        },
+      );
+
+    }
+    const dd:IPdf.TDocumentDefinitions = {
+      content: [
+        {
+          columns: [
+            imageRecibo,
+            tituloRecibo,
+          ],
+        },
+        {
+          columns: fromToColumns,
+        },
+        {
+          columns:YourNameClientNameColumns,
+        },
+        tituloDetallesRecibo,
+        {
+          layout: {
+            defaultBorder: false,
+            hLineWidth: function(i, node) {
+              return 1;
+            },
+            vLineWidth: function(i, node) {
+              return 1;
+            },
+            hLineColor: function(i, node) {
+              if (i === 1 || i === 0) {
+                return '#bfdde8';
+              }
+              return '#eaeaea';
+            },
+            vLineColor: function(i, node) {
+              return '#eaeaea';
+            },
+            hLineStyle: function(i, node) {
+              // if (i === 0 || i === node.table.body.length) {
+              return null;
+              //}
+            },
+            // vLineStyle: function (i, node) { return {dash: { length: 10, space: 4 }}; },
+            paddingLeft: function(i, node) {
+              return 2;
+            },
+            paddingRight: function(i, node) {
+              return 2;
+            },
+            paddingTop: function(i, node) {
+              return 1;
+            },
+            paddingBottom: function(i, node) {
+              return 1;
+            },
+            fillColor: function(rowIndex, node, columnIndex) {
+              return '#fff';
+            },
+          },
+          table: {
+            headerRows: 1,
+            widths: ['*', '*','*','*','*'],
+            body: bodyTable,
+          },
+        },
+        '\n',
+        {
+          layout: {
+            defaultBorder: false,
+            hLineWidth: function(i, node) {
+              return 1;
+            },
+            vLineWidth: function(i, node) {
+              return 1;
+            },
+            hLineColor: function(i, node) {
+              return '#eaeaea';
+            },
+            vLineColor: function(i, node) {
+              return '#eaeaea';
+            },
+            hLineStyle: function(i, node) {
+              // if (i === 0 || i === node.table.body.length) {
+              return null;
+              //}
+            },
+            // vLineStyle: function (i, node) { return {dash: { length: 10, space: 4 }}; },
+            paddingLeft: function(i, node) {
+              return 3;
+            },
+            paddingRight: function(i, node) {
+              return 3;
+            },
+            paddingTop: function(i, node) {
+              return 2;
+            },
+            paddingBottom: function(i, node) {
+              return 2;
+            },
+            fillColor: function(rowIndex, node, columnIndex) {
+              return '#fff';
+            },
+          },
+          table: {
+            headerRows: 1,
+            widths: ['*', 'auto'],
+            body: [
+              [
+                {
+                  text: 'TOTAL DE COBRO',
+                  bold: true,
+                  fontSize: 12,
+                  // alignment: 'right',
+                  border: [false, false, false, true],
+                  margin: [0, 5, 0, 5],
+                },
+                {
+                  text: `${totalPago} ${planillas[0].lecturas[0].pagar?.moneda}.`,
+                  bold: true,
+                  fontSize: 12,
+                  // alignment: 'right',
+                  border: [false, false, false, true],
+                  fillColor: '#f5f5f5',
+                  margin: [0, 5, 0, 5],
+                },
+              ],
+            ],
+          },
+          pageBreak:contentMulta.length>0?'after':undefined,
+        },
+
+        ...contentMulta
+      ],
+      styles: {
+        notesTitle: {
+          fontSize: 10,
+          bold: true,
+          margin: [0, 50, 0, 3],
+        },
+        notesText: {
+          fontSize: 10,
+        },
+      },
+      defaultStyle: {
+      },
+      pageSize:'A5',
+      pageOrientation:'landscape',
+      pageMargins:[25,25],
+   
+    
+    };
+    pdfMake.createPdf(dd).open();
+    return true;
   }
 }
