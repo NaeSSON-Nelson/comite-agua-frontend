@@ -30,6 +30,45 @@
         </div>
         <div class="field col-12 md:col-4">
           <span class="p-float-label">
+            <p-inputNumber
+              inputId="monto"
+              formControlName="monto"
+              [minFractionDigits]="2"
+              [ngClass]="inputValid('monto')"
+            ></p-inputNumber>
+            <label for="monto">Monto de Pago de afiliacion (*)</label>
+          </span>
+          <small
+            id="monto-help"
+            class="p-error block"
+            *ngIf="campoValido('monto')"
+            >{{ getMontoErrors("monto") }}
+          </small>
+        </div>
+        <div class="field col-12 md:col-4">
+          <span class="p-float-label">
+            <p-dropdown
+              inputId="moneda"
+              [autoDisplayFirst]="false"
+              [options]="commonServiceApp.monedas"
+              formControlName="moneda"
+              optionLabel="name"
+              optionValue="value"
+              placeholder="Selecione Moneda"
+              [ngClass]="inputValid('moneda')"
+            ></p-dropdown>
+
+            <label for="moneda">Moneda de Cobro (*)</label>
+          </span>
+          <small
+            id="moneda-help"
+            class="p-error block"
+            *ngIf="campoValido('moneda')"
+            >{{ getMonedaErrors("moneda") }}
+          </small>
+        </div>
+        <div class="field col-12 md:col-4">
+          <span class="p-float-label">
             <input
               type="text"
               id="numeroVivienda"

@@ -117,6 +117,8 @@ export class PerfilAfiliadoFormComponent {
     manzano         :[,[Validators.required]],
     numeroManzano   :[,[Validators.required,Validators.min(1)]],
     nroLote         :[,[Validators.required,Validators.min(1)]],
+    monto           :[,[Validators.required,Validators.min(0)]],
+    moneda          :[,Validators.required],
     longitud        :[],
     latitud         :[],
   })
@@ -223,7 +225,7 @@ export class PerfilAfiliadoFormComponent {
     this.afiliadoForm.markAsDirty();
   }
   get coordenadasLatLng(){
-    return new L.LatLng(this.afiliadoForm.get('latitud')?.value ||-21.4734,this.afiliadoForm.get('longitud')?.value ||-64.8026);
+    return new L.LatLng(this.afiliadoForm.get('latitud')?.value ||-21.48043577139176,this.afiliadoForm.get('longitud')?.value ||-64.77020853890953);
   }
   cerrarMapa(modal:boolean){
     this.showMap=modal;
@@ -311,7 +313,6 @@ export class PerfilAfiliadoFormComponent {
   }
   getAfiliadoNumeroManzanoErrors(campo:string){
     const errors = this.afiliadoForm.get(campo)?.errors;
-    console.log(errors);
     if (errors?.['required']) {
       return 'El campo es requerido';
     }else if(errors?.['min']){
@@ -321,13 +322,27 @@ export class PerfilAfiliadoFormComponent {
   }
   getAfiliadoNroLoteErrors(campo:string){
     const errors = this.afiliadoForm.get(campo)?.errors;
-    console.log(errors);
     if (errors?.['required']) {
       return 'El campo es requerido';
     }else if(errors?.['min']){
       return `El minimo de numero de lote es:`
     }
     return '';
+  }
+
+  getMontoErrors(campo:string){
+    const errors = this.afiliadoForm.get(campo)?.errors;
+    if(errors?.['required']){
+      return 'El campo es requerido'
+    }else if(errors?.['min']){
+      return `El minimo monto es ${errors?.['min'].min}`
+    }return ``;
+  }
+  getMonedaErrors(campo:string){
+    const errors = this.afiliadoForm.get(campo)?.errors;
+    if(errors?.['required']){
+      return 'El campo es requerido'
+    }return ``;
   }
   subscription!:Subscription;
   ngOnDestroy(): void {
