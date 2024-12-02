@@ -15,3 +15,8 @@ export interface RoleForm{
     estado?:   Estado;
     menus?:    number[];
 }
+
+export interface RolesSelect{
+    label:  string;
+    value:  any;
+}

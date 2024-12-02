@@ -6,3 +6,57 @@
 @import "../node_modules/primeflex/primeflex.scss";
 @import "../node_modules/primeicons/primeicons.css";
 // @import "../node_modules/bootstrap/scss/bootstrap.scss"
+
+
+//STYLES
+/* user-profile.component.css */
+
+.user-profile-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.profile-image-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.profile-image {
+  max-width: 250px;
+  border-radius: 50%;
+  aspect-ratio: 1/1;
+  object-fit: cover;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.profile-details h2{
+  border-bottom: 2px solid #e0e0e0;
+  padding-bottom: 10px;
+  margin-top: 20px;
+  margin-bottom: 15px;
+  color: #333;
+}
+.mark-title{
+  border-bottom: 2px solid #e0e0e0;
+  padding-bottom: 10px;
+  margin-top: 20px;
+  margin-bottom: 15px;
+  color: #333;
+}
+.profile-details .title-container {
+  border-bottom: 2px solid #e0e0e0;
+  padding-bottom: 10px;
+  margin-top: 20px;
+  margin-bottom: 15px;
+  color: #333;
+}
+.profile-details .grid > div {
+  margin-bottom: 10px;
+}
+@media (max-width: 768px) {
+  .profile-image {
+    max-width: 200px;
+  }
+}

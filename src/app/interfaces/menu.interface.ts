@@ -5,7 +5,7 @@ export interface Menu extends ColumnsAlways{
   id?:          number;
   nombre?:      string;
   linkMenu?:    string;
-  itemsMenu?:    ItemToMenu[];
+  itemMenu?:    ItemMenu[];
 }
 export interface MenuForm {
   id?:          number;
@@ -19,11 +19,11 @@ export interface ItemMenu extends ColumnsAlways{
   linkMenu?:    string;
   estado?:      Estado;
   isActive?:    boolean;
+  nombre?:      string;
+  visible?:     boolean;
 }
 export interface ItemToMenu extends ColumnsAlways{
   id?:          number;
-  nombre?:      string;
-  visible?:     boolean;
   itemMenu?:     ItemMenu;
   
 }

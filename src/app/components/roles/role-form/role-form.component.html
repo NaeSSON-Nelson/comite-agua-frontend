@@ -46,7 +46,7 @@
                 >{{ getNivelErrors("nivel") }}
               </small>
             </div>
-            <div class="field col-12 md:col-4" *ngIf="!this.roleActual?.id">
+            <div class="field col-12 md:col-4" *ngIf="noHayRole()">
               <span class="p-float-label">
                 <p-dropdown
                   inputId="estado"
@@ -68,7 +68,29 @@
                 >{{ getEstadoErrors("estado") }}
               </small>
             </div>
-            <div class="col-12">
+              <!-- Sección de Menús -->
+              <div class="col-12 p-field mb-3" >
+                <label class="block mb-5 text-2xl">Selección de Menús para los acceso del rol</label>
+                <div formArrayName="menus" class="grid">
+                  <div class="col-12 md:col-6" 
+                  *ngFor="let menuControl of menusFormArray.controls; let i=index">
+                  <div [formGroupName]="i" >
+                    <div class="field-checkbox">
+                      <p-checkbox
+                      [binary]="true"
+                      [inputId]="'menu_'+i"
+                      formControlName="selected"
+                      ></p-checkbox>
+                      <label [for]="'menu'+i"><strong>{{ menuControl.value.name | titlecase }} : </strong></label>
+                    </div>
+                    <div class="grid ml-4 mt-2">
+                    	<div class="col-12" *ngFor="let item of getItems(menuControl.value.id)">{{item.nombre}}</div>
+                    </div>
+                  </div>
+                  </div>
+                </div>
+              </div>
+            <!-- <div class="col-12">
               <h5>Menus para vincular</h5>
               <p-divider></p-divider>
               <div class="mt-3">
@@ -108,7 +130,7 @@
               </app-menu-select-table>
               <button pButton pRipple label="Añadir Item" icon="pi pi-plus" class="p-button-info p-button-rounded" (click)="addItem()"></button>
             </div>
-            </div>
+            </div> -->
             <div class="col-12 md:flex md:justify-content-center ">
               <button
                 type="button"
@@ -116,7 +138,7 @@
                 pRipple
                 class="p-button-primary"
                 [label]="roleActual?.id?'Modificar Rol':'Registrar Rol'"
-                [disabled]="roleForm.pending || !formValid"
+                [disabled]="roleForm.pending"
                 (click)="validForm()"
               ></button>
             </div>

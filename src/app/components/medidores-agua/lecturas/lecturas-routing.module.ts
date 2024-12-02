@@ -2,12 +2,13 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 import { RegistrarLecturasComponent } from './registrar-lecturas/registrar-lecturas.component';
-import { LecturasComponent } from './lecturas/lecturas.component';
+
 import { ReportesComponent } from './reportes/reportes.component';
+import { ValidItemMenu } from 'src/app/interfaces/routes-app';
 
 const routes: Routes = [
   {
-    path:'',
+    path:ValidItemMenu.lecturasListarAfiliadosPlanillasLecturas,
     component: RegistrarLecturasComponent,
   },
   {
@@ -16,7 +17,7 @@ const routes: Routes = [
   },
   {
     path: '**',
-    redirectTo: '',
+    redirectTo: ValidItemMenu.lecturasListarAfiliadosPlanillasLecturas,
   },
 ];
 

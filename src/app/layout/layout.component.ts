@@ -22,22 +22,9 @@ import { NavigationEnd, Router } from '@angular/router';
   ]
 })
 export class LayoutComponent {
-
-  overlayMenuOpenSubscription: Subscription;
-
-  menuOutsideClickListener: any;
-
-  profileMenuOutsideClickListener: any;
-
-  @ViewChild(SidebarComponent) appSidebar!: SidebarComponent;
-
-  @ViewChild(TopbarComponent) appTopbar!: TopbarComponent;
-
-
-
-  usuario:Usuario|null=null;
-  userLevel:number=0;
-  roles:any[]=[];
+  
+  // usuario:Usuario|null=null;
+  
   constructor(private authService:AuthService,
               public readonly layoutService:LayoutService,
               private readonly localStorageService:LocalStorageService,
@@ -85,20 +72,32 @@ export class LayoutComponent {
     // this.authService.usuarioLog.subscribe(res=>{
     //   console.log('RESPUESTA DESDE LISTENER',res);
     // })
-    this.layoutService.user.subscribe(res=>{
-      // console.log('hay usurio layout: 3');
-      console.log(res);
-      this.usuario=res;
-      if(res){
-        this.roles=res.roles!.map(rol=>{
-          return{name:rol.nombre,value:{id:rol.id,nivel:rol.nivel}};
-        })
-        this.userLevel = this.roles[0].value.nivel;
-      }else{
-        console.log('no usuario');
-      }
-    })
+    //TODO: VERIRIFAr BIEN
+    // this.layoutService.user.subscribe(res=>{
+    //   // console.log('hay usurio layout: 3');
+    //   console.log('reespuesta desde layout menu:',res);
+    //   this.usuario=res;
+    //   // if(res){
+    //   //   this.roles=res.roles!.map(rol=>{
+    //   //     return{name:rol.nombre,value:{id:rol.id,nivel:rol.nivel}};
+    //   //   })
+    //   //   this.userLevel = this.roles[0].value.nivel;
+    //   // }else{
+    //   //   console.log('no usuario');
+    //   // }
+    // })
   }
+  overlayMenuOpenSubscription: Subscription;
+
+  menuOutsideClickListener: any;
+
+  profileMenuOutsideClickListener: any;
+
+  @ViewChild(SidebarComponent) appSidebar!: SidebarComponent;
+
+  @ViewChild(TopbarComponent) appTopbar!: TopbarComponent;
+
+
 
   hideMenu() {
     this.layoutService.state.overlayMenuActive = false;
@@ -137,20 +136,30 @@ unblockBodyScroll(): void {
             'blocked-scroll'.split(' ').join('|') + '(\\b|$)', 'gi'), ' ');
     }
 }
-  get containerClass() {
+
+get containerClass() {
     return {
-      'layout-theme-light': this.layoutService.config.colorScheme === 'light',
-      'layout-theme-dark': this.layoutService.config.colorScheme === 'dark',
-      'layout-overlay': this.layoutService.config.menuMode === 'overlay',
-      'layout-static': this.layoutService.config.menuMode === 'static',
-      'layout-static-inactive': this.layoutService.state.staticMenuDesktopInactive && this.layoutService.config.menuMode === 'overlay',
-      'layout-overlay-active': this.layoutService.state.overlayMenuActive,
-      'layout-mobile-active': this.layoutService.state.staticMenuMobileActive,
-      'p-input-filled': this.layoutService.config.inputStyle === 'filled',
-      'p-ripple-disabled': !this.layoutService.config.ripple
+        'layout-theme-light': this.layoutService.config.colorScheme === 'light',
+        'layout-theme-dark': this.layoutService.config.colorScheme === 'dark',
+        'layout-overlay': this.layoutService.config.menuMode === 'overlay',
+        'layout-static': this.layoutService.config.menuMode === 'static',
+        'layout-static-inactive': this.layoutService.state.staticMenuDesktopInactive && this.layoutService.config.menuMode === 'static',
+        'layout-overlay-active': this.layoutService.state.overlayMenuActive,
+        'layout-mobile-active': this.layoutService.state.staticMenuMobileActive,
+        'p-input-filled': this.layoutService.config.inputStyle === 'filled',
+        'p-ripple-disabled': !this.layoutService.config.ripple
     }
-    // return this.usuario?'layout-static':'layout-overlay';
-  }
+}
+
+ngOnDestroy() {
+    if (this.overlayMenuOpenSubscription) {
+        this.overlayMenuOpenSubscription.unsubscribe();
+    }
+
+    if (this.menuOutsideClickListener) {
+        this.menuOutsideClickListener();
+    }
+}
   typeRoleSelected(){
       
   }
@@ -162,18 +171,9 @@ unblockBodyScroll(): void {
     const user =this.localStorageService.getItem<IDataUser>(KEY_STORAGE.DATA_USER);
     if(user)
     this.authService.getUser().subscribe(res=>{
-      // console.log('suscrito',res);
+      // console.log('suscrito get user',res);
       
       this.layoutService.userObserver.emit(res.data!)
     })
   }
-  ngOnDestroy() {
-    if (this.overlayMenuOpenSubscription) {
-        this.overlayMenuOpenSubscription.unsubscribe();
-    }
-
-    if (this.menuOutsideClickListener) {
-        this.menuOutsideClickListener();
-    }
-}
 }

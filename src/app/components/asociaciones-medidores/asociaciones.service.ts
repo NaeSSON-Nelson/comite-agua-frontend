@@ -12,10 +12,13 @@ export class AsociacionesService {
 
   private _perfiles$: Subject<DataResult<Perfil>>;
   private _perfil$: Subject<Perfil>;
-  
+  // private _AfiliadosWidthMedidores$:Subject<DataResult<Perfil>>;
+  // private _afiliadoWithMedidores$:Subject<Perfil>;
   private _medidorAsociado$:Subject<MedidorAsociado>;
   private URL_ASOCIACIONES:string = environment.apiURrl + '/asociaciones';
   constructor(private http:HttpClient) { 
+    // this._AfiliadosWidthMedidores$= new Subject<DataResult<Perfil>>();
+    // this._afiliadoWithMedidores$ = new Subject<Perfil>();
     this._perfiles$ = new Subject<DataResult<Perfil>>();
     this._perfil$ = new Subject<Perfil>();
     this._medidorAsociado$ = new Subject<MedidorAsociado>();
@@ -55,6 +58,7 @@ export class AsociacionesService {
           })
         );
     }
+  
   findOne(id:number){
     return this.http.get<HttpResponseApi<MedidorAsociado>>(`${this.URL_ASOCIACIONES}/${id}`).pipe(
       tap((resp)=>{
@@ -151,7 +155,7 @@ export class AsociacionesService {
       tap((resp)=>{
         if(resp.OK){
           // this._afiliadoWithMedidores$.next(resp.data!)
-          // this._afiliadoWithMedidores$.next(resp.data!);
+          this._medidorAsociado$.next(resp.data!);
         }
       }),
       map((resp) => {
@@ -192,4 +196,15 @@ export class AsociacionesService {
   updateStatusGestion(idPlanilla:number,registrable:boolean){
     return this.http.patch<HttpResponseApi<PlanillaLecturas>>(`${this.URL_ASOCIACIONES}/gestion/${idPlanilla}`,{registrable});
   }
+  obtenerAsociacionesAfiliado(idPerfil:number){
+    return this.http.get<HttpResponseApi<MedidorAsociado[]>>(`${this.URL_ASOCIACIONES}/afiliado/${idPerfil}`).pipe();
+  }
+
+  obtenerComprobantePorPagar(idLectura:number){
+    return this.http.get<HttpResponseApi<PlanillaMesLectura>>(`${this.URL_ASOCIACIONES}/comprobantes-lectura/${idLectura}`)
+    .pipe(
+      map(res=>res.data!)
+    )
+  }
+  
 }

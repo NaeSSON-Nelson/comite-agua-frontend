@@ -20,6 +20,4 @@ export class PagosService {
       map(res=>res.data!)
     )
   }
-  
-  
 }

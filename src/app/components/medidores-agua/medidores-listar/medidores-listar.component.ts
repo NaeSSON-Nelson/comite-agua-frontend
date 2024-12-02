@@ -7,7 +7,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { patternSpanishInline } from 'src/app/patterns/forms-patterns';
 import { PaginatorState } from 'primeng/paginator';
-import { PATH_AUTH, PATH_FORBBIDEN, PATH_MEDIDORES, PATH_MODULE_DETAILS, PATH_REGISTRAR } from 'src/app/interfaces/routes-app';
+import { PATH_AUTH, PATH_FORBBIDEN, PATH_MEDIDORES, PATH_MODULE_DETAILS, PATH_REGISTRAR, ValidItemMenu, ValidMenu } from 'src/app/interfaces/routes-app';
 
 @Component({
   selector: 'app-medidores-listar',
@@ -84,7 +84,7 @@ export class MedidoresListarComponent {
     });
   }
   dataDetail(id: number) {
-    this.router.navigate([PATH_MEDIDORES, PATH_MODULE_DETAILS,id]);
+    this.router.navigate([ValidMenu.medidores, ValidItemMenu.medidorDetails,id]);
   }
   loadCustomers(filters:any){
 

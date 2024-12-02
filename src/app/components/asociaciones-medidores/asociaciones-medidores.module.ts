@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AsociacionesListarComponent } from './asociaciones-listar/asociaciones-listar.component';
-import { DetallesAsociacionaesComponent } from './detalles-asociacionaes/detalles-asociacionaes.component';
 import { PrimeNgCrudModule } from 'src/app/prime-ng-crud/prime-ng-crud.module';
 import { HelpersModule } from 'src/app/helpers/helpers.module';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -22,7 +21,6 @@ import { TagModule } from 'primeng/tag';
 @NgModule({
   declarations: [
     AsociacionesListarComponent,
-    DetallesAsociacionaesComponent,
     AfiliadoMedidoresDetailsComponent,
     AsociarMedidorComponent,
     GestionPlanillasComponent,

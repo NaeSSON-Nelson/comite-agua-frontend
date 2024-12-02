@@ -1,10 +1,11 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Subject, catchError, map, of, tap } from 'rxjs';
-import { HttpResponseApi, Medidor, Perfil, ResponseResult, ResponseResultData } from 'src/app/interfaces';
+import { HttpResponseApi, HttpResponseApiArray, Medidor, MultaServicio, Perfil, ResponseResult, ResponseResultData } from 'src/app/interfaces';
 import { MedidorAsociado, PlanillaMesLectura, PlanillaLecturas } from 'src/app/interfaces/medidor.interface';
 
 import { environment } from 'src/environments/environment';
+import { DataResult } from '../../interfaces/http-respones.interface';
 @Injectable({
   providedIn: 'root'
 })
@@ -13,16 +14,21 @@ export class UsuarioFuncionesService {
   URL_user = environment.apiURrl +'/user';
   URL_user_medidores = this.URL_user +'/medidores'
   private _deudasLecturasMedidor$:Subject<Medidor>;
+  private _multasAsociacion$:Subject<DataResult<MultaServicio>>
   private _lecturasMedidor$:Subject<PlanillaLecturas>
   constructor(private http:HttpClient) {
     this._deudasLecturasMedidor$ = new Subject<Medidor>();
     this._lecturasMedidor$ = new Subject<PlanillaLecturas>();
+    this._multasAsociacion$ = new Subject<DataResult<MultaServicio>>();
   }
   get deudas(){
     return this._deudasLecturasMedidor$.asObservable();
   }
   get PlanillaLecturas(){
     return this._lecturasMedidor$.asObservable();
+  }
+  get multasAsociacion(){
+    return this._multasAsociacion$.asObservable();
   }
   getPerfilUser(){
     return this.http.get<HttpResponseApi<Perfil>>(`${this.URL_user}/profile`).pipe(
@@ -51,6 +57,9 @@ export class UsuarioFuncionesService {
         return of(errors);
       })
     )
+  }
+  getMedidorAsociadoSelected(id:number){
+    return this.http.get<HttpResponseApi<MedidorAsociado>>(`${this.URL_user_medidores}/detalles/${id}`).pipe();
   }
   getMedidor(nroMedidor:string){
     return this.http.get<HttpResponseApi<MedidorAsociado>>(`${this.URL_user_medidores}/${nroMedidor}`).pipe(
@@ -115,5 +124,30 @@ export class UsuarioFuncionesService {
         return of(errors);
       })
     )
+  }
+
+  obtenerMultasMedidorAsociado(idAsociacion:number){
+    return this.http.get<HttpResponseApiArray<MultaServicio>>(`${this.URL_user_medidores}/asociacion/${idAsociacion}`).pipe(
+      tap((resp) => {
+        if (resp.OK) {
+          this._multasAsociacion$.next(resp.data);
+          // console.log(resp.data);
+        }
+      }),
+      map((resp) => {
+        // console.log('map',resp);
+        const respuesta: ResponseResult = {
+          OK: resp.OK,
+          message: resp.message,
+          statusCode: 200,
+        };
+        return respuesta;
+      }),
+      catchError((err: HttpErrorResponse) => {
+        const errors = err.error as ResponseResult;
+        errors.OK = false;
+        return of(errors);
+      })
+    );
   }
 }

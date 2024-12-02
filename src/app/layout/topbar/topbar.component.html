@@ -1,21 +1,18 @@
 <div class="layout-topbar">
-    <a class="layout-topbar-logo" routerLink="">
-        <!-- <img src="assets/layout/images/{{layoutService.config.colorScheme === 'light' ? 'logo-dark' : 'logo-white'}}.svg" alt="logo"> -->
+    <a class="layout-topbar-logo md:flex md:justify-content-center md:flex-wrap" routerLink="/" >
+        <img src="assets/layout/images/AAPLAT-icon.svg" alt="logo">
         <span>AAPLAT</span>
     </a>
 
-    <!-- <button #menubutton class="p-link layout-menu-button layout-topbar-button" (click)="layoutService.onMenuToggle()">
-        <i class="pi pi-bars"></i>
-    </button> -->
-    <button #menubutton class="p-link layout-menu-button layout-topbar-button" (click)="layoutService.onMenuToggle()" *ngIf="userLevel>40">
+    <button  *ngIf="usuario"#menubutton class="p-link layout-menu-button layout-topbar-button" (click)="layoutService.onMenuToggle()">
         <i class="pi pi-bars"></i>
     </button>
-    <button #topbarmenubutton class="p-link layout-topbar-menu-button layout-topbar-button">
+    <button *ngIf="usuario" #topbarmenubutton class="p-link layout-topbar-menu-button layout-topbar-button">
         <i class="pi pi-ellipsis-v"></i>
     </button>
-    <div *ngIf="items.length>0" class="menu-taps">
+    <!-- <div *ngIf="items.length>0" class="menu-taps">
         <p-menubar [model]="items"></p-menubar>
-    </div>
+    </div> -->
     <div #topbarmenu class="layout-topbar-menu" [ngClass]="{'layout-topbar-menu-mobile-active': layoutService.state.profileSidebarVisible}" *ngIf="usuario; else nouser">
             <button class="p-link layout-topbar-button">
                 <i class="pi pi-user"></i>
@@ -32,9 +29,11 @@
                 <i class="pi pi-cog"></i>
             </button> 
             <p-dropdown [options]="roles"
-            optionLabel="name"
+            #dropdownRole
+            optionLabel="label"
             (onChange)="rolChange($event)"
             optionValue="value"
+            
             >
             </p-dropdown>
         </div>

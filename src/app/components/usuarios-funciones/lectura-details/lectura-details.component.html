@@ -1,61 +1,90 @@
-<p-dialog header="{{'Detalles de la lectura registrada del Mes ' + lectura?.PlanillaMesLecturar}}" [(visible)]="visible" [modal]="true" [style]="{ width: '50vw' }" [draggable]="false" [resizable]="false" (onHide)="eventVisible.emit(false)" [baseZIndex]="900">
-    <h4>LECTURA</h4>
-    <div class="card grid" *ngIf="lectura">
-        <div class="sm:col-6 col-12">
-            <label class="col-12 mb-2 md:col-2 md:mb-0 text-700 text-lg"> <b>LECTURA REGISTRADA: </b></label>
-            <div class="col-12 md:col-10">
-                <p class="text-900 text-left text-lg">{{lectura.lectura}} m3.</p>
+<p-dialog header="{{'Detalles de la lectura registrada del Mes ' + lectura?.PlanillaMesLecturar}}" [(visible)]="visible" [modal]="true" [style]="{ width: '68vw' }" [draggable]="false" [resizable]="false" (onHide)="eventVisible.emit(false)" [baseZIndex]="900">
+    <div class="card m-3" *ngIf="lectura">
+        <div class="col-12 grid">
+            <div class="col-12 md:col-6">
+                <div class="text-900 text-xl mb-2 font-medium text-right">Fecha de Lectura Registrada</div>
+                <p class="text-700 line-height-3 text-right">{{lectura.created_at| date: 'dd/MM/yyyy'}}</p>
             </div>
-        </div>
-        <div class="sm:col-6 col-12">
-            <label class="col-12 mb-2 md:col-2 md:mb-0 text-700 text-lg"> <b>M3. UTILIZADOS: </b></label>
-            <div class="col-12 md:col-10">
-                <p class="text-900 text-left text-lg">{{lectura.consumoTotal}} m3.</p>
+            <div class="col-12 md:col-6">
+                <div class="text-900 text-xl mb-2 font-medium text-right">Lectura del Medidor registrada</div>
+                <p class="text-700 line-height-3 text-right">{{lectura.lectura}} {{lectura.medicion}}</p>
+                
             </div>
-        </div>
-        <div class="sm:col-6 col-12">
-            <label class="col-12 mb-2 md:col-2 md:mb-0 text-700 text-lg"> <b>ESTADO DEL MEDIDOR: </b></label>
-            <div class="col-12 md:col-10">
-                <p class="text-900 text-left text-lg">{{lectura.estadoMedidor || 'SIN ESTADO REGISTRADO'}}</p>
+            <div class="col-12 md:col-6">
+                <div class="text-900 text-xl mb-2 font-medium text-right">Estado del Medidor de agua al momento de registrar Lectura</div>
+                <p class="text-700 line-height-3 text-right">{{lectura.estadoMedidor || 'SIN REGISTRO'}}</p>
             </div>
-        </div>
-        <div class="sm:col-6 col-12">
-            <label class="col-12 mb-2 md:col-2 md:mb-0 text-700 text-lg"> <b>F. REGISTRO LECTURA: </b></label>
-            <div class="col-12 md:col-10">
-                <p class="text-900 text-left text-lg">{{lectura.created_at | date : 'dd-MM-yyyy'}}</p>
-            </div>
-        </div>
-    </div>
-    <h4>DETALLES DE PAGO</h4>
-    <div class="card">
-        <div class="col-12 grid" *ngIf="lectura?.pagar; else sinComprobante">
-            <div class="sm:col-6 col-12">
-                <label class="col-12 mb-2 md:col-2 md:mb-0 text-700 text-lg"> <b>F. CREADA: </b></label>
-                <div class="col-12 md:col-10">
-                    <p class="text-900 text-left text-lg">{{lectura!.pagar!.created_at | date: 'dd-MM-yyyy'}}</p>
-                </div>
-            </div>
-            <div class="sm:col-6 col-12">
-                <label class="col-12 mb-2 md:col-2 md:mb-0 text-700 text-lg"> <b>MOTIVO PARA PAGAR: </b></label>
-                <div class="col-12 md:col-10">
-                    <p class="text-900 text-left text-lg">{{lectura!.pagar!.motivo}}</p>
-                </div>
-            </div>
-            <div class="sm:col-6 col-12">
-                <label class="col-12 mb-2 md:col-2 md:mb-0 text-700 text-lg"> <b>MONTO: </b></label>
-                <div class="col-12 md:col-10">
-                    <p class="text-900 text-left text-lg">{{lectura!.pagar!.monto}} {{lectura!.pagar!.moneda}}</p>
-                </div>
-            </div>
-            <div class="sm:col-6 col-12">
-                <label class="col-12 mb-2 md:col-2 md:mb-0 text-700 text-lg"> <b>ESTADO: </b></label>
-                <div class="col-12 md:col-10">
-                    <p class="text-900 text-left text-lg">{{lectura!.pagar!.estadoComprobate}}</p>
-                </div>
+            <div class="col-12 md:col-6">
+                <div class="text-900 text-xl mb-2 font-medium text-right">Consumo de agua del mes {{lectura.PlanillaMesLecturar}}</div>
+                <p class="text-700 line-height-3 text-right">{{lectura.consumoTotal}} {{lectura.medicion}}</p>
             </div>
             
         </div>
-        <ng-template #sinComprobante> <p><i>LA LECTURA NO TIENE COMPROBANTE POR PAGAR</i></p></ng-template>
-        
+        <div class="col-12" >
+            <p-tabView>
+                <p-tabPanel header="Detalles de pago" *ngIf="lectura">
+                    <div class="grid mt-2" *ngIf="lectura.pagar; else sinComprobante">
+                        <div class="col-12 md:col-6">
+                            <div class="text-900 text-xl mb-2 font-medium text-right">Fecha de Comprobante emitida</div>
+                            <p class="text-700 line-height-3 text-right">{{lectura.pagar.created_at | date: 'dd/MM/yyyy'}}</p>
+                        </div>
+                        <div class="col-12 md:col-6">
+                            <div class="text-900 text-xl mb-2 font-medium text-right">Monto de Pago</div>
+                            <p class="text-700 line-height-3 text-right">{{lectura.pagar.monto}} {{lectura.pagar.moneda}}</p>
+                        </div>
+                        <div class="col-12 md:col-6">
+                            <div class="text-900 text-xl mb-2 font-medium text-right">Motivo del pago</div>
+                            <p class="text-700 line-height-3 text-right">{{lectura.pagar.motivo}}</p>
+                        </div>
+                        <div class="col-12 md:col-6">
+                            <div class="text-900 text-xl mb-2 font-medium text-right">Estado del pago</div>
+                            <div class="flex flex-row-reverse flex-wrap">
+                            <p-tag styleClass="text-800 line-height-3 text-right text-white" [severity]="lectura.pagar.pagado?'success':'warning'" [value]="lectura.pagar.estadoComprobate"></p-tag>
+                            </div>
+                        </div>
+                        <div class="col-12 md:col-6">
+                            <div class="text-900 text-xl mb-2 font-medium text-right">Metodo de creacion del registro</div>
+                            <p class="text-700 line-height-3 text-right">{{lectura.pagar.metodoRegistro}}</p>
+                        </div>
+                        <div class="col-12 md:col-6">
+                            <div class="text-900 text-xl mb-2 font-medium text-right">Fecha limite de Tolerancia del pago</div>
+                            <p class="text-700 line-height-3 text-right">{{lectura.pagar.fechaLimitePago | date :'dd/MM/yyyy'}}</p>
+                        </div>
+                    </div>
+                    <div class="grid mt-2" *ngIf="lectura.pagar?.pagado">
+                        <div class="col-12"><p-divider> <p class="text-900 font-medium">Comprobante de pago</p></p-divider></div>
+                        <div class="col-12 md:col-6">
+                            <div class="text-900 text-xl mb-2 font-medium text-right">Nro de comprobante de pago</div>
+                            <p class="text-700 line-height-3 text-right">{{lectura.pagar?.comprobante?.id}}</p>
+                        </div>
+                        <div class="col-12 md:col-6">
+                            <div class="text-900 text-xl mb-2 font-medium text-right">Metodo de pago registrado</div>
+                            <p class="text-700 line-height-3 text-right">{{lectura.pagar?.comprobante?.metodoPago}}</p>
+                        </div>
+                        <div class="col-12 md:col-6">
+                            <div class="text-900 text-xl mb-2 font-medium text-right">Monto de pago</div>
+                            <p class="text-700 line-height-3 text-right">{{lectura.pagar?.comprobante?.montoPagado}} {{lectura.pagar?.comprobante?.moneda}}</p>
+                        </div>
+                        <div class="col-12 md:col-6">
+                            <div class="text-900 text-xl mb-2 font-medium text-right">Fecha de pago realizado</div>
+                            <p class="text-700 line-height-3 text-right">{{lectura.pagar?.comprobante?.fechaEmitida | date: 'dd/MM/yyyy HH:MM'}}</p>
+                        </div>
+                        <ng-container *ngIf="lectura.pagar?.comprobante?.entidadPago !=='NINGUNO'">
+                            <div class="col-12 md:col-6">
+                                <div class="text-900 text-xl mb-2 font-medium text-right">Entidad de pago</div>
+                                <p class="text-700 line-height-3 text-right">{{lectura.pagar?.comprobante?.entidadPago}}</p>
+                            </div>
+                            <div class="col-12 md:col-6">
+                                <div class="text-900 text-xl mb-2 font-medium text-right">Nro. de recibo de la entidad</div>
+                                <p class="text-700 line-height-3 text-right">{{lectura.pagar?.comprobante?.nroRecibo}}</p>
+                            </div>
+                        </ng-container>
+                    </div>
+                    <ng-template #sinComprobante>
+                        <p><i>ESTA LECTURA NO TIENE UN COMPROBANTE DE PAGO</i></p>
+                    </ng-template>
+                </p-tabPanel>
+            </p-tabView>
+        </div>
     </div>
 </p-dialog>

@@ -3,7 +3,7 @@ import { MedidoresAguaService } from '../medidores-agua.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Estado, Medidor, MedidorAsociado } from 'src/app/interfaces';
-import { PATH_AFILIADO, PATH_ASOCIACIONES, PATH_AUTH, PATH_EDIT, PATH_FORBBIDEN, PATH_MEDIDORES, PATH_MODULE_DETAILS, PATH_REGISTRAR } from 'src/app/interfaces/routes-app';
+import { PATH_AFILIADO, PATH_ASOCIACIONES, PATH_AUTH, PATH_EDIT, PATH_FORBBIDEN, PATH_MEDIDORES, PATH_MODULE_DETAILS, PATH_REGISTRAR, ValidItemMenu, ValidMenu } from 'src/app/interfaces/routes-app';
 
 @Component({
   selector: 'app-medidor-details',
@@ -88,7 +88,7 @@ export class MedidorDetailsComponent {
   actionData(action: string) {
     switch (action) {
       case 'MODIFICAR':
-        this.router.navigate([PATH_MEDIDORES,PATH_REGISTRAR,PATH_EDIT,this.medidor.id]);
+        this.router.navigate([ValidMenu.medidores,ValidItemMenu.medidorUpdate,this.medidor.id]);
         break;
 
       case 'DESHABILITAR':
@@ -101,12 +101,15 @@ export class MedidorDetailsComponent {
               .updateStatus(this.medidor.id!, { estado: Estado.DESHABILITADO })
               .subscribe({
                 next: (res) => {
-                  this.messageService.add({
-                    severity: 'info',
-                    summary: 'Se cambio con exito!',
-                    detail: `${res.message}`,
-                    icon: 'pi pi-check',
-                  });
+                  // console.log(res);
+                  if(res.OK){
+                    this.messageService.add({
+                      severity: 'info',
+                      summary: 'Se cambio con exito!',
+                      detail: `${res.message}`,
+                      icon: 'pi pi-check',
+                    });
+                  }
                 },
                 error: (err) => {
                   console.log(err);
@@ -164,7 +167,7 @@ export class MedidorDetailsComponent {
     const afi = this.medidor.medidorAsociado?.find(res=>res.afiliado?.perfil?.id);
     // console.log('id perfil',id);
     if(afi)
-    this.router.navigate([PATH_ASOCIACIONES,PATH_MODULE_DETAILS,afi.afiliado?.perfil?.id])
+    this.router.navigate([ValidMenu.asociaciones,ValidItemMenu.asociacionesAfiliadoDetails,afi.afiliado?.perfil?.id])
   }
   dataAsociados:MedidorAsociado[]=[];
   loadingAsociacion:boolean=false;
@@ -173,7 +176,6 @@ export class MedidorDetailsComponent {
     this.loadingAsociacion=true;
     this.asociacionTitle='';
     this.medidoresService.obtenerAsociacionesMedidor(this.medidor.id!).subscribe(res=>{
-     
       if(res.OK){
         this.dataAsociados=res.data!;
         this.loadingAsociacion=false;
@@ -186,9 +188,10 @@ export class MedidorDetailsComponent {
     })
   }
   visibleAsociacionDetails:boolean=false;
-  idAsociaod:number=-1;
+  idAsociado:number=-1;
   asociacionDetails(asociacion:MedidorAsociado){
-    this.idAsociaod=asociacion.id!;
+    // console.log(asociacion);
+    this.idAsociado=asociacion.id!;
     this.visibleAsociacionDetails=true;
   }
 }

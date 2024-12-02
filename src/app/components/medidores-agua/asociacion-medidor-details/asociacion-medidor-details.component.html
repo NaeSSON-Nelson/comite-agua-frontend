@@ -9,10 +9,10 @@
             <div class="text-900 text-xl mb-2 font-medium text-right">N° de Asociación</div>
             <p class="text-700 line-height-3 text-right">{{asociacion.id}}</p>
         </div> -->
-        <div class="md:col-6 mb-3 col-12">
+        <!-- <div class="md:col-6 mb-3 col-12">
             <label class="block text-900 font-medium mb-2">N° de Asociación</label>
             <div>{{ asociacion.id }}</div>
-        </div>
+        </div> -->
         <div class="col-12 md:col-6 mb-3">
             <label class="block text-900 font-medium mb-2">Estado de Asociación</label>
            <p-tag [severity]="asociacion.isActive?'success':'danger'" [value]="asociacion.estado"></p-tag>
@@ -60,14 +60,14 @@
                             <img [src]="asociacion.afiliado!.perfil!.urlImage ||''" class=" m-2" alt="User profile" [style]="{'max-width':'168px'}">
                         </div>
                         <div class="md:col-8 col-12 grid">
-                            <div class="col-12 md:col-6 mb-3">
+                            <!-- <div class="col-12 md:col-6 mb-3">
                                 <label class="block text-900 font-medium mb-2">N° de Afiliacion</label>
                             <div>{{ asociacion.afiliado?.id }}</div>
                             </div>
                             <div class="col-12 md:col-6 mb-3">
                                 <label class="block text-900 font-medium mb-2">N° de Perfil</label>
                             <div>{{ asociacion.afiliado?.perfil?.id }}</div>
-                            </div>
+                            </div> -->
                         <div class="col-12 md:col-6 mb-3">
                             <label class="block text-900 font-medium mb-2">Nombres</label>
                             <div>{{ asociacion.afiliado?.perfil?.nombrePrimero |uppercase }} {{ asociacion.afiliado?.perfil?.nombreSegundo +' '||'' |uppercase }}{{ asociacion.afiliado?.perfil?.apellidoPrimero |uppercase  }} {{ asociacion.afiliado?.perfil?.apellidoSegundo || '' |uppercase  }}</div>

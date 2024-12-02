@@ -8,13 +8,12 @@ import { HelpersModule } from 'src/app/helpers/helpers.module';
 import { TabViewModule } from 'primeng/tabview';
 import { MedidoresListarComponent } from './medidores-listar/medidores-listar.component';
 import { MedidorDetailsComponent } from './medidor-details/medidor-details.component';
-import { MedidoresComponent } from './medidores/medidores.component';
+
 import { AsociacionMedidorDetailsComponent } from './asociacion-medidor-details/asociacion-medidor-details.component';
 import { TagModule } from 'primeng/tag';
 import { ToolbarModule } from 'primeng/toolbar';
 @NgModule({
   declarations: [
-    MedidoresComponent,
     MedidorFormComponent,
     MedidoresListarComponent,
     MedidorDetailsComponent,

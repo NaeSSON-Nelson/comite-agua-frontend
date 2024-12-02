@@ -1,152 +1,127 @@
-<div class="grid">
-    <div class="col-12" *ngIf="perfil">
-        <div class="card grid">
-			<div class="col-12">
-				<div class="flex flex-row flex-wrap">
-					<h4 class="text-center">Detalles de Perfil</h4>
-				</div>
-				<div class="flex flex-row-reverse flex-wrap">
-					<p-button icon="pi pi-user-plus" *ngIf="!perfil.accessAcount" styleClass="p-button-rounded  p-button-info mr-2" alt="Deshabilitar registro"  (click)="actionData('USUARIO')"></p-button>
-					<p-button icon="pi pi-plus" label="Afiliacion" *ngIf="!perfil.afiliado" styleClass="p-button-rounded p-button-success mr-2" alt="Deshabilitar registro" (click)="actionData('AFILIADO')"></p-button>
-					<p-button icon="pi pi-lock" styleClass="p-button-rounded p-button-danger mr-2" alt="Deshabilitar registro" *ngIf="perfil.isActive; else inhabilitado" (click)="actionData('DESHABILITAR')"></p-button>
-					<p-button icon="pi pi-pencil" styleClass="p-button-rounded p-button-warning  mr-2" alt="Modificar datos"(click)="actionData('MODIFICAR')" ></p-button>
-					<ng-template #inhabilitado>
-						<p-button icon="pi pi-lock-open" styleClass="p-button-rounded p-button-success mr-2" alt="habilitar registro" (click)="actionData('HABILITAR')" ></p-button>
-					</ng-template>
-				</div>
+
+<div class="user-profile-container">
+	<p-card class="profile-card" *ngIf="perfil">
+		<div class="grid">
+			<div class="col-12 md:col-4 profile-image-container">
+				<img [src]="perfil.urlImage ||''" alt="Foto de perfil" class="profile-image"/>
+				<p-button icon="pi pi-camera" styleClass="p-button-rounded p-button-secondary" class="button-camera-position" (onClick)="visibleImageForm=true"></p-button>
 			</div>
-			<div class="col-12 md:col-4">
-                <img [src]="perfil.urlImage ||''" class="" alt="User profile" [style]="{'max-width':'248px'}">
-				<p-button
-				icon="pi pi-user-edit" styleClass="p-button-rounded p-button-success p-button-outlined mx-3" (onClick)="visibleImageForm= true"
-				></p-button>
-			</div>
-            <div class="p-fluid p-formgrid grid col-12 md:col-8" >
-				
-				<div class="field col-12 md:col-6">
-					<label htmlFor="nombres">Nombres</label>
-					<input pInputText id="nombres" type="text" [disabled]="true" value="{{perfil.nombrePrimero | uppercase}} {{perfil.nombreSegundo ||'' | uppercase}}" class="appearance-none text-color text-base" />
-				</div>
-				<div class="field col-12 md:col-6">
-					<label htmlFor="apellidos">Apellidos</label>
-					<input pInputText id="apellidos" type="text" [disabled]="true" value="{{perfil.apellidoPrimero | uppercase}} {{perfil.apellidoSegundo||'' | uppercase}}" class="appearance-none text-color text-base"/>
-				</div>
-				<div class="field col-12 md:col-3">
-					<label htmlFor="CI">Cedula de Identidad</label>
-					<input pInputText type="text"[disabled]="true" id="CI" [value]="perfil.CI" class="appearance-none text-color text-base"/>
-				</div>
-				<div class="field col-12 md:col-3">
-					<label htmlFor="CI">Nro. de Contacto</label>
-					<input pInputText type="text"[disabled]="true" id="CI" [value]="perfil.contacto" class="appearance-none text-color text-base"/>
-				</div>
-				<div class="field col-12 md:col-3">
-					<label htmlFor="genero">Genero</label>
-					<input pInputText type="text"[disabled]="true" id="genero" [value]="perfil.genero | uppercase" class="appearance-none text-color text-base"/>
-				</div>
-				<div class="field col-12 md:col-3">
-					<label htmlFor="fechaNacimiento">Fecha de Nacimiento</label>
-					<input pInputText type="text"[disabled]="true" id="fechaNacimiento" [value]='perfil.fechaNacimiento | date: "dd/MM/yyyy"' class="appearance-none text-color text-base"/>
-				</div>
-				<div class="field col-12 md:col-3">
-					<label htmlFor="profesion">Profesion</label>
-					<input pInputText type="text"[disabled]="true" id="profesion" [value]="perfil.profesion | uppercase" class="appearance-none text-color text-base"/>
-				</div>
-				<div class="field col-12 md:col-3">
-					<label htmlFor="tipoPerfil">Tipo de Perfil</label>
-					<input pInputText type="text"[disabled]="true" id="tipoPerfil" [value]="perfil.tipoPerfil?.toString()" class="appearance-none text-color text-base"/>
-				</div>
-				<div class="field col-12 md:col-3">
-					<label htmlFor="tipoPerfil">Estado</label>
-					<input pInputText type="text"[disabled]="true" id="estado" [value]="perfil.estado" class="appearance-none text-color text-base"/>
-					
-					<!-- <p-tag icon="pi pi-exclamation-triangle" severity="danger" value="danger" value="ESTE PERFIL ESTA DESHABILITADO" class="mt-2" *ngIf=" perfil.isActive === false"></p-tag> -->
-				</div>
-				<div class="col-12 md:col-6" *ngIf="!perfil.isActive">
-					<p class="font-italic text-red-700">* El registro se encuentra deshabilitado <i class="pi pi-exclamation-triangle"></i></p>
-				</div>
-			</div>
-        </div>
-		<div class="card grid" *ngIf="perfil.afiliado || perfil.usuario">
-			<div class="col-12 md:col-6 grid" *ngIf="perfil.afiliado">
-				<div class="col-12">
-					<div class="flex flex-row flex-wrap">
-						<h5>DATOS DE AFILIACION</h5>
-					</div>
-					<div class="flex flex-row-reverse flex-wrap">
-						<p-button icon="pi pi-lock" styleClass="p-button-rounded p-button-danger mr-2" alt="Deshabilitar registro" *ngIf="perfil.afiliado.isActive; else inhabilitado" (click)="actionDataAfiliado('DESHABILITAR')"></p-button>
-						<p-button icon="pi pi-pencil" styleClass="p-button-rounded p-button-warning  mr-2" alt="Modificar datos"(click)="actionDataAfiliado('MODIFICAR')" ></p-button>
-						<ng-template #inhabilitado>
-							<p-button icon="pi pi-lock-open" styleClass="p-button-rounded p-button-success mr-2" alt="habilitar registro" (click)="actionDataAfiliado('HABILITAR')" ></p-button>
-						</ng-template>
-					</div>
-				</div>
-				<p-divider class="col-12"></p-divider>
-				<div class="p-fluid p-formgrid grid col-12">
-					<div class="field col-12 md:col-6">
-						<label htmlFor="barrio">Barrio</label>
-						<input pInputText id="barrio" type="text" [disabled]="true" [value]="perfil.afiliado.ubicacion?.barrio || ''" class="appearance-none text-color text-base" />
-					</div>
-					<div class="field col-12 md:col-6">
-						<label htmlFor="nroVivienda">Numero de vivienda</label>
-						<input pInputText id="nroVivienda" type="text" [disabled]="true" [value]="perfil.afiliado.ubicacion?.numeroVivienda || 'SIN NUMERO DE VIVIENDA'" class="appearance-none text-color text-base" />
-					</div>
-					<div class="field col-12 md:col-6">
-						<label htmlFor="estado">Estado de afiliacion</label>
-						<input pInputText id="estado" type="text" [disabled]="true" [value]="perfil.afiliado.estado || ''" class="appearance-none text-color text-base" />
-					</div>
-					<div class="field col-12 md:col-6 md:mt-5">
-						<p-button label="Pago de afiliacion" (onClick)="visiblePagoAfiliacion = true"></p-button>
-					</div>
-					<div class=" col-12 md:col">
-						<div class="text-center p-3 border-round-sm h-full font-bold">
-						  <div class="col-12 flex flex-column justify-content-center">
-							<p-button icon="pi pi-map-marker" styleClass="p-button-rounded p-button-secondary p-button-text p-button-raised" (onClick)="mostrarMapAfiliado()"></p-button>
-						  </div>
+			<div class="col-12 md:col-8 profile-details">
+				<div class="grid">
+					<!-- DATA PERFIL-->
+					 <div class="col-12">
+						<div class="flex justify-content-between flex-wrap title-container">
+							<div class="flex justify-content-start flex-wrap">
+								<h3>Información Personal del Perfíl</h3>
+							</div>
+							<div class="flex justify-content-end flex-wrap">
+								<p-button icon="pi pi-user-plus" *ngIf="!perfil.accessAcount" styleClass="p-button-rounded  p-button-info mr-2" alt="Deshabilitar registro"  (click)="actionData('USUARIO')"></p-button>
+								<p-button icon="pi pi-plus" label="Afiliacion" *ngIf="!perfil.afiliado" styleClass="p-button-rounded p-button-success mr-2" alt="Deshabilitar registro" (click)="actionData('AFILIADO')"></p-button>
+								<p-button icon="pi pi-lock" styleClass="p-button-rounded p-button-danger mr-2" alt="Deshabilitar registro" *ngIf="perfil.isActive; else inhabilitado" (click)="actionData('DESHABILITAR')"></p-button>
+								<p-button icon="pi pi-pencil" styleClass="p-button-rounded p-button-warning  mr-2" alt="Modificar datos"(click)="actionData('MODIFICAR')" ></p-button>
+								<ng-template #inhabilitado>
+									<p-button icon="pi pi-lock-open" styleClass="p-button-rounded p-button-success mr-2" alt="habilitar registro" (click)="actionData('HABILITAR')" ></p-button>
+								</ng-template>
+							</div>
 						</div>
-					  </div>
-				</div>
-				<div class="col-12 md:col-6" *ngIf="!perfil.afiliado.isActive">
-					<p class="font-italic text-red-700">* El registro se encuentra deshabilitado <i class="pi pi-exclamation-triangle"></i></p>
+						<div class="grid">
+							<div class="col-12 md:col-6"><strong>Nombre Completo:</strong> {{ perfil.nombrePrimero | titlecase}} {{perfil.nombreSegundo ||'' | titlecase }} {{perfil.apellidoPrimero | titlecase}} {{perfil.apellidoSegundo||'' | titlecase}}</div>
+							<div class="col-12 md:col-6"><strong>Cédula de Identidad:</strong> {{ perfil.CI }}</div>
+							<div class="col-12 md:col-6"><strong>N° Contacto:</strong> {{ perfil.contacto || 'No tiene contacto' }}</div>
+							<div class="col-12 md:col-6"><strong>Profesión:</strong> {{ perfil.profesion | titlecase}}</div>
+							<div class="col-12 md:col-6"><strong>Género:</strong> {{ perfil.genero |titlecase }}</div>
+							<div class="col-12 md:col-6"><strong>Fecha de Nacimiento:</strong> {{ perfil.fechaNacimiento |date:'dd/MM/yyyy' }}</div>
+							<div class="col-12 md:col-6"><strong>Tipo de perfil:</strong> {{ perfil.tipoPerfil?.toString() |titlecase}}</div>
+							<div class="col-12 md:col-6"><strong>Estado del registro:</strong><p-tag [severity]="perfil.isActive?'success':'danger'" [value]="perfil.estado" class="ml-3"></p-tag></div>
+						</div>
+					</div>
 				</div>
 			</div>
-			<div class="col-12 md:col-6 grid" *ngIf="perfil.usuario">
-				<div class="col-12">
-					<div class="flex flex-row flex-wrap">
-						<h5>DATOS DE USUARIO</h5>
+			<div class="col-12 profile-details">
+				<div class="grid">
+					<div class="col-12" *ngIf="perfil.afiliado">
+						<div class="flex justify-content-between flex-wrap title-container">
+							<div class="flex justify-content-start flex-wrap">
+								<h3>Información Personal del Afiliación</h3>
+							</div>
+							<div class="flex justify-content-end flex-wrap">
+								<p-button icon="pi pi-lock" styleClass="p-button-rounded p-button-danger mr-2" alt="Deshabilitar registro" *ngIf="perfil.afiliado.isActive; else inhabilitado" (click)="actionDataAfiliado('DESHABILITAR')"></p-button>
+								<p-button icon="pi pi-pencil" styleClass="p-button-rounded p-button-warning  mr-2" alt="Modificar datos"(click)="actionDataAfiliado('MODIFICAR')" ></p-button>
+								<ng-template #inhabilitado>
+									<p-button icon="pi pi-lock-open" styleClass="p-button-rounded p-button-success mr-2" alt="habilitar registro" (click)="actionDataAfiliado('HABILITAR')" ></p-button>
+								</ng-template>
+							</div>
+						</div>
+						<div class="grid">
+							<div class="col-12 md:col-6"><strong>Estado del registro:</strong><p-tag [severity]="perfil.afiliado.isActive?'success':'danger'" [value]="perfil.afiliado.estado" class="ml-3"></p-tag>
+							</div>
+						</div>
+						<h2>Ubicación de Afiliado</h2>
+						<div class="grid">
+							<div class="col-12 md:col-6"><strong>Barrio ubicado:</strong> {{ perfil.afiliado.ubicacion?.barrio | titlecase}}</div>
+							<div class="col-12 md:col-6"><strong>N° de Vivienda:</strong> {{ perfil.afiliado.ubicacion?.numeroVivienda ||'Sin N° de Vivienda' | titlecase  }}</div>
+							<div class="col-12 md:col-6"><strong>Manzano:</strong> {{ perfil.afiliado.ubicacion?.manzano }}</div>
+							<div class="col-12 md:col-6"><strong>N° de manzano:</strong> {{ perfil.afiliado.ubicacion?.numeroManzano}}</div>
+							<div class="col-12 md:col-6"><strong>N° de Lote:</strong> {{ perfil.afiliado.ubicacion?.nroLote}}</div>
+							<div class="col-12 md:col-6"><strong>Latitud:</strong> {{ perfil.afiliado.ubicacion?.latitud ||'No se proporcionó el dato'}}</div>
+							<div class="col-12 md:col-6"><strong>Longitud:</strong> {{ perfil.afiliado.ubicacion?.longitud || 'No se proporcionó el dato'}}</div>
+							<div class="col-12 md:col-6"><strong>Mapa georreferencial:</strong><p-button icon="pi pi-map-marker" styleClass="p-button-rounded p-button-secondary p-button-text p-button-raised ml-4" (onClick)="mostrarMapAfiliado()"></p-button></div>
+						</div>
+						<h2>Coste de Afiliación</h2>
+						<div class="grid">
+							<div class="col-12 md:col-6"><strong>Mónto de cobro:</strong> {{ perfil.afiliado.monto | currency: perfil.afiliado.moneda+'. '}}</div>
+							<div class="col-12 md:col-6"><strong>Estado del pago:</strong><p-tag [severity]="perfil.afiliado.pagado?'success':'danger'" [value]="perfil.afiliado.pagado ?'Pagado':'No pagado'" class="ml-3"></p-tag></div>
+							<div class="col-12 md:col-6" *ngIf="!perfil.afiliado.pagado"><strong>Registrar Pago de Afiliación:</strong><p-button icon="pi pi-money-bill" styleClass="p-button-rounded p-button-success ml-4" (onClick)="visiblePagoAfiliacion=true"></p-button></div>
+							<ng-container *ngIf="perfil.afiliado.pagado">
+								<ng-container [ngSwitch]="perfil.afiliado.metodoPago">
+									<ng-container *ngSwitchCase="'PRESENCIAL'">
+										<div class="col-12 md:col-6"><strong>Método de Pago realizado:</strong> {{ perfil.afiliado.metodoPago |titlecase}}</div>
+										<div class="col-12 md:col-6"><strong>Monto de Pago realizado:</strong> {{ perfil.afiliado.montoRecibido | currency: perfil.afiliado.monedaRecibido+'. '}}</div>
+										<div class="col-12 md:col-6"><strong>Fecha de pago realizado:</strong> {{ perfil.afiliado.fechaPago | date: 'HH:MM dd/MM/yyyy'}}</div>
+										
+									</ng-container>
+									<ng-container *ngSwitchCase="'DEPOSITO'">
+										<div class="col-12 md:col-6"><strong>Método de Pago realizado:</strong> {{ perfil.afiliado.metodoPago |titlecase}}</div>
+										<div class="col-12 md:col-6"><strong>Monto de Pago depositado:</strong> {{ perfil.afiliado.montoRecibido | currency: perfil.afiliado.monedaRecibido+'. '}}</div>
+										<div class="col-12 md:col-6"><strong>Fecha de deposito de pago:</strong> {{ perfil.afiliado.fechaPago | date: 'HH:MM dd/MM/yyyy'}}</div>
+										<div class="col-12 md:col-6"><strong>Entidad Financiera de depósito:</strong> {{ perfil.afiliado.entidad |titlecase}}</div>
+										<div class="col-12 md:col-6"><strong>N° de cuenta depositada:</strong> {{ perfil.afiliado.nroCuenta }}</div>
+										<div class="col-12 md:col-6"><strong>N° de recibo de deposito:</strong> {{ perfil.afiliado.nroRecibo }}</div>
+										<div class="col-12 md:col-6"><strong>Remitente:</strong> {{ perfil.afiliado.remitente |titlecase}}</div>	
+									</ng-container>
+									
+								</ng-container>
+								
+							</ng-container>
+							
+						</div>
 					</div>
-					<div class="flex flex-row-reverse flex-wrap">
-						<p-button icon="pi pi-lock" styleClass="p-button-rounded p-button-danger mr-2"  alt="Deshabilitar registro" (click)="actionDataUsuario('DESHABILITAR')" *ngIf="perfil.usuario.isActive; else inhabilitado" ></p-button>
-						<p-button icon="pi pi-pencil" styleClass="p-button-rounded p-button-warning mr-2" alt="Modificar datos" (click)="actionDataUsuario('MODIFICAR')"></p-button>
-						<ng-template #inhabilitado>
-							<p-button icon="pi pi-lock-open" styleClass="p-button-rounded p-button-success mr-2" alt="habilitar registro"  (click)="actionDataUsuario('HABILITAR')"></p-button>
-						</ng-template>
+
+					<div class="col-12" *ngIf="perfil.usuario">
+						<div class="flex justify-content-between flex-wrap title-container">
+							<div class="flex justify-content-start flex-wrap">
+								<h3>Información de Usuario de acceso al sistema</h3>
+							</div>
+							<div class="flex justify-content-end flex-wrap">
+								<p-button icon="pi pi-lock" styleClass="p-button-rounded p-button-danger mr-2"  alt="Deshabilitar registro" (click)="actionDataUsuario('DESHABILITAR')" *ngIf="perfil.usuario.isActive; else inhabilitado" ></p-button>
+								<p-button icon="pi pi-pencil" styleClass="p-button-rounded p-button-warning mr-2" alt="Modificar datos" (click)="actionDataUsuario('MODIFICAR')"></p-button>
+								<ng-template #inhabilitado>
+									<p-button icon="pi pi-lock-open" styleClass="p-button-rounded p-button-success mr-2" alt="habilitar registro"  (click)="actionDataUsuario('HABILITAR')"></p-button>
+								</ng-template>
+							</div>
+						</div>
+						<div class="grid">
+							<div class="col-12 md:col-6"><strong>Usuario de acceso:</strong> {{ perfil.usuario.username}}</div>
+							<div class="col-12 md:col-6"><strong>Correo Electrónico:</strong> {{ perfil.usuario.correo ||'Sin correo electrónico'}}</div>
+							<div class="col-12 md:col-6"><strong>Roles de acceso de la cuenta:</strong> {{ perfil.usuario.roles?.toString() ||'No tiene roles Asignados'}}</div>
+							<div class="col-12 md:col-6"><strong>Estado del registro:</strong><p-tag [severity]="perfil.usuario.isActive?'success':'danger'" [value]="perfil.usuario.estado" class="ml-3"></p-tag></div>
+									
+						</div>
 					</div>
-				</div>
-				<p-divider class="col-12"></p-divider>
-				<div class="p-fluid p-formgrid grid">
-					<div class="field col-12 md:col-6">
-						<label htmlFor="username">Usuario</label>
-						<input pInputText id="username" type="text" [disabled]="true" [value]="perfil.usuario.username || ''" class="appearance-none text-color text-base" />
-					</div>
-					<div class="field col-12 md:col-6">
-						<label htmlFor="correo">correo electronico</label>
-						<input pInputText id="correo" type="text" [disabled]="true" [value]="perfil.usuario.correo || ' SIN CORREO ELECTRONICO'" class="appearance-none text-color text-base" />
-					</div>
-					<div class="field col-12 md:col-6">
-						<label htmlFor="estadouser">Estado de la cuenta</label>
-						<input pInputText id="estadouser" type="text" [disabled]="true" [value]="perfil.usuario.estado || ''" class="appearance-none text-color text-base" />
-					</div>
-					<div class="field col-12 md:col-6">
-						<label htmlFor="roles">Roles</label>
-						<input pInputText id="roles" type="text" [disabled]="true" [value]="perfil.usuario.roles?.toString() || 'SIN ROLES'" class="appearance-none text-color text-base" />
-					</div>
-				</div>
-				<div class="col-12 md:col-6" *ngIf="!perfil.usuario.isActive">
-					<p class="font-italic text-red-700">* El registro se encuentra deshabilitado <i class="pi pi-exclamation-triangle"></i></p>
 				</div>
 			</div>
 		</div>
-    </div>
+	</p-card>
 </div>
 
 <p-dialog header="Header" [(visible)]="visibleImageForm" [modal]="true" [style]="{ width: '50vw' }" [draggable]="false" [resizable]="false" (onHide)="visibleImageForm=false">
@@ -157,17 +132,21 @@
 		[customUpload]="true"
 		mode="advanced"
 		[files]="imageUpload" 
-		(uploadHandler)="submitImage($event)" 
+		(uploadHandler)="submitImage($event)"
+		[chooseLabel]="' Foto'"
+		[uploadLabel]="' Subir Foto'"
+		[cancelLabel]="' Quitar Foto'"
+		 
 		>
 			<ng-template pTemplate="toolbar">
-				<div class="py-3">Upload 3 Files</div>
+				<div class="py-3">Subir 1 imagen</div>
 			</ng-template>
-			<ng-template let-file pTemplate="file">
+			<!-- <ng-template let-file pTemplate="file">
 				<div>Custom UI to display a file</div>
-			</ng-template>
-			<ng-template pTemplate="content" let-files>
+			</ng-template> -->
+			<!-- <ng-template pTemplate="content" let-files>
 				<div>Additional content.</div>
-			</ng-template>
+			</ng-template> -->
 		</p-fileUpload>
 	</div>
 

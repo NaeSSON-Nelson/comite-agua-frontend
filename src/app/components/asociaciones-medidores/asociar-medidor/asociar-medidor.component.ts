@@ -44,22 +44,57 @@ export class AsociarMedidorComponent {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
     this.sub=this.asociacionService.medidorAsociado.subscribe(res=>{
-     
+     console.log('res asociacion',res);
       this.loading=false;
       this.asociacion=res;
+      //FORM EDIT
+
+       // this.asociacionForm.removeControl('estado');
+    // this.afiliado.setValue({
+    //   id:this.asociacion.afiliado?.id
+    // })
+    // this.medidor.setValue({
+    //   id:this.asociacion.medidor?.id
+    // })
+    this.asociacionForm.setValue({
+      registrable:this.asociacion.registrable,
+      fechaInstalacion:new Date(this.asociacion.fechaInstalacion!),
+      estado:this.asociacion.estado,    
+      estadoMedidorAsociado:this.asociacion.estadoMedidorAsociado,
+      ubicacion:{
+        barrio:this.asociacion.ubicacion?.barrio,
+        latitud:this.asociacion.ubicacion?.latitud,
+        longitud:this.asociacion.ubicacion?.longitud,
+        numeroVivienda:this.asociacion.ubicacion?.numeroVivienda,
+        manzano:this.asociacion.ubicacion?.manzano,
+        numeroManzano:this.asociacion.ubicacion?.numeroManzano,
+        nroLote:this.asociacion.ubicacion?.nroLote
+      },
+      medidor:{
+        id:this.asociacion.medidor?.id
+      },
+      afiliado:{
+        id:this.asociacion.afiliado?.id
+      }
+      })
+    //   if(!this.asociacionForm.get('medidor'))
+    //     this.asociacionForm.addControl('medidor',this.medidor);
+    // if(!this.asociacionForm.get('afiliado'))
+    //   this.asociacionForm.addControl('afiliado',this.afiliado);
+      if(!this.asociacion.isActive){
+        this.asociacionForm.disable();
+      }
     })
 
     if(this.perfilSelect === null || this.medidorSelect===null)
     this.findAsociacion();
     else{
-      this.afiliado.setValue({
+      this.afiliadoForm.setValue({
         id:this.perfilSelect.afiliado!.id
       })
-      this.medidor.setValue({
+      this.medidorForm.setValue({
         id:this.medidorSelect.id
       })
-      this.asociacionForm.addControl('medidor',this.medidor);
-      this.asociacionForm.addControl('afiliado',this.afiliado);
     }
   }
   ngOnDestroy(): void {
@@ -81,24 +116,31 @@ export class AsociarMedidorComponent {
       latitud: [],
       longitud: [],
       numeroVivienda: [],
-    })
-    })
-  afiliado:FormGroup = this.fb.group({
-    id:[,Validators.required],
-  });
-  medidor:FormGroup = this.fb.group({
-    id:[,Validators.required],
-  });
+    }),
+    afiliado:this.fb.group({
+      id:[,Validators.required],
+    }),
+    medidor: this.fb.group({
+      id:[,Validators.required],
+    }),
+    });
+  get afiliadoForm(){
+    return this.asociacionForm.get('afiliado') as FormGroup;
+  }
+  get medidorForm(){
+    return this.asociacionForm.get('medidor') as FormGroup;
+  }
   validForm(){
-    console.log(this.asociacionForm);
     this.asociacionForm.markAllAsTouched();
     // console.log(this.medidorForm);
     if (this.asociacionForm.invalid) return;
     // console.log(this.clienteForm.value);
     let asociacionSend: MedidorAsociadoForm = {};
-    console.log(this.asociacion);
     if (this.asociacion) {
       for (const [key, value] of Object.entries(this.asociacionForm.value)) {
+        console.log('key',key);
+        console.log('value',value);
+        console.log('type:',typeof value);
         if (value !== this.asociacion[key as keyof MedidorAsociado]) {
           asociacionSend[key as keyof MedidorAsociadoForm] = value as any;
         }
@@ -109,7 +151,6 @@ export class AsociarMedidorComponent {
         if (value === null || value ===undefined) delete asociacionSend[key as keyof MedidorAsociadoForm];
       });
     }
-    console.log('FORM: ',asociacionSend);
     this.registrarFormulario(asociacionSend);
   }
   get ubicacionForm(){
@@ -119,8 +160,8 @@ export class AsociarMedidorComponent {
     this.confirmationService.confirm({
       message: `¿Está seguro de ${
         this.asociacion?.id
-          ? 'actualizar este registro'
-          : 'registrar este formulario'
+          ? 'actualizar la asociación'
+          : 'registrar esta asciación'
       }?`,
       header: 'Confirmar Acción',
       icon: 'pi pi-info-circle',
@@ -138,7 +179,7 @@ export class AsociarMedidorComponent {
                 });
                 // this.router.navigate([PATH_MEDIDORES, PATH_MODULE_DETAILS,this.medidorActual?.id], {
                 // });
-                this.showFormAscEdit=false;
+                // this.showFormAscEdit=false;
                 this.resetForm()
                 this.findAsociacion();
               }else{
@@ -275,13 +316,6 @@ export class AsociarMedidorComponent {
     }
   }
   activarForm(){
-    // this.asociacionForm.removeControl('estado');
-    this.afiliado.setValue({
-      id:this.asociacion.afiliado?.id
-    })
-    this.medidor.setValue({
-      id:this.asociacion.medidor?.id
-    })
     this.asociacionForm.setValue({
       registrable:this.asociacion.registrable,
       fechaInstalacion:new Date(this.asociacion.fechaInstalacion!),
@@ -293,9 +327,13 @@ export class AsociarMedidorComponent {
         longitud:this.asociacion.ubicacion?.longitud,
         numeroVivienda:this.asociacion.ubicacion?.numeroVivienda,
       },
+      medidor:{
+        id:this.asociacion.medidor?.id
+      },
+      afiliado:{
+        id:this.asociacion.afiliado?.id
+      }
       })
-      this.asociacionForm.addControl('medidor',this.medidor);
-      this.asociacionForm.addControl('afiliado',this.afiliado);
     
     this.showFormAscEdit=true;
     this.showFormAsc=false;
@@ -360,7 +398,7 @@ export class AsociarMedidorComponent {
     this.ubicacionForm.markAsDirty();
   }
   get coordenadasLatLngForm(){
-    return new L.LatLng(this.ubicacionForm.get('latitud')?.value ||-21.4734,this.ubicacionForm.get('longitud')?.value ||-64.8026);
+    return new L.LatLng(this.ubicacionForm.get('latitud')?.value ||-21.47988808379478,this.ubicacionForm.get('longitud')?.value ||-64.7703490201949);
   }
   get coordenadasLatLngDetails(){
     return new L.LatLng(this.asociacion.ubicacion?.latitud,this.asociacion.ubicacion?.longitud);
@@ -484,5 +522,29 @@ export class AsociarMedidorComponent {
         life: 5000,
       });
     }
+  }
+  disabledAsc(){
+    this.confirmationService.confirm({
+      message: `¿Está seguro de deshabilitar la asociación? <br/>
+      <span class="text-red-600">Una vez deshabilitado no se podra volver a habilitar la asociación, debe registrar
+      una nueva asociación</span>`,
+      header: 'Confirmar Acción',
+      icon: 'pi pi-info-circle',
+      blockScroll:true,
+      acceptLabel:'Aceptar',
+      accept: () => {
+        this.asociacionService.updateStatus(this.asociacion!.id!,{estado:Estado.DESHABILITADO}).subscribe(res=>{
+          console.log(res);
+          if(res.OK){
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Acción realiza con exito!',
+              detail: res.message,
+              life: 2000,
+            });
+          }
+        })
+      },
+    });
   }
 }

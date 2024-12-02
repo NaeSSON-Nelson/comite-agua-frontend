@@ -28,7 +28,7 @@
             >{{ getAfiliadoBarrioErrors("barrio") }}
           </small>
         </div>
-        <div class="field col-12 md:col-4">
+        <div class="field col-12 md:col-4" *ngIf="!this.perfilActual?.afiliado">
           <span class="p-float-label">
             <p-inputNumber
               inputId="monto"
@@ -45,7 +45,7 @@
             >{{ getMontoErrors("monto") }}
           </small>
         </div>
-        <div class="field col-12 md:col-4">
+        <div class="field col-12 md:col-4" *ngIf="!this.perfilActual?.afiliado">
           <span class="p-float-label">
             <p-dropdown
               inputId="moneda"
@@ -58,7 +58,7 @@
               [ngClass]="inputValid('moneda')"
             ></p-dropdown>
 
-            <label for="moneda">Moneda de Cobro (*)</label>
+            <label for="moneda">Moneda de Cobro (*)"</label>
           </span>
           <small
             id="moneda-help"
@@ -144,7 +144,7 @@
             >{{ getAfiliadoManzanoErrors("manzano") }}
           </small>
         </div>
-        <div class="field col-12 md:col-4 md:mt-3">
+        <div class="field col-12 md:col-4 md:mt-3" >
           <span class="p-float-label">
             <p-inputNumber
               inputId="numeroManzano"
@@ -177,7 +177,7 @@
             >{{ getAfiliadoNroLoteErrors("nroLote") }}
           </small>
         </div>
-        <div class="field col-12 md:col-3" *ngIf="!this.perfilActual?.id">
+        <div class="field col-12 md:col-3" *ngIf="!this.perfilActual?.afiliado">
           <span class="p-float-label">
             <p-dropdown
               inputId="estado"

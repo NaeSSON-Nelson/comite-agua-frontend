@@ -2,12 +2,13 @@ import { Component } from '@angular/core';
 import { MedidoresAguaService } from '../../medidores-agua/medidores-agua.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Afiliado } from 'src/app/interfaces/afiliado.interface';
-import { switchMap } from 'rxjs';
+
 import { Medidor, MedidorAsociado } from 'src/app/interfaces/medidor.interface';
 import { Estado, Perfil } from 'src/app/interfaces';
 import { PATH_AFILIADO, PATH_AUTH, PATH_FORBBIDEN, PATH_MEDIDORES } from 'src/app/interfaces/routes-app';
+import { AsociacionesService } from '../asociaciones.service';
 
+import * as L from 'leaflet';
 @Component({
   selector: 'app-afiliado-medidores-details',
   templateUrl: './afiliado-medidores-details.component.html',
@@ -16,15 +17,17 @@ import { PATH_AFILIADO, PATH_AUTH, PATH_FORBBIDEN, PATH_MEDIDORES } from 'src/ap
 })
 export class AfiliadoMedidoresDetailsComponent {
   constructor(
-    private readonly medidoresService: MedidoresAguaService,
+    // private readonly medidoresService: MedidoresAguaService,
     private readonly messageService: MessageService,
     private readonly confirmationService: ConfirmationService,
+    private readonly asociacionesService:AsociacionesService,
     private router: Router,
     private routerAct: ActivatedRoute
   ) {}
 
   perfil!: Perfil;
-  medidorAsociadoSelected!: MedidorAsociado;
+  medidoresAsociados: MedidorAsociado[]=[];
+  medidorAsociadoSelected:MedidorAsociado|null=null;
   medidoresPerfil:any[]=[];
   planillaVisible:boolean=false;
   gestionesVisible:boolean=false;
@@ -32,19 +35,13 @@ export class AfiliadoMedidoresDetailsComponent {
   showMedidoresLibresVisible:boolean=false;
   medidorSelect:Medidor|null=null;
   formAsociar:boolean=false;
+  loadingAsociaciones:boolean=false;
   ngOnInit(): void {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
-    this.medidoresService.afiliadoWithMedidores.subscribe((res) => {
+    this.asociacionesService.perfil.subscribe((res) => {
       this.perfil = res;
-      if(res.afiliado){
-        this.medidoresPerfil=[];
-        for(const asc of res.afiliado.medidorAsociado!)
-        this.medidoresPerfil.push({
-          name:`${asc.medidor?.nroMedidor}${asc.isActive?'':' (deshabilitado)'}`,
-          value:asc
-        })
-      }
+      console.log('perfil',res);
     });
     if (!this.routerAct.snapshot.params['id']) {
       this.messageService.add({
@@ -57,11 +54,10 @@ export class AfiliadoMedidoresDetailsComponent {
       return;
     } else {
       const id =this.routerAct.snapshot.params['id']
-        this.findAfiliado(id);
-      
+        this.findPerfil(id);
   }}
-  findAfiliado(id:number){
-    this.medidoresService.findOne(id).subscribe({
+  findPerfil(id:number){
+    this.asociacionesService.findOnePerfil(id).subscribe({
       next: (res) => {
         // console.log(res);
         if (res.OK === false) {
@@ -103,21 +99,17 @@ export class AfiliadoMedidoresDetailsComponent {
               });
               break;
           }
+        }else{
+          this.obtenerAsociaciones();
         }
       },
     });
   }
-  actionData(action: string) {
-    if(!this.medidorAsociadoSelected){
-      this.messageService.add({
-        severity: 'info',
-        summary: 'Error',
-        detail: `No ha seleccionado ningun medidor`,
-        life: 1000,
-      });
-    }
+  actionData(action: string,asociado:MedidorAsociado) {
+    
     switch (action) {
       case 'DETALLES':
+        this.medidorAsociadoSelected=asociado;
         this.medidorSelect=null;
         this.formAsociar=false;
         this.asociaFormVisible=true;
@@ -135,7 +127,17 @@ export class AfiliadoMedidoresDetailsComponent {
   resetVisible(visible:boolean){
     this.asociaFormVisible = visible
     this.formAsociar=false;
-    this.findAfiliado(this.routerAct.snapshot.params['id']);
+    this.findPerfil(this.routerAct.snapshot.params['id']);
+  }
+  obtenerAsociaciones(){
+    this.loadingAsociaciones=true;
+    this.asociacionesService.obtenerAsociacionesAfiliado(this.perfil!.id!).subscribe(res=>{
+      this.loadingAsociaciones=false;
+      console.log(res);
+      if(res.OK){
+        this.medidoresAsociados=res.data!;
+      }
+    })
   }
   selectMedidor(data:any){
     this.medidorAsociadoSelected=data.value;
@@ -144,8 +146,17 @@ export class AfiliadoMedidoresDetailsComponent {
     // this.router.navigate(['medidores-agua','medidor-agua-register'],{queryParams:{idPerfil:this.perfil.id}})
     this.showMedidoresLibresVisible=true;
   }
-  showPlanillas(){
+  showGestiones(asc:MedidorAsociado){
+    this.medidorAsociadoSelected=asc;
+    this.gestionesVisible=true;
+  }
+  showPlanillas(asc:MedidorAsociado){
+    this.medidorAsociadoSelected=asc;
     this.planillaVisible=!this.planillaVisible;
+  }
+  showReportLecturas(asc:MedidorAsociado){
+    this.medidorAsociadoSelected=asc;
+    this.visibleReportLecturas=true;
   }
   cerrarPlanillas(evento:boolean){
     this.planillaVisible=evento;
@@ -159,4 +170,21 @@ export class AfiliadoMedidoresDetailsComponent {
   }
   visibleReportLecturas:boolean=false;
   
+  visibleMapAsociacionMedidor:boolean=false;
+  get coordenadasLatLngDetails(){
+    return new L.LatLng(this.medidorAsociadoSelected!.ubicacion?.latitud,this.medidorAsociadoSelected!.ubicacion?.longitud);
+  }
+  mostrarMapAfiliado(asociacion:MedidorAsociado){
+    this.medidorAsociadoSelected=asociacion;
+    if(this.medidorAsociadoSelected.ubicacion?.latitud && this.medidorAsociadoSelected.ubicacion?.longitud){
+      this.visibleMapAsociacionMedidor=true;
+    }else{
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'Warn Message',
+        detail: 'No se proporcionó los datos de georreferenciación a la asociación',
+        life: 5000,
+      });
+    }
+  }
 }

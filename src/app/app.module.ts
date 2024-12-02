@@ -14,8 +14,6 @@ import { AppComponent } from './app.component';
 import { LayoutModule } from './layout/layout.module';
 
 import { AuthModule } from './auth/auth.module';
-import { ItemsMenuModule } from './components/menus/items-menu/items-menu.module';
-import { MenusModule } from './components/menus/menus.module';
 import { RolesModule } from './components/roles/roles.module';
 import { MedidoresAguaModule } from './components/medidores-agua/medidores-agua.module';
 import { ForbiddenComponent } from './common/forbidden/forbidden.component';
@@ -46,16 +44,16 @@ import { AsociacionesMedidoresModule } from './components/asociaciones-medidores
     ConfirmDialogModule,
     ReactiveFormsModule,
     // //UNA SOLUCION AL ERROR: NOW?
-    AuthModule,
-    ItemsMenuModule,
-    MenusModule,
-    RolesModule,
-    MedidoresAguaModule,
-    PerfilesModule,
-    LecturasModule,
-    UsuariosFuncionesModule,
-    CobrosModule,
-    AsociacionesMedidoresModule,
+    // AuthModule,
+    // ItemsMenuModule,
+    // MenusModule,
+    // RolesModule,
+    // MedidoresAguaModule,
+    // PerfilesModule,
+    // LecturasModule,
+    // UsuariosFuncionesModule,
+    // CobrosModule,
+    // AsociacionesMedidoresModule,
   ],
   providers: [
     MessageService,

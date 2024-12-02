@@ -1,103 +1,47 @@
-<div class="grid">
-    <div class="col-12">
-      <div class="card">
-        <h5>Datos del Rol</h5>
-        <p-divider></p-divider>
-        <div class="grid p-fluid md:flex md:justify-content-center" *ngIf="role">
-          <div class="field col-12">
-            <label htmlFor="nombre">Nombe del Rol</label>
-            <input
-              pInputText
-              id="nombre"
-              type="text"
-              [disabled]="true"
-              [value]="role.nombre"
-              class="appearance-none text-color text-base"
-            />
-          </div>
-          <div class="field col-12">
-            <label htmlFor="estado">Estado</label>
-            <input
-              pInputText
-              id="estado"
-              type="text"
-              [disabled]="true"
-              [value]="role.estado"
-              class="appearance-none text-color text-base"
-            />
-          </div>
-        </div>
-      </div>
-      <div class="card" *ngIf="role?.menus">
-        <div class="col-12">
-          <h5>Menus de acceso vinculados al rol</h5>
-          <p-divider></p-divider>
-          <div class="mt-3">
-            <p-table
-              [value]="role.menus!"
-              [tableStyle]="{ 'min-width': '50rem' }"
-            >
-              <ng-template pTemplate="header">
-                <tr>
-                  <th>Code</th>
-                  <th>Nombre de Item</th>
-                  <th>Enlace de Item</th>
-                  <th>Estado de Item</th>
-                </tr>
-              </ng-template>
-              <ng-template pTemplate="body" let-customer let-index>
-                <tr>
-                  <td>{{ customer.id }}</td>
-                  <td>{{ customer.nombre }}</td>
-                  <td>{{ customer.linkMenu }}</td>
-                  <td>     <p-tag [severity]="customer.isActive?'success':'danger'" [value]="customer.estado"></p-tag>
-                  </td>
-                </tr>
-              </ng-template>
-            </p-table>
-          </div>
-        </div>
-      </div>
-  
-      <div class="card">
-        <h5>Opciones</h5>
-        <p-divider></p-divider>
-        <div class="grid p-fluid md:justify-content-center" *ngIf="role">
-          <div class="col-12 md:col-3 md:flex md:justify-content-center">
-            <button
-              pButton
-              pRipple
-              label="Modificar"
-              class="p-button-success"
-              (click)="actionData('MODIFICAR')"
-            ></button>
-          </div>
-          <div
-            class="col-12 md:col-3 md:flex md:justify-content-center"
-            *ngIf="role.isActive; else inhabilitado"
-          >
-            <button
-              pButton
-              pRipple
-              label="Deshabilitar"
-              class="p-button-warning"
-              *ngIf="role.isActive;else inhabilitado"
-              (click)="actionData('DESHABILITAR')"
-            ></button>
-          </div>
-          <ng-template #inhabilitado>
-            <div class="col-12 md:col-3 md:flex md:justify-content-center">
-              <button
-                pButton
-                pRipple
-                label="Habilitar"
-                class="p-button-info"
-                (click)="actionData('HABILITAR')"
-              ></button>
+<div class="user-profile-container">
+  <p-card class="profile-card" *ngIf="role">
+    <div class="grid">
+      <div class="col-12 profile-details">
+        <div class="grid">
+					<!-- DATA ROLE-->
+					 <div class="col-12">
+						<div class="flex justify-content-between flex-wrap title-container">
+							<div class="flex justify-content-start flex-wrap">
+								<h3>Información de Role de acceso</h3>
+							</div>
+							<div class="flex justify-content-end flex-wrap">
+								<p-button icon="pi pi-pencil" styleClass="p-button-rounded p-button-warning  mr-2" alt="Modificar datos"(click)="actionData('MODIFICAR')" ></p-button>
+								<p-button icon="pi pi-lock" styleClass="p-button-rounded p-button-danger mr-2" alt="Deshabilitar registro" *ngIf="role.isActive; else inhabilitado" (click)="actionData('DESHABILITAR')"></p-button>
+								<ng-template #inhabilitado>
+									<p-button icon="pi pi-lock-open" styleClass="p-button-rounded p-button-success mr-2" alt="habilitar registro" (click)="actionData('HABILITAR')" ></p-button>
+								</ng-template>
+							</div>
+						</div>
+						<div class="grid">
+							<div class="col-12 md:col-6"><strong>Nombre del rol:</strong> {{ role.nombre}}</div>
+							<div class="col-12 md:col-6"><strong>Estado del registro:</strong><p-tag [severity]="role.isActive?'success':'danger'" [value]="role.estado" class="ml-3"></p-tag></div>
+						</div>
+					</div>
+          <div class="col-12 p-3" *ngIf="role.menus;else sinMenus">
+            <h2>Menus de acceso del rol</h2>
+            <div class="grid" *ngFor="let menu of role.menus;let index">
+              <h5 class="title-container font-semibold col-12 ml-3">
+                {{menu.nombre | titlecase}}
+              </h5>
+              <div class="grid mx-5 my-2 col-12">
+                  <div class="col-12 md:col-6" *ngFor="let item of menu.itemMenu">
+                    <!-- <strong>Nombre:</strong> -->
+                     {{ item.nombre }}</div>
+                
+              </div>
             </div>
+          </div>
+          <ng-template #sinMenus>
+            <p class="font-italic"> * El rol no tiene menus de acceso</p>
           </ng-template>
-        </div>
+          
+				</div>
       </div>
     </div>
-  </div>
-  
+  </p-card>
+</div>

@@ -4,28 +4,28 @@ import { RouterModule, Routes } from '@angular/router';
 import { RolesComponent } from './roles/roles.component';
 import { RoleDetailsComponent } from './role-details/role-details.component';
 import { RoleFormComponent } from './role-form/role-form.component';
-import { PATH_EDIT, PATH_LISTAR, PATH_MODULE_DETAILS, PATH_REGISTRAR } from 'src/app/interfaces/routes-app';
+import { PATH_EDIT, PATH_LISTAR, PATH_MODULE_DETAILS, PATH_REGISTRAR, ValidItemMenu } from 'src/app/interfaces/routes-app';
 
 const routes: Routes = [
   {
-    path: PATH_LISTAR,
+    path: ValidItemMenu.rolList,
     component: RolesComponent,
   },
   {
-    path: `${PATH_MODULE_DETAILS}/:id`,
+    path: `${ValidItemMenu.rolDetails}/:id`,
     component:RoleDetailsComponent,
   },
   {
-    path: PATH_REGISTRAR,
+    path: ValidItemMenu.rolRegister,
     component:RoleFormComponent,
   },
   {
-    path: `${PATH_REGISTRAR}/${PATH_EDIT}/:id`,
+    path: `${ValidItemMenu.rolUpdate}/:id`,
     component:RoleFormComponent,
   },
   {
     path: '**',
-    redirectTo: PATH_LISTAR,
+    redirectTo: ValidItemMenu.rolList,
   },
 ];
 

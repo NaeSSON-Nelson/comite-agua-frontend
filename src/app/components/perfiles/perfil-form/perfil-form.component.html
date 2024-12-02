@@ -93,7 +93,7 @@
             >{{ getCiErrors("CI") }}
           </small>
         </div>
-        <div class="field col-12 md:col-3">
+        <div class="field col-6 md:col-3">
           <span class="p-float-label">
             <p-dropdown
               inputId="genero"
@@ -116,7 +116,7 @@
           </small>
         </div>
 
-        <div class="field col-12 md:col-3">
+        <div class="field col-6 md:col-3">
           <span class="p-float-label">
             <input
               type="text"
@@ -134,7 +134,7 @@
             >{{ getProfesionErrors("profesion") }}
           </small>
         </div>
-        <div class="field col-12 md:col-3">
+        <div class="field col-6 md:col-3">
           <span class="p-float-label">
             <input
               type="text"
@@ -152,7 +152,7 @@
             >{{ getDireccionErrors("direccion") }}
           </small>
         </div>
-        <div class="field col-12 md:col-3">
+        <div class="field col-6 md:col-3">
           <span class="p-float-label">
             <input
               id="contacto"
@@ -162,7 +162,7 @@
               formControlName="contacto"
               [ngClass]="inputValid('contacto')"
             />
-            <label for="contacto">Nro. Contacto</label>
+            <label for="contacto">Nro. Contacto (opcional)</label>
           </span>
           <small
             id="contacto-help"
@@ -171,7 +171,7 @@
             >{{ getContactoErrors("contacto") }}
           </small>
         </div>
-        <div class="field col-12 md:col-3">
+        <div class="field col-6 md:col-3">
           <span class="p-float-label">
             <p-calendar
               formControlName="fechaNacimiento"
@@ -192,7 +192,7 @@
           </small>
         </div>
 
-        <div class="field col-12 md:col-3" *ngIf="!this.perfilActual?.id">
+        <div class="field col-6 md:col-3" *ngIf="!this.perfilActual?.id">
           <span class="p-float-label">
             <p-dropdown
               inputId="estado"
@@ -221,7 +221,7 @@
       <p>¿Es un Afiliado?</p>
       <p-divider></p-divider>
       <div class="grid">
-        <div class="col-3">
+        <div class="col-12">
           <p-selectButton
             [options]="stateOptions"
             optionLabel="label"
@@ -234,7 +234,7 @@
           [formGroup]="afiliadoForm"
           *ngIf="addAfiliado"
         >
-          <div class="field col-12 md:col-6 md:mt-3">
+          <div class="field col-6 md:mt-3">
             <span class="p-float-label">
               <p-dropdown
                 inputId="barrio"
@@ -256,7 +256,7 @@
               >{{ getAfiliadoBarrioErrors("barrio") }}
             </small>
           </div>
-          <div class="field col-12 md:col-6 md:mt-3">
+          <div class="field col-6 md:mt-3">
             <span class="p-float-label">
               <input
                 type="text"
@@ -265,9 +265,7 @@
                 formControlName="numeroVivienda"
                 [ngClass]="inputValidAfiliado('numeroVivienda')"
               />
-              <label for="numeroVivienda"
-                >Numero de Vivienda del afiliado</label
-              >
+              <label for="numeroVivienda">N° Vivienda del afiliado (opcional)</label>
             </span>
             <small
               id="numeroVivienda-help"
@@ -276,7 +274,7 @@
               >{{ getAfiliadoNumeroViviendaErrors("numeroVivienda") }}
             </small>
           </div>
-          <div class="field col-12 md:col-4 md:mt-3">
+          <div class="field col-6 md:col-4 md:mt-3">
             <span class="p-float-label">
               <input
                 type="text"
@@ -294,7 +292,7 @@
               >{{ getAfiliadoManzanoErrors("manzano") }}
             </small>
           </div>
-          <div class="field col-12 md:col-4 md:mt-3">
+          <div class="field col-6 md:col-4 md:mt-3">
             <span class="p-float-label">
               <p-inputNumber
                 inputId="numeroManzano"
@@ -310,7 +308,7 @@
               >{{ getAfiliadoNumeroManzanoErrors("numeroManzano") }}
             </small>
           </div>
-          <div class="field col-12 md:col-4 md:mt-3">
+          <div class="field col-6 md:col-4 md:mt-3">
             <span class="p-float-label">
               <p-inputNumber
                 inputId="nroLote"
@@ -328,11 +326,12 @@
             </small>
           </div>
           
-        <div class="field col-12 md:col-4">
+        <div class="field col-6 md:col-4">
           <span class="p-float-label">
             <p-inputNumber
               inputId="monto"
               formControlName="monto"
+              [maxFractionDigits]="2"
               [ngClass]="inputValidAfiliado('monto')"
             ></p-inputNumber>
             <label for="monto">Costo de Afiliación (*)</label>
@@ -344,7 +343,7 @@
             >{{ getAfiliadoMontoErrors("monto") }}
           </small>
         </div>
-        <div class="field col-12 md:col-4">
+        <div class="field col-6 md:col-4">
           <span class="p-float-label">
             <p-dropdown
               inputId="moneda"
@@ -364,7 +363,7 @@
             >{{ getAfiliadoMonedaErrors("moneda") }}
           </small>
         </div>
-        <div class="field col-12 md:col-4">
+        <div class="field col-6 md:col-4">
           <span class="p-float-label">
             <p-dropdown
               inputId="estado"
@@ -386,7 +385,7 @@
             >{{ getAfiliadoEstadoErrors("estado") }}
           </small>
         </div>
-          <div class="col-12 grid">
+          <div class="col-12 grid md:col-offset-5">
             <label for="icon-geo" class="col-12">Ubicacion georeferencial</label>
             <p-button   id="icon-geo" class="col-1" icon="pi pi-map-marker" styleClass="p-button-rounded p-button-secondary p-button-text p-button-raised" (onClick)="showMap=true"></p-button>
             <div class="col-1" *ngIf="this.afiliadoForm.get('latitud')?.value &&
@@ -401,7 +400,7 @@
       <p>Cuenta de acceso al sistema</p>
       <p-divider></p-divider>
       <div class="grid">
-        <div class="col-3">
+        <div class="col-12">
           <p-selectButton
             [options]="stateOptions"
             optionLabel="label"
@@ -422,7 +421,7 @@
                 formControlName="correo"
                 [ngClass]="inputValidUsuario('correo')"
               />
-              <label for="correo">Correo electronico</label>
+              <label for="correo">Correo electronico (opcional)</label>
             </span>
             <small
               id="correo-help"

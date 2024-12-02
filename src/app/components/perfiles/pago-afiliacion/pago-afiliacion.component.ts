@@ -5,7 +5,7 @@ import { PerfilService } from '../perfil.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Afiliado, Perfil } from 'src/app/interfaces';
 import { CommonAppService } from 'src/app/common/common-app.service';
-import { amountMatchValidator, MonedaMatchValidator } from '../../menus/validators/monto-validator.service';
+import { amountMatchValidator, MonedaMatchValidator } from './../validators/monto-validator.service';
 
 @Component({
   selector: 'app-pago-afiliacion',

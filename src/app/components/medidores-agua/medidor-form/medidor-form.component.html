@@ -1,15 +1,15 @@
 <div class="grid">
     <form class="col-12" [formGroup]="medidorForm">
       <div class="card">
-          <h4>Registro de Nuevo Medidor de agua</h4>
+          <h4 class="text-center">{{medidorActual?.id?'Modificación de Datos del Medidor de agua Actual':'Registro de Nuevo Medidor de agua'}}</h4>
           <p-divider></p-divider>
           <div class="p-fluid grid grid mt-5">
               <div class="col-12" >
-                  <h5>Datos Requeridos del Medidor de Agua Potable</h5>
+                  <h5>{{medidorActual?.id?'Datos del medidor de agua':'Datos requeridos para registrar'}}</h5>
                   <p-divider></p-divider>
                   <div class="grid mt-5 p-fluid">
-                  <div class="field col-12 md:col-6 m-3">
-                    <span class="p-float-label p-input-icon-right">
+                  <div class="field col-12 md:col-6">
+                    <span class="p-float-label p-input-icon-right mb-3">
                       <input
                         type="text"
                         id="nroMedidor"
@@ -27,16 +27,14 @@
                       >{{ getNroMedidorErrors("nroMedidor") }}
                     </small>
                   </div>
-                  <div class="field col-12 md:col-6 m-3">
+                  <div class="field col-12 md:col-6 mb-3">
                     <span class="p-float-label">
-                      <input
-                        type="number"
-                        id="lecturaInicial"
-                        pInputText
-                        formControlName="lecturaInicial"
-                        pKeyFilter="int"
-                        [ngClass]="inputValid('lecturaInicial')"
-                      />
+                      <p-inputNumber
+                      inputId="lecturaInicial"
+                      formControlName="lecturaInicial"
+                      [ngClass]="inputValid('lecturaInicial')"
+                      [min]="0"
+                      ></p-inputNumber>
                       <label for="lecturaInicial">Lectura Inicial en la instalacion (*)</label>
                     </span>
                     <small
@@ -47,7 +45,7 @@
                     </small>
                   </div>
                   
-                  <div class="field col-12 md:col-4 m-3">
+                  <div class="field col-12 md:col-6 mb-3">
                     <span class="p-float-label">
                       <p-dropdown
                         inputId="estado"
@@ -69,8 +67,8 @@
                       >{{ getMedicionErrors("medicion") }}
                     </small>
                   </div>
-                  <div class="field col-12 md:col-6 m-3">
-                    <span class="p-float-label">
+                  <div class="field col-12 md:col-3">
+                    <span class="p-float-label mb-3">
                       <input
                         type="text"
                         id="marca"
@@ -87,8 +85,8 @@
                       >{{ getMarcaErrors("marca") }}
                     </small>
                   </div>
-                  <div class="field col-12 md:col-3 m-3" *ngIf="!medidorActual?.id">
-                    <span class="p-float-label">
+                  <div class="field col-12 md:col-3" *ngIf="!medidorActual?.id">
+                    <span class="p-float-label mb-3">
                       <p-dropdown
                         inputId="estado"
                         [autoDisplayFirst]="false"

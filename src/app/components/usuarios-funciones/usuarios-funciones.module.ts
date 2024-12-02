@@ -12,13 +12,16 @@ import { ButtonModule } from 'primeng/button';
 import { TagModule } from 'primeng/tag';
 import { TableModule } from 'primeng/table';
 import { DialogModule } from 'primeng/dialog';
+import { MedidorDetailsComponent } from './medidor-details/medidor-details.component';
+import { TabViewModule } from 'primeng/tabview';
 
 @NgModule({
   declarations: [
     MedidoresComponent,
     LecturaDetailsComponent,
     DeudasComponent,
-    PerfilComponent
+    PerfilComponent,
+    MedidorDetailsComponent
   ],
   imports: [
     CommonModule,
@@ -30,6 +33,7 @@ import { DialogModule } from 'primeng/dialog';
     TagModule,
     TableModule,
     DialogModule,
+    TabViewModule,
   ]
 })
 export class UsuariosFuncionesModule { }

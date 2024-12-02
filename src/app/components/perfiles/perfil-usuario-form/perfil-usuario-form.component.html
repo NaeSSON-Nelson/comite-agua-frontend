@@ -6,7 +6,7 @@
             </h5>
           <p-divider></p-divider>
           <div class="grid p-fluid">
-            <div class="col-12" *ngIf="perfilActual?.usuario===null"><p>El usuario y contraseña de Acceso seran entregados en la creacion del perfil</p></div>
+            <div class="col-12" *ngIf="perfilActual?.usuario===null"><p>El usuario y contraseña de Acceso seran entregados en el registro de usuario</p></div>
           <div class="field col-12 md:col-6">
             <span class="p-float-label">
               <input
@@ -25,7 +25,7 @@
               >{{ getUsuarioCorreoErrors("correo") }}
             </small>
           </div>
-          <div class="field col-12 md:col-3" *ngIf="!this.perfilActual?.id">
+          <div class="field col-12 md:col-3" *ngIf="!this.perfilActual?.usuario">
               <span class="p-float-label">
                 <p-dropdown
                   inputId="estado"

@@ -18,6 +18,7 @@ import {
   PATH_PERFILES,
   PATH_ROLES,
   PATH_USER,
+  ValidMenu,
 } from './interfaces/routes-app';
 import { NotFound404Component } from './public/not-found404/not-found404.component';
 
@@ -30,31 +31,31 @@ const routes: Routes = [
         path: '',
         children: [
           {
-            path: PATH_PERFILES,
+            path: ValidMenu.perfiles,
             loadChildren: () =>
               import('./components/perfiles/perfiles-routing.module').then(
                 (m) => m.PerfilesRoutingModule
               ),       
             canActivate: [validarTokenGuard],
           },
+          // {
+          //   path: PATH_MENUS,
+          //   loadChildren: () =>
+          //     import('./components/menus/menus-routing.module').then(
+          //       (m) => m.MenusRoutingModule
+          //     ),
+          //   canActivate: [validarTokenGuard],
+          // },
+          // {
+          //   path: PATH_ITEMSMENU,
+          //   loadChildren: () =>
+          //     import(
+          //       './components/menus/items-menu/items-menu-routing.module'
+          //     ).then((m) => m.ItemsMenuRoutingModule),
+          //   canActivate: [validarTokenGuard],
+          // },
           {
-            path: PATH_MENUS,
-            loadChildren: () =>
-              import('./components/menus/menus-routing.module').then(
-                (m) => m.MenusRoutingModule
-              ),
-            canActivate: [validarTokenGuard],
-          },
-          {
-            path: PATH_ITEMSMENU,
-            loadChildren: () =>
-              import(
-                './components/menus/items-menu/items-menu-routing.module'
-              ).then((m) => m.ItemsMenuRoutingModule),
-            canActivate: [validarTokenGuard],
-          },
-          {
-            path: PATH_ROLES,
+            path: ValidMenu.roles,
             loadChildren: () =>
               import('./components/roles/roles-routing.module').then(
                 (m) => m.RolesRoutingModule
@@ -62,7 +63,7 @@ const routes: Routes = [
             canActivate: [validarTokenGuard],
           },
           {
-            path: PATH_MEDIDORES,
+            path: ValidMenu.medidores,
             loadChildren: () =>
               import(
                 './components/medidores-agua/medidores-agua-routing.module'
@@ -70,7 +71,7 @@ const routes: Routes = [
             canActivate: [validarTokenGuard],
           },
           {
-            path: PATH_ASOCIACIONES,
+            path: ValidMenu.asociaciones,
             loadChildren: () =>
               import(
                 './components/asociaciones-medidores/asociaciones-routing.module'
@@ -78,7 +79,7 @@ const routes: Routes = [
             canActivate: [validarTokenGuard],
           },
           {
-            path: PATH_LECTURAS,
+            path: ValidMenu.lecturas,
             loadChildren: () =>
               import(
                 './components/medidores-agua/lecturas/lecturas-routing.module'
@@ -86,7 +87,7 @@ const routes: Routes = [
             canActivate: [validarTokenGuard],
           },
           {
-            path: PATH_COBROS,
+            path: ValidMenu.cobros,
             loadChildren: () =>
               import('./components/cobros/cobros-routing.module').then(
                 (m) => m.CobrosRoutingModule
@@ -94,7 +95,7 @@ const routes: Routes = [
             canActivate: [validarTokenGuard],
           },
           {
-            path: PATH_USER,
+            path: ValidMenu.consultar,
             children: [
               {
                 path: PATH_EMPTY,

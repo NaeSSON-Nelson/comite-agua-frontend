@@ -17,6 +17,7 @@ import { LocalStorageService } from '../common/storage/local-storage.service';
 import { KEY_STORAGE } from '../interfaces/storage.enum';
 import { URL_AUTH_REFRESH } from '../common/api/urls-api';
 import { Router } from '@angular/router';
+import { PATH_AUTH } from '../interfaces/routes-app';
 @Injectable({
   providedIn: 'root',
 })
@@ -63,6 +64,7 @@ export class AuthService {
     this.localStorageService.removeItem(KEY_STORAGE.DATA_USER);
     this.layoutService.userObserver.next(null);
     this.router.navigateByUrl('');
+    this.layoutService.state.staticMenuDesktopInactive=true;
   }
   getMenusUser(idRole: number) {
     return this.http.get<HttpResponseApi<Role>>(`${this.URL_Auth}/roles/${idRole}`)

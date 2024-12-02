@@ -1,88 +1,76 @@
 <div class="card">
+    <h2 class="text-center mt-3 mb-5">Consultas de Datos de Medidores de agua asociados</h2>
     <label for="selectMedidor"> <h4>Seleccione un medidor de agua:</h4></label>
-    <p-dropdown [options]="selectMedidoresRelacion" class="m-5" id="selectMedidor" optionLabel="nroMedidor" optionValue="nroMedidor" (onChange)="obtenerMedidor($event)" placeholder="Seleccione su medidor" emptyMessage="Sin medidores"></p-dropdown>
+    <p-dropdown [options]="selectMedidoresRelacion" class="m-5" id="selectMedidor" optionLabel="medidor.nroMedidor" optionValue="medidor.nroMedidor" (onChange)="obtenerMedidor($event)" placeholder="Seleccione su medidor" emptyMessage="Sin medidores"></p-dropdown>
     <div class="card col-12 grid m-3" *ngIf="medidorAsc">
         <div class="col-12">
-            <h4>MEDIDOR {{medidorAsc.medidor?.nroMedidor}}</h4>
+            <h4>Medidor asociado: {{medidorAsc.medidor?.nroMedidor}}</h4>
             <p-divider></p-divider>
-            <div class="grid">
-                <div class="col-12"><h5>DATOS DEL MEDIDOR</h5> <p-divider></p-divider></div>
-                <div class="col-12 md:col-7 md:col-offset-3 grid col-offset-0" >
-                    <div class="sm:col-6 col-12">
-                        <label class="col-12 mb-2 md:col-2 md:mb-0 text-700 text-lg"> <b>NRO MEDIDOR: </b></label>
-                        <div class="col-12 md:col-10">
-                            <p class="text-900 text-left text-lg">{{medidorAsc.medidor?.nroMedidor | uppercase}}</p>
-                        </div>
-                    </div>
-                    <div class="sm:col-6 col-12">
-                        <label class="col-12 mb-2 md:col-2 md:mb-0 text-700 text-lg"> <b>MARCA: </b></label>
-                        <div class="col-12 md:col-10">
-                            <p class="text-900 text-left text-lg">{{medidorAsc.medidor?.marca | uppercase}}</p>
-                        </div>
-                    </div>
-                    <div class="sm:col-6 col-12">
-                        <label class="col-12 mb-2 md:col-2 md:mb-0 text-700 text-lg"> <b>F. INSTALACIÓN: </b></label>
-                        <div class="col-12 md:col-10">
-                            <p class="text-900 text-left text-lg">{{medidorAsc.fechaInstalacion | date : 'dd-MM-yyyy'}}</p>
-                        </div>
-                    </div>
-                    <div class="sm:col-6 col-12">
-                        <label class="col-12 mb-2 md:col-2 md:mb-0 text-700 text-lg"> <b>LECTURA DE INSTALACION: </b></label>
-                        <div class="col-12 md:col-10">
-                            <p class="text-900 text-left text-lg">{{medidorAsc.lecturaInicial }} m3.</p>
-                        </div>
-                    </div>
-                    <div class="sm:col-6 col-12">
-                        <label class="col-12 mb-2 md:col-2 md:mb-0 text-700 text-lg"> <b>LECTURA REGISTRA: </b></label>
-                        <div class="col-12 md:col-10">
-                            <p class="text-900 text-left text-lg">{{medidorAsc.lecturaSeguimiento }} m3.</p>
+            
+            <div class="card">
+                <p-tabView (onChange)="cambioDeLaDo()" class="col-12 mt-3" [style]="{'min-width':'250px','min-height':'200px'}" [(activeIndex)]="activeIndex" >
+                    <p-tabPanel>
+                    <ng-template pTemplate="header">
+                        <i class="pi pi-book"></i>
+                        <span>Lecturas</span>
+                    </ng-template>
+                    <div class="grid">
+                        <div class="col-12"><p-dropdown [options]="planillasSelect" placeholder="Seleccione una Gestión" (onChange)="obtenerLecturas($event)"></p-dropdown></div>
+                        <div class="col-12 grid" *ngIf="planillaSelected && showLecturas">
+                            <div class="col-12" *ngIf="planillaSelected.lecturas.length>0; else sinLecturas">
+                                <h5>REGISTROS DE LECTURA DEL MEDIDOR, GESTION {{planillaSelected.gestion}}</h5>
+                                <p-divider></p-divider>
+                                <p-table [value]="planillaSelected.lecturas">
+                                  <ng-template pTemplate="header" let-columns>
+                                    <tr>
+                                      <th class="text-center"></th>
+                                      <th class="text-center">Mes Lecturado</th>
+                                      <th class="text-center">lectura Registrada. (m3)</th>
+                                      <th class="text-center">Consumo Total. (m3)</th>
+                                      <th class="text-center">Tarifa de pago (Bs)</th>
+                                      <th class="text-center">Tarifa pagada</th>
+                                      <th></th>
+                                    </tr>
+                                </ng-template>
+                                <ng-template pTemplate="body" let-product let-rowIndex="rowIndex">
+                                    <tr>
+                                      <td class="text-center">{{rowIndex +1}}</td>
+                                      <td class="text-center">{{product.PlanillaMesLecturar}}</td>
+                                      <td class="text-center">{{product.lectura}} {{product.medicion}}</td>
+                                      <td class="text-center">{{product.consumoTotal}} {{product.medicion}}</td>
+                                      <td class="text-center">{{product.pagar ? product.pagar.monto +' '+product.pagar.moneda:'LECTURA SIN TARIFA DE PAGO'}}</td>
+                                      <td class="text-center">
+                                        <p-tag [severity]="product.pagar.pagado?'success':'danger'" [value]="product.pagar.pagado ? 'PAGADO':'NO PAGADO'"></p-tag>
+                                      </td>
+                                      <td>
+                                        <p-button icon="pi pi-external-link" severity="secondary" styleClass="p-button-rounded p-button-secondary p-button-text p-button-raised" (onClick)="obtenerLectura(product.id)"></p-button>
+        
+                                      </td>
+                                    </tr>
+                                </ng-template>
+                                </p-table>
+                          
+                              </div>
+                              <ng-template #sinLecturas>
+                                <div class="col-12">
+                                  <p-divider>
+                                  </p-divider>
+                                  <p>{{titleLecturas}}</p>
+                          
+                                </div>
+                              </ng-template>
                         </div>
                     </div>
                     
-                </div>
-                <div class="col-12"><h5>LECTURAS REGISTRAS DEL MEDIDOR</h5><p-divider></p-divider><p-dropdown [options]="planillasSelect" placeholder="Selecte Planilla" (onChange)="obtenerLecturas($event)"></p-dropdown></div>
-                <div class="col-12 grid" *ngIf="planillaSelected && showLecturas">
-                    <div class="col-12" *ngIf="planillaSelected.lecturas.length>0; else sinLecturas">
-                        <h5>REGISTROS DE LECTURA DEL MEDIDOR, GESTION {{planillaSelected.gestion}}</h5>
-                        <p-divider></p-divider>
-                        <p-table [value]="planillaSelected.lecturas">
-                          <ng-template pTemplate="header" let-columns>
-                            <tr>
-                              <th class="text-center text-xl"></th>
-                              <th class="text-center text-xl">Mes Lecturado</th>
-                              <th class="text-center text-xl">lectura Registrada. (m3)</th>
-                              <th class="text-center text-xl">Consumo Total. (m3)</th>
-                              <th class="text-center text-xl">Tarifa de pago (Bs)</th>
-                              <th class="text-center text-xl">Tarifa pagada</th>
-                              <th></th>
-                            </tr>
+                    </p-tabPanel>
+                    <p-tabPanel>
+                        <ng-template pTemplate="header">
+                            <i class="pi pi-clock"></i>
+                            <span>Multas</span>
                         </ng-template>
-                        <ng-template pTemplate="body" let-product let-rowIndex="rowIndex">
-                            <tr>
-                              <td class="text-center text-lg">{{rowIndex +1}}</td>
-                              <td class="text-center text-lg">{{product.mesLecturado}}</td>
-                              <td class="text-center text-lg">{{product.lectura}} m3.</td>
-                              <td class="text-center text-lg">{{product.consumoTotal}} m3.</td>
-                              <td class="text-center text-lg">{{product.pagar ? product.pagar.monto +' '+product.pagar.moneda:'LECTURA SIN TARIFA DE PAGO'}}</td>
-                              <td class="text-center text-lg">{{product.pagar ? product.pagar.pagado ? 'SI':'NO' :''}}</td>
-                              <td>
-                                <p-button icon="pi pi-external-link" severity="secondary" styleClass="p-button-rounded p-button-secondary p-button-text p-button-raised" (onClick)="obtenerLectura(product.id)"></p-button>
-
-                              </td>
-                            </tr>
-                        </ng-template>
-                        </p-table>
-                  
-                      </div>
-                      <ng-template #sinLecturas>
-                        <div class="col-12">
-                          <p-divider>
-                          </p-divider>
-                          <p>{{titleLecturas}}</p>
-                  
-                        </div>
-                      </ng-template>
-                </div>
+                        
+                    </p-tabPanel>
+                </p-tabView>
             </div>
         </div>
         <div class="col-12"></div>

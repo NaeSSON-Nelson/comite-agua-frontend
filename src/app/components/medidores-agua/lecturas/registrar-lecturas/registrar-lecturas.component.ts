@@ -15,6 +15,9 @@ import { CommonAppService } from '../../../../common/common-app.service';
   styleUrls:['./registrar-lecturas.component.css']
 })
 export class RegistrarLecturasComponent {
+
+  ModuleTitle:string='MÓDULO DE REGISTRO PARA REGISTRAR LECTURAS MARCADAS DE LOS MEDIDORES DE AGUA DE AFILIADOS';
+  // stateTitle:string='';
   data: Perfil[] = [];
   limite!:AnioSeguimientoLecturas
   constructor(

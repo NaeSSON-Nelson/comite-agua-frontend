@@ -1,591 +1,470 @@
 <p-dialog [header]="title" [(visible)]="visible" [modal]="true" [style]="{ width: '68vw' }" [draggable]="false" [resizable]="false" [baseZIndex]="900" (visibleChange)="endVisible()">
   <div class="card" *ngIf="!showFormAsc; else formAsc">
         <i class="pi pi-spin pi-spinner" style="font-size: 2rem" *ngIf="loading"></i>
-    <div class="col-12 grid" *ngIf="asociacion">
-            <div class="col-12 md:col-4">
-                <img [src]="asociacion.afiliado?.perfil?.urlImage || ''" class="" alt="User profile" [style]="{'max-width':'248px'}">
+
+    <div class="grid" *ngIf="asociacion">
+      <div class="col-12 md:col-4 profile-image-container">
+				<img [src]="asociacion.afiliado?.perfil?.urlImage || ''" alt="Foto de perfil" class="profile-image"/>
+			
+			</div>
+      <div class="col-12 md:col-8 profile-details">
+        <div class="grid">
+          <div class="col-12">
+            <h2>Afiliado Vinculado</h2>
+            <div class="grid">
+              <div class="col-12 md:col-6"><strong>Nombre Completo:</strong> {{ asociacion.afiliado?.perfil?.nombrePrimero | titlecase}} {{asociacion.afiliado?.perfil?.nombreSegundo ||'' | titlecase }} {{asociacion.afiliado?.perfil?.apellidoPrimero | titlecase}} {{asociacion.afiliado?.perfil?.apellidoSegundo||'' | titlecase}}</div>
+							<div class="col-12 md:col-6"><strong>Cédula de Identidad:</strong> {{ asociacion.afiliado?.perfil?.CI }}</div>
+							<div class="col-12 md:col-6"><strong>N° Contacto:</strong> {{ asociacion.afiliado?.perfil?.contacto || 'No tiene contacto' }}</div>
+							<div class="col-12 md:col-6"><strong>Estado del registro:</strong><p-tag [severity]="asociacion.afiliado?.perfil?.isActive?'success':'danger'" [value]="asociacion.afiliado?.perfil?.estado" class="ml-3"></p-tag></div>
             </div>
-        <div class="col-12 md:col-8">
-            <h5 class="flex justify-content-center">Afiliado Vinculado</h5>
-            <p-divider></p-divider>
-            <div class="grid p-fluid">
-                <div class="field col-12 md:col-6">
-                    <label htmlFor="afiliado">Nombre Completo</label>
-                    <input pInputText id="afiliado" type="text" [disabled]="true" value="{{asociacion.afiliado?.perfil?.nombrePrimero | titlecase}} {{asociacion.afiliado?.perfil?.nombreSegundo ||'' |titlecase}} {{asociacion.afiliado?.perfil?.apellidoPrimero | titlecase}} {{asociacion.afiliado?.perfil?.apellidoSegundo ||'' | titlecase}}" class="appearance-none text-color text-base" />
-                </div>
-                <div class="field col-12 md:col-6">
-                    <label htmlFor="CI">Cedula de Identidad</label>
-                    <input pInputText id="CI" type="text" [disabled]="true" [value]="asociacion.afiliado?.perfil?.CI" class="appearance-none text-color text-base" />
-                </div>
-                <div class="field col-12 md:col-6">
-                    <label htmlFor="contacto">Contacto</label>
-                    <input pInputText id="contacto" type="text" [disabled]="true" [value]="asociacion.afiliado?.perfil?.contacto || 'SIN CONTACTO'" class="appearance-none text-color text-base" />
-                </div>
-                <div class="col-12 md:col-6 mb-3">
-                  <label class="block text-900 font-medium mb-2">Estado de perfil</label>
-                 <p-tag [severity]="asociacion.afiliado?.isActive?'success':'danger'" [value]="asociacion.afiliado?.perfil?.estado"></p-tag>
-                              
-              </div>
-            </div>
+          </div>
         </div>
-    </div>
-    <div class="col-12 grid"  *ngIf="asociacion">
-        <div class="col-12 md:col-8">
-            <h5 class="flex justify-content-center">Medidor {{asociacion.medidor ?'VINCULADO':'POR VINCULAR'}}</h5>
-            <p-divider ></p-divider>
-            <div class="grid p-fluid">
-                <div class="field col-12 md:col-6">
-                    <label htmlFor="afiliado">Numero de Medidor de Agua</label>
-                    <input pInputText id="afiliado" type="text" [disabled]="true" [value]="asociacion.medidor?.nroMedidor" class="appearance-none text-color text-base" />
-                </div>
-                <div class="field col-12 md:col-6">
-                    <label htmlFor="CI">Tipo Medición</label>
-                    <input pInputText id="CI" type="text" [disabled]="true" [value]="asociacion.medidor?.medicion" class="appearance-none text-color text-base" />
-                </div>
-                <div class="col-12 md:col-6 mb-3">
-                  <label class="block text-900 font-medium mb-2">Estado medidor de agua</label>
-                 <p-tag [severity]="asociacion.medidor?.isActive?'success':'danger'" [value]="asociacion.medidor?.estado"></p-tag>
-                              
-              </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-12" *ngIf="!showFormAscEdit; else formEdit;">
-        <h4>Datos de la Asociacion</h4>
-        <p-divider></p-divider>
-        <div class="grid p-fluid" *ngIf="asociacion">
-          <div class="field col-12 md:col-6">
-              <label htmlFor="idAsociacion">ID Asociacion</label>
-              <input pInputText id="idAsociacion" type="text" [disabled]="true" [value]="asociacion.id" class="appearance-none text-color text-base" />
-          </div>
-          <div class="field col-12 md:col-6">
-              <label htmlFor="estadoMedidorAsociado">Estado de actividad</label>
-              <input pInputText id="estadoMedidorAsociado" type="text" [disabled]="true" [value]="asociacion.estadoMedidorAsociado" class="appearance-none text-color text-base" />
-          </div>
-          <div class="field col-12 md:col-6">
-              <label htmlFor="fechaInstalacion">Fecha de Instalacion</label>
-              <input pInputText id="fechaInstalacion" type="text" [disabled]="true" [value]="asociacion.fechaInstalacion | date: 'dd/MM/yyyy'" class="appearance-none text-color text-base" />
-          </div>
-          <div class="field col-12 md:col-6">
-              <label htmlFor="lecturaInicial">Lectura de Inicio a la Asociacion</label>
-              <input pInputText id="lecturaInicial" type="text" [disabled]="true" [value]="asociacion.lecturaInicial" class="appearance-none text-color text-base" />
-          </div>
-          <div class="field col-12 md:col-6">
-              <label htmlFor="lecturaSeguimiento">Seguimiento de Lectura</label>
-              <input pInputText id="lecturaSeguimiento" type="text" [disabled]="true" [value]="asociacion.lecturaSeguimiento" class="appearance-none text-color text-base" />
-          </div>
-          <div class="field col-12 md:col-6">
-              <label htmlFor="registrable">Registrable</label>
-              <input pInputText id="registrable" type="text" [disabled]="true" [value]="asociacion.registrable?'SI':'NO'" class="appearance-none text-color text-base" />
-          </div>
-          <div class="field col-12 md:col-6">
-              <label htmlFor="barrio">Barrio Ubicacion Medidor</label>
-              <input pInputText id="barrio" type="text" [disabled]="true" [value]="asociacion.ubicacion?.barrio" class="appearance-none text-color text-base" />
-          </div>
-          <div class="field col-12 md:col-6">
-              <label htmlFor="numeroVivienda">Numero de vivienda</label>
-              <input pInputText id="numeroVivienda" type="text" [disabled]="true" [value]="asociacion.ubicacion?.numeroVivienda ||'NINGUNO'" class="appearance-none text-color text-base" />
-          </div>
-          <div class="col-12 md:col-6 mb-3">
-            <label class="block text-900 font-medium mb-2">Estado de asociación</label>
-           <p-tag [severity]="asociacion.isActive?'success':'danger'" [value]="asociacion.estado"></p-tag>
-        </div>
-        <div class=" col-12 md:col-6">
-          <div class="text-center p-3 border-round-sm h-full font-bold">
-            <label class="font-bold">Ubicación georreferencial</label>
-            <div class="col-12 flex flex-column justify-content-center">
-            <p-button icon="pi pi-map-marker" styleClass="p-button-rounded p-button-secondary p-button-text p-button-raised" (onClick)="mostrarMapAfiliado()"></p-button>
-            </div>
-          </div>
-          </div>
-          <div class="col-12" *ngIf="!asociacion.isActive">
-            <p class="font-italic text-red-700">* La asociación se encuentra deshabilitada</p>
-          </div>
       </div>
-    </div>
-    <ng-template #formEdit>
-      <div class="card col-12">
-        <h4>Editar datos de la asociacion</h4>
-        <p-divider></p-divider>
-        <form class="col-12" [formGroup]="asociacionForm">    
-          <h4>Registrar nueva Asociacion</h4>
-          <p-divider></p-divider>
-          <div class="p-fluid grid">
-            <div class="col-4">
-              <div class="text-center p-3 border-round-sm h-full font-bold">
-                <div class="col-12 flex flex-column justify-content-center">
-                  <p-button icon="pi pi-map-marker" styleClass="p-button-rounded p-button-secondary p-button-text p-button-raised" (onClick)="showMap=true"></p-button>
-                  <p>coordenadas</p>
-                  <div class="text-400">
-                    <p>Ltd: {{ubicacionForm.get('latitud')?.value || asociacionSelect?.ubicacion?.latitud}}, Lng: {{ubicacionForm.get('longitud')?.value || asociacionSelect?.ubicacion?.longitud}}</p>
+      <div class="col-12 profile-details">
+        <div class="grid">
+          <div class="col-12">
+            <h2>Medidor de agua Vinculado</h2>
+          </div>
+          <div class="grid">
+            <div class="col-12 md:col-6"><strong>N° de Medidor de agua:</strong> {{ asociacion.medidor?.nroMedidor}}</div>
+            <div class="col-12 md:col-6"><strong>Tipo de medición:</strong> {{ asociacion.medidor?.medicion |titlecase }}</div>
+            <div class="col-12 md:col-6"><strong>Estado del registro:</strong><p-tag [severity]="asociacion.medidor?.isActive?'success':'danger'" [value]="asociacion.medidor?.estado" class="ml-3"></p-tag></div>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 profile-details">
+        <div class="grid">
+          <div class="col-12">
+            <h2>Modificación de datos de Asociación</h2>
+          </div>
+          <form class="col-12" [formGroup]="asociacionForm">    
+            <div class="p-fluid grid">
+              <div class="col-4">
+                <div class="text-center p-3 border-round-sm h-full font-bold">
+                  <div class="col-12 flex flex-column justify-content-center">
+                    <p-button icon="pi pi-map-marker" styleClass="p-button-rounded p-button-secondary p-button-text p-button-raised" (onClick)="showMap=true" [disabled]="this.asociacionForm.disabled"></p-button>
+                    <p>coordenadas</p>
+                    <div class="text-400">
+                      <p>Ltd: {{ubicacionForm.get('latitud')?.value || asociacionSelect?.ubicacion?.latitud}}, Lng: {{ubicacionForm.get('longitud')?.value || asociacionSelect?.ubicacion?.longitud}}</p>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-              <div class="col-8" >
-                  <div class="grid mt-5 p-fluid" formGroupName="ubicacion">
-                    <div class="field col-12 md:col-6" >
+                <div class="col-8 grid">
+                    <div class="grid mt-5 p-fluid col-12" formGroupName="ubicacion">
+                      <div class="field col-12 md:col-6" >
+                        <span class="p-float-label p-input-icon-right">
+                          <input
+                            type="text"
+                            id="numeroVivienda"
+                            pInputText
+                            formControlName="numeroVivienda"
+                            [ngClass]="inputValidUbicacion('numeroVivienda')"
+                          />
+                          <label for="numeroVivienda">Numero de Vivienda ubicada</label>
+                        </span>
+                        <small
+                          id="numeroVivienda-help"
+                          class="p-error block"
+                          *ngIf="campoValidoUbicacion('numeroVivienda')"
+                          >{{ getNumeroViviendaErrors("numeroVivienda") }}
+                        </small>
+                      </div>
+                      <div class="field col-12 md:col-6">
+                        <span class="p-float-label">
+                          <p-dropdown
+                            inputId="barrio"
+                            [autoDisplayFirst]="false"
+                            [options]="commonAppService.barriosForm"
+                            formControlName="barrio"
+                            optionLabel="name"
+                            optionValue="value"
+                            [ngClass]="inputValidUbicacion('barrio')"
+                          ></p-dropdown>
+              
+                          <label for="barrio">Barrio</label>
+                        </span>
+                        <small
+                          id="barrio-help"
+                          class="p-error block"
+                          *ngIf="campoValidoUbicacion('barrio')"
+                          >{{ getBarrioErrors("barrio") }}
+                        </small>
+                      </div>
+                      <div class="field col-12 md:col-3 md:mt-3">
+                        <span class="p-float-label">
+                          <input
+                            type="text"
+                            id="manzano"
+                            pInputText
+                            formControlName="manzano"
+                            [ngClass]="inputValidUbicacion('manzano')"
+                          />
+                          <label for="manzano">Manzano (*)</label>
+                        </span>
+                        <small
+                          id="manzano-help"
+                          class="p-error block"
+                          *ngIf="campoValidoUbicacion('manzano')"
+                          >{{ getManzanoErrors("manzano") }}
+                        </small>
+                      </div>
+                      <div class="field col-12 md:col-3 md:mt-3">
+                        <span class="p-float-label">
+                          <p-inputNumber
+                            inputId="numeroManzano"
+                            formControlName="numeroManzano"
+                            [ngClass]="inputValidUbicacion('numeroManzano')"
+                          ></p-inputNumber>
+                          <label for="numeroManzano">N° Manzano (*)</label>
+                        </span>
+                        <small
+                          id="numeroManzano-help"
+                          class="p-error block"
+                          *ngIf="campoValidoUbicacion('numeroManzano')"
+                          >{{ getNroManzanoErrors("numeroManzano") }}
+                        </small>
+                      </div>
+                      <div class="field col-12 md:col-3 md:mt-3">
+                        <span class="p-float-label">
+                          <p-inputNumber
+                            inputId="nroLote"
+                            formControlName="nroLote"
+                            [ngClass]="inputValidUbicacion('nroLote')"
+                          ></p-inputNumber>
+                          <label for="nroLote">N° Lote (*)</label
+                          >
+                        </span>
+                        <small
+                          id="nroLote-help"
+                          class="p-error block"
+                          *ngIf="campoValidoUbicacion('nroLote')"
+                          >{{ getNroLoteErrors("nroLote") }}
+                        </small>
+                      </div>
+                    </div>
+                    <div class="field col-12 md:col-3">
+                      <span class="p-float-label">
+                        <p-dropdown
+                          inputId="registrable"
+                          [autoDisplayFirst]="false"
+                          [options]="commonAppService.registrables"
+                          formControlName="registrable"
+                          optionLabel="name"
+                          optionValue="value"
+                          [ngClass]="inputValid('registrable')"
+                        ></p-dropdown>
+            
+                        <label for="registrable">Es registrable?</label>
+                      </span>
+                      <small
+                        id="registrable-help"
+                        class="p-error block"
+                        *ngIf="campoValido('registrable')"
+                        >{{ getRegistrableErrors("registrable") }}
+                      </small>
+                    </div>
+                    <div class="field col-12 md:col-4">
+                      <span class="p-float-label">
+                        <p-calendar
+                          formControlName="fechaInstalacion"
+                          [showIcon]="true"
+                          dateFormat="dd/mm/yy"
+                          dataType="date"
+                          [ngClass]="inputValid('fechaInstalacion')"
+                          placeholder="dd/mm/yy"
+                          
+                        >
+                        </p-calendar>
+                        <label for="fechaInstalacion">Fecha de Instalacion</label>
+                      </span>
+                      <small
+                        id="fechaInstalacion-help"
+                        class="p-error block"
+                        *ngIf="campoValido('fechaInstalacion')"
+                        >{{ getFechaInstalacionErrors("fechaInstalacion") }}
+                      </small>
+                    </div>
+                    <div class="field col-12 md:col-4" >
                       <span class="p-float-label p-input-icon-right">
                         <input
                           type="text"
-                          id="numeroVivienda"
+                          id="estadoMedidorAsociado"
                           pInputText
-                          formControlName="numeroVivienda"
-                          [ngClass]="inputValidUbicacion('numeroVivienda')"
+                          formControlName="estadoMedidorAsociado"
+                          [ngClass]="inputValid('estadoMedidorAsociado')"
                         />
-                        <label for="numeroVivienda">Numero de Vivienda ubicada</label>
+                        <label for="estadoMedidorAsociado">Estado de Asociacion</label>
                       </span>
                       <small
-                        id="numeroVivienda-help"
+                        id="estadoMedidorAsociado-help"
                         class="p-error block"
-                        *ngIf="campoValidoUbicacion('numeroVivienda')"
-                        >{{ getNumeroViviendaErrors("numeroVivienda") }}
-                      </small>
-                    </div>
-                    <div class="field col-12 md:col-6">
-                      <span class="p-float-label">
-                        <p-dropdown
-                          inputId="barrio"
-                          [autoDisplayFirst]="false"
-                          [options]="commonAppService.barriosForm"
-                          formControlName="barrio"
-                          optionLabel="name"
-                          optionValue="value"
-                          [ngClass]="inputValidUbicacion('barrio')"
-                        ></p-dropdown>
-            
-                        <label for="barrio">Barrio</label>
-                      </span>
-                      <small
-                        id="barrio-help"
-                        class="p-error block"
-                        *ngIf="campoValidoUbicacion('barrio')"
-                        >{{ getBarrioErrors("barrio") }}
-                      </small>
-                    </div>
-                    <div class="field col-12 md:col-4 md:mt-3">
-                      <span class="p-float-label">
-                        <input
-                          type="text"
-                          id="manzano"
-                          pInputText
-                          formControlName="manzano"
-                          [ngClass]="inputValid('manzano')"
-                        />
-                        <label for="manzano">Manzano (*)</label>
-                      </span>
-                      <small
-                        id="manzano-help"
-                        class="p-error block"
-                        *ngIf="campoValido('manzano')"
-                        >{{ getManzanoErrors("manzano") }}
-                      </small>
-                    </div>
-                    <div class="field col-12 md:col-4 md:mt-3">
-                      <span class="p-float-label">
-                        <p-inputNumber
-                          inputId="numeroManzano"
-                          formControlName="numeroManzano"
-                          [ngClass]="inputValid('numeroManzano')"
-                        ></p-inputNumber>
-                        <label for="numeroManzano">N° Manzano (*)</label>
-                      </span>
-                      <small
-                        id="numeroManzano-help"
-                        class="p-error block"
-                        *ngIf="campoValido('numeroManzano')"
-                        >{{ getNroManzanoErrors("numeroManzano") }}
-                      </small>
-                    </div>
-                    <div class="field col-12 md:col-4 md:mt-3">
-                      <span class="p-float-label">
-                        <p-inputNumber
-                          inputId="nroLote"
-                          formControlName="nroLote"
-                          [ngClass]="inputValid('nroLote')"
-                        ></p-inputNumber>
-                        <label for="nroLote">N° Lote (*)</label
-                        >
-                      </span>
-                      <small
-                        id="nroLote-help"
-                        class="p-error block"
-                        *ngIf="campoValido('nroLote')"
-                        >{{ getNroLoteErrors("nroLote") }}
+                        *ngIf="campoValido('estadoMedidorAsociado')"
+                        >{{ getEstadoMedidorAsociadoErrors("estadoMedidorAsociado") }}
                       </small>
                     </div>
                   </div>
-                  <div class="grid p-fluid">
-                  <div class="field col-12 md:col-6">
-                    <span class="p-float-label">
-                      <p-calendar
-                        formControlName="fechaInstalacion"
-                        [showIcon]="true"
-                        dateFormat="dd/mm/yy"
-                        dataType="date"
-                        [ngClass]="inputValid('fechaInstalacion')"
-                        placeholder="dd/mm/yy"
-                        
-                      >
-                      </p-calendar>
-                      <label for="fechaInstalacion">Fecha de Instalacion</label>
-                    </span>
-                    <small
-                      id="fechaInstalacion-help"
-                      class="p-error block"
-                      *ngIf="campoValido('fechaInstalacion')"
-                      >{{ getFechaInstalacionErrors("fechaInstalacion") }}
-                    </small>
-                  </div>
-                  <div class="field col-12 md:col-6">
-                    <span class="p-float-label">
-                      <p-dropdown
-                        inputId="registrable"
-                        [autoDisplayFirst]="false"
-                        [options]="commonAppService.registrables"
-                        formControlName="registrable"
-                        optionLabel="name"
-                        optionValue="value"
-                        [ngClass]="inputValid('registrable')"
-                      ></p-dropdown>
-          
-                      <label for="registrable">Es registrable?</label>
-                    </span>
-                    <small
-                      id="registrable-help"
-                      class="p-error block"
-                      *ngIf="campoValido('registrable')"
-                      >{{ getRegistrableErrors("registrable") }}
-                    </small>
-                  </div>
-                  <div class="field col-12 md:col-6" >
-                    <span class="p-float-label p-input-icon-right">
-                      <input
-                        type="text"
-                        id="estadoMedidorAsociado"
-                        pInputText
-                        formControlName="estadoMedidorAsociado"
-                        [ngClass]="inputValid('estadoMedidorAsociado')"
-                      />
-                      <label for="estadoMedidorAsociado">Estado de Asociacion</label>
-                    </span>
-                    <small
-                      id="estadoMedidorAsociado-help"
-                      class="p-error block"
-                      *ngIf="campoValido('estadoMedidorAsociado')"
-                      >{{ getEstadoMedidorAsociadoErrors("estadoMedidorAsociado") }}
-                    </small>
-                  </div>
-                  <!-- <div class="field col-12 md:col-6">
-                    <span class="p-float-label">
-                      <p-dropdown
-                        inputId="estado"
-                        [autoDisplayFirst]="false"
-                        [options]="commonAppService.estados"
-                        formControlName="estado"
-                        optionLabel="name"
-                        optionValue="value"
-                        placeholder="Select Estado"
-                        [ngClass]="inputValid('estado')"
-                      ></p-dropdown>
-          
-                      <label for="estado">estado (*)</label>
-                    </span>
-                    <small
-                      id="estado-help"
-                      class="p-error block"
-                      *ngIf="campoValido('estado')"
-                      >{{ getEstadoErrors("estado") }}
-                    </small>
-                  </div> -->
-                </div>
-              </div>
-          </div>
-        </form>
-      </div>
-    </ng-template>
-    
-    <div class="card col-12">
-        <div class="grid p-fluid md:justify-content-center" *ngIf="asociacion">
-            <div class="col-12 md:col-3 md:flex md:justify-content-center" *ngIf="!showFormAscEdit else formB;">
-                <button pButton pRipple label="Editar datos de Asociacion" class="p-button-success" (click)="activarForm()"></button>
+                  <div class="col-12 grid">
+                    <!-- <div class="grid p-fluid md:justify-content-center">
+                        <div class="col-12  md:flex md:flex-wrap md:justify-content-between">
+                        </div>
+                      </div> -->
+                      <div class="col-12 md:col">
+                        <button pButton pRipple *ngIf="this.asociacion.isActive" label="Deshabilitar Asociación" class="p-button-danger" (click)="disabledAsc()" [disabled]="this.asociacionForm.disabled"></button>
+                      </div>
+                      <div class="col-12 md:col">
+                        <button pButton pRipple label="Modificar Datos de asociación" class="p-button-info" (click)="validForm()" [disabled]="this.asociacionForm.disabled"></button>
+                      </div>
+                      <div class="col-12 md:col">
+                        <button pButton pRipple label="Cerrar ventana" class="p-button-secondary" (click)="sendVisible.emit(false)"></button>
+                      </div>
+                    </div>
             </div>
-            <div class="col-12 md:col-3 md:flex md:justify-content-center" *ngIf="asociacion.estado==='ACTIVO'; else deshabilitado">
-              <button pButton pRipple label="Deshabilitar asociacion" class="p-button-secondary" (click)="actionData('DESHABILITAR')"></button>
-            </div>
-            <ng-template #deshabilitado>
-              <div class="col-12 md:col-3 md:flex md:justify-content-center">
-                <button pButton pRipple label="Habilitar asociacion" class="p-button-secondary" (click)="actionData('HABILITAR')"></button>
-              </div>
-            </ng-template>
-            <ng-template #formB>
-                <div class="col-12 md:col-3 md:flex md:justify-content-center">
-                    <button pButton pRipple label="Modificar Asociacion" class="p-button-success" [disabled]="asociacionForm.pristine" (click)="actionData('MODIFICAR')"></button>
-                </div>
-                <div class="col-12 md:col-3 md:flex md:justify-content-center">
-                    <button pButton pRipple label="Cancelar modificacion" class="p-button-primary" (click)="resetForm()"></button>
-                </div>
-            </ng-template>
-            
+          </form>
         </div>
+      </div>
     </div>
   </div>
   <ng-template #formAsc>
-    <div class="card grid">
-      <div class="col-12 grid" *ngIf="perfilSelect">
-        <div class="col-12 md:col-4">
-            <img [src]="perfilSelect.urlImage" class="" alt="User profile" [style]="{'max-width':'248px'}">
+
+    <div class="card">
+      <div class="grid">
+        <div class="col-12 md:col-4 profile-image-container">
+          <img [src]="perfilSelect?.urlImage || ''" alt="Foto de perfil" class="profile-image"/>
         </div>
-        <div class="col-12 md:col-8">
-            <h5 class="flex justify-content-center">Afiliado por Vincular</h5>
-            <p-divider></p-divider>
-            <div class="grid p-fluid">
-                <div class="field col-12 md:col-6">
-                    <label htmlFor="afiliado">Nombre Completo</label>
-                    <input pInputText id="afiliado" type="text" [disabled]="true" value="{{perfilSelect.nombrePrimero | titlecase}} {{perfilSelect.nombreSegundo ||'' |titlecase}} {{perfilSelect.apellidoPrimero | titlecase}} {{perfilSelect.apellidoSegundo ||'' | titlecase}}" class="appearance-none text-color text-base" />
-                </div>
-                <div class="field col-12 md:col-6">
-                    <label htmlFor="CI">Cedula de Identidad</label>
-                    <input pInputText id="CI" type="text" [disabled]="true" [value]="perfilSelect.CI" class="appearance-none text-color text-base" />
-                </div>
-                <div class="field col-12 md:col-6">
-                    <label htmlFor="contacto">Contacto</label>
-                    <input pInputText id="contacto" type="text" [disabled]="true" value="SIN CONTACTOS" class="appearance-none text-color text-base" />
-                </div>
-                <div class="field col-12 md:col-6">
-                    <label htmlFor="estado">Estado</label>
-                    <input pInputText id="estado" type="text" [disabled]="true" [value]="perfilSelect.estado" class="appearance-none text-color text-base" />
-                </div>
-            </div>
-        </div>
-  </div>
-  <div class="col-12 grid"  *ngIf="medidorSelect">
-    <div class="col-4">
-      <div class="text-center p-3 border-round-sm h-full font-bold"></div>
-    </div>
-    <div class="col-8 md:col-8">
-        <h5 class="flex justify-content-center">Medidor a vincular</h5>
-        <p-divider ></p-divider>
-        <div class="grid p-fluid">
-            <div class="field col-12 md:col-6">
-                <label htmlFor="afiliado">Numero de Medidor de Agua</label>
-                <input pInputText id="afiliado" type="text" [disabled]="true" [value]="medidorSelect.nroMedidor" class="appearance-none text-color text-base" />
-            </div>
-            <div class="field col-12 md:col-6">
-                <label htmlFor="CI">Tipo Medición</label>
-                <input pInputText id="CI" type="text" [disabled]="true" [value]="medidorSelect.medicion" class="appearance-none text-color text-base" />
-            </div>
-            <div class="field col-12 md:col-6">
-                <label htmlFor="estado">Estado</label>
-                <input pInputText id="estado" type="text" [disabled]="true" [value]="medidorSelect.estado" class="appearance-none text-color text-base" />
-            </div>
-        </div>
-    </div>
-  </div>
-    <form class="col-12" [formGroup]="asociacionForm">    
-          <h4>Registrar nueva Asociacion</h4>
-          <p-divider></p-divider>
-          <h5 class="text-center">Datos Requeridos para la asociacion</h5>
-          <p-divider></p-divider>
-          <div class="p-fluid grid">
-            <div class="col-4">
-              <div class="text-center p-3 border-round-sm h-full font-bold">
-                <div class="col-12 flex flex-column justify-content-center">
-                  <p-button icon="pi pi-map-marker" styleClass="p-button-rounded p-button-secondary p-button-text p-button-raised" (onClick)="showMap=true"></p-button>
-                  <p>coordenadas</p>
-                  <div class="text-400" *ngIf="ubicacionForm.get('latitud')?.value">
-                    <p>Ltd: {{ubicacionForm.get('latitud')?.value}}, Lng: {{ubicacionForm.get('longitud')?.value}}</p>
-                  </div>
-                </div>
+        <div class="col-12 md:col-8 profile-details">
+          <div class="grid">
+            <div class="col-12">
+              <h2>Afiliado a Vincular</h2>
+              <div class="grid">
+                <div class="col-12 md:col-6"><strong>Nombre Completo:</strong> {{ perfilSelect?.nombrePrimero | titlecase}} {{perfilSelect?.nombreSegundo ||'' | titlecase }} {{perfilSelect?.apellidoPrimero | titlecase}} {{perfilSelect?.apellidoSegundo||'' | titlecase}}</div>
+                <div class="col-12 md:col-6"><strong>Cédula de Identidad:</strong> {{ perfilSelect?.CI }}</div>
+                <div class="col-12 md:col-6"><strong>N° Contacto:</strong> {{ perfilSelect?.contacto || 'No tiene contacto' }}</div>
+                <div class="col-12 md:col-6"><strong>Estado del registro:</strong><p-tag [severity]="perfilSelect?.isActive?'success':'danger'" [value]="perfilSelect?.estado" class="ml-3"></p-tag></div>
               </div>
             </div>
-              <div class="col-8" >
-                  <div class="grid mt-5 p-fluid" formGroupName="ubicacion">
-                    <div class="field col-12 md:col-6" >
-                      <span class="p-float-label p-input-icon-right">
-                        <input
-                          type="text"
-                          id="numeroVivienda"
-                          pInputText
-                          formControlName="numeroVivienda"
-                          [ngClass]="inputValidUbicacion('numeroVivienda')"
-                        />
-                        <label for="numeroVivienda">Numero de Vivienda ubicada</label>
-                      </span>
-                      <small
-                        id="numeroVivienda-help"
-                        class="p-error block"
-                        *ngIf="campoValidoUbicacion('numeroVivienda')"
-                        >{{ getNumeroViviendaErrors("numeroVivienda") }}
-                      </small>
-                    </div>
-                    <div class="field col-12 md:col-6">
-                      <span class="p-float-label">
-                        <p-dropdown
-                          inputId="barrio"
-                          [autoDisplayFirst]="false"
-                          [options]="commonAppService.barriosForm"
-                          formControlName="barrio"
-                          optionLabel="name"
-                          optionValue="value"
-                          [ngClass]="inputValidUbicacion('barrio')"
-                        ></p-dropdown>
-            
-                        <label for="barrio">Barrio</label>
-                      </span>
-                      <small
-                        id="barrio-help"
-                        class="p-error block"
-                        *ngIf="campoValidoUbicacion('barrio')"
-                        >{{ getBarrioErrors("barrio") }}
-                      </small>
-                    </div>
-                    <div class="field col-12 md:col-4 md:mt-3">
-                      <span class="p-float-label">
-                        <input
-                          type="text"
-                          id="manzano"
-                          pInputText
-                          formControlName="manzano"
-                          [ngClass]="inputValidUbicacion('manzano')"
-                        />
-                        <label for="manzano">Manzano (*)</label>
-                      </span>
-                      <small
-                        id="manzano-help"
-                        class="p-error block"
-                        *ngIf="campoValidoUbicacion('manzano')"
-                        >{{ getManzanoErrors("manzano") }}
-                      </small>
-                    </div>
-                    <div class="field col-12 md:col-4 md:mt-3">
-                      <span class="p-float-label">
-                        <p-inputNumber
-                          inputId="numeroManzano"
-                          formControlName="numeroManzano"
-                          [ngClass]="inputValidUbicacion('numeroManzano')"
-                        ></p-inputNumber>
-                        <label for="numeroManzano">N° Manzano (*)</label>
-                      </span>
-                      <small
-                        id="numeroManzano-help"
-                        class="p-error block"
-                        *ngIf="campoValidoUbicacion('numeroManzano')"
-                        >{{ getNroManzanoErrors("numeroManzano") }}
-                      </small>
-                    </div>
-                    <div class="field col-12 md:col-4 md:mt-3">
-                      <span class="p-float-label">
-                        <p-inputNumber
-                          inputId="nroLote"
-                          formControlName="nroLote"
-                          [ngClass]="inputValidUbicacion('nroLote')"
-                        ></p-inputNumber>
-                        <label for="nroLote">N° Lote (*)</label
-                        >
-                      </span>
-                      <small
-                        id="nroLote-help"
-                        class="p-error block"
-                        *ngIf="campoValidoUbicacion('nroLote')"
-                        >{{ getNroLoteErrors("nroLote") }}
-                      </small>
-                    </div>
-                  </div>
-                  <div class="grid p-fluid">
-                  <div class="field col-12 md:col-6">
-                    <span class="p-float-label">
-                      <p-calendar
-                        formControlName="fechaInstalacion"
-                        [showIcon]="true"
-                        dateFormat="dd/mm/yy"
-                        dataType="date"
-                        [ngClass]="inputValid('fechaInstalacion')"
-                        placeholder="dd/mm/yy"
-                      >
-                      </p-calendar>
-                      <label for="fechaInstalacion">Fecha de Instalacion</label>
-                    </span>
-                    <small
-                      id="fechaInstalacion-help"
-                      class="p-error block"
-                      *ngIf="campoValido('fechaInstalacion')"
-                      >{{ getFechaInstalacionErrors("fechaInstalacion") }}
-                    </small>
-                  </div>
-                  <div class="field col-12 md:col-6">
-                    <span class="p-float-label">
-                      <p-dropdown
-                        inputId="registrable"
-                        [autoDisplayFirst]="false"
-                        [options]="commonAppService.registrables"
-                        formControlName="registrable"
-                        optionLabel="name"
-                        optionValue="value"
-                        [ngClass]="inputValid('registrable')"
-                      ></p-dropdown>
-          
-                      <label for="registrable">Es registrable?</label>
-                    </span>
-                    <small
-                      id="registrable-help"
-                      class="p-error block"
-                      *ngIf="campoValido('registrable')"
-                      >{{ getRegistrableErrors("registrable") }}
-                    </small>
-                  </div>
-                  <div class="field col-12 md:col-6" >
-                    <span class="p-float-label p-input-icon-right">
-                      <input
-                        type="text"
-                        id="estadoMedidorAsociado"
-                        pInputText
-                        formControlName="estadoMedidorAsociado"
-                        [ngClass]="inputValid('estadoMedidorAsociado')"
-                      />
-                      <label for="estadoMedidorAsociado">Estado de Asociacion</label>
-                    </span>
-                    <small
-                      id="estadoMedidorAsociado-help"
-                      class="p-error block"
-                      *ngIf="campoValido('estadoMedidorAsociado')"
-                      >{{ getEstadoMedidorAsociadoErrors("estadoMedidorAsociado") }}
-                    </small>
-                  </div>
-                  <div class="field col-12 md:col-6">
-                    <span class="p-float-label">
-                      <p-dropdown
-                        inputId="estado"
-                        [autoDisplayFirst]="false"
-                        [options]="commonAppService.estados"
-                        formControlName="estado"
-                        optionLabel="name"
-                        optionValue="value"
-                        placeholder="Select Estado"
-                        [ngClass]="inputValid('estado')"
-                      ></p-dropdown>
-          
-                      <label for="estado">estado (*)</label>
-                    </span>
-                    <small
-                      id="estado-help"
-                      class="p-error block"
-                      *ngIf="campoValido('estado')"
-                      >{{ getEstadoErrors("estado") }}
-                    </small>
-                  </div>
-                </div>
-              </div>
           </div>
-          <div class="col-12">
-            <div class="grid p-fluid md:justify-content-center">
-                <div class="col-12 md:col-3 md:flex md:justify-content-center">
-                    <button pButton pRipple label="Registrar nueva asociacion" class="p-button-success" (click)="validForm()"></button>
+        </div>
+        <div class="col-12 profile-details">
+          <div class="grid">
+            <div class="col-12">
+              <h2>Medidor de agua a Vincular</h2>
+            </div>
+            <div class="grid">
+              <div class="col-12 md:col-6"><strong>N° de Medidor de agua:</strong> {{ medidorSelect?.nroMedidor}}</div>
+              <div class="col-12 md:col-6"><strong>Tipo de medición:</strong> {{ medidorSelect?.medicion |titlecase }}</div>
+              <div class="col-12 md:col-6"><strong>Estado del registro:</strong><p-tag [severity]="medidorSelect?.isActive?'success':'danger'" [value]="medidorSelect?.estado" class="ml-3"></p-tag></div>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 profile-details">
+          <div class="grid">
+            <div class="col-12">
+              <h2>Formulario de Registro de asociación</h2>
+            </div>
+            <form class="col-12" [formGroup]="asociacionForm">
+              <div class="p-fluid grid">
+                <div class="col-4">
+                  <div class="text-center p-3 border-round-sm h-full font-bold">
+                    <div class="col-12 flex flex-column justify-content-center">
+                      <p-button icon="pi pi-map-marker" styleClass="p-button-rounded p-button-secondary p-button-text p-button-raised" (onClick)="showMap=true"></p-button>
+                      <p>coordenadas</p>
+                      <div class="text-400" *ngIf="ubicacionForm.get('latitud')?.value">
+                        <p>Ltd: {{ubicacionForm.get('latitud')?.value}}, Lng: {{ubicacionForm.get('longitud')?.value}}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                  <div class="col-8" >
+                      <div class="grid mt-5 p-fluid" formGroupName="ubicacion">
+                        <div class="field col-12 md:col-6" >
+                          <span class="p-float-label p-input-icon-right">
+                            <input
+                              type="text"
+                              id="numeroVivienda"
+                              pInputText
+                              formControlName="numeroVivienda"
+                              [ngClass]="inputValidUbicacion('numeroVivienda')"
+                            />
+                            <label for="numeroVivienda">Numero de Vivienda ubicada</label>
+                          </span>
+                          <small
+                            id="numeroVivienda-help"
+                            class="p-error block"
+                            *ngIf="campoValidoUbicacion('numeroVivienda')"
+                            >{{ getNumeroViviendaErrors("numeroVivienda") }}
+                          </small>
+                        </div>
+                        <div class="field col-12 md:col-6">
+                          <span class="p-float-label">
+                            <p-dropdown
+                              inputId="barrio"
+                              [autoDisplayFirst]="false"
+                              [options]="commonAppService.barriosForm"
+                              formControlName="barrio"
+                              optionLabel="name"
+                              optionValue="value"
+                              [ngClass]="inputValidUbicacion('barrio')"
+                            ></p-dropdown>
+                
+                            <label for="barrio">Barrio</label>
+                          </span>
+                          <small
+                            id="barrio-help"
+                            class="p-error block"
+                            *ngIf="campoValidoUbicacion('barrio')"
+                            >{{ getBarrioErrors("barrio") }}
+                          </small>
+                        </div>
+                        <div class="field col-12 md:col-4 md:mt-3">
+                          <span class="p-float-label">
+                            <input
+                              type="text"
+                              id="manzano"
+                              pInputText
+                              formControlName="manzano"
+                              [ngClass]="inputValidUbicacion('manzano')"
+                            />
+                            <label for="manzano">Manzano (*)</label>
+                          </span>
+                          <small
+                            id="manzano-help"
+                            class="p-error block"
+                            *ngIf="campoValidoUbicacion('manzano')"
+                            >{{ getManzanoErrors("manzano") }}
+                          </small>
+                        </div>
+                        <div class="field col-12 md:col-4 md:mt-3">
+                          <span class="p-float-label">
+                            <p-inputNumber
+                              inputId="numeroManzano"
+                              formControlName="numeroManzano"
+                              [ngClass]="inputValidUbicacion('numeroManzano')"
+                            ></p-inputNumber>
+                            <label for="numeroManzano">N° Manzano (*)</label>
+                          </span>
+                          <small
+                            id="numeroManzano-help"
+                            class="p-error block"
+                            *ngIf="campoValidoUbicacion('numeroManzano')"
+                            >{{ getNroManzanoErrors("numeroManzano") }}
+                          </small>
+                        </div>
+                        <div class="field col-12 md:col-4 md:mt-3">
+                          <span class="p-float-label">
+                            <p-inputNumber
+                              inputId="nroLote"
+                              formControlName="nroLote"
+                              [ngClass]="inputValidUbicacion('nroLote')"
+                            ></p-inputNumber>
+                            <label for="nroLote">N° Lote (*)</label
+                            >
+                          </span>
+                          <small
+                            id="nroLote-help"
+                            class="p-error block"
+                            *ngIf="campoValidoUbicacion('nroLote')"
+                            >{{ getNroLoteErrors("nroLote") }}
+                          </small>
+                        </div>
+                      </div>
+                      <div class="grid p-fluid">
+                      <div class="field col-12 md:col-6">
+                        <span class="p-float-label">
+                          <p-calendar
+                            formControlName="fechaInstalacion"
+                            [showIcon]="true"
+                            dateFormat="dd/mm/yy"
+                            dataType="date"
+                            [ngClass]="inputValid('fechaInstalacion')"
+                            placeholder="dd/mm/yy"
+                          >
+                          </p-calendar>
+                          <label for="fechaInstalacion">Fecha de Instalacion</label>
+                        </span>
+                        <small
+                          id="fechaInstalacion-help"
+                          class="p-error block"
+                          *ngIf="campoValido('fechaInstalacion')"
+                          >{{ getFechaInstalacionErrors("fechaInstalacion") }}
+                        </small>
+                      </div>
+                      <div class="field col-12 md:col-6">
+                        <span class="p-float-label">
+                          <p-dropdown
+                            inputId="registrable"
+                            [autoDisplayFirst]="false"
+                            [options]="commonAppService.registrables"
+                            formControlName="registrable"
+                            optionLabel="name"
+                            optionValue="value"
+                            [ngClass]="inputValid('registrable')"
+                          ></p-dropdown>
+              
+                          <label for="registrable">Es registrable?</label>
+                        </span>
+                        <small
+                          id="registrable-help"
+                          class="p-error block"
+                          *ngIf="campoValido('registrable')"
+                          >{{ getRegistrableErrors("registrable") }}
+                        </small>
+                      </div>
+                      <div class="field col-12 md:col-6" >
+                        <span class="p-float-label p-input-icon-right">
+                          <input
+                            type="text"
+                            id="estadoMedidorAsociado"
+                            pInputText
+                            formControlName="estadoMedidorAsociado"
+                            [ngClass]="inputValid('estadoMedidorAsociado')"
+                          />
+                          <label for="estadoMedidorAsociado">Estado de Asociacion</label>
+                        </span>
+                        <small
+                          id="estadoMedidorAsociado-help"
+                          class="p-error block"
+                          *ngIf="campoValido('estadoMedidorAsociado')"
+                          >{{ getEstadoMedidorAsociadoErrors("estadoMedidorAsociado") }}
+                        </small>
+                      </div>
+                      <div class="field col-12 md:col-6">
+                        <span class="p-float-label">
+                          <p-dropdown
+                            inputId="estado"
+                            [autoDisplayFirst]="false"
+                            [options]="commonAppService.estados"
+                            formControlName="estado"
+                            optionLabel="name"
+                            optionValue="value"
+                            placeholder="Select Estado"
+                            [ngClass]="inputValid('estado')"
+                          ></p-dropdown>
+              
+                          <label for="estado">estado (*)</label>
+                        </span>
+                        <small
+                          id="estado-help"
+                          class="p-error block"
+                          *ngIf="campoValido('estado')"
+                          >{{ getEstadoErrors("estado") }}
+                        </small>
+                      </div>
+                    </div>
+                  </div>
+              </div>
+              <div class="col-12">
+                <div class="grid p-fluid md:justify-content-center">
+                    <div class="col-12 md:col-6 md:flex md:justify-content-center">
+                        <button pButton pRipple label="Registrar nueva asociacion" class="p-button-info" (click)="validForm()"></button>
+                    </div>
                 </div>
             </div>
+      </form>
+          </div>
         </div>
-  </form>
-  </div>
+      </div>
+    </div>
   </ng-template>
 </p-dialog>
 

@@ -12,7 +12,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { CommonAppService } from 'src/app/common/common-app.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription, switchMap } from 'rxjs';
-import { PATH_AUTH, PATH_EDIT, PATH_FORBBIDEN, PATH_LISTAR, PATH_MODULE_DETAILS, PATH_PERFILES } from 'src/app/interfaces/routes-app';
+import { PATH_AUTH, PATH_EDIT, PATH_FORBBIDEN, PATH_LISTAR, PATH_MODULE_DETAILS, PATH_PERFILES, ValidItemMenu, ValidMenu } from 'src/app/interfaces/routes-app';
 
 @Component({
   selector: 'app-perfil-usuario-form',
@@ -38,10 +38,10 @@ export class PerfilUsuarioFormComponent {
       
       const { usuario } = res;
       this.perfilActual = res;
-      // console.log(usuario);
+      console.log('resperfil',res);
       if (usuario) {
         this.usuarioForm.removeControl('estado');
-        if(this.routerAct.snapshot.routeConfig?.path?.includes(PATH_EDIT)){
+        if(this.routerAct.snapshot.routeConfig?.path?.includes(ValidItemMenu.perfilUserUpdate)){
           const {
             correoVerify,
             created_at,
@@ -64,7 +64,7 @@ export class PerfilUsuarioFormComponent {
             detail: 'EL PERFIL YA TIENE UNA CUENTA DE ACCESO',
             life: 5000,
           });
-          this.router.navigate([PATH_PERFILES,PATH_MODULE_DETAILS,this.perfilActual.id]);
+          this.router.navigate([ValidMenu.perfiles,ValidItemMenu.perfilDetails,this.perfilActual.id]);
         }
       }
     });
@@ -99,7 +99,7 @@ export class PerfilUsuarioFormComponent {
                 detail: `${res.message},code: ${res.statusCode}`,
                 life: 5000,
               });
-              this.router.navigate([PATH_PERFILES])
+              this.router.navigate([ValidMenu.perfiles])
               break;
             default:
               console.log(res);
@@ -176,7 +176,7 @@ export class PerfilUsuarioFormComponent {
                     detail: res.message,
                     icon: 'pi pi-check',
                   });
-                  this.router.navigate([PATH_PERFILES, PATH_MODULE_DETAILS,this.perfilActual?.id]);
+                  this.router.navigate([ValidMenu.perfiles, ValidItemMenu.perfilDetails,this.perfilActual?.id]);
               
                 } else {
                   this.messageService.add({
@@ -206,7 +206,7 @@ export class PerfilUsuarioFormComponent {
                     this.dataUser = res.data;
                     this.usuarioCreate = true;
                   } else {
-                    this.router.navigate([PATH_PERFILES, PATH_MODULE_DETAILS,this.perfilActual?.id]);
+                    this.router.navigate([ValidMenu.perfiles, ValidItemMenu.perfilDetails,this.perfilActual?.id]);
               
                   }
                 } else {

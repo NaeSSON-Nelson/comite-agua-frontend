@@ -6,7 +6,7 @@ import { MessageService } from 'primeng/api';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { patternSpanishInline } from 'src/app/patterns/forms-patterns';
-import { PATH_ASOCIACIONES, PATH_AUTH, PATH_FORBBIDEN, PATH_MODULE_DETAILS } from 'src/app/interfaces/routes-app';
+import { PATH_ASOCIACIONES, PATH_AUTH, PATH_FORBBIDEN, PATH_MODULE_DETAILS, ValidItemMenu, ValidMenu } from 'src/app/interfaces/routes-app';
 import { PaginatorState } from 'primeng/paginator';
 
 @Component({
@@ -17,7 +17,7 @@ import { PaginatorState } from 'primeng/paginator';
 })
 export class AsociacionesListarComponent {
   data: Perfil[] = [];
-  titleTable = 'LISTA DE AFILIADOS REGISTRADOS';
+  titleTable = 'LISTADO DE AFILIADOS REGISTRADOS';
   loading:boolean=false;
   // debouncer: Subject<string> = new Subject<string>();
   constructor(
@@ -141,7 +141,7 @@ export class AsociacionesListarComponent {
     //  this.loadCustomers();
   }
   dataDetail(id: number) {
-    this.router.navigate([PATH_ASOCIACIONES, PATH_MODULE_DETAILS,id],);
+    this.router.navigate([ValidMenu.asociaciones, ValidItemMenu.asociacionesAfiliadoDetails,id],);
   }
   campoValido(nombre: string) {
     return (

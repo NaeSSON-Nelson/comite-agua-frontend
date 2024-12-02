@@ -3,9 +3,9 @@ import { RolesService } from '../roles.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Role } from 'src/app/interfaces/role.interface';
-import { switchMap } from 'rxjs';
+import { Subscription, switchMap } from 'rxjs';
 import { Estado } from 'src/app/interfaces';
-import { PATH_AUTH, PATH_EDIT, PATH_FORBBIDEN, PATH_REGISTRAR, PATH_ROLES } from 'src/app/interfaces/routes-app';
+import { PATH_AUTH, PATH_EDIT, PATH_FORBBIDEN, PATH_REGISTRAR, PATH_ROLES, ValidItemMenu, ValidMenu } from 'src/app/interfaces/routes-app';
 
 @Component({
   selector: 'app-role-details',
@@ -21,14 +21,14 @@ export class RoleDetailsComponent {
     private router: Router,
     private routerAct: ActivatedRoute
   ) {}
-
+  subscription!:Subscription;
   role!: Role;
   ngOnInit(): void {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
-    this.rolesService.role.subscribe((res) => {
+    this.subscription=this.rolesService.role.subscribe((res) => {
       this.role = res;
-      console.log(res);
+      console.log('role data:',res);
     });
     if (!this.routerAct.snapshot.params['id']) {
       this.messageService.add({
@@ -37,7 +37,7 @@ export class RoleDetailsComponent {
         detail: 'SE DEBE MANDAR UNA REFERENCIA',
         life: 5000,
       });
-      this.router.navigate([PATH_ROLES]);
+      this.router.navigate([ValidMenu.roles]);
       return;
     } else {
       const id =this.routerAct.snapshot.params['id']
@@ -71,7 +71,7 @@ export class RoleDetailsComponent {
                   detail: `${res.message},code: ${res.statusCode}`,
                   life: 5000,
                 });
-                this.router.navigate([PATH_ROLES])
+                this.router.navigate([ValidMenu.roles])
                 break;
               default:
                 console.log(res);
@@ -92,7 +92,7 @@ export class RoleDetailsComponent {
   actionData(action: string) {
     switch (action) {
       case 'MODIFICAR':
-        this.router.navigate([PATH_ROLES,PATH_REGISTRAR,PATH_EDIT,this.role.id]);
+        this.router.navigate([ValidMenu.roles,ValidItemMenu.rolUpdate,this.role.id]);
         break;
 
       case 'DESHABILITAR':
@@ -163,5 +163,10 @@ export class RoleDetailsComponent {
         console.log('Opcion invalida');
         break;
     }
+  }
+  ngOnDestroy(): void {
+    //Called once, before the instance is destroyed.
+    //Add 'implements OnDestroy' to the class.
+    this.subscription.unsubscribe();
   }
 }

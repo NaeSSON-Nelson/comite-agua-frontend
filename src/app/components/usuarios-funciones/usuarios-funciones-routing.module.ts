@@ -3,14 +3,15 @@ import { RouterModule, Routes } from '@angular/router';
 import { MedidoresComponent } from './medidores/medidores.component';
 import { DeudasComponent } from './deudas/deudas.component';
 import { PerfilComponent } from './perfil/perfil.component';
+import { PATH_DASHBOARD, ValidItemMenu } from 'src/app/interfaces/routes-app';
 
 const routes: Routes = [
   {
-    path: 'medidores',
+    path: ValidItemMenu.consultarConsultarMedidoresAgua,
     component: MedidoresComponent,
   },
   {
-    path:'deudas',
+    path:ValidItemMenu.consultarDeudas,
     component:DeudasComponent,
   },
   {
@@ -19,7 +20,7 @@ const routes: Routes = [
   },
   {
     path: '**',
-    redirectTo: 'dashboard',
+    redirectTo: PATH_DASHBOARD,
   },
 ];
 

@@ -6,6 +6,7 @@ import { DataResult, HttpResponseApi, HttpResponseApiArray } from 'src/app/inter
 import { Role, RoleForm } from 'src/app/interfaces/role.interface';
 import { environment } from 'src/environments/environment';
 import { ResponseResult } from '../../interfaces/http-respones.interface';
+import { Menu } from 'src/app/interfaces';
 
 @Injectable({
   providedIn: 'root'
@@ -127,5 +128,9 @@ export class RolesService {
           return of(errors);
         })
       );
+  }
+
+  obtenerMenusForm(){
+    return this.http.get<HttpResponseApi<Menu[]>>(`${this.URL_Roles}/menus`);
   }
 }

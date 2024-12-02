@@ -30,7 +30,7 @@ export class ErrorApiInterceptor implements HttpInterceptor {
         /** MANEJAR LOS ERRORES */
         if(error.status === HttpStatusCode.Unauthorized){
           this.authService.isRefreshing = true;
-          // console.log('error http unathorizaed:',error);
+          console.log('error http unathorizaed:',error);
             return  this.authService.refreshToken().pipe(
               concatMap((res)=>{
                 this.authService.updateTokens(res.accessToken,res.refreshToken)
@@ -40,8 +40,8 @@ export class ErrorApiInterceptor implements HttpInterceptor {
               }),
               catchError(()=>{
                 console.error('******** ERROR UPDATE TOKENS ********');
-                console.log('No se pudo atenticar el usuario');
-                // this.localStorageService.removeItem(KEY_STORAGE.DATA_USER);
+                console.log('No se pudo autenticar el usuario');
+                this.localStorageService.removeItem(KEY_STORAGE.DATA_USER);
                 this.router.navigateByUrl(URL_SIGNIN);
                 return EMPTY
               }),
@@ -58,7 +58,7 @@ export class ErrorApiInterceptor implements HttpInterceptor {
               // console.info('******** FORBIDDEN ********');
               // console.log(error);
               this.messageService.add({life:3000,summary:error.error.error,detail:error.error.message,severity: 'info',})
-              this.router.navigateByUrl('/dashboara')
+              this.router.navigateByUrl('user/dashboard')
             } else if (error.status === HttpStatusCode.NotFound){
               this.messageService.add({life:3000,summary:error.error.error,detail:error.error.message,severity: 'info',})
 

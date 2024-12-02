@@ -11,6 +11,7 @@ import { Router } from '@angular/router';
 import { LocalStorageService } from 'src/app/common/storage/local-storage.service';
 import { KEY_STORAGE } from 'src/app/interfaces/storage.enum';
 import { LayoutService } from 'src/app/layout/layout.service';
+import { PATH_DASHBOARD, ValidMenu } from 'src/app/interfaces/routes-app';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -27,7 +28,11 @@ export class LoginComponent {
     private messageService: MessageService,
     private router: Router
   ) {}
-
+  ngAfterContentInit(): void {
+    //Called after ngOnInit when the component's or directive's content has been initialized.
+    //Add 'implements AfterContentInit' to the class.
+    this.layoutService.state.staticMenuDesktopInactive=true;
+  }
   loginForm: FormGroup = this.fb.group({
     username: [
       ,
@@ -55,12 +60,14 @@ export class LoginComponent {
   signUp(form: Usuario) {
     
     this.authService.login(form).subscribe((res) => {
-      // console.log(res);
-      this.localStorageService.setItem(KEY_STORAGE.DATA_USER,res.dataUser);
-      // this.layoutService.user.next(res.dataUser)
-      this.getUser();
+      // console.log('log',res);
+        if(res.OK){
+          this.localStorageService.setItem(KEY_STORAGE.DATA_USER,res.dataUser);
+          this.getUser();
+          this.router.navigateByUrl(`${ValidMenu.consultar}/${PATH_DASHBOARD}`);
+   
+        }
       
-      this.router.navigateByUrl('');
     });
   }
   limpiarCampo(campo: string) {
@@ -109,7 +116,7 @@ export class LoginComponent {
   }
   getUser(){
     this.authService.getUser().subscribe(res=>{
-      console.log(res);
+      console.log('es get user',res);
       this.layoutService.userObserver.emit(res.data!)
     })
   }

@@ -8,7 +8,7 @@ import { patternCI, patternSpanishInline, patternText } from 'src/app/patterns/f
 import { CommonAppService } from 'src/app/common/common-app.service';
 import { Subscription, switchMap } from 'rxjs';
 import * as L from 'leaflet'
-import { PATH_AUTH, PATH_EDIT, PATH_FORBBIDEN, PATH_MODULE_DETAILS, PATH_PERFILES } from 'src/app/interfaces/routes-app';
+import { PATH_AUTH, PATH_EDIT, PATH_FORBBIDEN, PATH_MODULE_DETAILS, PATH_PERFILES, ValidItemMenu, ValidMenu } from 'src/app/interfaces/routes-app';
 import { LayoutService } from 'src/app/layout/layout.service';
 @Component({
   selector: 'app-perfil-form',
@@ -44,7 +44,7 @@ export class PerfilFormComponent {
     });
     // console.log(this.router);
     // console.log(this.routerAct);
-    if (this.routerAct.snapshot.params['id'] && this.routerAct.snapshot.routeConfig?.path?.includes(PATH_EDIT)){
+    if (this.routerAct.snapshot.params['id'] && this.routerAct.snapshot.routeConfig?.path?.includes(ValidItemMenu.perfilUpdate)){
         // console.log('es edit');
         this.perfilService.findOne(this.routerAct.snapshot.params['id']).
         subscribe((res) => {
@@ -75,7 +75,7 @@ export class PerfilFormComponent {
                   detail: `${res.message},code: ${res.statusCode}`,
                   life: 5000,
                 });
-                this.router.navigate([PATH_PERFILES])
+                this.router.navigate([ValidMenu.perfiles])
                 break;
               default:
                 console.log(res);
@@ -238,7 +238,7 @@ export class PerfilFormComponent {
                   detail: res.message,
                   icon: 'pi pi-check',
                 });
-                this.router.navigate([PATH_PERFILES, PATH_MODULE_DETAILS,this.perfilActual!.id]);
+                this.router.navigate([ValidMenu.perfiles, ValidItemMenu.perfilDetails,this.perfilActual!.id]);
               }else{
                 this.messageService.add({
                   severity: 'error',
@@ -266,7 +266,7 @@ export class PerfilFormComponent {
                 this.dataUser=res.data;
                 this.usuarioCreate=true;
               }else{
-                this.router.navigate([PATH_PERFILES]);
+                this.router.navigate([ValidMenu.perfiles,ValidItemMenu.perfilList]);
               }
             }else{
               this.messageService.add({

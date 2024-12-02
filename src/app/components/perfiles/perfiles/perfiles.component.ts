@@ -7,7 +7,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { patternSpanishInline } from 'src/app/patterns/forms-patterns';
 import { PaginatorState } from 'primeng/paginator';
-import { PATH_AUTH, PATH_FORBBIDEN, PATH_MODULE_DETAILS, PATH_PERFILES, PATH_REGISTRAR } from 'src/app/interfaces/routes-app';
+import { PATH_AUTH, PATH_FORBBIDEN, PATH_MODULE_DETAILS, PATH_PERFILES, PATH_REGISTRAR, ValidItemMenu, ValidMenu } from 'src/app/interfaces/routes-app';
 
 @Component({
   selector: 'app-perfiles',
@@ -17,7 +17,7 @@ import { PATH_AUTH, PATH_FORBBIDEN, PATH_MODULE_DETAILS, PATH_PERFILES, PATH_REG
 })
 export class PerfilesComponent {
   data: Perfil[] = [];
-  titleTable = 'LISTA DE PERFILES';
+  titleTable = 'LISTA DE PERFILES REGISTRADOS';
   loading:boolean=false;
   pdfGeneratorVisible:boolean=false;
   // debouncer: Subject<string> = new Subject<string>();
@@ -106,7 +106,7 @@ export class PerfilesComponent {
   }
   
   dataDetail(id: number) {
-    this.router.navigate([PATH_PERFILES, PATH_MODULE_DETAILS,id],);
+    this.router.navigate([ValidMenu.perfiles, ValidItemMenu.perfilDetails,id],);
   }
   campoValido(nombre: string) {
     return (
@@ -152,7 +152,7 @@ export class PerfilesComponent {
   }
   registerNewPerfil(){
     
-    this.router.navigate([PATH_PERFILES, PATH_REGISTRAR],);
+    this.router.navigate([ValidMenu.perfiles, ValidItemMenu.perfilRegister],);
   }
   subscription!:Subscription;
   ngOnDestroy(): void {

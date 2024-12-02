@@ -4,13 +4,18 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Estado, Perfil } from 'src/app/interfaces';
 import { Subscription, switchMap } from 'rxjs';
-import { PATH_AFILIADO, PATH_AUTH, PATH_EDIT, PATH_FORBBIDEN, PATH_PERFILES, PATH_REGISTRAR, PATH_USER } from 'src/app/interfaces/routes-app';
+import { PATH_AFILIADO, PATH_AUTH, PATH_EDIT, PATH_FORBBIDEN, PATH_PERFILES, PATH_REGISTRAR, PATH_USER, ValidItemMenu, ValidMenu } from 'src/app/interfaces/routes-app';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import * as L from 'leaflet';
 @Component({
   selector: 'app-perfil-details',
   templateUrl: './perfil-details.component.html',
-  styles: [
+  styles: [`
+    .button-camera-position{
+      position: absolute;
+      margin-top: 200px;
+      margin-left: 168px;
+    }`
   ]
 })
 export class PerfilDetailsComponent {
@@ -25,6 +30,7 @@ export class PerfilDetailsComponent {
   perfil!: Perfil;
   ngOnInit(): void {
     this.subscription=this.perfilService.perfil.subscribe((res) => {
+      console.log('perfil',res);
       this.perfil = res;
     });
     if (!this.routerAct.snapshot.params['id']) {
@@ -34,7 +40,7 @@ export class PerfilDetailsComponent {
         detail: 'SE DEBE MANDAR UNA REFERENCIA',
         life: 5000,
       });
-      this.router.navigate([PATH_PERFILES]);
+      this.router.navigate([ValidMenu.perfiles]);
       return;
     } else {
       this.findPerfil();
@@ -45,7 +51,7 @@ export class PerfilDetailsComponent {
     // console.log(this.perfil);
     switch (action) {
       case 'MODIFICAR':
-        this.router.navigate([PATH_PERFILES, PATH_REGISTRAR,PATH_EDIT,this.perfil.id], {
+        this.router.navigate([ValidMenu.perfiles, ValidItemMenu.perfilUpdate,this.perfil.id], {
           // queryParams: { id: this.perfil.id },
         });
         break;
@@ -116,8 +122,9 @@ export class PerfilDetailsComponent {
         
         case 'AFILIADO':
               if(this.perfil.afiliado===null){
-                this.router.navigate([PATH_PERFILES,PATH_AFILIADO, PATH_REGISTRAR,this.perfil.id], {
-                  queryParams: { id: this.perfil.id }})
+                this.router.navigate([ValidMenu.perfiles,ValidItemMenu.perfilAfiliadoRegister,this.perfil.id], {
+                  // queryParams: { id: this.perfil.id }
+                })
               }else {
                 this.messageService.add({
                     severity: 'error',
@@ -129,8 +136,8 @@ export class PerfilDetailsComponent {
         break;
         case 'USUARIO':
           if(this.perfil.accessAcount === false){
-            this.router.navigate([PATH_PERFILES,PATH_USER, PATH_REGISTRAR,this.perfil.id], {
-              queryParams: { id: this.perfil.id },
+            this.router.navigate([ValidMenu.perfiles,ValidItemMenu.perfilUserRegister,this.perfil.id], {
+              // queryParams: { id: this.perfil.id },
             });
           }else{
             this.messageService.add({
@@ -149,7 +156,7 @@ export class PerfilDetailsComponent {
   actionDataAfiliado(action: string) {
     switch (action) {
       case 'MODIFICAR':
-        this.router.navigate([PATH_PERFILES,PATH_AFILIADO, PATH_REGISTRAR,PATH_EDIT,this.perfil.id ], {
+        this.router.navigate([ValidMenu.perfiles,ValidItemMenu.perfilAfiliadoUpdate,this.perfil.id ], {
         });
         break;
 
@@ -225,7 +232,7 @@ export class PerfilDetailsComponent {
   actionDataUsuario(action: string) {
     switch (action) {
       case 'MODIFICAR':
-        this.router.navigate([PATH_PERFILES,PATH_USER, PATH_REGISTRAR,PATH_EDIT,this.perfil.id], {
+        this.router.navigate([ValidMenu.perfiles,ValidItemMenu.perfilUserUpdate,this.perfil.id], {
         });
         break;
       case 'DESHABILITAR':

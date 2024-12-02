@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Subject, debounceTime } from 'rxjs';
+import { Subject, Subscription, debounceTime } from 'rxjs';
 import { Role } from 'src/app/interfaces/role.interface';
 import { RolesService } from '../roles.service';
 import { MessageService } from 'primeng/api';
@@ -8,7 +8,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { patternSpanishInline } from 'src/app/patterns/forms-patterns';
 import { PaginatorFind } from 'src/app/interfaces/Paginator.interface';
 import { PaginatorState } from 'primeng/paginator';
-import { PATH_AUTH, PATH_FORBBIDEN, PATH_MODULE_DETAILS, PATH_REGISTRAR, PATH_ROLES } from 'src/app/interfaces/routes-app';
+import { PATH_AUTH, PATH_FORBBIDEN, PATH_MODULE_DETAILS, PATH_REGISTRAR, PATH_ROLES, ValidItemMenu, ValidMenu } from 'src/app/interfaces/routes-app';
 
 @Component({
   selector: 'app-roles',
@@ -18,7 +18,7 @@ import { PATH_AUTH, PATH_FORBBIDEN, PATH_MODULE_DETAILS, PATH_REGISTRAR, PATH_RO
 })
 export class RolesComponent {
   data: Role[] = [];
-  titleTable = 'Lista de Roles';
+  titleTable = 'LISTADO DE ROLES DE ACCESO A LOS MENÚS PARA ASIGNAR A USUARIOS';
   // debouncer: Subject<string> = new Subject<string>();
   constructor(
     private readonly rolesService: RolesService,
@@ -27,16 +27,17 @@ export class RolesComponent {
     private router: Router,
     private routerAct: ActivatedRoute
   ) {}
-
+  subscription!:Subscription;
   ngOnInit(): void {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
-    this.rolesService.roles.subscribe((res) => {
+    this.subscription=this.rolesService.roles.subscribe((res) => {
       this.dataPaginator.limit=res.limit;
       this.dataPaginator.offset=res.offset;
       this.dataPaginator.order=res.order;
       this.dataPaginator.size=res.size;
       this.data = res.data;
+      console.log('res',res);
     });
   }
   searchForm:FormGroup= this.fb.group({
@@ -85,7 +86,7 @@ export class RolesComponent {
     });
   }
   dataDetail(id: number) {
-    this.router.navigate([PATH_ROLES, PATH_MODULE_DETAILS,id]);
+    this.router.navigate([ValidMenu.roles, ValidItemMenu.rolDetails,id]);
   }
   campoValido(nombre: string) {
     return (
@@ -148,6 +149,11 @@ export class RolesComponent {
   }
   registrarNew(){
     
-    this.router.navigate([PATH_ROLES, PATH_REGISTRAR],);
+    this.router.navigate([ValidMenu.roles, ValidItemMenu.rolRegister],);
+  }
+  ngOnDestroy(): void {
+    //Called once, before the instance is destroyed.
+    //Add 'implements OnDestroy' to the class.
+    this.subscription.unsubscribe();
   }
 }

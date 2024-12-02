@@ -21,10 +21,14 @@ export class MedidoresComponent {
   constructor(private usuarioFunciones:UsuarioFuncionesService,
     private readonly messageService: MessageService,){}
   ngOnInit(): void {
+
+    this.usuarioFunciones.multasAsociacion.subscribe(res=>{
+      console.log('res multas',res);
+    })
     this.usuarioFunciones.PlanillaLecturas.subscribe(res=>{
       this.planillaSelected=res;
       this.showLecturas=true;
-      console.log(res);
+      // console.log(res);
       if(res.lecturas.length===0){
         this.titleLecturas='NO HAY LECTURAS DE ESA GESTION'
       }
@@ -42,6 +46,7 @@ export class MedidoresComponent {
   visible=false;
   getSelectsMedidores(){
     this.usuarioFunciones.getSelectsMedidores().subscribe(res=>{
+      console.log('medidores select user',res);
       if(res.OK){
         this.selectMedidoresRelacion=res.data!;
       }
@@ -51,7 +56,7 @@ export class MedidoresComponent {
     // console.log(event);
     this.showLecturas=false;
     this.usuarioFunciones.getMedidor(event.value).subscribe(res=>{
-      // console.log(res);
+      console.log(res);
       if(res.OK){
         this.medidorAsc=res.data!;
         this.planillasSelect = this.medidorAsc.planillas?.map(plan=>{
@@ -80,5 +85,21 @@ export class MedidoresComponent {
     console.log(id);
     this.lecturaSelected=id;
     this.visible=true;
+  }
+  activeIndex:number=0;
+  cambioDeLaDo(){
+    if(this.activeIndex===0){
+      
+    }else if(this.activeIndex===1){ //OBTENER MULTAS
+      this.obtenerMultasAsociado();
+    }
+  }
+  loadingMultasSpinner:boolean=false;
+  obtenerMultasAsociado(){
+    this.loadingMultasSpinner=true;
+    this.usuarioFunciones.obtenerMultasMedidorAsociado(this.medidorAsc!.id!).subscribe(res=>{
+      
+      this.loadingMultasSpinner=false;
+    })
   }
 }

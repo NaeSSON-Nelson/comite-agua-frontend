@@ -32,7 +32,7 @@ export class AsociacionMedidorDetailsComponent {
   } 
   obtenerAsociacion(){
     if(this.asociadoId>0){
-      this.medidoresService.findAsociacionDetails(this.asociadoId).subscribe(res=>{
+      this.medidoresService.findAsociacionMedidorDetails(this.asociadoId).subscribe(res=>{
         console.log('rsto details',res);
         if(res.OK){
           this.asociacion=res.data!;

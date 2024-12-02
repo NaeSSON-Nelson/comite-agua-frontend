@@ -1,18 +1,18 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
-import { PATH_LISTAR, PATH_MODULE_DETAILS } from 'src/app/interfaces/routes-app';
+import { PATH_LISTAR, PATH_MODULE_DETAILS, ValidItemMenu } from 'src/app/interfaces/routes-app';
 import { AsociacionesListarComponent } from './asociaciones-listar/asociaciones-listar.component';
 import { AfiliadoMedidoresDetailsComponent } from './afiliado-medidores-details/afiliado-medidores-details.component';
 
 const routes: Routes = [
   //* PATH MEDIDORES DE AGUA
   {
-    path: PATH_LISTAR,
+    path: ValidItemMenu.asociacionList,
     component:AsociacionesListarComponent,
   },
   {
-    path: `${PATH_MODULE_DETAILS}/:id`,
+    path: `${ValidItemMenu.asociacionesAfiliadoDetails}/:id`,
     component:AfiliadoMedidoresDetailsComponent,
   },
   {

@@ -8,7 +8,7 @@ import { Subscription, switchMap } from 'rxjs';
 import { patternText } from 'src/app/patterns/forms-patterns';
 import { CommonAppService } from 'src/app/common/common-app.service';
 import * as L from 'leaflet';
-import { PATH_AUTH, PATH_EDIT, PATH_FORBBIDEN, PATH_MODULE_DETAILS, PATH_PERFILES } from 'src/app/interfaces/routes-app';
+import { PATH_AUTH, PATH_EDIT, PATH_FORBBIDEN, PATH_MODULE_DETAILS, PATH_PERFILES, ValidItemMenu, ValidMenu } from 'src/app/interfaces/routes-app';
 
 @Component({
   selector: 'app-perfil-afiliado-form',
@@ -37,12 +37,14 @@ export class PerfilAfiliadoFormComponent {
     //   console.log(params);
     // })
    this.subscription= this.perfilService.perfil.subscribe((res) => {
-      // console.log(res);
+      console.log('resto perfil',res);
       const {afiliado}=res;
       this.perfilActual=res;
       if(afiliado){
-        this.afiliadoForm.removeControl('estado')
-        if(this.routerAct.snapshot.routeConfig?.path?.includes(PATH_EDIT)){
+        if(this.routerAct.snapshot.routeConfig?.path?.includes(ValidItemMenu.perfilAfiliadoUpdate)){
+          this.afiliadoForm.removeControl('estado');
+          this.afiliadoForm.removeControl('moneda');
+          this.afiliadoForm.removeControl('monto');
           this.afiliadoForm.setValue({
             // estado:afiliado.estado,
             barrio:afiliado.ubicacion?.barrio,
@@ -60,12 +62,12 @@ export class PerfilAfiliadoFormComponent {
             detail: 'EL PERFIL YA TIENE UNA AFILIACION',
             life: 5000,
           });
-          this.router.navigate([PATH_PERFILES,PATH_MODULE_DETAILS,this.perfilActual.id]);
+          this.router.navigate([ValidMenu.perfiles,ValidItemMenu.perfilDetails,this.perfilActual.id]);
         }
       }
     });
     if (this.routerAct.snapshot.params['id']){
-      // console.log('es edit');
+      console.log('es edit form');
       this.perfilService.findOnePerfilAfiliado(this.routerAct.snapshot.params['id']).
       subscribe((res) => {
         if (res.OK === false) {
@@ -95,7 +97,7 @@ export class PerfilAfiliadoFormComponent {
                 detail: `${res.message},code: ${res.statusCode}`,
                 life: 5000,
               });
-              this.router.navigate([PATH_PERFILES])
+              this.router.navigate([ValidMenu.perfiles])
               break;
             default:
               console.log(res);
@@ -176,7 +178,7 @@ export class PerfilAfiliadoFormComponent {
                   detail: `${res.message}`,
                   icon: 'pi pi-check',
                 });
-                this.router.navigate([PATH_PERFILES, PATH_MODULE_DETAILS,this.perfilActual?.id ]);
+                this.router.navigate([ValidMenu.perfiles, ValidItemMenu.perfilDetails,this.perfilActual?.id ]);
               }else{
                 this.messageService.add({
                   severity: 'error',
@@ -200,7 +202,7 @@ export class PerfilAfiliadoFormComponent {
                   detail: res.message,
                   icon: 'pi pi-check',
                 });
-                this.router.navigate([PATH_PERFILES, PATH_MODULE_DETAILS,this.perfilActual?.id]);
+                this.router.navigate([ValidMenu.perfiles, ValidItemMenu.perfilDetails,this.perfilActual?.id]);
               }
               else{
                 this.messageService.add({
@@ -352,5 +354,8 @@ export class PerfilAfiliadoFormComponent {
   }
   get formValid(){
     return this.afiliadoForm.valid && this.afiliadoForm.touched && !this.afiliadoForm.pristine
+  }
+  noHayRegistro(){
+    return this.perfilActual?.afiliado === undefined
   }
 }

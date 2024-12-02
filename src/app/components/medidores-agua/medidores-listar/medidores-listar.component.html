@@ -1,13 +1,10 @@
 <div class="grid">
     <div class="col-12">
-        <div class="card px-6 py-6">
-            <p-toolbar styleClass="mb-4 gap-2">
-                <ng-template pTemplate="left">
-                    <div class="my-2">
-                        <button pButton pRipple label="Registrar nuevo medidor de agua" icon="pi pi-plus" class="p-button-success mr-2" (click)="registrarForm()" ></button>
-                    </div>
-                </ng-template>
-            </p-toolbar>
+        <div class="card">
+
+            <div class="mt-3 mb-5">
+                <h3 class="text-center">{{titleTable}}</h3>
+            </div>
             <p-table #dt
             
             dataKey="id"
@@ -20,20 +17,27 @@
             [totalRecords]="dataPaginator.size||0"
             [customSort]="true"
             [showCurrentPageReport]="true"
-            [tableStyle]="{ 'min-width': '50rem' }"
-            currentPageReportTemplate="Mostrando del {first} al {last} de {totalRecords} entries"
-            [rowsPerPageOptions]="[10, 25, 50]"
-            
+           [rowsPerPageOptions]="[10, 25, 50]"
+
+            [tableStyle]="{ 'min-width': '50rem'}"
+            currentPageReportTemplate="Mostrando {first} al {last} de {totalRecords} Registros"
+            [scrollable]="true" scrollHeight="400px"
             >
                 <ng-template pTemplate="caption">
-                    <form class="flex flex-column md:flex-row md:justify-content-between md:align-items-center"
-                    [formGroup]="searchForm"
-                    >
-                        <h5 class="m-0">{{titleTable}}</h5>
-                        <span class="block mt-2 md:mt-0 p-input-icon-left">
-                            <i class="pi pi-search"></i>
-                            <input pInputText type="text" inputId="termino"  placeholder="Search..." formControlName="termino" class="w-full sm:w-auto"  (input)="dt.filterGlobal($event.target, 'contains')"/>
-                            <small
+                    <div class="grid">
+                        <div class="col-6">
+                            <div class="ml-3">
+                                <button pButton pRipple  icon="pi pi-plus" class="p-button-success mr-2 p-button p-button-rounded " (click)="registrarForm()" ></button>
+                             </div>
+                        </div>
+                        <div class="col-6">
+                            <form class="flex flex-row-reverse flex-wrap"
+                            [formGroup]="searchForm"
+                            >
+                            <span class="block mt-2 md:mt-0 p-input-icon-left">
+                                <i class="pi pi-search"></i>
+                                <input pInputText type="text" inputId="termino"  placeholder="Buscar..." formControlName="termino" class="w-full sm:w-auto" (input)="dt.filterGlobal($event.target, 'contains')" />
+                                <small
                                 id="termino-help"
                                 class="p-error block"
                                 *ngIf="campoValido('termino')"
@@ -41,6 +45,8 @@
                             </small>
                         </span>
                     </form>
+                </div>
+            </div>
                 </ng-template>
                 <ng-template pTemplate="header">
                     <tr>
@@ -54,33 +60,15 @@
                 </ng-template>
                 <ng-template pTemplate="body" let-customer >
                     <tr>
-                        <td style="width:14%; min-width:10rem;"><span class="p-column-title">Code</span>
-                            {{customer.id}}
-                        </td>
-                        <td style="width:14%; min-width:10rem;">
-                            <span class="p-column-title">Nro Medidor</span>
-                            {{customer.nroMedidor | uppercase}} 
-                        </td>
-                        <td style="width:14%; min-width:10rem;"><span class="p-column-title">Ci</span>
-                            <span class="p-column-title">Estado</span>
-                            <p-tag [severity]="customer.isActive?'success':'danger'" [value]="customer.estado"></p-tag>
-                        </td>
-                        <td style="width:14%; min-width:8rem;">
-                            <span class="p-column-title">Funcionamiento</span>
-                           {{customer.funcionamiento?'EN FUNCIONAMIENTO':'SIN FUNCIONAMIENTO'}}
-                        </td>
-                        <td  style="width:14%; min-width: 10rem;">
-                            <div class="flex p-fluid">
-                                <button pButton pRipple icon="pi pi-book" class="p-button-rounded p-button-info mr-2"
-                                (click)="dataDetail(customer.id)"
-                                ></button>                                
-                            </div>
-                        </td>
+                        <td >{{customer.id}}</td>
+                        <td >{{customer.nroMedidor | uppercase}} </td>
+                        <td ><p-tag [severity]="customer.isActive?'success':'danger'" [value]="customer.estado"></p-tag></td>
+                        <td >{{customer.funcionamiento?'EN FUNCIONAMIENTO':'SIN FUNCIONAMIENTO'}}</td>
+                        <td >
+                            <p-button icon="pi pi-book" (onClick)="dataDetail(customer.id)" styleClass="p-button-rounded"></p-button>
+                         </td>
                     </tr>
                 </ng-template>
-                <!-- <ng-template #NotFound pTemplate="body">
-                    <p>No hay lista...</p>
-                </ng-template> -->
                 
             </p-table>
         </div>

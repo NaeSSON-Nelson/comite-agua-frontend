@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ComprobantePorPago } from 'src/app/interfaces/pagos-services.interface';
 import { PagosService } from '../../medidores-agua/pagos.service';
 import { PlanillaMesLectura } from 'src/app/interfaces';
+import { AsociacionesService } from '../asociaciones.service';
 
 @Component({
   selector: 'app-comprobante-lectura',
@@ -19,14 +20,18 @@ export class ComprobanteLecturaComponent {
   @Output()
   eventVisible:EventEmitter<boolean> = new EventEmitter<boolean>();
   lectura:PlanillaMesLectura|null=null;
-  constructor(private comprobanteService:PagosService){}
+  constructor(
+    // private comprobanteService:PagosService
+      private asociacionService:AsociacionesService
+
+  ){}
   ngOnInit(): void {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
     this.obtenerComprobanteDetalles();
   }
   obtenerComprobanteDetalles(){
-    this.comprobanteService.obtenerComprobantePorPagar(this.idLectura).subscribe(res=>{
+    this.asociacionService.obtenerComprobantePorPagar(this.idLectura).subscribe(res=>{
       this.lectura=res;
       console.log(res);
     })

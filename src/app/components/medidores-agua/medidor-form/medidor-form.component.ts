@@ -11,7 +11,7 @@ import { Afiliado } from 'src/app/interfaces/afiliado.interface';
 import { Estado, Perfil } from 'src/app/interfaces';
 import { CommonAppService } from 'src/app/common/common-app.service';
 import * as L from 'leaflet';
-import { PATH_AUTH, PATH_EDIT, PATH_FORBBIDEN, PATH_MEDIDORES, PATH_MODULE_DETAILS } from 'src/app/interfaces/routes-app';
+import { PATH_AUTH, PATH_EDIT, PATH_FORBBIDEN, PATH_MEDIDORES, PATH_MODULE_DETAILS, ValidItemMenu, ValidMenu } from 'src/app/interfaces/routes-app';
 
 @Component({
   selector: 'app-medidor-form',
@@ -76,7 +76,7 @@ export class MedidorFormComponent {
                 detail: `${res.message},code: ${res.statusCode}`,
                 life: 5000,
               });
-              this.router.navigate([PATH_MEDIDORES])
+              this.router.navigate([ValidMenu.medidores])
               break;
             default:
               console.log(res);
@@ -151,7 +151,7 @@ export class MedidorFormComponent {
                   detail: `${res.message}`,
                   icon: 'pi pi-check',
                 });
-                this.router.navigate([PATH_MEDIDORES, PATH_MODULE_DETAILS,this.medidorActual?.id]);
+                this.router.navigate([ValidMenu.medidores, ValidItemMenu.medidorDetails,this.medidorActual?.id]);
               }else{
                 this.messageService.add({
                   severity: 'error',
@@ -174,7 +174,7 @@ export class MedidorFormComponent {
                   detail: res.message,
                   icon: 'pi pi-check',
                 });
-                this.router.navigate([PATH_MEDIDORES],
+                this.router.navigate([ValidMenu.medidores,ValidItemMenu.medidorList],
                 // {queryParams:{id:this.perfilActual?.id}}
               );
               }else{

@@ -6,47 +6,47 @@ import { PerfilDetailsComponent } from './perfil-details/perfil-details.componen
 import { PerfilFormComponent } from './perfil-form/perfil-form.component';
 import { PerfilUsuarioFormComponent } from './perfil-usuario-form/perfil-usuario-form.component';
 import { PerfilAfiliadoFormComponent } from './perfil-afiliado-form/perfil-afiliado-form.component';
-import { PATH_AFILIADO, PATH_EDIT, PATH_LISTAR, PATH_MODULE_DETAILS, PATH_REGISTRAR, PATH_USER } from 'src/app/interfaces/routes-app';
+import { PATH_AFILIADO, PATH_EDIT, PATH_LISTAR, PATH_MODULE_DETAILS, PATH_REGISTRAR, PATH_USER, ValidItemMenu } from 'src/app/interfaces/routes-app';
 
 const routes: Routes = [
   //PERFILES
   {
-    path: PATH_LISTAR,
+    path: ValidItemMenu.perfilList,
     component: PerfilesComponent,
   },
   {
-    path: `${PATH_MODULE_DETAILS}/:id`,
+    path: `${ValidItemMenu.perfilDetails}/:id`,
     component:PerfilDetailsComponent,
   },
   {
-    path: PATH_REGISTRAR,
+    path: ValidItemMenu.perfilRegister,
     component:PerfilFormComponent,
   },
   {
-    path:`${PATH_REGISTRAR}/${PATH_EDIT}/:id`,
+    path:`${ValidItemMenu.perfilUpdate}/:id`,
     component:PerfilFormComponent,
   },
   //PERFIL -> USER
   {
-    path:`${PATH_USER}/${PATH_REGISTRAR}/:id`,
+    path:`${ValidItemMenu.perfilUserRegister}/:id`,
     component:PerfilUsuarioFormComponent,
   },
   {
-    path:`${PATH_USER}/${PATH_REGISTRAR}/${PATH_EDIT}/:id`,
+    path:`${ValidItemMenu.perfilUserUpdate}/:id`,
     component:PerfilUsuarioFormComponent,
   },
   //PERFIL -> AFILIADO
   {
-    path:`${PATH_AFILIADO}/${PATH_REGISTRAR}/:id`,
+    path:`${ValidItemMenu.perfilAfiliadoRegister}/:id`,
     component:PerfilAfiliadoFormComponent,
   },
   {
-    path:`${PATH_AFILIADO}/${PATH_REGISTRAR}/${PATH_EDIT}/:id`,
+    path:`${ValidItemMenu.perfilAfiliadoUpdate}/:id`,
     component:PerfilAfiliadoFormComponent,
   },
   {
     path: '**',
-    redirectTo: PATH_LISTAR,
+    redirectTo: ValidItemMenu.perfilList,
   },
 ];
 

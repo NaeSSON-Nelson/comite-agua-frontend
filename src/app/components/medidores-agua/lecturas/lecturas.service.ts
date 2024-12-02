@@ -11,7 +11,7 @@ import { environment } from 'src/environments/environment';
 export class LecturasService {
 
   URL_lecturas:string =environment.apiURrl+'/medidores-agua/lecturas';
-  URL_medidores:string =environment.apiURrl+'/medidores-agua';
+  // URL_medidores:string =environment.apiURrl+'/medidores-agua';
   URL_seguimiento:string =environment.apiURrl+'/medidores-agua/gestion/anios-seguimientos';
   URL_reportes:string = this.URL_lecturas+'/reportes'
   
@@ -130,6 +130,6 @@ export class LecturasService {
     return this.http.get<HttpResponseApi<AnioSeguimientoLecturas>>(`${this.URL_lecturas}/time`);
   }
   obtenerTiposManzanos(){
-    return this.http.get<HttpResponseApi<string[]>>(`${this.URL_medidores}/manzanos`).pipe()
+    return this.http.get<HttpResponseApi<string[]>>(`${this.URL_lecturas}/manzanos`).pipe()
   }
 }

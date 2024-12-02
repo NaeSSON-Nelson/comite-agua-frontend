@@ -1,12 +1,12 @@
 <div class="grid card">    
     <div class="col-12">
-      <h3 class="text-center my-5">REGISTRO DE LECTURAS A LAS PLANILLAS DE LOS MEDIDORES DE AGUA</h3>
+      <h3 class="text-center my-5">{{ModuleTitle}}</h3>
       <!-- <p-button label="Genar Tarifas por pagar" (onClick)="visibleGenerar=true"></p-button> -->
       <form class="card mt-3 mb-2" [formGroup]="lecturasForm" *ngIf="showForm;else finalizado">
         <div class="col-12 grid">
           <div class="col-12 grid" *ngIf="limite">
             <div class="col-12 my-5">
-              <h5 class="text-center">REGISTRO DE LECTURA DEL MES {{limite.meses![0].mes}} DE LA GESTION {{limite.anio}}</h5>
+              <h5 class="text-center">REGISTRAR LECTURAS PARA EL MES {{limite.meses![0].mes | uppercase}} DE LA GESTION {{limite.anio}}</h5>
             </div>
             <div class="col-12 md:col-6">
               <h5>FECHA LIMITE:</h5>
