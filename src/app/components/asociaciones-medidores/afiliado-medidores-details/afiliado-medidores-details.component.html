@@ -2,6 +2,7 @@
 <div class="user-profile-container">
 	<p-card class="profile-card" *ngIf="perfil">
 		<div class="grid">
+      <div class="col-12 text-center my-3"><h2>ASOCIACIONES DEL AFILIADO Y MEDIDORES DE AGUA</h2></div>
 			<div class="col-12 md:col-4 profile-image-container">
 				<img [src]="perfil.urlImage ||''" alt="Foto de perfil" class="profile-image"/>
 			
@@ -10,9 +11,9 @@
 				<div class="grid">
 					<!-- DATA PERFIL-->
 					 <div class="col-12">
-						<div class="flex justify-content-between flex-wrap">
-							<div class="flex justify-content-start flex-wrap">
-								<h2>Información Personal del Afiliado asociado</h2>
+						<div >
+							<div >
+								<h2 class="text-center">Datos del afiliado</h2>
 							</div>
 						</div>
 						<div class="grid">
@@ -33,17 +34,17 @@
                   
                     <div class="flex justify-content-between flex-wrap title-container">
                         <div class="flex justify-content-start flex-wrap">
-                            <h3>Información de Medidores de agua asociados</h3>
+                            <h3>Medidores de agua asociados</h3>
                         </div>
                         <div class="flex justify-content-end flex-wrap">
-                            <p-button icon="pi pi-plus" styleClass="p-button-rounded  p-button-info mr-2" alt="Asociar medidor de agua"  (click)="showMedidoresLibresVisible=true"></p-button>
+                            <p-button icon="pi pi-plus" styleClass="p-button-rounded p-button-info mr-2" label="Nueva asociación" alt="Asociar medidor de agua"  (click)="showMedidoresLibresVisible=true"></p-button>
                         </div>
                     </div>
                   <ng-container *ngFor="let asc of medidoresAsociados">
-                    <div class="col-12">
+                    <div class="col-12 md:ml-3">
                       <div class="flex justify-content-between flex-wrap title-container">
                         <div class="flex justify-content-start flex-wrap">
-                          <h4 >Asociación de medidor de agua con N°: {{asc.medidor?.nroMedidor}} {{!asc.isActive?asc.estadoMedidorAsociado :'' |titlecase}}</h4>
+                          <h4 >N° Serie: {{asc.medidor?.nroMedidor}} {{!asc.isActive?asc.estadoMedidorAsociado :'' |titlecase}}</h4>
                         </div>
                         <div class="flex justify-content-end flex-wrap">
                           <p-button styleClass="p-button-rounded p-button-info mr-2" icon="pi pi-pencil" (onClick)="actionData('DETALLES',asc)"></p-button>
@@ -53,23 +54,26 @@
                         </div>
                       </div>
                       <div class="grid">
-                        <div class="col-12 md:col-6"><strong>Estado de asociación:</strong> {{asc.estadoMedidorAsociado | titlecase}}</div>
-                        <div class="col-12 md:col-6"><strong>Estado de Registro de asociación:</strong> <p-tag [severity]="asc.isActive?'success':'danger'" [value]="asc.estado" class="ml-3"></p-tag></div>
-                        <div class="col-12 md:col-6"><strong>Lectura de Inicio de Asociación:</strong> {{asc.lecturaInicial}} {{asc.medidor?.medicion}}.</div>
-                        <div class="col-12 md:col-6"><strong>Última lectura de Seguimiento registrada:</strong> {{asc.lecturaSeguimiento}} {{asc.medidor?.medicion}}.</div>
-                        
-                    </div>
-                    <h5 class="mark-title">Ubicación de instalación del medidor de agua</h5>
-                    <div class="grid">
-                        <div class="col-12 md:col-6"><strong>Barrio:</strong> {{asc.ubicacion?.barrio | titlecase}}</div>
-                        <div class="col-12 md:col-6"><strong>N° de vivienda:</strong> {{asc.ubicacion?.numeroVivienda ||'Sin numero de vivienda'}}</div>
-                        <div class="col-12 md:col-6"><strong>Mazano:</strong> {{asc.ubicacion?.manzano | titlecase}}</div>
-                        <div class="col-12 md:col-6"><strong>N° de mazano:</strong> {{asc.ubicacion?.numeroManzano}}</div>
-                        <div class="col-12 md:col-6"><strong>N° de Lote:</strong> {{asc.ubicacion?.nroLote}}</div>
-                        <div class="col-12 md:col-6"><strong>Longitud:</strong> {{asc.ubicacion?.longitud || 'Dato no proporcionado'}}</div>
-                        <div class="col-12 md:col-6"><strong>Latitud:</strong> {{asc.ubicacion?.latitud || 'Dato no proporcionado'}}</div>
-                    	<div class="col-12 md:col-6"><strong>Mapa georreferencial:</strong><p-button icon="pi pi-map-marker" styleClass="p-button-rounded p-button-secondary p-button-text p-button-raised ml-4" (onClick)="mostrarMapAfiliado(asc)"></p-button></div>
-						  
+                        <div class="col-12 md:col-6 grid">
+                          <div class="col-12"><strong>Estado de asociación:</strong> {{asc.estadoMedidorAsociado | titlecase}}</div>
+                          <div class="col-12"><strong>Estado de Registro de asociación:</strong> <p-tag [severity]="asc.isActive?'success':'danger'" [value]="asc.estado" class="ml-3"></p-tag></div>
+                          <div class="col-12"><strong>Lectura de Inicio de Asociación:</strong> {{asc.lecturaInicial}} {{asc.medidor?.medicion}}.</div>
+                          <div class="col-12"><strong>Última lectura de Seguimiento registrada:</strong> {{asc.lecturaSeguimiento}} {{asc.medidor?.medicion}}.</div>
+                        </div>
+                        <div class="col-12 md:col-6 grid">
+                          <h5 class="md:mt-2">Ubicación del medidor de agua</h5>
+                          <div class="grid">
+                              <div class="col-12 md:col-6"><strong>Barrio:</strong> {{asc.ubicacion?.barrio | titlecase}}</div>
+                              <div class="col-12 md:col-6"><strong>N° de vivienda:</strong> {{asc.ubicacion?.numeroVivienda ||'Sin numero de vivienda'}}</div>
+                              <div class="col-12 md:col-6"><strong>Mazano:</strong> {{asc.ubicacion?.manzano | titlecase}}</div>
+                              <div class="col-12 md:col-6"><strong>N° de mazano:</strong> {{asc.ubicacion?.numeroManzano}}</div>
+                              <div class="col-12 md:col-6"><strong>N° de Lote:</strong> {{asc.ubicacion?.nroLote}}</div>
+                              <div class="col-12 md:col-6"><strong>Longitud:</strong> {{asc.ubicacion?.longitud || 'Dato no proporcionado'}}</div>
+                              <div class="col-12 md:col-6"><strong>Latitud:</strong> {{asc.ubicacion?.latitud || 'Dato no proporcionado'}}</div>
+                            <div class="col-12 md:col-6 flex justify-content-center"><strong>Mapa georreferencial:</strong><p-button icon="pi pi-map-marker" styleClass="p-button-rounded p-button-secondary p-button-text p-button-raised ml-4" (onClick)="mostrarMapAfiliado(asc)" [disabled]="!asc.ubicacion?.longitud && !asc.ubicacion?.latitud"></p-button></div>
+                          </div>
+
+                        </div>
                     </div>
                     </div>
                   </ng-container>

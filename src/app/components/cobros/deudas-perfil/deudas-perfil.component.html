@@ -1,23 +1,25 @@
-<p-dialog header="MODULO DE SELECCION DE COBROS DEL SERVICIO" [(visible)]="visible" [modal]="true" [style]="{ width: '90vw' }" [draggable]="false" [resizable]="false" (onHide)="eventVisible.emit(false)" [baseZIndex]="900" [closeOnEscape]="false">
-    
+<p-dialog header="header" [(visible)]="visible" [modal]="true" [style]="{ width: '90vw' }" [draggable]="false" [resizable]="false" (onHide)="eventVisible.emit(false)" [baseZIndex]="900" [closeOnEscape]="false">
+    <ng-template pTemplate="header">
+        <span class="text-xl font-bold text-center">COBROS DE SERVICIO DE AGUA</span>
+    </ng-template>
     <div class="card m-1">
         <div class=" col-12 grid">
             <ng-container *ngIf="perfil">
-            <div class="col-12 md:col-6">
-                    <div class="text-900 text-2xl mb-2 font-medium text-right">AFILIADO</div>
-                    <p class="text-700 line-height-3 text-xl text-right">{{perfil.nombrePrimero | titlecase}} {{perfil.nombreSegundo ||'' |titlecase}} {{perfil.apellidoPrimero | titlecase}} {{perfil.apellidoSegundo ||'' | titlecase}}</p>        
+            <div class="col-12 md:col-4">
+                    <div class="text-900 text-2xl mb-2 font-medium text-left">Afiliado</div>
+                    <p class="text-700 line-height-3 text-xl text-left">{{perfil.nombrePrimero | titlecase}} {{perfil.nombreSegundo ||'' |titlecase}} {{perfil.apellidoPrimero | titlecase}} {{perfil.apellidoSegundo ||'' | titlecase}}</p>        
                 </div>
                 <div class="col-12 md:col-3">
-                    <div class="text-900 text-2xl mb-2 font-medium text-right">Cedula de Identidad</div>
-                    <p class="text-700 line-height-3 text-xl text-right">{{perfil.CI}}</p>
+                    <div class="text-900 text-2xl mb-2 font-medium text-left">Cedula de Identidad</div>
+                    <p class="text-700 line-height-3 text-xl text-left">{{perfil.CI}}</p>
                 </div>
-                <div class="col-12 md:col-3">
-                    <div class="text-900 text-2xl mb-2 font-medium text-right">BARRIO</div>
-                    <p class="text-700 line-height-3 text-xl text-right">{{perfil.afiliado?.ubicacion?.barrio}}</p>
+                <div class="col-12 md:col-2">
+                    <div class="text-900 text-2xl mb-2 font-medium text-left">Barrio</div>
+                    <p class="text-700 line-height-3 text-xl text-left">{{perfil.afiliado?.ubicacion?.barrio}}</p>
                 </div>
             </ng-container>
         </div>
-        <h3>DEUDAS DE LECTURAS POR PAGAR</h3>
+        <h4 class="text-center">DEUDAS DE LECTURAS POR PAGAR DE LOS MEDIDORES DE AGUA</h4>
         <div class="col-12" >
             <i class="pi pi-spin pi-spinner" style="font-size: 2rem" *ngIf="loading"></i>
             <p-divider></p-divider>
@@ -26,7 +28,7 @@
                     
                     <ng-template pTemplate="header" let-columns>
                         <tr>
-                            <th *ngFor="let col of columns">
+                            <th *ngFor="let col of columns" class="text-center">
                                 {{ col.header }}
                             </th>
                         </tr>

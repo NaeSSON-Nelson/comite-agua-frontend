@@ -6,26 +6,26 @@ import { Perfil } from "./perfil.interface";
 export interface Afiliado extends ColumnsAlways{
     id?                 :number;
     ubicacion?          :Ubicacion;
-    metodoPago?         :MetodoPago;
-    entidad?            :string;
-    nroRecibo?          :string;
-    remitente?          :string;
-    montoRecibido?      :number;
-    monedaRecibido?     :Monedas;
+    // metodoPago?         :MetodoPago;
+    // entidad?            :string;
+    // nroRecibo?          :string;
+    // remitente?          :string;
+    // montoRecibido?      :number;
+    // monedaRecibido?     :Monedas;
+    // fechaPago?          :Date;
+    // pagado?             :boolean;
+    // nroCuenta?          :string;
     medidorAsociado?    :MedidorAsociado[];
     perfil?             :Perfil;
-    monto?              :number;
-    moneda?             :Monedas;
-    fechaPago?          :Date;
-    pagado?             :boolean;
-    nroCuenta?          :string;
+    montoAfiliacion?    :number;
+    monedaAfiliacion?   :Monedas;
 
 }
 export interface AfiliadoForm{
     id?              :number;
     estado?          :Estado;
-    monto?           :number;
-    moneda?          :Monedas;
+    montoAfiliacion? :number;
+    monedaAfiliacion?:Monedas;
     //ubicacion
     barrio?          :Barrio
     numeroVivienda?  :string;

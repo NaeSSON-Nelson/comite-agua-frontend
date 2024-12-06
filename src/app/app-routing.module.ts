@@ -95,6 +95,14 @@ const routes: Routes = [
             canActivate: [validarTokenGuard],
           },
           {
+            path: ValidMenu.reportes,
+            loadChildren: () =>
+              import('./components/reportes/reportes-routing.module').then(
+                (m) => m.ReportesRoutingModule
+              ),
+            canActivate: [validarTokenGuard],
+          },
+          {
             path: ValidMenu.consultar,
             children: [
               {

@@ -202,7 +202,7 @@ export class FormRegisterDeudasComponent {
   };
   tieneMultas(){
     for(const gestion of this.porPagar){
-      if(gestion.multas.length>0) return true;
+      if(gestion.multas?.length>0) return true;
     }
     return false;
   }

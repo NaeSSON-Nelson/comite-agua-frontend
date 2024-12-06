@@ -38,7 +38,7 @@ export class PerfilFormComponent {
     this.subscription=this.perfilService.perfil.subscribe((res) => {
       const { usuario,estado,afiliado,accessAcount,created_at,updated_at,id,isActive,contacto,defaultClientImage,fechaNacimiento,tipoPerfil,profileImageUri,urlImage,...dataPerfil } = res;
       console.log(res);
-      this.perfilForm.removeControl('estado');
+      // this.perfilForm.removeControl('estado');
       this.perfilActual=res;
         this.perfilForm.setValue({...dataPerfil,contacto,fechaNacimiento:new Date(fechaNacimiento!)});
     });
@@ -110,13 +110,13 @@ export class PerfilFormComponent {
     genero:           [,[Validators.required, Validators.pattern(patternText)]],
     fechaNacimiento:  [,[Validators.required]],
     contacto:         [,[Validators.pattern(/^\d{6,8}$/),Validators.minLength(6),Validators.maxLength(8)]],
-    estado:           [,[Validators.required]],
+    // estado:           [,[Validators.required]],
   })
 
   afiliadoForm:FormGroup= this.fb.group({
-    estado          :[Estado.ACTIVO,[Validators.required]],
-    monto           :[,[Validators.required,Validators.min(0)]],
-    moneda          :[,Validators.required],
+    // estado          :[Estado.ACTIVO,[Validators.required]],
+    montoAfiliacion :[,[Validators.required,Validators.min(0)]],
+    monedaAfiliacion:[,Validators.required],
     barrio          :[,[Validators.required]],
     manzano         :[,[Validators.required]],
     numeroManzano   :[,[Validators.required,Validators.min(1)]],
@@ -128,7 +128,7 @@ export class PerfilFormComponent {
   })
   usuarioForm: FormGroup = this.fb.group({
     roles           :this.fb.array([], [Validators.required]),
-    estado          :[Estado.ACTIVO,[Validators.required]],
+    // estado          :[Estado.ACTIVO,[Validators.required]],
     correo          :[,[Validators.email]]
   });
   get rolesForm() {
@@ -450,14 +450,14 @@ export class PerfilFormComponent {
     return '';
   }
 
-  getEstadoErrors(campo: string) {
-    const errors = this.perfilForm.get(campo)?.errors;
+  // getEstadoErrors(campo: string) {
+  //   const errors = this.perfilForm.get(campo)?.errors;
 
-    if (errors?.['required']) {
-      return 'El campo es requerido';
-    }
-    return '';
-  }
+  //   if (errors?.['required']) {
+  //     return 'El campo es requerido';
+  //   }
+  //   return '';
+  // }
 
 
 
@@ -529,14 +529,14 @@ export class PerfilFormComponent {
     }
     return '';
   }
-  getAfiliadoEstadoErrors(campo: string) {
-    const errors = this.afiliadoForm.get(campo)?.errors;
+  // getAfiliadoEstadoErrors(campo: string) {
+  //   const errors = this.afiliadoForm.get(campo)?.errors;
     
-    if (errors?.['required']) {
-      return 'El campo es requerido';
-    }
-    return '';
-  }
+  //   if (errors?.['required']) {
+  //     return 'El campo es requerido';
+  //   }
+  //   return '';
+  // }
   
   getUsuarioCorreoErrors(campo:string){
     const errors = this.usuarioForm.get(campo)?.errors;
@@ -545,14 +545,14 @@ export class PerfilFormComponent {
     }
     return'';
   }
-  getUsuarioEstadoErrors(campo: string) {
-    const errors = this.usuarioForm.get(campo)?.errors;
+  // getUsuarioEstadoErrors(campo: string) {
+  //   const errors = this.usuarioForm.get(campo)?.errors;
     
-    if (errors?.['required']) {
-      return 'El campo es requerido';
-    }
-    return '';
-  }
+  //   if (errors?.['required']) {
+  //     return 'El campo es requerido';
+  //   }
+  //   return '';
+  // }
   getRolesErrors() {
     const errors = this.rolesForm.errors;
     if (errors?.['required']) {
@@ -573,7 +573,7 @@ export class PerfilFormComponent {
     }
     return '';
   }
-  getAfiliadoMontoErrors(campo:string){
+  getAfiliadoMontoAfiliacionErrors(campo:string){
     const errors = this.afiliadoForm.get(campo)?.errors;
     if(errors?.['required']){
       return `El campo es requerido`
@@ -582,7 +582,7 @@ export class PerfilFormComponent {
     }
     return '';
   }
-  getAfiliadoMonedaErrors(campo:string){
+  getAfiliadoMonedaAfiliacionErrors(campo:string){
     const errors = this.afiliadoForm.get(campo)?.errors;
     if(errors?.['required']){
       return `El campo es requerido`

@@ -25,28 +25,7 @@
               >{{ getUsuarioCorreoErrors("correo") }}
             </small>
           </div>
-          <div class="field col-12 md:col-3" *ngIf="!this.perfilActual?.usuario">
-              <span class="p-float-label">
-                <p-dropdown
-                  inputId="estado"
-                  [autoDisplayFirst]="false"
-                  [options]="commonServiceApp.estados"
-                  formControlName="estado"
-                  optionLabel="name"
-                  optionValue="value"
-                  placeholder="Select Estado"
-                  [ngClass]="inputValid('estado')"
-                ></p-dropdown>
-  
-                <label for="estado">estado (*)</label>
-              </span>
-              <small
-                id="estado-help"
-                class="p-error block"
-                *ngIf="campoValido('estado')"
-                >{{ getUsuarioEstadoErrors("estado") }}
-              </small>
-            </div>
+         
             <div class="col-12">
                 <h5>Roles de Acceso al usuario</h5>
                 <p-divider></p-divider>

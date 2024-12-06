@@ -17,7 +17,7 @@ import { PATH_AUTH, PATH_FORBBIDEN, PATH_MEDIDORES, PATH_MODULE_DETAILS, PATH_RE
 })
 export class MedidoresListarComponent {
   data: Medidor[] = [];
-  titleTable = 'Medidores de agua registrados';
+  titleTable = 'MEDIDORES DE AGUA';
   constructor(
     private readonly medidorService: MedidoresAguaService,
     private readonly messageService: MessageService,

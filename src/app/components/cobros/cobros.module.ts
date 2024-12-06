@@ -16,6 +16,7 @@ import { DetallesMultaComponent } from './detalles-multa/detalles-multa.componen
 import { FormRegistrarPagoMultasSelectedComponent } from './form-registrar-pago-multas-selected/form-registrar-pago-multas-selected.component';
 import { DetallesLecuturaPagoComponent } from './detalles-lecutura-pago/detalles-lecutura-pago.component'
 import { TagModule } from 'primeng/tag';
+import { MultasDeRetrasoPagosComponent } from './multas-de-retraso-pagos/multas-de-retraso-pagos.component';
 @NgModule({
   declarations: [
     CobrosComponent,
@@ -27,6 +28,7 @@ import { TagModule } from 'primeng/tag';
     DetallesMultaComponent,
     FormRegistrarPagoMultasSelectedComponent,
     DetallesLecuturaPagoComponent,
+    MultasDeRetrasoPagosComponent,
   ],
   imports: [
     CommonModule,

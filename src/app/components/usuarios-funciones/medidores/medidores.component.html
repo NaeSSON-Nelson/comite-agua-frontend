@@ -1,6 +1,6 @@
 <div class="card">
-    <h2 class="text-center mt-3 mb-5">Consultas de Datos de Medidores de agua asociados</h2>
-    <label for="selectMedidor"> <h4>Seleccione un medidor de agua:</h4></label>
+    <h2 class="text-center mt-3 mb-5">CONSULTAR MEDIDORES DE AGUA</h2>
+    <label for="selectMedidor"> <h4>Seleccione:</h4></label>
     <p-dropdown [options]="selectMedidoresRelacion" class="m-5" id="selectMedidor" optionLabel="medidor.nroMedidor" optionValue="medidor.nroMedidor" (onChange)="obtenerMedidor($event)" placeholder="Seleccione su medidor" emptyMessage="Sin medidores"></p-dropdown>
     <div class="card col-12 grid m-3" *ngIf="medidorAsc">
         <div class="col-12">

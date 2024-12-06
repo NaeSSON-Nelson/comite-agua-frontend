@@ -13,12 +13,12 @@ import { TabPanel } from 'primeng/tabview';
   ]
 })
 export class HistorialCobrosComponent {
-  @Input()
-  idPerfil!:number;
+  
   @Input()
   visible:boolean=false;
   closable:boolean=true;
-
+  @Input()
+  idPerfil!:number;
   @Output()
   eventVisible:EventEmitter<boolean> = new EventEmitter<boolean>();
 
@@ -44,7 +44,7 @@ export class HistorialCobrosComponent {
     this.obtenerPerfil();
   }
   // tipoModel:'HISTORIAL'|'MULTAS'|'CREATE-MULTA'|'HISTORIA-MULTAS'='HISTORIAL';
-  activeIndex:number=0;
+  
   obtenerPerfil(){
     this.loading=true;
     this.cobrosService.getAfiliadoMedidores(this.idPerfil).subscribe(res=>{
@@ -100,99 +100,13 @@ export class HistorialCobrosComponent {
     }
     return []
   }
-  cambioDeLaDo(){
-    if(this.activeIndex===0){
+  
 
-    }else if(this.activeIndex===1){ //OBTENER MULTAS
-      this.obtenerMultas();
-    }else if(this.activeIndex===2){
-      this.obtenerHistorialMultas();
-    }
-  }
-  visibleMultasForm:boolean=false;
-
-  eventReloadFormMulta(event:{visible:boolean,refreshMultas?:boolean}){
-    this.visibleMultasForm=event.visible;
-    if(event.refreshMultas){
-      this.obtenerMultas();
-    }
-  }
-  multasPorPagar:any[]=[];
-  multasMessage:string='';
-  hayMultas:boolean=false;
-  loadingMultasSpinner:boolean=false;
-  multasSeleccionadas:MultaServicio[]=[];
   
   @ViewChildren("tpMultas") chart!:  QueryList<TabPanel>;
-  obtenerMultas(){
-    this.loadingMultasSpinner=true;
-    this.hayMultas=false;
-    this.cobrosService.obtenerMultasActivas(this.idPerfil).subscribe(res=>{
-      if(res.OK){
-        // console.log(res);
-        this.multasPorPagar=res.data!;
-        this.multasMessage='';
-        this.hayMultas=true;
-      }else{
-        this.hayMultas=false;
-        this.multasMessage='El perfil no tiene multas por pagar';
-      }
-      this.loadingMultasSpinner=false;
-    })
-  }
-  obtenerHistorialMultas(){
-    this.cobrosService.ObtenerMultasHistorial(this.perfil.id!,this.dataPaginator).subscribe(res=>{
-      if(res.OK){
-        // console.log(res);
-        this.multasPorPagar=res.data.data;
-        this.dataPaginator.limit=res.data.limit;
-      this.dataPaginator.offset=res.data.offset;
-      this.dataPaginator.order=res.data.order;
-      this.dataPaginator.size=res.data.size;
-        this.multasMessage='';
-        this.hayMultas=true;
-      }else{
-        this.hayMultas=false;
-        this.multasMessage='El perfil no tiene multas por pagar';
-      }
-      this.loadingMultasSpinner=false;
-    })
-  }
-  visibleDetallesMulta:boolean=false;
+  
 
-  multaIdSelect:number=-1;
-  multaDetalles(event:any){
-    this.multaIdSelect=event.id;
-    this.visibleDetallesMulta=true;
-  }
-  visiblePagarMultaForm:boolean=false;
-  formPagarMultasVisible(event:{visible:boolean,refreshMultas?:boolean}){
-    this.visiblePagarMultaForm=event.visible;
-    if(event.refreshMultas)this.obtenerMultas();
-  }
 
-  dataPaginator: PaginatorFind = {
-    offset:0,
-    limit:50,
-    order:'ASC',
-    sort:'id',
-  };
-  loadCustomers(filters:any){
-
-    console.log('customers',filters);
-    if(filters.sortField){
-      this.dataPaginator.sort=filters.sortField;
-      this.dataPaginator.order= filters.sortOrder===1 ?'ASC': 'DESC';
-    }
-    this.dataPaginator.offset=filters.first
-    this.dataPaginator.limit=filters.rows
-    // if(filters.globalFilter){
-    //   if(filters.globalFilter.value.length===0)
-    //   delete this.dataPaginator.q
-    //   else this.dataPaginator.q = filters.globalFilter.value
-    // }
-    this.obtenerHistorialMultas();
-  }
   visibleDetallesLecturaPago:boolean=false;
   idLecturaSelectedDetalles:number=-1;
   selectLectura(event:any){

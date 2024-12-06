@@ -1,229 +1,145 @@
-<p-dialog header="PANEL DE SEGUIMIENTO DE TARIFAS" [(visible)]="visible" [modal]="true" [style]="{ width: '95vw' }" [draggable]="false" [resizable]="false" [baseZIndex]="900" [closeOnEscape]="false" (onHide)="eventVisible.emit(false)">
-    <div class="card m-3" *ngIf="perfil">
-        <div class=" col-12 grid">
-            <ng-container >
-            <div class="col-12 md:col-6">
-                    <div class="text-900 text-2xl mb-2 font-medium text-right">AFILIADO</div>
-                    <p class="text-700 line-height-3 xl text-right">{{perfil.nombrePrimero | titlecase}} {{perfil.nombreSegundo ||'' |titlecase}} {{perfil.apellidoPrimero | titlecase}} {{perfil.apellidoSegundo ||'' | titlecase}}</p>        
-                </div>
-                <div class="col-12 md:col-3">
-                    <div class="text-900 text-2xl mb-2 font-medium text-right">Cedula de Identidad</div>
-                    <p class="text-700 line-height-3 text-right">{{perfil.CI}}</p>
-                </div>
-                <div class="col-12 md:col-3">
-                    <div class="text-900 text-2xl mb-2 font-medium text-right">BARRIO</div>
-                    <p class="text-700 line-height-3 xl text-right">{{perfil.afiliado?.ubicacion?.barrio}}</p>
-                </div>
-            </ng-container>
+<p-dialog
+  header="HISTORIAL DE COBROS REALIZADOS"
+  [(visible)]="visible"
+  [modal]="true"
+  [style]="{ width: '95vw' }"
+  [draggable]="false"
+  [resizable]="false"
+  [baseZIndex]="900"
+  [closeOnEscape]="false"
+  (onHide)="eventVisible.emit(false)"
+>
+  <div class="card m-3" *ngIf="perfil">
+    <div class="col-12 grid">
+      <div class="col-12 md:col-4">
+        <div class="text-900 text-2xl mb-2 font-medium text-left">Afiliado</div>
+        <p class="text-700 line-height-3 xl text-left">
+          {{ perfil.nombrePrimero | titlecase }}
+          {{ perfil.nombreSegundo || "" | titlecase }}
+          {{ perfil.apellidoPrimero | titlecase }}
+          {{ perfil.apellidoSegundo || "" | titlecase }}
+        </p>
+      </div>
+      <div class="col-12 md:col-3">
+        <div class="text-900 text-2xl mb-2 font-medium text-left">
+          Cedula de Identidad
         </div>
-        <p-divider></p-divider>
-        <div class="col-12 grid nested-grid">
-            <p-tabView class="col-12 mt-3" [style]="{'min-width':'250px','min-height':'200px'}" [(activeIndex)]="activeIndex"  (onChange)="cambioDeLaDo()" >
-                <p-tabPanel>
-                    <ng-template pTemplate="header">
-                        <div *ngIf="activeIndex!==0"><span>COBROS <i class="pi pi-book" style="font-size: 1rem"></i></span></div>
-                        <div *ngIf="activeIndex===0"><span>Historial de cobros realizados</span></div>
-                    </ng-template> 
-                    <div class="m-5" *ngIf="activeIndex===0">
+        <p class="text-700 line-height-3 text-left">{{ perfil.CI }}</p>
+      </div>
+      <div class="col-12 md:col-2">
+        <div class="text-900 text-2xl mb-2 font-medium text-left">Barrio</div>
+        <p class="text-700 line-height-3 xl text-left">
+          {{ perfil.afiliado?.ubicacion?.barrio }}
+        </p>
+      </div>
+    </div>
+    <p-divider></p-divider>
+    <div class="col-12 grid nested-grid">
+      
+      <div class="m-5">
         <div class="col-12 grid p-fluid">
-            <div class="field col-12 md:col-3">
-                <span class="p-float-label">
-                <p-dropdown
-                    inputId="medidor"
-                    [autoDisplayFirst]="false"
-                    [options]="medidoresGes()"
-                    optionLabel="nroMedidor"
-                    optionValue="nroMedidor"
-                    placeholder="Select Medidor"
-                    (onChange)="obtenerGestiones($event)"
-                ></p-dropdown>
-                <label for="medidor">Medidor:</label>
-                </span>
-            </div>
+          <div class="field col-12 md:col-3">
+            <span class="p-float-label">
+              <p-dropdown
+                inputId="medidor"
+                [autoDisplayFirst]="false"
+                [options]="medidoresGes()"
+                optionLabel="nroMedidor"
+                optionValue="nroMedidor"
+                placeholder="Select Medidor"
+                (onChange)="obtenerGestiones($event)"
+              ></p-dropdown>
+              <label for="medidor">Medidor:</label>
+            </span>
+          </div>
         </div>
         <div class="col-12 grid p-fluid">
-            <div class="field col-12 md:col-3">
-                <span class="p-float-label">
-                <p-dropdown
-                    inputId="gestion"
-                    [autoDisplayFirst]="false"
-                    [options]="planillas"
-                    optionLabel="gestion"
-                    optionValue="value"
-                    [emptyMessage]="messagePlanillas"
-                    placeholder="Select Gestion"
-                    (onChange)="obtenerLecturas($event)"
-                ></p-dropdown>
-                <label for="gestion">Gestión:</label>
-                </span>
-            </div>
+          <div class="field col-12 md:col-3">
+            <span class="p-float-label">
+              <p-dropdown
+                inputId="gestion"
+                [autoDisplayFirst]="false"
+                [options]="planillas"
+                optionLabel="gestion"
+                optionValue="value"
+                [emptyMessage]="messagePlanillas"
+                placeholder="Select Gestion"
+                (onChange)="obtenerLecturas($event)"
+              ></p-dropdown>
+              <label for="gestion">Gestión:</label>
+            </span>
+          </div>
         </div>
-        <div class="col-12" *ngIf="lecturas.length>0 && showTable; else sinLecturas">
-            <h5>REGISRO DE LECTURAS DE GESTION</h5>
-            <p-table [value]="lecturas" [tableStyle]="{'min-width': '50rem'}"
-            
-            >
-                <!-- <ng-template pTemplate="caption">
+        <div
+          class="col-12"
+          *ngIf="lecturas.length > 0 && showTable; else sinLecturas"
+        >
+          <h5>REGISRO DE LECTURAS DE GESTION</h5>
+          <p-table [value]="lecturas" [tableStyle]="{ 'min-width': '50rem' }">
+            <!-- <ng-template pTemplate="caption">
                     <div class="grid">
                         <button pButton pRipple icon="pi pi-book" class="p-button-rounded p-button-info mr-2"
-                                (click)="generarPdf()" [disabled]="lecturasSelected.length===0"></button>
+                        (click)="generarPdf()" [disabled]="lecturasSelected.length===0"></button>
                     </div>
                 </ng-template> -->
-                <ng-template pTemplate="header" let-columns>
-                    <tr>
-                        <th class="text-center">Mes </th>
-                        <th class="text-center">Lectura (m3.)</th>
-                        <th class="text-center">consumo (m3.)</th>
-                        <th class="text-center">consumo (bs.)</th>
-                        <th class="text-center">Estado pago</th>
-                        <th class="text-center">Monto cancelado (Bs.)</th>
-                        <th class="text-center">Acciones</th>
-                        <!-- <th class="text-center">Metodo de pago (tipo)</th>
+            <ng-template pTemplate="header" let-columns>
+              <tr>
+                <th class="text-center">Mes</th>
+                <th class="text-center">Lectura (m3.)</th>
+                <th class="text-center">consumo (m3.)</th>
+                <th class="text-center">consumo (bs.)</th>
+                <th class="text-center">Estado pago</th>
+                <th class="text-center">Monto cancelado (Bs.)</th>
+                <th class="text-center">Acciones</th>
+                <!-- <th class="text-center">Metodo de pago (tipo)</th>
                         <th class="text-center">Fecha registrada</th>
                         <th class="text-center">Entidad de pago</th> -->
-                    </tr>
-                </ng-template>
-                <ng-template pTemplate="body" let-product let-columns="columns">
-                    <tr>
-                        <td class="text-center">{{product.PlanillaMesLecturar}}</td>
-                        <td class="text-center">{{product.lectura}}</td>
-                        <td class="text-center">{{product.consumoTotal}}</td>
-                        <td class="text-center">{{product.pagar.monto}}</td>
-                        <td class="text-center">{{product.pagar.estadoComprobate}}</td>
-                        <td class="text-center">{{product.pagar.comprobante.montoPagado}}</td>
-                        <td><p-button icon="pi pi-book" styleClass="p-button-rounded" (onClick)="selectLectura(product)"></p-button></td>
-                        <!-- <td class="text-center">{{product.pagar.comprobante.metodoPago}}</td>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-product let-columns="columns">
+              <tr>
+                <td class="text-center">{{ product.PlanillaMesLecturar }}</td>
+                <td class="text-center">{{ product.lectura }}</td>
+                <td class="text-center">{{ product.consumoTotal }}</td>
+                <td class="text-center">{{ product.pagar.monto }}</td>
+                <td class="text-center">
+                  {{ product.pagar.estadoComprobate }}
+                </td>
+                <td class="text-center">
+                  {{ product.pagar.comprobante.montoPagado }}
+                </td>
+                <td>
+                  <p-button
+                    icon="pi pi-book"
+                    styleClass="p-button-rounded"
+                    (onClick)="selectLectura(product)"
+                  ></p-button>
+                </td>
+                <!-- <td class="text-center">{{product.pagar.comprobante.metodoPago}}</td>
                         <td class="text-center">{{product.pagar.comprobante.fechaEmitida | date :'dd-MM-yyyy HH:MM'}}</td>
                         <td class="text-center">{{product.pagar.comprobante.entidadPago}}</td> -->
-                    </tr>
-                </ng-template>
-            </p-table>   
+              </tr>
+            </ng-template>
+          </p-table>
         </div>
         <ng-template #sinLecturas>
-            <div class="col-12"><p><i>{{tableReport}}</i></p></div>
+          <div class="col-12">
+            <p>
+              <i>{{ tableReport }}</i>
+            </p>
+          </div>
         </ng-template>
-            </div>
-        </p-tabPanel>
-                <p-tabPanel #tpMultas>
-                    <ng-template pTemplate="header">
-                        <div *ngIf="activeIndex!==1"><span>MULTAS <i class="pi pi-book" style="font-size: 1rem"></i></span></div>
-                        <div *ngIf="activeIndex===1"><span>Multas de pagos de tarifa de lecturas con retraso de 90 dias</span></div>
-                    </ng-template> 
-                    <div class="grid" *ngIf="activeIndex===1">
-                        <div class="col-12">
-                            <p-button label="Añadir nueva Multa" (onClick)="visibleMultasForm=true"></p-button>
-                            <p-button label="Pagar Multas seleccionadas" (onClick)="visiblePagarMultaForm=true" [disabled]="multasSeleccionadas.length===0"></p-button>
-                        
-                        </div>
-                        <div class="col-12 px-2">
-                            <i class="pi pi-spin pi-spinner" style="font-size: 2rem" *ngIf="loadingMultasSpinner"></i>
-                            <p>{{multasMessage}}</p>
-                            <p-table [value]="multasPorPagar" [(selection)]="multasSeleccionadas" dataKey="id" [tableStyle]="{'min-width': '50rem'}" *ngIf="hayMultas">
-                            <ng-template pTemplate="header">
-                                <tr>
-                                    <th style="width: 4rem">
-                                        <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
-                                    </th>
-                                    <th>NRO MULTA</th>
-                                    <th>MOTIVO</th>
-                                    <th>LECTURAS VINCULADAS A LA MULTA</th>
-                                    <th>DETALLES DE LECTURAS DE MULTA:</th>
-                                </tr>
-                            </ng-template>
-                            <ng-template pTemplate="body" let-multa>
-                                <tr>
-                                    <td>
-                                        <p-tableCheckbox [value]="multa"></p-tableCheckbox>
-                                    </td>
-                                    <td>{{multa.id}}</td>
-                                    <td>{{multa.motivo}}</td>
-                                    <td>{{multa.lecturasMultadasTotal}}</td>
-                                    <td> <p-button label="Detalles" (onClick)="multaDetalles(multa)"></p-button></td>
-                                </tr>
-                            </ng-template>
-                        </p-table>
-                        </div>
-                    </div>
-                </p-tabPanel>
-                <p-tabPanel>
-                    <ng-template pTemplate="header">
-                        <div *ngIf="activeIndex!==2"><span>HISTORIAL <i class="pi pi-book" style="font-size: 1rem"></i></span></div>
-                        <div *ngIf="activeIndex===2"><span>HISTORIAL DE MULTAS</span></div>
-                    </ng-template> 
-                    <div class="grid" *ngIf="activeIndex===2">
-                            <div class="col-12">
-                                <h4>HISTORIAL DE MULTAS REGISTRADAS</h4>
-                                <p-divider></p-divider>
-                            </div>
-                            <div class="col-12 px-2">
-                                <i class="pi pi-spin pi-spinner" style="font-size: 2rem" *ngIf="loadingMultasSpinner"></i>
-                                <p>{{multasMessage}}</p>
-                                <p-table [value]="multasPorPagar"  dataKey="id" [tableStyle]="{'min-width': '50rem'}" *ngIf="hayMultas"
-                                
-                                            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
-                                            [rowsPerPageOptions]="[10, 25, 50]"
-                                            [rowHover]="true" 
-                                            [paginator]="true"
-                                            [rows]="10"
-                                            [lazy]="true" 
-                                            (onLazyLoad)="loadCustomers($event)"
-                                            [totalRecords]="dataPaginator.size||0"
-                                            [customSort]="true"
-                                            [showCurrentPageReport]="true"
-                                >
-                                <ng-template pTemplate="header">
-                                    <tr>
-                                        <th>NRO MULTA</th>
-                                        <th>MOTIVO</th>
-                                        <th>DETALLES DE LECTURAS DE MULTA:</th>
-                                    </tr>
-                                </ng-template>
-                                <ng-template pTemplate="body" let-multa>
-                                    <tr>
-                                        
-                                        <td>{{multa.id}}</td>
-                                        <td>{{multa.motivo}}</td>
-                                        <td> <p-button label="Detalles" (onClick)="multaDetalles(multa)"></p-button></td>
-                                    </tr>
-                                </ng-template>
-                            </p-table>
-                            </div>
-                    </div>
-                </p-tabPanel>
-                <p-tabPanel>
-                    <p>
-                        At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa
-                        qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus.
-                    </p>
-                </p-tabPanel>
-            </p-tabView>
-        </div>
-        <ng-container *ngIf="visibleHistorial">
-        </ng-container>
+      </div>
+
+    
+
     </div>
+    <ng-container *ngIf="visibleHistorial"> </ng-container>
+  </div>
 </p-dialog>
-<app-form-multas-register
-*ngIf="visibleMultasForm"
-[visible] ="visibleMultasForm"
-[perfil]="perfil"
-(eventVisible)="eventReloadFormMulta($event)"
-></app-form-multas-register>
-<app-detalles-multa
-*ngIf="visibleDetallesMulta"
-[visible]="visibleDetallesMulta"
-(eventVisible)="visibleDetallesMulta=$event"
-[multaId]="multaIdSelect"
-></app-detalles-multa>
-<app-form-registrar-pago-multas-selected
-*ngIf="visiblePagarMultaForm"
-[visible]="visiblePagarMultaForm"
-(eventVisible)="formPagarMultasVisible($event)"
-[perfil]="perfil"
-[multasSelected]="multasSeleccionadas"
-></app-form-registrar-pago-multas-selected>
 <app-detalles-lecutura-pago
-    *ngIf="visibleDetallesLecturaPago"
-    [visible]="visibleDetallesLecturaPago"
-    [idLectura]="idLecturaSelectedDetalles"
-    (eventVisible)="visibleDetallesLecturaPago=$event"
+  *ngIf="visibleDetallesLecturaPago"
+  [visible]="visibleDetallesLecturaPago"
+  [idLectura]="idLecturaSelectedDetalles"
+  (eventVisible)="visibleDetallesLecturaPago = $event"
 ></app-detalles-lecutura-pago>

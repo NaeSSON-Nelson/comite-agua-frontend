@@ -1,0 +1,83 @@
+<div class="card ">
+    <h2 class="text-center mb-5">REPORTES DE PAGOS DE SERVICIO</h2>
+    <form [formGroup]="calendarForm" class="formgrid grid">
+        <div class="field md:col-6 col-12 p-fluid">
+            <span class="p-float-label">
+                <p-calendar inputId="calendarRange"
+                formControlName="calendarRange" selectionMode="range" 
+                [minDate]="minDate" [maxDate]="maxDate"
+                [ngClass]="inputValid('calendarRange')"
+                [readonlyInput]="true" [showClear]="true" (onClear)="visibleTable=false"></p-calendar>
+                <label for="calendarRange">Seleccione un Rango de fecha (*)</label>
+            </span>
+            <small
+              id="correo-help"
+              class="p-error block"
+              *ngIf="campoValido('calendarRange')"
+              >{{ getCalendarRangeErrors("calendarRange") }}
+            </small>
+        </div>
+        <div class="field md:col-6 col-12">
+            <p-button label="Obtener pagos" (onClick)="obtenerData()"></p-button>
+        </div>
+    </form>
+    <i class="pi pi-spin pi-spinner text-center m-5" style="font-size: 2rem" *ngIf="loading"></i>
+    <div class="m-5" *ngIf="data.length>0 && visibleTable;else sinData">
+        <h4> Lista de Afiliados que pagaron entre las fechas seleccionadas</h4>
+        <p-toolbar>
+            <div class="grid">
+                <div class="col-12 mt-3 mb-3 text-xl">Exportar en:</div>
+                <div class="p-toolbar-group-start grid">
+                    <p-button label="PDF" icon="pi pi-file-pdf" class="mr-2" styleClass="p-button-rounded" (onClick)="exportPDF()"></p-button>
+                    <!-- <p-button label="EXCEL" icon="pi pi-file-excel" styleClass="p-button-rounded p-button-success"></p-button> -->
+                </div>
+            </div>
+        </p-toolbar>
+        <p-table [value]="data" [tableStyle]="{'min-width': '50rem'}">
+        <ng-template pTemplate="header">
+            
+            <tr>
+                <th>Nombre completo</th>
+                <th>Medidor de agua</th>
+                <th>Total lecturas </th>
+                <th>Total Multas </th>
+                <th>Total General </th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-perfil>
+            <ng-container *ngIf="perfil.afiliado.medidorAsociado.length===1;else masAsociaciones">
+                <tr>
+                    <td [rowSpan]="perfil.afiliado.medidorAsociado.length">{{perfil.nombrePrimero | titlecase}} {{perfil.nombreSegundo||'' | titlecase}} {{perfil.apellidoPrimero | titlecase}} {{perfil.apellidoSegundo ||'' | titlecase}} {{perfil.nombrePrimero | titlecase}}</td>
+                     <td>{{perfil.afiliado.medidorAsociado[0].medidor.nroMedidor}}</td>
+                     <td class="text-center">{{totalPagosAsociado(perfil.afiliado.medidorAsociado[0]) | currency : 'Bs. '}}</td>   
+                     <td class="text-center">{{totalPagosMultasAsociado(perfil.afiliado.medidorAsociado[0].multasAsociadas) | currency : 'Bs. '}}</td>
+                     <td class="text-center">{{totalPagosAll(perfil.afiliado.medidorAsociado[0],perfil.afiliado.medidorAsociado[0].multasAsociadas) | currency : 'Bs. '}}</td>   
+                
+                </tr>
+
+            </ng-container>
+            <ng-template #masAsociaciones>
+                <tr>
+                    <td [rowSpan]="perfil.afiliado.medidorAsociado.length">{{perfil.nombrePrimero | titlecase}} {{perfil.nombreSegundo||'' | titlecase}} {{perfil.apellidoPrimero | titlecase}} {{perfil.apellidoSegundo ||'' | titlecase}} {{perfil.nombrePrimero | titlecase}}</td>
+                </tr>
+                <tr *ngFor="let asc of perfil.afiliado.medidorAsociado">
+                     <td class="text-center">{{asc.medidor.nroMedidor}}</td>
+                     <td class="text-center">{{totalPagosAsociado(asc) | currency : 'Bs. '}}</td>   
+                     <td class="text-center">{{totalPagosMultasAsociado(asc.multasAsociadas) | currency : 'Bs. '}}</td>
+                     <td class="text-center">{{totalPagosAll(asc,asc.multasAsociadas) | currency : 'Bs. '}}</td>   
+                </tr>
+            </ng-template>
+            
+        </ng-template>
+        <ng-template pTemplate="footer">
+            <tr>
+                <td colspan="4" class="text-right">Total:</td>
+                <td class="text-center">{{totalGeneral | currency :'Bs. '}}</td>
+            </tr>
+        </ng-template>
+    </p-table></div>
+    <ng-template #sinData>
+        <p class="font-italic" *ngIf="data.length===0 && visibleTable"> * NO HAY REGISTROS DE PAGOS EN ENTRE LAS FECHAS SOLICITADAS</p>
+    </ng-template>
+    
+</div>

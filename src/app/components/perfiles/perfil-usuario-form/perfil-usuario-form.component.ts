@@ -120,7 +120,7 @@ export class PerfilUsuarioFormComponent {
   }
   usuarioForm: FormGroup = this.fb.group({
     roles: [, [Validators.required]],
-    estado: [Estado.ACTIVO, [Validators.required]],
+    // estado: [Estado.ACTIVO, [Validators.required]],
     correo: [, [Validators.email]],
   });
   validForm() {
@@ -280,14 +280,7 @@ export class PerfilUsuarioFormComponent {
     }
     return '';
   }
-  getUsuarioEstadoErrors(campo: string) {
-    const errors = this.usuarioForm.get(campo)?.errors;
-
-    if (errors?.['required']) {
-      return 'El campo es requerido';
-    }
-    return '';
-  }
+  
   getRolesErrors(campo: string) {
     const errors = this.usuarioForm.get(campo)?.errors;
     if (errors?.['required']) {

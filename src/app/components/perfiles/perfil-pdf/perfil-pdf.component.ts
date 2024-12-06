@@ -12,7 +12,7 @@ import { MessageService } from 'primeng/api';
 import { finalize } from 'rxjs';
 import { QueryExportPerfil } from 'src/app/interfaces/Paginator.interface';
 
-// pdfMake.vfs = pdfFonts.pdfMake.vfs;
+
 
 @Component({
   selector: 'app-perfil-pdf',
@@ -57,6 +57,7 @@ export class PerfilPdfComponent {
   ngOnInit(): void {
     
     this.calculateColumnWidths();
+    // pdfMake.vfs = pdfFonts.pdfMake.vfs;
   }
   addField(){
     this.freeField.markAllAsTouched();
@@ -380,6 +381,7 @@ private getColumnAlignment(field: string): string {
     
     // Calcular anchos proporcionales para las columnas
     let totalWeight = selectedColumns.reduce((sum, col) => sum + (col.width || 0), 0);
+    console.log('total weight',totalWeight);
     let columnWidths: number[];
     
     if (selectedColumns.length <= 4) {
@@ -389,7 +391,8 @@ private getColumnAlignment(field: string): string {
         return  availableWidth / (selectedColumns.length-1)
       else return indexWidth
       });
-    } else {
+    } 
+    else {
       // Si hay más columnas, usar anchos proporcionales basados en el contenido
       columnWidths = selectedColumns.map((col,index) => {
         if(index!==0){

@@ -76,6 +76,7 @@
                                 ></button> -->
                                 <p-button icon="pi pi-money-bill" (onClick)="cobrosAfiliado(customer.id)" styleClass="p-button-rounded p-button-success mr-2"></p-button>
                                 <p-button icon="pi pi-book" (onClick)="historialCobros(customer.id)" styleClass="p-button-rounded p-button-secondary mr-2"></p-button>
+                                <p-button icon="pi pi-credit-card" (onClick)="multasAfiliado(customer.id)" styleClass="p-button-rounded p-button-warning mr-2"></p-button>
                             </div>
                         
                         </td>
@@ -100,3 +101,9 @@
 [visible]="visibleHistorial"
 (eventVisible)="visibleHistorial = $event"
 ></app-historial-cobros>
+<app-multas-de-retraso-pagos
+*ngIf="idPerfil>0 visibleMultas"
+[idPerfil]="idPerfil"
+[visible]="visibleMultas"
+(eventVisible)="visibleMultas = $event"
+></app-multas-de-retraso-pagos>

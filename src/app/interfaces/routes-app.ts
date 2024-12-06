@@ -39,7 +39,8 @@ export enum ValidMenu{
     roles="roles",
     cobros="cobros-de-servicio-agua",
     lecturas="lecturas",
-    consultar="user"
+    consultar="user",
+    reportes="reportes",
     // multasRetrasoPago="multas-de-servicio"
     // afiliados="afiliados",
     //  usuarios="usuarios",
@@ -137,5 +138,18 @@ export enum ValidItemMenu{
     //FUNCIONES DE USUARIO AFILIADO
 
     consultarConsultarMedidoresAgua="consultar-medidores-de-agua",
-    consultarDeudas="consultar-deudas"
+    consultarDeudas="consultar-deudas",
+
+
+
+
+    //REPORTES
+
+    reportesPagosService="reportes-pagos",
+    reportesDeudores="reportes-deudores",
+}
+
+export enum PRIORITY{
+    afiliado=30,
+    administrativo=90,
 }

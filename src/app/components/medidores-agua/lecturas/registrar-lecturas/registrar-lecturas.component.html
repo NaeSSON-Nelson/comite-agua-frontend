@@ -6,7 +6,7 @@
         <div class="col-12 grid">
           <div class="col-12 grid" *ngIf="limite">
             <div class="col-12 my-5">
-              <h5 class="text-center">REGISTRAR LECTURAS PARA EL MES {{limite.meses![0].mes | uppercase}} DE LA GESTION {{limite.anio}}</h5>
+              <h5 class="text-left">REGISTRAR LECTURAS PARA EL MES {{limite.meses![0].mes | uppercase}} DE LA GESTION {{limite.anio}}</h5>
             </div>
             <div class="col-12 md:col-6">
               <h5>FECHA LIMITE:</h5>
@@ -14,7 +14,7 @@
               <p>FIN: {{limite.meses![0].fechaFinRegistroLecturas  | date: 'dd/MM/yyyy'}}</p>
             </div>
             <div class="col-12 md:col-6 flex flex-wrap flex-wrap-reverse">
-              <p-button label="Exportar Afiliados para lecturar" (onClick)="visibleRegistrarLecturarExport=true"></p-button>
+              <p-button label="Exportar Afiliados" (onClick)="visibleRegistrarLecturarExport=true"></p-button>
             </div>
           </div>
           <div class="col-12 md:col-3">
@@ -133,9 +133,11 @@
             
           </tr>
           <ng-template #segundaForma>
+          <tr>
+              <td class="text-center" [rowSpan]="perfil.afiliado.medidorAsociado.length" >{{perfil.id}}</td>
+              <td class="text-center left-side" [rowSpan]="perfil.afiliado.medidorAsociado.length"> {{perfil.nombrePrimero | titlecase}} {{perfil.nombreSegundo ||"" |titlecase}} {{perfil.apellidoPrimero | titlecase}} {{perfil.apellidoSegundo ||"" | titlecase}}</td>
+            </tr>
           <tr *ngFor="let asociacion of perfil.afiliado.medidorAsociado;let i=index" >
-            <td class="text-center" [rowSpan]="perfil.afiliado.medidorAsociado.length" *ngIf="i===0">{{perfil.id}}</td>
-            <td class="text-center left-side" [rowSpan]="perfil.afiliado.medidorAsociado.length" *ngIf="i===0"> {{perfil.nombrePrimero | titlecase}} {{perfil.nombreSegundo ||"" |titlecase}} {{perfil.apellidoPrimero | titlecase}} {{perfil.apellidoSegundo ||"" | titlecase}}</td>
             <td class="text-center">{{asociacion.ubicacion.barrio}}</td>
             <td class="text-center">{{asociacion.medidor.nroMedidor}}</td>
             <td class="text-center">{{asociacion.ubicacion.manzano}}-{{asociacion.ubicacion.numeroManzano}} <br/> N°Lote:{{asociacion.ubicacion.nroLote}}</td>

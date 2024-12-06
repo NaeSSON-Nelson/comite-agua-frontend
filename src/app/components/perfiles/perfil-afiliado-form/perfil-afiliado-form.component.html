@@ -28,46 +28,7 @@
             >{{ getAfiliadoBarrioErrors("barrio") }}
           </small>
         </div>
-        <div class="field col-12 md:col-4" *ngIf="!this.perfilActual?.afiliado">
-          <span class="p-float-label">
-            <p-inputNumber
-              inputId="monto"
-              formControlName="monto"
-              [minFractionDigits]="2"
-              [ngClass]="inputValid('monto')"
-            ></p-inputNumber>
-            <label for="monto">Monto de Pago de afiliacion (*)</label>
-          </span>
-          <small
-            id="monto-help"
-            class="p-error block"
-            *ngIf="campoValido('monto')"
-            >{{ getMontoErrors("monto") }}
-          </small>
-        </div>
-        <div class="field col-12 md:col-4" *ngIf="!this.perfilActual?.afiliado">
-          <span class="p-float-label">
-            <p-dropdown
-              inputId="moneda"
-              [autoDisplayFirst]="false"
-              [options]="commonServiceApp.monedas"
-              formControlName="moneda"
-              optionLabel="name"
-              optionValue="value"
-              placeholder="Selecione Moneda"
-              [ngClass]="inputValid('moneda')"
-            ></p-dropdown>
-
-            <label for="moneda">Moneda de Cobro (*)"</label>
-          </span>
-          <small
-            id="moneda-help"
-            class="p-error block"
-            *ngIf="campoValido('moneda')"
-            >{{ getMonedaErrors("moneda") }}
-          </small>
-        </div>
-        <div class="field col-12 md:col-4">
+        <div class="field col-12 md:col-3">
           <span class="p-float-label">
             <input
               type="text"
@@ -76,7 +37,7 @@
               formControlName="numeroVivienda"
               [ngClass]="inputValid('numeroVivienda')"
             />
-            <label for="numeroVivienda">Numero de Vivienda del afiliado</label>
+            <label for="numeroVivienda">Numero de Vivienda (opcional)</label>
           </span>
           <small
             id="apellidoPrimero-help"
@@ -84,6 +45,49 @@
             *ngIf="campoValido('numeroVivienda')"
             >{{ getAfiliadoNumeroViviendaErrors("numeroVivienda") }}
           </small>
+        </div>
+        <div class="field col-12 md:col-3">
+          <span class="p-float-label">
+            <p-inputNumber
+              inputId="montoAfiliacion"
+              formControlName="montoAfiliacion"
+              [minFractionDigits]="2"
+              [ngClass]="inputValid('montoAfiliacion')"
+            ></p-inputNumber>
+            <label for="montoAfiliacion">Monto pagado de afiliación(*)</label>
+          </span>
+          <small
+            id="montoAfiliacion-help"
+            class="p-error block"
+            *ngIf="campoValido('montoAfiliacion')"
+            >{{ getMontoAfiliacionErrors("montoAfiliacion") }}
+          </small>
+        </div>
+        <div class="field col-12 md:col-3">
+          <span class="p-float-label">
+            <p-dropdown
+              inputId="monedaAfiliacion"
+              [autoDisplayFirst]="false"
+              [options]="commonServiceApp.monedas"
+              formControlName="monedaAfiliacion"
+              optionLabel="name"
+              optionValue="value"
+              placeholder="Selecione Moneda del pago"
+              [ngClass]="inputValid('monedaAfiliacion')"
+            ></p-dropdown>
+
+            <label for="moneda">Moneda del monto recibido (*)"</label>
+          </span>
+          <small
+            id="monedaAfiliacion-help"
+            class="p-error block"
+            *ngIf="campoValido('monedaAfiliacion')"
+            >{{ getMonedaAfiliacionErrors("monedaAfiliacion") }}
+          </small>
+        </div>
+        
+        <div class="col-12">
+          <p-divider>Ubicación del afiliado</p-divider>
         </div>
         <div class="col-12 flex justify-content-center">
           <p-button icon="pi pi-map-marker" styleClass="p-button-rounded p-button-secondary p-button-text p-button-raised" (onClick)="showMap=true"></p-button>
@@ -126,7 +130,7 @@
           </small>
         </div>
         
-        <div class="field col-12 md:col-4 md:mt-3">
+        <div class="field col-4 md:col-4 md:mt-3">
           <span class="p-float-label">
             <input
               type="text"
@@ -144,7 +148,7 @@
             >{{ getAfiliadoManzanoErrors("manzano") }}
           </small>
         </div>
-        <div class="field col-12 md:col-4 md:mt-3" >
+        <div class="field col-4 md:col-4 md:mt-3" >
           <span class="p-float-label">
             <p-inputNumber
               inputId="numeroManzano"
@@ -160,7 +164,7 @@
             >{{ getAfiliadoNumeroManzanoErrors("numeroManzano") }}
           </small>
         </div>
-        <div class="field col-12 md:col-4 md:mt-3">
+        <div class="field col-4 md:col-4 md:mt-3">
           <span class="p-float-label">
             <p-inputNumber
               inputId="nroLote"
@@ -177,7 +181,7 @@
             >{{ getAfiliadoNroLoteErrors("nroLote") }}
           </small>
         </div>
-        <div class="field col-12 md:col-3" *ngIf="!this.perfilActual?.afiliado">
+        <!-- <div class="field col-12 md:col-3" *ngIf="!this.perfilActual?.afiliado">
           <span class="p-float-label">
             <p-dropdown
               inputId="estado"
@@ -198,7 +202,7 @@
             *ngIf="campoValido('estado')"
             >{{ getAfiliadoEstadoErrors("estado") }}
           </small>
-        </div>
+        </div> -->
         <div class="col-12 md:flex md:justify-content-center">
             <button
               type="button"

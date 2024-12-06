@@ -1,13 +1,15 @@
 <div class="user-profile-container">
   <p-card class="profile-card" *ngIf="role">
     <div class="grid">
+      <div class="col-12"><h2 class="text-center">DATOS DEL ROL</h2>
+      </div>
       <div class="col-12 profile-details">
         <div class="grid">
 					<!-- DATA ROLE-->
 					 <div class="col-12">
 						<div class="flex justify-content-between flex-wrap title-container">
 							<div class="flex justify-content-start flex-wrap">
-								<h3>Información de Role de acceso</h3>
+								<h3>Información de Rol</h3>
 							</div>
 							<div class="flex justify-content-end flex-wrap">
 								<p-button icon="pi pi-pencil" styleClass="p-button-rounded p-button-warning  mr-2" alt="Modificar datos"(click)="actionData('MODIFICAR')" ></p-button>
@@ -23,8 +25,8 @@
 						</div>
 					</div>
           <div class="col-12 p-3" *ngIf="role.menus;else sinMenus">
-            <h2>Menus de acceso del rol</h2>
-            <div class="grid" *ngFor="let menu of role.menus;let index">
+            <h2>Menús asignados</h2>
+            <div class="grid ml-3" *ngFor="let menu of role.menus;let index">
               <h5 class="title-container font-semibold col-12 ml-3">
                 {{menu.nombre | titlecase}}
               </h5>

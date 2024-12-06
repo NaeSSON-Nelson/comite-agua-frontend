@@ -17,7 +17,7 @@ import { PaginatorState } from 'primeng/paginator';
 })
 export class AsociacionesListarComponent {
   data: Perfil[] = [];
-  titleTable = 'LISTADO DE AFILIADOS REGISTRADOS';
+  titleTable = 'ASOCIACIONES DE AFILIADOS';
   loading:boolean=false;
   // debouncer: Subject<string> = new Subject<string>();
   constructor(

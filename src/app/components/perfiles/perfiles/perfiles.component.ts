@@ -17,7 +17,7 @@ import { PATH_AUTH, PATH_FORBBIDEN, PATH_MODULE_DETAILS, PATH_PERFILES, PATH_REG
 })
 export class PerfilesComponent {
   data: Perfil[] = [];
-  titleTable = 'LISTA DE PERFILES REGISTRADOS';
+  titleTable = 'PERFILES';
   loading:boolean=false;
   pdfGeneratorVisible:boolean=false;
   // debouncer: Subject<string> = new Subject<string>();

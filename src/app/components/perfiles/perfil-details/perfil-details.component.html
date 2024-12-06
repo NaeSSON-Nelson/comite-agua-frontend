@@ -2,6 +2,7 @@
 <div class="user-profile-container">
 	<p-card class="profile-card" *ngIf="perfil">
 		<div class="grid">
+			<div class="col-12"><h2 class="text-center">DATOS DE PERFIL</h2></div>
 			<div class="col-12 md:col-4 profile-image-container">
 				<img [src]="perfil.urlImage ||''" alt="Foto de perfil" class="profile-image"/>
 				<p-button icon="pi pi-camera" styleClass="p-button-rounded p-button-secondary" class="button-camera-position" (onClick)="visibleImageForm=true"></p-button>
@@ -12,7 +13,7 @@
 					 <div class="col-12">
 						<div class="flex justify-content-between flex-wrap title-container">
 							<div class="flex justify-content-start flex-wrap">
-								<h3>Información Personal del Perfíl</h3>
+								<h3>Información Personal</h3>
 							</div>
 							<div class="flex justify-content-end flex-wrap">
 								<p-button icon="pi pi-user-plus" *ngIf="!perfil.accessAcount" styleClass="p-button-rounded  p-button-info mr-2" alt="Deshabilitar registro"  (click)="actionData('USUARIO')"></p-button>
@@ -42,7 +43,7 @@
 					<div class="col-12" *ngIf="perfil.afiliado">
 						<div class="flex justify-content-between flex-wrap title-container">
 							<div class="flex justify-content-start flex-wrap">
-								<h3>Información Personal del Afiliación</h3>
+								<h3>Afiliación</h3>
 							</div>
 							<div class="flex justify-content-end flex-wrap">
 								<p-button icon="pi pi-lock" styleClass="p-button-rounded p-button-danger mr-2" alt="Deshabilitar registro" *ngIf="perfil.afiliado.isActive; else inhabilitado" (click)="actionDataAfiliado('DESHABILITAR')"></p-button>
@@ -53,11 +54,11 @@
 							</div>
 						</div>
 						<div class="grid">
-							<div class="col-12 md:col-6"><strong>Estado del registro:</strong><p-tag [severity]="perfil.afiliado.isActive?'success':'danger'" [value]="perfil.afiliado.estado" class="ml-3"></p-tag>
-							</div>
+							<div class="col-12 md:col-6"><strong>Estado del registro:</strong><p-tag [severity]="perfil.afiliado.isActive?'success':'danger'" [value]="perfil.afiliado.estado" class="ml-3"></p-tag></div>
+							<div class="col-12 md:col-6"><strong>Monto pagado de afiliación:</strong> {{ perfil.afiliado.montoAfiliacion | currency : perfil.afiliado.monedaAfiliacion}}</div>
 						</div>
-						<h2>Ubicación de Afiliado</h2>
-						<div class="grid">
+						<h4 class="mark-title md:ml-3 mt-0">Ubicación</h4>
+						<div class="grid md:ml-3">
 							<div class="col-12 md:col-6"><strong>Barrio ubicado:</strong> {{ perfil.afiliado.ubicacion?.barrio | titlecase}}</div>
 							<div class="col-12 md:col-6"><strong>N° de Vivienda:</strong> {{ perfil.afiliado.ubicacion?.numeroVivienda ||'Sin N° de Vivienda' | titlecase  }}</div>
 							<div class="col-12 md:col-6"><strong>Manzano:</strong> {{ perfil.afiliado.ubicacion?.manzano }}</div>
@@ -67,7 +68,7 @@
 							<div class="col-12 md:col-6"><strong>Longitud:</strong> {{ perfil.afiliado.ubicacion?.longitud || 'No se proporcionó el dato'}}</div>
 							<div class="col-12 md:col-6"><strong>Mapa georreferencial:</strong><p-button icon="pi pi-map-marker" styleClass="p-button-rounded p-button-secondary p-button-text p-button-raised ml-4" (onClick)="mostrarMapAfiliado()"></p-button></div>
 						</div>
-						<h2>Coste de Afiliación</h2>
+						<!-- <h2>Coste de Afiliación</h2>
 						<div class="grid">
 							<div class="col-12 md:col-6"><strong>Mónto de cobro:</strong> {{ perfil.afiliado.monto | currency: perfil.afiliado.moneda+'. '}}</div>
 							<div class="col-12 md:col-6"><strong>Estado del pago:</strong><p-tag [severity]="perfil.afiliado.pagado?'success':'danger'" [value]="perfil.afiliado.pagado ?'Pagado':'No pagado'" class="ml-3"></p-tag></div>
@@ -94,13 +95,13 @@
 								
 							</ng-container>
 							
-						</div>
+						</div> -->
 					</div>
 
-					<div class="col-12" *ngIf="perfil.usuario">
+					<div class="col-12 md:ml-3" *ngIf="perfil.usuario">
 						<div class="flex justify-content-between flex-wrap title-container">
 							<div class="flex justify-content-start flex-wrap">
-								<h3>Información de Usuario de acceso al sistema</h3>
+								<h4 >Usuario de sistema</h4>
 							</div>
 							<div class="flex justify-content-end flex-wrap">
 								<p-button icon="pi pi-lock" styleClass="p-button-rounded p-button-danger mr-2"  alt="Deshabilitar registro" (click)="actionDataUsuario('DESHABILITAR')" *ngIf="perfil.usuario.isActive; else inhabilitado" ></p-button>
@@ -124,7 +125,7 @@
 	</p-card>
 </div>
 
-<p-dialog header="Header" [(visible)]="visibleImageForm" [modal]="true" [style]="{ width: '50vw' }" [draggable]="false" [resizable]="false" (onHide)="visibleImageForm=false">
+<p-dialog header="SUBIR FOTO DE PERFIL" [(visible)]="visibleImageForm" [modal]="true" [style]="{ width: '50vw' }" [draggable]="false" [resizable]="false" (onHide)="visibleImageForm=false">
     <div class="card flex justify-content-center">
 		<p-fileUpload accept=".jpeg,.jpg,.png" 
 		[disabled]="IsLoading"
@@ -158,9 +159,9 @@
 [defaultCenter]="coordenadasLatLng"
 (eventVisible)="visibleMapAfiliado =$event"
 ></app-map-afiliado>
-<app-pago-afiliacion
+<!-- <app-pago-afiliacion
 *ngIf="visiblePagoAfiliacion"
 [visible]="visiblePagoAfiliacion"
 [perfil]="perfil"
 (eventVisible)="visiblePagoAfiliacion = $event"
-></app-pago-afiliacion>
+></app-pago-afiliacion> -->

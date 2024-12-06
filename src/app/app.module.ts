@@ -26,6 +26,17 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { ErrorApiInterceptor } from './interceptors/error-api.interceptor';
 import { AsociacionesMedidoresModule } from './components/asociaciones-medidores/asociaciones-medidores.module';
+import { ReportesModule } from './components/reportes/reportes.module';
+
+import {HttpClient} from "@angular/common/http";
+
+// Localization
+import { LOCALE_ID } from '@angular/core';
+import { registerLocaleData } from '@angular/common';
+import localeES from '@angular/common/locales/es';
+
+// Registrar el locale español
+registerLocaleData(localeES, 'es');
 
 
 
@@ -36,6 +47,7 @@ import { AsociacionesMedidoresModule } from './components/asociaciones-medidores
   ],
   imports: [
     BrowserModule,
+    
     BrowserAnimationsModule,
     AppRoutingModule,
     HttpClientModule,
@@ -43,10 +55,8 @@ import { AsociacionesMedidoresModule } from './components/asociaciones-medidores
     ToastModule,
     ConfirmDialogModule,
     ReactiveFormsModule,
-    // //UNA SOLUCION AL ERROR: NOW?
+    //UNA SOLUCION AL ERROR: NOW?
     // AuthModule,
-    // ItemsMenuModule,
-    // MenusModule,
     // RolesModule,
     // MedidoresAguaModule,
     // PerfilesModule,
@@ -54,6 +64,7 @@ import { AsociacionesMedidoresModule } from './components/asociaciones-medidores
     // UsuariosFuncionesModule,
     // CobrosModule,
     // AsociacionesMedidoresModule,
+    // ReportesModule,
   ],
   providers: [
     MessageService,
@@ -67,6 +78,10 @@ import { AsociacionesMedidoresModule } from './components/asociaciones-medidores
       provide: HTTP_INTERCEPTORS,
       useClass:ErrorApiInterceptor,
       multi:true,
+    },
+    { 
+      provide: LOCALE_ID, 
+      useValue: 'es' 
     }
   ],
   bootstrap: [AppComponent]

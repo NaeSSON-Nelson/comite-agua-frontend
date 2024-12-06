@@ -192,7 +192,7 @@
           </small>
         </div>
 
-        <div class="field col-6 md:col-3" *ngIf="!this.perfilActual?.id">
+        <!-- <div class="field col-6 md:col-3" *ngIf="!this.perfilActual?.id">
           <span class="p-float-label">
             <p-dropdown
               inputId="estado"
@@ -213,7 +213,7 @@
             *ngIf="campoValido('estado')"
             >{{ getEstadoErrors("estado") }}
           </small>
-        </div>
+        </div> -->
       </div>
     </div>
     <div class="grid card"  *ngIf="!perfilActual?.id">
@@ -329,41 +329,41 @@
         <div class="field col-6 md:col-4">
           <span class="p-float-label">
             <p-inputNumber
-              inputId="monto"
-              formControlName="monto"
+              inputId="montoAfiliacion"
+              formControlName="montoAfiliacion"
               [maxFractionDigits]="2"
-              [ngClass]="inputValidAfiliado('monto')"
+              [ngClass]="inputValidAfiliado('montoAfiliacion')"
             ></p-inputNumber>
-            <label for="monto">Costo de Afiliación (*)</label>
+            <label for="montoAfiliacion">Monto de afiliacion pagada (*)</label>
           </span>
           <small
-            id="monto-help"
+            id="montoAfiliacion-help"
             class="p-error block"
-            *ngIf="campoValidoAfiliado('monto')"
-            >{{ getAfiliadoMontoErrors("monto") }}
+            *ngIf="campoValidoAfiliado('montoAfiliacion')"
+            >{{ getAfiliadoMontoAfiliacionErrors("montoAfiliacion") }}
           </small>
         </div>
         <div class="field col-6 md:col-4">
           <span class="p-float-label">
             <p-dropdown
-              inputId="moneda"
+              inputId="monedaAfiliacion"
               [options]="commonServiceApp.monedas"
-              formControlName="moneda"
+              formControlName="monedaAfiliacion"
               optionLabel="name"
               optionValue="value"
-              placeholder="Moneda de Pago"
-              [ngClass]="inputValidAfiliado('moneda')"
+              placeholder="Moneda del Pago"
+              [ngClass]="inputValidAfiliado('monedaAfiliacion')"
             ></p-dropdown>
-            <label for="moneda">moneda (*)</label>
+            <label for="moneda">Moneda del monto recibido(*)</label>
           </span>
           <small
-            id="moneda-help"
+            id="monedaAfiliacion-help"
             class="p-error block"
-            *ngIf="campoValidoAfiliado('moneda')"
-            >{{ getAfiliadoMonedaErrors("moneda") }}
+            *ngIf="campoValidoAfiliado('monedaAfiliacion')"
+            >{{ getAfiliadoMonedaAfiliacionErrors("monedaAfiliacion") }}
           </small>
         </div>
-        <div class="field col-6 md:col-4">
+        <!-- <div class="field col-6 md:col-4">
           <span class="p-float-label">
             <p-dropdown
               inputId="estado"
@@ -384,7 +384,7 @@
             *ngIf="campoValidoAfiliado('estado')"
             >{{ getAfiliadoEstadoErrors("estado") }}
           </small>
-        </div>
+        </div> -->
           <div class="col-12 grid md:col-offset-5">
             <label for="icon-geo" class="col-12">Ubicacion georeferencial</label>
             <p-button   id="icon-geo" class="col-1" icon="pi pi-map-marker" styleClass="p-button-rounded p-button-secondary p-button-text p-button-raised" (onClick)="showMap=true"></p-button>
@@ -430,7 +430,7 @@
               >{{ getUsuarioCorreoErrors("correo") }}
             </small>
           </div>
-          <div class="field col-12 md:col-6 md:mt-3">
+          <!-- <div class="field col-12 md:col-6 md:mt-3">
               <span class="p-float-label">
                 <p-dropdown
                   inputId="estado"
@@ -451,7 +451,7 @@
                 *ngIf="campoValidoUsuario('estado')"
                 >{{ getUsuarioEstadoErrors("estado") }}
               </small>
-            </div>
+            </div> -->
             <div class="col-12"><p class="font-italic">El usuario y contraseña de Acceso seran entregados en la creacion del perfil (*)</p></div> 
             <div class="col-12">
                 <h5>Roles de Acceso al usuario</h5>

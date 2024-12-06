@@ -16,8 +16,8 @@ import { PaginatorState } from 'primeng/paginator';
 })
 export class CobrosComponent {
   data: Perfil[] = [];
-  titleTableModule = 'MODULO DE COBROS DE LECTURAS A LOS AFILIADOS';
-  titleTable = 'LISTADO DE AFILIADOS';
+  titleTableModule = 'COBROS DE SERVICIO DE AGUA';
+  titleTable = 'LISTA DE AFILIADOS';
   // debouncer: Subject<string> = new Subject<string>();
   constructor(
     private readonly cobrosService: CobrosService,
@@ -111,6 +111,11 @@ export class CobrosComponent {
   visibleHistorial:boolean=false;
   historialCobros(id:number){
     this.visibleHistorial=true;
+    this.idPerfil=id;
+  }
+  visibleMultas:boolean=false;
+  multasAfiliado(id:number){
+    this.visibleMultas=true;
     this.idPerfil=id;
   }
   closeModal(event:any){

@@ -117,7 +117,8 @@ export class LoginComponent {
   getUser(){
     this.authService.getUser().subscribe(res=>{
       console.log('es get user',res);
-      this.layoutService.userObserver.emit(res.data!)
+      this.layoutService.userObserver.emit(res.data!);
+      // this.authService.usuarioState=res.data|| null;
     })
   }
 }

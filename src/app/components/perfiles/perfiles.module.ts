@@ -30,7 +30,7 @@ import { PagoAfiliacionComponent } from './pago-afiliacion/pago-afiliacion.compo
     UsuarioCreatedComponent,
     PerfilPdfComponent,
     MapAfiliadoDetailsComponent,
-    PagoAfiliacionComponent,
+    // PagoAfiliacionComponent,
   ],
   imports: [
     CommonModule,

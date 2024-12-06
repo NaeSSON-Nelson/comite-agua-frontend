@@ -29,6 +29,7 @@ export class LayoutService {
   get user() {
     return this._user$.asObservable();
   }
+  
   get userObserver() {
     return this._user$;
   }
@@ -46,7 +47,7 @@ export class LayoutService {
     menuMode: 'static',
     colorScheme: 'light',
     theme: 'lara-light-indigo',
-    scale: 18,
+    scale: 22,
 };
 
 state: LayoutState = { 

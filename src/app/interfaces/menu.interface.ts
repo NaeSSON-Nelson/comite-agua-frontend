@@ -5,6 +5,7 @@ export interface Menu extends ColumnsAlways{
   id?:          number;
   nombre?:      string;
   linkMenu?:    string;
+  prioridad?:   number;
   itemMenu?:    ItemMenu[];
 }
 export interface MenuForm {

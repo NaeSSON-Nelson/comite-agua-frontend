@@ -55,12 +55,12 @@ export class DeudasPerfilComponent {
   selectedNodes: any =null;
   loading:boolean=false;
   cols:any[]=[
-    { field: 'name', header: 'Nro. medidor afiliado' },
+    { field: 'name', header: 'Medidores de agua' },
     { field: 'gestion', header: 'Gestión' },
-    { field: 'mesLectura', header: 'Mes de Lecturación' },
+    { field: 'mesLectura', header: 'Mes lecturado' },
     { field: 'lectura', header: 'Lectura' },
-    { field: 'consumo', header: 'Consumo' },
-    { field: 'monto_view', header: 'Tarifa por pagar' }
+    { field: 'consumo', header: 'Consumido' },
+    { field: 'monto_view', header: 'Deudas por pagar' }
   ];
   colsMulta:any[]=[
 

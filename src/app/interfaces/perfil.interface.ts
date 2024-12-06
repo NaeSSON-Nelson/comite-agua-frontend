@@ -36,7 +36,7 @@ export interface PerfilForm{
     fechaNacimiento?:Date;
     direccion?      :string;
     contactos?      :string[];
-    estado?         :Estado;
+    // estado?         :Estado;
     usuarioForm?    :UsuarioForm;
     afiliadoForm?   :AfiliadoForm;
 }

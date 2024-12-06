@@ -46,8 +46,8 @@ export class PagoAfiliacionComponent {
         if(res.OK){
           this.afiliado=res.data!;
           // this.formPago.get('montoRecibido')?.addValidators(amountMatchValidator(this.afiliado.monto!));
-          this.formPago.get('montoRecibido')?.setValidators([Validators.required,Validators.min(0),amountMatchValidator(this.afiliado.monto!)]);
-          this.formPago.get('monedaRecibido')?.setValidators([Validators.required,MonedaMatchValidator(this.afiliado.moneda!)]);
+          // this.formPago.get('montoRecibido')?.setValidators([Validators.required,Validators.min(0),amountMatchValidator(this.afiliado.monto!)]);
+          // this.formPago.get('monedaRecibido')?.setValidators([Validators.required,MonedaMatchValidator(this.afiliado.moneda!)]);
           // this.formPago.get('monedaRecibido')?.addValidators(MonedaMatchValidator(this.afiliado.moneda!));
           this.formPago.get('perfilId')?.setValue(this.perfil.id!);
         }
@@ -235,14 +235,14 @@ export class PagoAfiliacionComponent {
   visibleUpdatePagoForm:boolean=false;
   visibleDialogReport:boolean=false;
   reporteGenerado:boolean=false;
-  generarRecibo(){
-    this.reporteGenerado=this.commonAppService.generarReciboDePagoPorAfiliacion({
-      ...this.perfil,
-      afiliado:this.afiliado,
-      }
-    )
-    console.log(this.reporteGenerado);
-  }
+  // generarRecibo(){
+  //   this.reporteGenerado=this.commonAppService.generarReciboDePagoPorAfiliacion({
+  //     ...this.perfil,
+  //     afiliado:this.afiliado,
+  //     }
+  //   )
+  //   console.log(this.reporteGenerado);
+  // }
   cerrarVentana(){
     if(this.reporteGenerado){
       this.visibleDialogReport=false;
@@ -295,11 +295,11 @@ export class PagoAfiliacionComponent {
   get formValidUpdate(){
     return this.updatePagoForm.valid && this.updatePagoForm.touched && !this.updatePagoForm.pristine
   }
-  mostrarFormUpdate(){
-    this.visibleUpdatePagoForm=true;
-    this.updatePagoForm.get('monto')?.setValue(this.afiliado.monto);
-    this.updatePagoForm.get('moneda')?.setValue(this.afiliado.moneda);
-  }
+  // mostrarFormUpdate(){
+  //   this.visibleUpdatePagoForm=true;
+  //   this.updatePagoForm.get('monto')?.setValue(this.afiliado.monto);
+  //   this.updatePagoForm.get('moneda')?.setValue(this.afiliado.moneda);
+  // }
   campoValidoUpdatePago(nombre: string) {
     return (
       this.updatePagoForm.controls[nombre].errors &&

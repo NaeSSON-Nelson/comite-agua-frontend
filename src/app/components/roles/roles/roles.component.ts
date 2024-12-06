@@ -18,7 +18,7 @@ import { PATH_AUTH, PATH_FORBBIDEN, PATH_MODULE_DETAILS, PATH_REGISTRAR, PATH_RO
 })
 export class RolesComponent {
   data: Role[] = [];
-  titleTable = 'LISTADO DE ROLES DE ACCESO A LOS MENÚS PARA ASIGNAR A USUARIOS';
+  titleTable = 'ROLES';
   // debouncer: Subject<string> = new Subject<string>();
   constructor(
     private readonly rolesService: RolesService,

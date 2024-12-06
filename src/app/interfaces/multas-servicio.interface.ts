@@ -19,7 +19,7 @@ export interface ComprobanteDePagoDeMultas{
     id:number;
     fechaEmitida:Date;
     metodoPago:string;
-    montoPagado:number;
+    montoPagado:string;
     moneda:Monedas;
     entidadPago?:string;
     nroRecibo?:string;

@@ -42,9 +42,9 @@ export class PerfilAfiliadoFormComponent {
       this.perfilActual=res;
       if(afiliado){
         if(this.routerAct.snapshot.routeConfig?.path?.includes(ValidItemMenu.perfilAfiliadoUpdate)){
-          this.afiliadoForm.removeControl('estado');
-          this.afiliadoForm.removeControl('moneda');
-          this.afiliadoForm.removeControl('monto');
+          // this.afiliadoForm.removeControl('estado');
+          // this.afiliadoForm.removeControl('moneda');
+          // this.afiliadoForm.removeControl('monto');
           this.afiliadoForm.setValue({
             // estado:afiliado.estado,
             barrio:afiliado.ubicacion?.barrio,
@@ -54,6 +54,8 @@ export class PerfilAfiliadoFormComponent {
             manzano:afiliado.ubicacion?.manzano,
             numeroManzano:afiliado.ubicacion?.numeroManzano,
             nroLote:afiliado.ubicacion?.nroLote,
+            montoAfiliacion:afiliado.montoAfiliacion,
+            monedaAfiliacion:afiliado.monedaAfiliacion,
           })
         }else{
           this.messageService.add({
@@ -113,14 +115,14 @@ export class PerfilAfiliadoFormComponent {
     })}
   }
   afiliadoForm:FormGroup= this.fb.group({
-    estado          :[Estado.ACTIVO,[Validators.required]],
+    // estado          :[Estado.ACTIVO,[Validators.required]],
     barrio          :[,[Validators.required]],
     numeroVivienda  :[,[Validators.pattern(patternText),Validators.minLength(3)]],
     manzano         :[,[Validators.required]],
     numeroManzano   :[,[Validators.required,Validators.min(1)]],
     nroLote         :[,[Validators.required,Validators.min(1)]],
-    monto           :[,[Validators.required,Validators.min(0)]],
-    moneda          :[,Validators.required],
+    montoAfiliacion :[,[Validators.required,Validators.min(0)]],
+    monedaAfiliacion:[,Validators.required],
     longitud        :[],
     latitud         :[],
   })
@@ -295,14 +297,14 @@ export class PerfilAfiliadoFormComponent {
     }
     return '';
   }
-  getAfiliadoEstadoErrors(campo: string) {
-    const errors = this.afiliadoForm.get(campo)?.errors;
+  // getAfiliadoEstadoErrors(campo: string) {
+  //   const errors = this.afiliadoForm.get(campo)?.errors;
     
-    if (errors?.['required']) {
-      return 'El campo es requerido';
-    }
-    return '';
-  }
+  //   if (errors?.['required']) {
+  //     return 'El campo es requerido';
+  //   }
+  //   return '';
+  // }
 
   
   getAfiliadoManzanoErrors(campo:string){
@@ -332,7 +334,7 @@ export class PerfilAfiliadoFormComponent {
     return '';
   }
 
-  getMontoErrors(campo:string){
+  getMontoAfiliacionErrors(campo:string){
     const errors = this.afiliadoForm.get(campo)?.errors;
     if(errors?.['required']){
       return 'El campo es requerido'
@@ -340,7 +342,7 @@ export class PerfilAfiliadoFormComponent {
       return `El minimo monto es ${errors?.['min'].min}`
     }return ``;
   }
-  getMonedaErrors(campo:string){
+  getMonedaAfiliacionErrors(campo:string){
     const errors = this.afiliadoForm.get(campo)?.errors;
     if(errors?.['required']){
       return 'El campo es requerido'

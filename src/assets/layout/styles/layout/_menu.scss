@@ -21,7 +21,7 @@
 
     .layout-root-menuitem {
         >.layout-menuitem-root-text {
-            font-size: .857rem;
+            font-size: 1.2rem;
             text-transform: uppercase;
             font-weight: 700;
             color: var(--surface-900);
@@ -68,7 +68,10 @@
             transition: background-color $transitionDuration, box-shadow $transitionDuration;
 
             .layout-menuitem-icon {
-                margin-right: .5rem;
+                margin-right: 1rem;
+            }
+            .layout-menuitem-text {
+                margin-right: 1rem;
             }
 
             .layout-submenu-toggler {

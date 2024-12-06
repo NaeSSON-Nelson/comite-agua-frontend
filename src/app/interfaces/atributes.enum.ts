@@ -38,3 +38,10 @@ export enum MetodoPago{
     deposito='DEPOSITO',
 }
   
+export enum RetrasoTipo{
+    mensual='MES',
+    bimestral='BIMESTRE',
+    trimestral='TRIMESTRE',
+    demas='DEMAS'
+  }
+  
