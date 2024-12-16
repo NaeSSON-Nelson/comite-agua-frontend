@@ -93,7 +93,7 @@ export class MedidorDetailsComponent {
 
       case 'DESHABILITAR':
         this.confirmationService.confirm({
-          message: `¿Está seguro de Deshabilitar?`,
+          message: `¿Está seguro de Deshabilitar el medidor de agua?`,
           header: 'Confirmar Acción',
           icon: 'pi pi-info-circle',
           accept: () => {
@@ -128,7 +128,7 @@ export class MedidorDetailsComponent {
 
       case 'HABILITAR':
         this.confirmationService.confirm({
-          message: `¿Está seguro de Habilitar?`,
+          message: `¿Está seguro de Habilitar el medidor de agua?`,
           header: 'Confirmar Acción',
           icon: 'pi pi-info-circle',
           accept: () => {

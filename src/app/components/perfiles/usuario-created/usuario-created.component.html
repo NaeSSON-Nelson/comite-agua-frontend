@@ -30,14 +30,12 @@
             <label htmlFor="username">Username</label>
             <input pInputText id="username" type="text" [disabled]="true" [value]="dataSelected.perfil.usuario?.username" class="appearance-none text-color text-base" />
         </div>
-        <div class="field col-12 md:col-6">
-            <label htmlFor="password">Password</label>
-            <input pInputText id="password" type="text" [disabled]="true" [value]="dataSelected.dataUser.passwordImplict" class="appearance-none text-color text-base" />
-        </div>
     </div>
 </div>
 <ng-template pTemplate="footer">
     <div class="flex justify-content-center flex-wrap">
+        <button pButton pRipple type="button" label="Generar PDF con la cuenta" class="p-button-primary mx-3 p-button-success" (click)="generatePDF()"
+     ></button>
         <button pButton pRipple type="button" label="Cerrar Ventana" class="p-button-primary mx-3 " (click)="closeModal()"
      ></button>
     </div>

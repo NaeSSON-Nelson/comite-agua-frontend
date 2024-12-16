@@ -1,0 +1,74 @@
+<div class="card">
+    <div class="grid">
+        <h2 class="text-center col-12 my-5">RECONEXIONES DEL SERVICIO DE AGUA POTABLE</h2>
+        <div class="col-12">
+            <i class=" pi pi-spin pi-spinner" style="font-size: 2rem" *ngIf="loading"></i>
+        </div>
+        <div class="m-5" *ngIf="data.length>0 && visibleTable;else sinData">
+            <h4> Lista de Afiliados para reconexión del servicio de agua</h4>
+            <p-toolbar>
+                <div class="grid">
+                    <div class="col-12 mt-3 mb-3 text-xl">Exportar en:</div>
+                    <div class="p-toolbar-group-start grid">
+                        <p-button label="PDF" icon="pi pi-file-pdf" class="mr-2" styleClass="p-button-rounded" (onClick)="exportPDF()"></p-button>
+                        <!-- <p-button label="EXCEL" icon="pi pi-file-excel" styleClass="p-button-rounded p-button-success"></p-button> -->
+                    </div>
+                </div>
+            </p-toolbar>
+        <p-table [value]="data" [tableStyle]="{ 'min-width': '50rem' }" *ngIf="data.length>0"
+        (onRowSelect)="addSelect($event)"
+        (onRowUnselect)="dropSelect($event)"
+        >
+            <ng-template pTemplate="header">
+                <tr>
+                    <th>Nombre completo</th>
+                    <th>N° contacto</th>
+                    <th>Medidor de agua</th>
+                    <th>Ubicacion</th>
+                    <th>Acciones</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-perfil>
+                <ng-container *ngIf="perfil.afiliado.medidorAsociado.length>1; else onlyMedidor">
+                    <tr>
+                        <td>{{perfil.nombrePrimero | titlecase}} {{perfil.nombreSegundo ||'' |titlecase}} {{perfil.apellidoPrimero | titlecase}} {{perfil.apellidoSegundo ||'' | titlecase}}</td>
+                        
+                        <td>{{perfil.contacto || 'SIN CONTACTO'}}</td>
+                    </tr>
+                    <tr *ngFor="let asc of perfil.afiliado.medidorAsociado;let i=index">
+                        <td>{{asc.medidor.nroMedidor}}</td>
+                        <td>{{getUbicacion(asc.ubicacion)}}</td>
+                        <td>
+                            <p-tableCheckbox [value]="asc"></p-tableCheckbox>
+                        </td>
+                    </tr>
+                </ng-container>
+                <ng-template #onlyMedidor>
+                    <tr>
+                        <td>{{perfil.nombrePrimero | titlecase}} {{perfil.nombreSegundo ||'' |titlecase}} {{perfil.apellidoPrimero | titlecase}} {{perfil.apellidoSegundo ||'' | titlecase}}</td>
+                       
+                        <td>{{perfil.contacto || 'SIN CONTACTO'}}</td>
+                        <td>{{perfil.afiliado.medidorAsociado[0].medidor.nroMedidor}}</td>
+                        <td>{{getUbicacion(perfil.afiliado.medidorAsociado[0].ubicacion)}}</td>
+                       
+                        <td class="text-center">
+                            <p-tableCheckbox [value]="perfil.afiliado.medidorAsociado[0]"></p-tableCheckbox>
+                        </td>
+                    </tr>
+                </ng-template>
+                
+            </ng-template>
+        </p-table>
+        <div class="col-12 mt-3 flex flex-wrap justify-content-center"  *ngIf="data.length>0">
+            <p-button label="Registar reconexiones de servicio seleccionados" (onClick)="registrarReconexiones()"></p-button>
+        </div>
+        </div>
+        <ng-template #sinData>
+            <p class="font-italic" *ngIf="data.length===0 && visibleTable"></p>
+            <div class="col-12">
+                <p class="font-italic">{{title}}</p>
+            </div>
+        </ng-template>
+    </div>
+
+</div>

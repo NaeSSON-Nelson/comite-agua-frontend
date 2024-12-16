@@ -1,18 +1,22 @@
 <div class="card grid">
     <div class="col-12 grid" *ngIf="userPerfil">
-        <div class="col-4"></div>
-        <div class="col-8">
-            <h4>Perfil</h4>
+        <div class="col-12">
+            <h2 class="text-center">DATOS DEL PERFIL DE USUARIO</h2>
+        </div>
+        <div class="col-12 md:col-4">
+            <img [src]="userPerfil.urlImage ||''" alt="Foto de perfil" class="profile-image"/>
+         </div>
+        <div class="col-12 md:col-8">
             <p-divider></p-divider>
             <div class="grid mt-3">
-                <div class="col-12">
+                <div class="col-12 md:col-6">
                     <label class="col-12 mb-2 md:col-2 md:mb-0 text-700 text-lg"> <b>NOMBRES: </b></label>
                     <div class="col-12 md:col-10">
                         <p class="text-900 text-left text-lg">{{userPerfil.nombrePrimero |uppercase}} {{userPerfil.nombreSegundo || "" |uppercase}} {{userPerfil.apellidoPrimero |uppercase}} {{userPerfil.apellidoSegundo || "" |uppercase}}</p>
                     </div>
                 </div>
                 <div class="col-3">
-                    <label class="col-12 mb-2 md:col-2 md:mb-0 text-700 text-lg"> <b>CI: </b></label>
+                    <label class="col-12 mb-2 md:col-2 md:mb-0 text-700 text-lg"> <b>Cédula de Identidad: </b></label>
                     <div class="col-12 md:col-10">
                         <p class="text-900 text-left text-lg">{{userPerfil.CI}}</p>
                     </div>
@@ -51,6 +55,19 @@
                         <p class="text-900 text-left text-lg">{{userPerfil.afiliado.ubicacion?.barrio}}</p>
                     </div>
                 </div>
+                <div class="col-12 md:col-6 text-700 text-lg" *ngIf="userPerfil.afiliado.descuentos!.length>0;else sinBeneficios"><b>Beneficiario de descuento:</b>
+                    <div class="mt-2">
+                        <ul class="list-none p-0">
+                            <li *ngFor="let ben of userPerfil.afiliado.descuentos" 
+                                class="mb-2 p-2 rounded">
+                              {{ ben.tipoBeneficiario }} {{ben.descuento}}% de descuento.
+                            </li>
+                          </ul>
+                    </div>
+                </div>
+                <ng-template #sinBeneficios>
+                    <div class="col-12 md:col-6 text-700 text-lg"><b>BENEFICIARIO DE ALGUN DESCUENTO:</b> NINGUNO</div>
+                </ng-template>
                 <div class="col-6">
                     <label class="col-12 mb-2 md:col-2 md:mb-0 text-700 text-lg"> <b>UBICACION GEOGRAFICA: </b></label>
                     <ng-container *ngIf="userPerfil.afiliado?.ubicacion?.latitud && userPerfil.afiliado?.ubicacion?.longitud; else noUbicacion">

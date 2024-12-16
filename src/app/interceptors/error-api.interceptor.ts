@@ -53,14 +53,14 @@ export class ErrorApiInterceptor implements HttpInterceptor {
               
               // console.info('******** BAD REQUEST ********');
               // console.log(error);
-              this.messageService.add({life:2000,summary:'bad request',detail:error.error.message,severity: 'warn',})
+              this.messageService.add({life:5000,summary:'Bad Request',detail:error.error.message,severity: 'warn',})
             }else if(error.status === HttpStatusCode.Forbidden){
               // console.info('******** FORBIDDEN ********');
               // console.log(error);
-              this.messageService.add({life:3000,summary:error.error.error,detail:error.error.message,severity: 'info',})
+              this.messageService.add({life:6000,summary:error.error.error,detail:error.error.message,severity: 'info',})
               this.router.navigateByUrl('user/dashboard')
             } else if (error.status === HttpStatusCode.NotFound){
-              this.messageService.add({life:3000,summary:error.error.error,detail:error.error.message,severity: 'info',})
+              this.messageService.add({life:6000,summary:error.error.error,detail:error.error.message,severity: 'info',})
 
             }
         return throwError(()=> error)

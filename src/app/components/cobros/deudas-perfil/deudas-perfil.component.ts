@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Medidor, MultaServicio, Perfil } from 'src/app/interfaces';
 import { CobrosService } from '../cobros.service';
-import { TreeNode } from 'primeng/api';
+import { MessageService, TreeNode } from 'primeng/api';
 import { ComprobantePorPago, GestionesPorCobrar } from 'src/app/interfaces/pagos-services.interface';
 
 interface MultaTree{
@@ -51,6 +51,9 @@ export class DeudasPerfilComponent {
   eventVisible:EventEmitter<boolean> = new EventEmitter<boolean>();
   perfil!:Perfil;
   medidoresDeudas:TreeNode<any> []=[];
+  
+  multasPorPagar:{multas:MultaServicio[], nroMedidor:string}[]=[];
+  multasPorPagarSelected:MultaServicio[]=[];
   //comprobantesPagar:any[]=[];
   selectedNodes: any =null;
   loading:boolean=false;
@@ -60,7 +63,7 @@ export class DeudasPerfilComponent {
     { field: 'mesLectura', header: 'Mes lecturado' },
     { field: 'lectura', header: 'Lectura' },
     { field: 'consumo', header: 'Consumido' },
-    { field: 'monto_view', header: 'Deudas por pagar' }
+    { field: 'monto_view', header: 'Tarifa a pagar' }
   ];
   colsMulta:any[]=[
 
@@ -71,71 +74,80 @@ export class DeudasPerfilComponent {
     // { field: 'moneda', header: 'MONEDA',colspan:1 },
     // { field: 'pagado', header: 'Consumo' },
   ];
-  constructor(private cobrosService:CobrosService){}
+  constructor(private cobrosService:CobrosService,
+              private messageService:MessageService
+  ){}
+  titlePagos:string='';
   ngOnInit(): void {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
     this.cobrosService.perfil.subscribe(res=>{
       this.perfil=res;
+      this.medidoresDeudas=[];
       console.log('PERFIL:',res);
       this.colorIndex=0;
-      this.medidoresDeudas=res.afiliado!.medidorAsociado!.map((asc,i)=>{
-        const {medidor,planillas}=asc
-        const nodoMedidor:TreeNode<any> ={
-          expanded:true,
-          data:{
-          name:medidor!.nroMedidor,
-          gestion:null,
-          mesLectura:null,
-          lectura:null,
-          consumo:null,
-          monto:null,
-          moneda:null,
-          isMulta:false,
-          },
-          children:asc.planillas?.map((planilla,j)=>{
-            const nodoPlanilla:TreeNode<any>={
-              expanded:true,
-              data:{
-                name:null,
-                gestion:planilla.gestion,
-                mesLectura:null,
-                lectura:null,
-                consumo:null,
-                monto:null,
-                moneda:null,
-                isMulta:false,
-              },
-              children:planilla.lecturas.map((lect,k,planillas)=>{
-                
-                const lecturaNode:TreeNode<any>={
-                  expanded:true,
-                  selectable:lect.isMulta?false:true,
-                  data:{
-                    name:null,
-                    gestion:null, 
-                    mesLectura:lect.PlanillaMesLecturar,
-                    lectura:`${lect.lectura} ${lect.medicion}.`,
-                    consumo:`${lect.consumoTotal} ${lect.medicion}.`,
-                    monto:lect.pagar!.monto,
-                    idComprobante:lect.pagar!.id,
-                    moneda:`${lect.pagar?.moneda}`,
-                    monto_view:`${lect.pagar?.monto} ${lect.pagar?.moneda}.`,
-                    isMulta:lect.isMulta,
-                    multa:lect.multa
+      // this.multasPorPagar=res.afiliado!.medidorAsociado!.map(med=>med.multasAsociadas);
+      
+      this.multasPorPagar=this.getMultasAsociado(res);
+      if(this.tieneLecturasPorPagar(res)){
+        this.medidoresDeudas=res.afiliado!.medidorAsociado!.map((asc,i)=>{
+          const {medidor,planillas}=asc
+          const nodoMedidor:TreeNode<any> ={
+            expanded:true,
+            data:{
+            name:medidor!.nroMedidor,
+            gestion:null,
+            mesLectura:null,
+            lectura:null,
+            consumo:null,
+            monto:null,
+            moneda:null,
+            isMulta:false,
+            },
+            children:planillas?.map((planilla,j)=>{
+              const nodoPlanilla:TreeNode<any>={
+                expanded:true,
+                data:{
+                  name:null,
+                  gestion:planilla.gestion,
+                  mesLectura:null,
+                  lectura:null,
+                  consumo:null,
+                  monto:null,
+                  moneda:null,
+                  isMulta:false,
+                },
+                children:planilla.lecturas.map((lect)=>{
+                  
+                  const lecturaNode:TreeNode<any>={
+                    expanded:true,
+                    // selectable:lect.isMulta?false:true,
+                    data:{
+                      name:null,
+                      gestion:null, 
+                      mesLectura:lect.PlanillaMesLecturar,
+                      lectura:`${lect.lectura} ${lect.medicion}.`,
+                      consumo:`${lect.consumoTotal} ${lect.medicion}.`,
+                      monto:lect.pagar?.monto,
+                      idComprobante:lect.pagar?.id,
+                      moneda:`${lect.pagar?.moneda}`,
+                      monto_view:`${lect.pagar?.monto.toFixed(2)} ${lect.pagar?.moneda}.`,
+                      // isMulta:lect.isMulta,
+                      // multa:lect.multa
+                    }
                   }
-                }
-                
-                return lecturaNode;
-              })
-            }
-            return nodoPlanilla;
-          })
-        };
-        return nodoMedidor;
-      })
-      this.addMultasTreePagos();
-      // console.log(this.medidoresDeudas);
+                  
+                  return lecturaNode;
+                })
+              }
+              return nodoPlanilla;
+            })
+          };
+          return nodoMedidor;
+        })
+      }else{
+        this.titlePagos='* No tiene deudas por pagar'
+      }
     })
     this.obtenerComprobanteDetalles();
   }
@@ -162,8 +174,14 @@ export class DeudasPerfilComponent {
      
     // this.idPerfil=this.perfil!.id!;
     console.log(this.gestionesPorCobrar);
-    this.visiblePagar=true;
-    this.closable=false;
+    console.log(this.multasPorPagarSelected);
+    if(this.gestionesPorCobrar.length>0 || this.multasPorPagarSelected.length>0){
+      this.visiblePagar=true;
+      this.closable=false;
+    }else{
+      this.messageService.add({ severity: 'warn', summary:'DEBE SELECCIONAR UNA DEUDA POR PAGAR',life:2000 });
+       
+    }
   }
   addSelect(event:any){
     this.addCobro(event.node)
@@ -174,53 +192,7 @@ export class DeudasPerfilComponent {
   gestionesPorCobrar:GestionesPorCobrar[]=[];
   addCobro(nodo:TreeNode<any>){
     if(!nodo.children){
-      if(nodo.data.id){
-
-        const gestionesSelected:{gestion:number,lecturas:TreeNode<any>[]}[]=[];
-        for(const medidor of this.medidoresDeudas){
-            const lt =medidor.children!.map(gest=>{
-            return {
-              gestion:gest.data.gestion,
-              lecturas:gest.children!.filter(lect=> lect.data?.multa?.id === nodo.data.id)};
-          })
-          for(const ges of lt){
-            if(ges.lecturas.length>0) gestionesSelected.push(ges);
-          }
-        }
-        if(gestionesSelected.length>0){
-          let lastGestion:GestionesPorCobrar|null=null;
-          for(const gestion of gestionesSelected){
-            for(const lectura of gestion.lecturas){
-              const gestionInt = this.gestionesPorCobrar.find(res=>res.gestion === gestion.gestion);
-            if(gestionInt){
-              lastGestion=gestionInt;
-              let compExit;
-              this.gestionesPorCobrar.forEach(gest=>{
-                gest.comprobantes.forEach(comp=>{
-                  if(comp.idComprobante === lectura.data.idComprobante) compExit=comp;
-                })
-              })
-              if(!compExit){
-                gestionInt?.comprobantes.push(lectura.data);
-                this.total=this.total+lectura.data.monto
-              }
-            }else{
-              this.gestionesPorCobrar.push({
-                gestion:gestion.gestion,
-                comprobantes:[],
-                multas:[],
-              });
-              const gestionInt = this.gestionesPorCobrar.find(res=>res.gestion === gestion.gestion);
-              gestionInt?.comprobantes.push(lectura.data);
-              this.total=this.total+lectura.data.monto
-            }}
-          }
-          if(lastGestion){
-            lastGestion.multas.push(nodo.data);
-            this.total=this.total+Number.parseFloat(nodo.data.monto);
-          }
-        }
-      }else if(!nodo.data.isMulta){
+      
         const gestion = this.gestionesPorCobrar.find(gest=>gest.gestion === nodo.parent?.data.gestion);
         if(gestion){
           const compbExit = gestion.comprobantes.find(cmp=>cmp.idComprobante ===nodo.data.idComprobante);
@@ -232,13 +204,12 @@ export class DeudasPerfilComponent {
           this.gestionesPorCobrar.push({
             gestion:nodo.parent?.data.gestion,
             comprobantes:[],
-            multas:[],
           })
           const gest = this.gestionesPorCobrar.find(gest=>gest.gestion === nodo.parent?.data.gestion);
-          this.total=this.total+nodo.data.monto
           gest?.comprobantes.push(nodo.data)
+          this.total=this.total+nodo.data.monto
         }
-      }
+      
     }else{
       for(const child of nodo.children){
         this.addCobro(child);
@@ -247,56 +218,20 @@ export class DeudasPerfilComponent {
   }
   reduceCobro(nodo:TreeNode<any>){
     if(!nodo.children){
-      if(nodo.data.id){
-        const checkGestiones = [...this.gestionesPorCobrar];
-        let k=0;
-        for(const gestion of checkGestiones){
-          let i=0;
-          const lectu = this.gestionesPorCobrar[i].comprobantes.filter(lct=>{
-            if(lct.multa?.id!==nodo.data.id){
-              return true;
-            }else{
-              this.total=this.total-lct.monto
-              return false
-            }
-          })
-          if(lectu.length===gestion.comprobantes.length){
-          }else if(lectu.length===0){
-            this.gestionesPorCobrar[i].multas.forEach(mult=>{
-              if(mult.id === nodo.data.id){
-                this.total=this.total-Number.parseFloat(nodo.data.monto);
-              }
-            })
-            this.gestionesPorCobrar.splice((i-k),1);
-            k++;
-          }else{
-            this.gestionesPorCobrar[i].comprobantes=lectu;
-            this.gestionesPorCobrar[i].multas=this.gestionesPorCobrar[i].multas.filter(mult=>{
-              if(mult.id !== nodo.data.id){
-                return true;
-              }else{
-                this.total=this.total-Number.parseFloat(nodo.data.monto);
-                return false;
-              }
-            });
-          }
-          i++;
-        }
-      }else if(!nodo.data.isMulta){
         const gestion = this.gestionesPorCobrar.find(gest=>gest.gestion === nodo.parent?.data.gestion)!;
         
         if(gestion.comprobantes.length===1){
           const gestionIndex=this.gestionesPorCobrar.findIndex(gest=>gest.gestion === nodo.parent?.data.gestion);
           this.gestionesPorCobrar.splice(gestionIndex,1);
-          this.total=0;
+          this.total=this.total-nodo.data.monto;
         }else{
           const comp = gestion.comprobantes.findIndex(compa=>compa.idComprobante=== nodo.data.idComprobante);
-          if(comp>=0 && this.total>=0){
+          if(comp>=0){
             gestion.comprobantes.splice(comp,1)
             this.total=this.total-nodo.data.monto
           }
         }
-      }
+      
     }else{
       for(const child of nodo.children){
         this.reduceCobro(child);
@@ -419,4 +354,41 @@ export class DeudasPerfilComponent {
     }
     return color;
   }
+  getMultasAsociado(perfil:Perfil){
+    const multas:{nroMedidor:string,multas:MultaServicio[]}[]=[];
+    for(const asc of perfil.afiliado!.medidorAsociado!){
+      if(asc.multasAsociadas!.length>0){
+        multas.push({
+          nroMedidor:asc.medidor!.nroMedidor!,
+          multas:asc.multasAsociadas!
+        })
+      }
+    }
+    return multas;
+  }
+  addPagoPorMulta(event:any){
+    console.log('evento por agregar multa',event);
+    const multa = this.multasPorPagarSelected.find(multa=>multa.id === event.data.id);
+    if(!multa){
+      this.total=this.total+event.data.monto;
+      this.multasPorPagarSelected.push(event.data);
+    }
+  }
+  
+  dropPagoMulta(event:any){
+    console.log('evento por eliminar multa',event);
+    const multa = this.multasPorPagarSelected.findIndex(multa=>multa.id === event.data.id);
+    if(multa>=0){
+      // const multaDrop = this.multasPorPagarSelected.find(multa=>multa.id === event.data.id);
+      this.total=this.total-event.data.monto;
+      this.multasPorPagarSelected.splice(multa,1);
+    }
+  }
+  tieneLecturasPorPagar(perfil:Perfil){
+    for(const asc of perfil.afiliado!.medidorAsociado!){
+      if(asc.planillas!.length>0) return true;
+    }
+    return false;
+  }
+  
 }

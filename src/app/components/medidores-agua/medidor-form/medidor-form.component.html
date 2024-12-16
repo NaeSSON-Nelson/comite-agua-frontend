@@ -48,7 +48,7 @@
                   <div class="field col-12 md:col-6 mb-3">
                     <span class="p-float-label">
                       <p-dropdown
-                        inputId="estado"
+                        inputId="medicion"
                         [autoDisplayFirst]="false"
                         [options]="commonAppService.mediciones"
                         formControlName="medicion"
@@ -85,28 +85,7 @@
                       >{{ getMarcaErrors("marca") }}
                     </small>
                   </div>
-                  <div class="field col-12 md:col-3" *ngIf="!medidorActual?.id">
-                    <span class="p-float-label mb-3">
-                      <p-dropdown
-                        inputId="estado"
-                        [autoDisplayFirst]="false"
-                        [options]="commonAppService.estados"
-                        formControlName="estado"
-                        optionLabel="name"
-                        optionValue="value"
-                        placeholder="Select Estado"
-                        [ngClass]="inputValid('estado')"
-                      ></p-dropdown>
-          
-                      <label for="estado">estado (*)</label>
-                    </span>
-                    <small
-                      id="estado-help"
-                      class="p-error block"
-                      *ngIf="campoValido('estado')"
-                      >{{ getEstadoErrors("estado") }}
-                    </small>
-                  </div>
+                 
                 </div>
               </div>
               <div class="col-12 md:flex md:justify-content-center ">

@@ -8,11 +8,10 @@ import { ToolbarModule } from 'primeng/toolbar';
 import {SplitButtonModule} from 'primeng/splitbutton';
 import { ListaDeudoresComponent } from './lista-deudores/lista-deudores.component'
 import { DropdownModule } from 'primeng/dropdown';
-
 @NgModule({
   declarations: [
     PagosServicioComponent,
-    ListaDeudoresComponent
+    ListaDeudoresComponent,
   ],
   imports: [
     CommonModule,

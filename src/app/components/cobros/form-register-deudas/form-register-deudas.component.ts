@@ -6,7 +6,7 @@ import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { patternCI, } from 'src/app/patterns/forms-patterns';
 import { CommonAppService } from 'src/app/common/common-app.service';
 import { PlanillaLecturas } from 'src/app/interfaces/medidor.interface';
-import { ComprobanteDePagoDeMultas, Perfil, ResponseResultData } from 'src/app/interfaces';
+import { ComprobanteDePagoDeMultas, MultaServicio, Perfil, ResponseResultData } from 'src/app/interfaces';
 
 @Component({
   selector: 'app-form-register-deudas',
@@ -18,6 +18,8 @@ export class FormRegisterDeudasComponent {
 
   @Input()
   porPagar:GestionesPorCobrar[]=[];
+  @Input()
+  multasPorPagarSelected:MultaServicio[]=[];
   // loading:boolean=false;
   @Input()
   perfil!:Perfil;
@@ -42,7 +44,7 @@ export class FormRegisterDeudasComponent {
     pagarForm: FormGroup = this.fb.group(
       {
         perfilId:     [,Validators.required],
-         comprobantes: this.fb.array([],Validators.required),
+         comprobantes: this.fb.array([]),
          multas:this.fb.array([]),
       }
     );
@@ -59,26 +61,30 @@ export class FormRegisterDeudasComponent {
           id:[por.idComprobante,Validators.required]
         })
         this.comprobantesArray.push(comproValid);
-      });
-      gest.multas.forEach(mult=>{
+      }); 
+    }
+    for(const multa of this.multasPorPagarSelected){
         const multValid = this.fb.group({
-          id:[mult.id,Validators.required],
+          id:[multa.id,Validators.required],
         })
         this.multasArray.push(multValid);
-      })
+      
     }
   }
   validForm(){
    console.log(this.pagarForm); 
    console.log(this.pagarForm.value); 
-   console.log(this.porPagar);
+   console.log('POR PAGAR SELECTED',this.porPagar);
+   console.log('MULTAS POR PAGAR SELECTED',this.multasPorPagarSelected);
    this.pagarForm.markAllAsTouched()
    if(this.pagarForm.invalid) {
     return};
-
+    if(this.porPagar.length=== 0 && this.multasPorPagarSelected.length === 0){
+      this.messageService.add({ severity: 'warn', summary:'NO HAY NINGUNA DEUDA POR PAGAR SELECCIONADA',life:2000 });
+       
+    }
    const {perfilId,comprobantes,multas} = this.pagarForm.value;
     // console.log(titular,ciTitular,perfilId,comprobantes);
-    // console.log(this.comprobantesArray.value.map((res:any)=>res.id));
     this.registrarPagos({
     perfilId,comprobantes:comprobantes.map((res:any)=>res.id),multas:multas.map((res:any)=>res.id)
    })
@@ -86,8 +92,8 @@ export class FormRegisterDeudasComponent {
 
   registrarPagos(pagosForm:PagosForm){
     this.confirmationService.confirm({
-      message: `¿Está seguro de registrar los pagos de las lecturas ${this.tieneMultas()?'Y las multas Seleccionadas?':'seleccionadas?'}?<br>
-      Total a registrar : <p class="font-bold">${this.totalPagar} Bs. </p><br>`,
+      message: `¿Está seguro de registrar los pagos seleccionados '}?<br>
+      Total a registrar : <p class="font-bold"> ${this.totalPagar} Bs. </p><br>`,
       header: 'Confirmar Registro de deuda',
       icon: 'pi pi-info-circle',
       accept:()=>{
@@ -178,43 +184,43 @@ export class FormRegisterDeudasComponent {
       ? 'ng-valid ng-dirty'
       : '';
   }
-  getTitularErrors(campo: string) {
-    const errors = this.pagarForm.get(campo)?.errors;
-    if (errors?.['pattern']) {
-      return 'El campo contiene caracteres invalidos';
-    } else if(errors?.['required']){
-      return 'El campo es obligatorio'
-    }
-    return '';
-  }
-  getCiTitularErrors(campo: string) {
-    const errors = this.pagarForm.get(campo)?.errors;
-    if (errors?.['pattern']) {
-      return 'El campo contiene caracteres invalidos';
-    } else if(errors?.['required']){
-      return 'El campo es obligatorio'
-    }
-    return '';
-  }
-  lastMulta(comp:any,multas:any[]){
+  // getTitularErrors(campo: string) {
+  //   const errors = this.pagarForm.get(campo)?.errors;
+  //   if (errors?.['pattern']) {
+  //     return 'El campo contiene caracteres invalidos';
+  //   } else if(errors?.['required']){
+  //     return 'El campo es obligatorio'
+  //   }
+  //   return '';
+  // }
+  // getCiTitularErrors(campo: string) {
+  //   const errors = this.pagarForm.get(campo)?.errors;
+  //   if (errors?.['pattern']) {
+  //     return 'El campo contiene caracteres invalidos';
+  //   } else if(errors?.['required']){
+  //     return 'El campo es obligatorio'
+  //   }
+  //   return '';
+  // }
+  // lastMulta(comp:any,multas:any[]){
     
-    return false;
-  };
-  tieneMultas(){
-    for(const gestion of this.porPagar){
-      if(gestion.multas?.length>0) return true;
-    }
-    return false;
-  }
-  multaColor(rowData:any){
-    if(rowData.isMulta){
-      for(const pagar of this.porPagar){
-        for(const multa of pagar.multas)
-          if(multa.id === rowData.multa.id){
-            return `text-center ${multa.multaColor}`
-          }
-        }
-    }
-    return 'text-center'
-  }
+  //   return false;
+  // };
+  // tieneMultas(){
+  //   for(const gestion of this.porPagar){
+  //     if(gestion.multas?.length>0) return true;
+  //   }
+  //   return false;
+  // }
+  // multaColor(rowData:any){
+  //   if(rowData.isMulta){
+  //     for(const pagar of this.porPagar){
+  //       for(const multa of pagar.multas)
+  //         if(multa.id === rowData.multa.id){
+  //           return `text-center ${multa.multaColor}`
+  //         }
+  //       }
+  //   }
+  //   return 'text-center'
+  // }
 }

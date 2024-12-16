@@ -13,6 +13,7 @@ import { Perfil } from '../../../interfaces/perfil.interface';
 import { Afiliado, MedidorAsociado, MultaServicio, PlanillaMesLectura, Ubicacion } from 'src/app/interfaces';
 import { PlanillaLecturas } from '../../../interfaces/medidor.interface';
 import { ExportColumn } from '../../perfiles/perfil-pdf/perfil-pdf.component';
+import { LayoutService } from 'src/app/layout/layout.service';
 @Component({
   selector: 'app-lista-deudores',
   templateUrl: './lista-deudores.component.html',
@@ -39,13 +40,14 @@ export class ListaDeudoresComponent {
   titleList:string='Lista de deudores morosos obtenidos';
   constructor( private readonly messageService:MessageService,
     private readonly reportesService:ReportesService,
+    private layoutService:LayoutService,
     private cdr: ChangeDetectorRef,
     private fb:FormBuilder,
   ){}
   options=[
-    {label:'Retraso un mes',value:RetrasoTipo.mensual},
-    {label:'Retrasos de dos meses',value:RetrasoTipo.bimestral},
-    {label:'Retrasos de tres meses',value:RetrasoTipo.trimestral},
+    // {label:'Retraso un mes',value:RetrasoTipo.mensual},
+    // {label:'Retrasos de dos meses',value:RetrasoTipo.bimestral},
+    {label:'Retrasos de tres meses o mas',value:RetrasoTipo.trimestral},
     {label:'Todos los retrasos',value:RetrasoTipo.demas},
   ]
   ngOnInit(): void {
@@ -156,10 +158,10 @@ export class ListaDeudoresComponent {
   { field: 'contacto', header: 'Contacto', selected: false },
   { field: 'ubicacion', header: 'Ubicación', selected: true },
   { field :'medidor',header:'Medidores de agua',selected:true},
-  { field :'multas',header:'Multas por retraso de pago',selected:true},
+  { field :'multas',header:'Multas',selected:true},
   { field :'gestion',header:'Gestiones',selected:true},
   { field :'lecturas',header:'Meses de cobro',selected:true},
-  { field :'total',header:'Cobro',selected:true},
+  { field :'total',header:'Tarifa',selected:true},
 ];
   get columnsLengthSelected(){
     return this.columns.filter(col=>col.selected).length
@@ -216,7 +218,7 @@ export class ListaDeudoresComponent {
 
       for(const multa of multas){
         multasContact=multasContact.concat(`N° Multa: ${multa.id}\n`)
-        .concat(this.getGestionWithLecturas(multa.lecturasMultadas))
+        .concat(multa.motivo)
         .concat(`Pago Multa: ${multa.monto} ${multa.moneda}.`)
         .concat(`\n --${multa.pagado?'PAGADO':'NO PAGADO'}--\n`);
       }
@@ -235,8 +237,13 @@ export class ListaDeudoresComponent {
     }
     return multadas;
   }
+  getFechaFormat(fechaSolicitada:Date){
+    return `${fechaSolicitada.getDate()}-${fechaSolicitada.getMonth()+1}-${fechaSolicitada.getFullYear()} ${fechaSolicitada.getHours()}:${fechaSolicitada.getMinutes()}`;
+  }
   exportPDF() {
     const  fechaSolicitada = new Date();
+    
+    const fechaFormat=this.getFechaFormat(fechaSolicitada);
     const asi=fechaSolicitada.toTimeString().split('GMT')[0];
     // this.totalGeneralToExport=0;
     const selectedColumns = this.getSelectedColumns();
@@ -250,9 +257,8 @@ export class ListaDeudoresComponent {
     
     
     // Calcular anchos proporcionales para las columnas
-    let totalWeight = this.columns.reduce((sum, col) => sum + (col.width || 0), 0);
-    let columnWidths: number[]=[];
-    columnWidths = selectedColumns.map((val,index) => {
+    // let totalWeight = this.columns.reduce((sum, col) => sum + (col.width || 0), 0);
+    let columnWidths = selectedColumns.map((val,index) => {
         if(index!==0)
         return  availableWidth / (selectedColumns.length-1)
       else return indexWidth
@@ -271,7 +277,7 @@ export class ListaDeudoresComponent {
             text: col.field === 'index'?index
                 : col.field === 'nombreCompleto' ?this.getNombreCompleto(perfil)
                 : col.field === 'ubicacion'? this.getUbicacion(perfil.afiliado!.ubicacion!)
-                : col.field === 'total'? this.totalPagarLecturas(perfil.afiliado!.medidorAsociado![0].planillas![0])
+                : col.field === 'total'? `${this.totalPagarLecturas(perfil.afiliado!.medidorAsociado![0].planillas![0]).toFixed(2)} Bs.`
                 : col.field === 'lecturas'? this.getLecturas(perfil.afiliado!.medidorAsociado![0].planillas![0].lecturas)
                 : col.field === 'medidor'?perfil.afiliado!.medidorAsociado![0].medidor!.nroMedidor
                 : col.field === 'multas'?this.getMultasAsociado(perfil.afiliado!.medidorAsociado![0].multasAsociadas!)
@@ -343,7 +349,7 @@ export class ListaDeudoresComponent {
                     text:this.getLecturas(planilla.lecturas)
                   },
                   {
-                    text:this.totalPagarLecturas(planilla)
+                    text:`${this.totalPagarLecturas(planilla).toFixed(2)} Bs.`
                   });
                   tableContent.push(rowAux);
                 }else{
@@ -353,7 +359,7 @@ export class ListaDeudoresComponent {
                 },{
                   text:this.getLecturas(planilla.lecturas)
                 },{
-                  text:this.totalPagarLecturas(planilla)
+                  text:`${this.totalPagarLecturas(planilla).toFixed(2)} Bs.`
                 })
               }
               })
@@ -418,7 +424,7 @@ export class ListaDeudoresComponent {
                     },{
                       text:this.getLecturas(asc.planillas![0].lecturas)
                     },{
-                      text:'pago total'
+                      text:`${this.totalPagarLecturas(asc.planillas![0]).toFixed(2)} Bs.`
                     }
                   );
                   tableContent.push(rowAux);
@@ -438,7 +444,7 @@ export class ListaDeudoresComponent {
                   },{
                     text:this.getLecturas(asc.planillas![0].lecturas)
                   },{
-                    text:this.totalPagarLecturas(asc.planillas![0])
+                    text:`${this.totalPagarLecturas(asc.planillas![0]).toFixed(2)} Bs.`
                   }
                 )
                 }
@@ -485,7 +491,7 @@ export class ListaDeudoresComponent {
                         },{
                           text:this.getLecturas(planilla.lecturas)
                         },{
-                          text:this.totalPagarLecturas(planilla)
+                          text:`${this.totalPagarLecturas(planilla).toFixed(2)} Bs.`
                         }
                       );
                       tableContent.push(rowAuxPlanilla);
@@ -496,7 +502,7 @@ export class ListaDeudoresComponent {
                         },{
                           text:this.getLecturas(planilla.lecturas)
                         },{
-                          text:this.totalPagarLecturas(planilla)
+                          text:`${this.totalPagarLecturas(planilla).toFixed(2)} Bs.`
                         }
                       );
                     }
@@ -531,7 +537,7 @@ export class ListaDeudoresComponent {
                         },{
                           text:this.getLecturas(planilla.lecturas)
                         },{
-                          text:this.totalPagarLecturas(planilla)
+                          text:`${this.totalPagarLecturas(planilla).toFixed(2)} Bs.`
                         }
                       );
                       tableContent.push(rowAux);
@@ -542,7 +548,7 @@ export class ListaDeudoresComponent {
                         },{
                           text:this.getLecturas(planilla.lecturas)
                         },{
-                          text:this.totalPagarLecturas(planilla)
+                          text:`${this.totalPagarLecturas(planilla).toFixed(2)} Bs.`
                         }
                       );
                     }
@@ -566,24 +572,19 @@ export class ListaDeudoresComponent {
       pageMargins: [margins, 40, margins, 40], // [left, top, right, bottom]
       content: [
         { 
-          text: 'REPORTES DE PAGOS DE AFILIADOS',
+          text: 'LISTA DE DEUDORES CON DETALLES',
           style: 'header',
           alignment: 'center',
           margin: [0, 0, 0, 5]
+        },{
+          text:`Fecha solicitada: \n${fechaFormat}`,
+          alignment:'left',
+          margin: [0, 20, 0, 10]
         },
-        { 
-          text: `Filtro de fechas:`,
-          style: 'subheader',
-          alignment: 'left',
-          margin: [0, 20 , 0, 10]
-        },
-        { 
-          text: `Fecha de inicio: 
-          Fecha fin: 
-          Hora solicitada: `,
-          style: 'subheader',
-          alignment: 'left',
-          margin: [0, 0, 0, 10]
+        {
+          text:`Usuario:\n${this.getNombreCompleto(this.layoutService.usuario!.perfil!)}`,
+          margin: [0, 10, 0, 10],
+          alignment:'left',
         },
         {
           table: {
@@ -610,38 +611,39 @@ export class ListaDeudoresComponent {
             paddingTop: (i: number) => 8,
             paddingBottom: (i: number) => 8,
           }
-        },'\n',
-        {
-          layout:{
-           defaultBorder:false
-          },
-          table:{
-            headerRows: 1,
-            widths:['*','auto'],
-            body:[
-              [
-                {
-                  text:`TOTAL:\t`,
-                  bold: true,
-                  fontSize: 10,
-                  alignment:'right',
-                  // alignment: 'right',
-                  border: [false, false, false, true],
-                  // margin: [0, 5, 0, 5],
-                },
-                {
-                  text: `${this.totalGeneral.toFixed(2)} Bs.`,
-                  bold: true,
-                  fontSize: 12,
-                  // alignment: 'right',
-                  border: [false, false, false, true],
-                  fillColor: '#f5f5f5',
-                  margin: [0, 5, 0, 5],
-                },
-              ],
-            ]
-          }
         }
+        // ,'\n',
+        // {
+        //   layout:{
+        //    defaultBorder:false
+        //   },
+        //   table:{
+        //     headerRows: 1,
+        //     widths:['*','auto'],
+        //     body:[
+        //       [
+        //         {
+        //           text:`TOTAL:\t`,
+        //           bold: true,
+        //           fontSize: 10,
+        //           alignment:'right',
+        //           // alignment: 'right',
+        //           border: [false, false, false, true],
+        //           // margin: [0, 5, 0, 5],
+        //         },
+        //         {
+        //           text: `${this.totalGeneral.toFixed(2)} Bs.`,
+        //           bold: true,
+        //           fontSize: 12,
+        //           // alignment: 'right',
+        //           border: [false, false, false, true],
+        //           fillColor: '#f5f5f5',
+        //           margin: [0, 5, 0, 5],
+        //         },
+        //       ],
+        //     ]
+        //   }
+        // }
         
       ]
       ,

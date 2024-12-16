@@ -56,6 +56,21 @@
 						<div class="grid">
 							<div class="col-12 md:col-6"><strong>Estado del registro:</strong><p-tag [severity]="perfil.afiliado.isActive?'success':'danger'" [value]="perfil.afiliado.estado" class="ml-3"></p-tag></div>
 							<div class="col-12 md:col-6"><strong>Monto pagado de afiliación:</strong> {{ perfil.afiliado.montoAfiliacion | currency : perfil.afiliado.monedaAfiliacion}}</div>
+							
+							<div class="col-12 md:col-6" *ngIf="perfil.afiliado.descuentos!.length>0;else sinBeneficios"><strong>Beneficiario de algún descuento:</strong>
+								<div class="mt-2">
+									<ul class="list-none p-0">
+										<li *ngFor="let ben of perfil.afiliado.descuentos" 
+											class="mb-2 p-2 rounded">
+										  {{ ben.tipoBeneficiario }} {{ben.descuento}}% de descuento.
+										</li>
+									  </ul>
+								</div>
+							</div>
+							<ng-template #sinBeneficios>
+								<div class="col-12 md:col-6"><strong>Beneficiario de algún descuento:</strong> NINGUNO</div>
+							</ng-template>
+							
 						</div>
 						<h4 class="mark-title md:ml-3 mt-0">Ubicación</h4>
 						<div class="grid md:ml-3">

@@ -21,6 +21,7 @@ import {
   ResponseCreatePerfil,
   ResponseResultData,
 } from 'src/app/interfaces';
+import { BeneficiarioDescuentos } from 'src/app/interfaces/opciones-confuguraciones.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -394,5 +395,8 @@ export class PerfilService {
   }
   registrarPagoDeposito(form:Afiliado){
     return this.http.post<HttpResponseApi<null>>(`${this.URL_afiliado}/pagar/deposito`,form).pipe();
+  }
+  obtenerBeneficiosDescuentos(){
+    return this.http.get<HttpResponseApi<BeneficiarioDescuentos[]>>(`${this.URL_perfil}/afiliados/beneficiarios`);
   }
 }

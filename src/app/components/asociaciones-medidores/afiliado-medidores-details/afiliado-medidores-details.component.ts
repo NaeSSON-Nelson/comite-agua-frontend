@@ -9,6 +9,7 @@ import { PATH_AFILIADO, PATH_AUTH, PATH_FORBBIDEN, PATH_MEDIDORES } from 'src/ap
 import { AsociacionesService } from '../asociaciones.service';
 
 import * as L from 'leaflet';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 @Component({
   selector: 'app-afiliado-medidores-details',
   templateUrl: './afiliado-medidores-details.component.html',
@@ -22,7 +23,8 @@ export class AfiliadoMedidoresDetailsComponent {
     private readonly confirmationService: ConfirmationService,
     private readonly asociacionesService:AsociacionesService,
     private router: Router,
-    private routerAct: ActivatedRoute
+    private routerAct: ActivatedRoute,
+    private fb:FormBuilder,
   ) {}
 
   perfil!: Perfil;
@@ -36,6 +38,7 @@ export class AfiliadoMedidoresDetailsComponent {
   medidorSelect:Medidor|null=null;
   formAsociar:boolean=false;
   loadingAsociaciones:boolean=false;
+  visibleHistorialCortes:boolean=false;
   ngOnInit(): void {
     //Called after the constructor, initializing input properties, and the first call to ngOnChanges.
     //Add 'implements OnInit' to the class.
@@ -146,9 +149,20 @@ export class AfiliadoMedidoresDetailsComponent {
     // this.router.navigate(['medidores-agua','medidor-agua-register'],{queryParams:{idPerfil:this.perfil.id}})
     this.showMedidoresLibresVisible=true;
   }
+  visibleMultas:boolean=false;
+  showMultas(asc:MedidorAsociado){
+    this.medidorAsociadoSelected=asc;
+    this.visibleMultas=true;
+
+  }
   showGestiones(asc:MedidorAsociado){
     this.medidorAsociadoSelected=asc;
     this.gestionesVisible=true;
+  }
+  showHistorialLectura(asc:MedidorAsociado){
+    this.medidorAsociadoSelected=asc;
+    this.visibleHistorialCortes=true;
+    
   }
   showPlanillas(asc:MedidorAsociado){
     this.medidorAsociadoSelected=asc;
@@ -186,5 +200,135 @@ export class AfiliadoMedidoresDetailsComponent {
         life: 5000,
       });
     }
+  }
+  formCorte:FormGroup = this.fb.group({
+    motivo:[,Validators.required]
+  })
+  visibleFormCorte:boolean=false;
+  titleSolicitud:string='';
+  getMotivoErrors(campo:string){
+    const erorrs = this.formCorte.get(campo)?.errors;
+    if(erorrs?.['required']){
+      return `El campo es requerido`
+    }
+    return '';
+  }
+  limpiarCampo(campo: string) {
+    if (
+      !this.formCorte.get(campo)?.pristine &&
+      this.formCorte.get(campo)?.value?.length === 0
+    ) {
+      this.formCorte.get(campo)?.reset();
+    }
+  }
+  campoValido(nombre: string) {
+    return (
+      this.formCorte.controls[nombre].errors &&
+      this.formCorte.controls[nombre].touched
+    );
+  }
+  inputValid(nombre: string) {
+    return this.formCorte.controls[nombre].errors &&
+      this.formCorte.controls[nombre].touched
+      ? 'ng-invalid ng-dirty'
+      : this.formCorte.controls[nombre].valid &&
+        this.formCorte.controls[nombre].touched
+      ? 'ng-valid ng-dirty'
+      : '';
+  }
+  abrirSolicitudCorte(asc:MedidorAsociado){
+    this.medidorAsociadoSelected=asc;
+    this.titleSolicitud='SOLICITUD DE CORTE DE SERVICIO';
+    this.visibleFormCorte=true;
+  }
+  abrirSolicitudReconexion(asc:MedidorAsociado){
+    this.medidorAsociadoSelected=asc;
+    this.titleSolicitud='SOLICITUD DE RECONEXIÓN DE SERVICIO';
+    this.visibleFormCorte=true;
+  }
+  confirmarSolicitarCorte(){
+    if(this.formCorte.invalid) return;
+    this.confirmationService.confirm({
+      message: `¿Está seguro de autorizar corte de su servicio de agua?`,
+          header: 'Confirmar Acción',
+          icon: 'pi pi-info-circle',
+      accept:()=>{
+        this.asociacionesService.solicitudCorte(this.medidorAsociadoSelected!.id!,this.formCorte.value).subscribe(res=>{
+          if(res.OK){
+            this.obtenerAsociaciones();
+            this.visibleFormCorte=false;
+            this.formCorte.reset();
+            this.messageService.add({
+              severity: 'info',
+              summary: 'Solicitud realizada',
+              detail: `${res.message}`,
+              icon: 'pi pi-check',
+            });
+          }
+        })
+      }
+    })
+  }
+  cancelarSolicitudCorte(asc:MedidorAsociado){
+    this.confirmationService.confirm({
+      message: `¿Está seguro de cancelar el corte de servicio solicitado?`,
+          header: 'Confirmar Acción',
+          icon: 'pi pi-info-circle',
+      accept:()=>{
+        this.asociacionesService.cancelarSolicitudCorte(asc.id!).subscribe(res=>{
+          if(res.OK){
+            this.obtenerAsociaciones();
+            this.messageService.add({
+              severity: 'info',
+              summary: 'Solicitud realizada',
+              detail: `${res.message}`,
+              icon: 'pi pi-check',
+            });
+          }
+        })
+      }
+    })
+  }
+  cancelarSolicitudReconexion(asc:MedidorAsociado){
+    this.confirmationService.confirm({
+      message: `¿Está seguro de cancelar la solicitud de reconexión del servicio?`,
+          header: 'Confirmar Acción',
+          icon: 'pi pi-info-circle',
+      accept:()=>{
+        this.asociacionesService.cancelarSolicitudCorte(asc.id!).subscribe(res=>{
+          if(res.OK){
+            this.obtenerAsociaciones();
+            this.messageService.add({
+              severity: 'info',
+              summary: 'Solicitud realizada',
+              detail: `${res.message}`,
+              icon: 'pi pi-check',
+            });
+          }
+        })
+      }
+    })
+  }
+  confirmarSolicitarReconexion(){
+    this.confirmationService.confirm({
+      message: '¿Está seguro solicitar una reconexión del servicio?',
+          header: 'Confirmar Acción',
+          icon: 'pi pi-info-circle',
+      accept:()=>{
+        this.asociacionesService.solicitudReconexion(this.medidorAsociadoSelected!.id!,this.formCorte.value).subscribe(res=>{
+          if(res.OK){
+            this.obtenerAsociaciones();
+            this.visibleFormCorte=false;
+            this.formCorte.reset();
+            this.messageService.add({
+              severity: 'info',
+              summary: 'Solicitud realizada',
+              detail: `${res.message}`,
+              icon: 'pi pi-check',
+            });
+          }
+        })
+      }
+    })
   }
 }

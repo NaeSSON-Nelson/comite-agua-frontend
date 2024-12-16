@@ -146,6 +146,6 @@ export class MedidoresListarComponent {
   }
  registrarForm(){
   
-  this.router.navigate([PATH_MEDIDORES, PATH_REGISTRAR],);
+  this.router.navigate([ValidMenu.medidores,ValidItemMenu.medidorRegister],);
  }
 }

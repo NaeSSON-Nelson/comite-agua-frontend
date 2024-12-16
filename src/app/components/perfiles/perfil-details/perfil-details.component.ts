@@ -15,7 +15,8 @@ import * as L from 'leaflet';
       position: absolute;
       margin-top: 200px;
       margin-left: 168px;
-    }`
+    }
+    `
   ]
 })
 export class PerfilDetailsComponent {
@@ -58,7 +59,7 @@ export class PerfilDetailsComponent {
 
       case 'DESHABILITAR':
         this.confirmationService.confirm({
-          message: `¿Está seguro de Deshabilitar?`,
+          message: `¿Está seguro de Deshabilitar el perfil?`,
           header: 'Confirmar Acción',
           icon: 'pi pi-info-circle',
           accept: () => {
@@ -90,7 +91,7 @@ export class PerfilDetailsComponent {
 
       case 'HABILITAR':
         this.confirmationService.confirm({
-          message: `¿Está seguro de Habilitar?`,
+          message: `¿Está seguro de Habilitar el perfil?`,
           header: 'Confirmar Acción',
           icon: 'pi pi-info-circle',
           accept: () => {
@@ -237,7 +238,7 @@ export class PerfilDetailsComponent {
         break;
       case 'DESHABILITAR':
         this.confirmationService.confirm({
-          message: `¿Está seguro de Deshabilitar?`,
+          message: `¿Está seguro de Deshabilitar el usuario?`,
           header: 'Confirmar Acción',
           icon: 'pi pi-info-circle',
           accept: () => {
@@ -269,7 +270,7 @@ export class PerfilDetailsComponent {
 
       case 'HABILITAR':
         this.confirmationService.confirm({
-          message: `¿Está seguro de Habilitar?`,
+          message: `¿Está seguro de Habilitar el usuario?`,
           header: 'Confirmar Acción',
           icon: 'pi pi-info-circle',
           accept: () => {
@@ -407,7 +408,13 @@ export class PerfilDetailsComponent {
   }
   visiblePagoAfiliacion:boolean=false;
 
-
-
-
+  mostrarBeneficiarios(){
+    let beneficiarios='';
+    if(this.perfil.afiliado!.descuentos){
+      for(const beneficio of this.perfil.afiliado!.descuentos){
+        beneficiarios=beneficiarios.concat(`${beneficio.tipoBeneficiario} ${beneficio.descuento}% de descuento\n`)
+      }
+    }
+    return beneficiarios;
+  }
 }

@@ -39,7 +39,6 @@ export class RoleFormComponent {
       
       // console.log('role form',this.roleForm.value);
       this.roleActual = res;
-      this.roleForm.removeControl('estado');
       // this.listMenusSelected=menus!;
       // this.ListMenuSelected(menus!);
       console.log('role',res);
@@ -176,7 +175,7 @@ export class RoleFormComponent {
           Validators.pattern(patternText),
         ],
       ],
-      estado: [Estado.ACTIVO,[Validators.required]],
+      // estado: [Estado.ACTIVO,[Validators.required]],
       nivel: [,[Validators.required]],
       menus: this.fb.array([],[Validators.required]),
     },
@@ -394,13 +393,6 @@ export class RoleFormComponent {
     return '';
   }
 
-  getEstadoErrors(campo: string) {
-    const errors = this.roleForm.get(campo)?.errors;
-    if (errors?.['required']) {
-      return 'El campo es requerido';
-    }
-    return '';
-  }
   getNivelErrors(campo: string) {
     const errors = this.roleForm.get(campo)?.errors;
     if (errors?.['required']) {
@@ -412,9 +404,7 @@ export class RoleFormComponent {
   get formValid(){
     return this.roleForm.valid && this.roleForm.touched && !this.roleForm.pristine
   }
-  noHayRole(){
-    return this.roleActual === undefined
-  }
+ 
   ngOnDestroy(): void {
     //Called once, before the instance is destroyed.
     //Add 'implements OnDestroy' to the class.

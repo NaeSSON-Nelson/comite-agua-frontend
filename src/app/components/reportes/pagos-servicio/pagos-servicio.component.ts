@@ -13,6 +13,7 @@ import * as pdfFonts from 'pdfmake/build/vfs_fonts';
 import * as XLSX from 'xlsx';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
+import { LayoutService } from 'src/app/layout/layout.service';
 
 @Component({
   selector: 'app-pagos-servicio',
@@ -44,6 +45,7 @@ export class PagosServicioComponent {
     private fb:FormBuilder,
     private readonly messageService:MessageService,
     private readonly reportesService:ReportesService,
+    private readonly layoutService:LayoutService,
     private cdr: ChangeDetectorRef
   ){}
   LIMITE_DAY:number=(82800000+3540000+59000);
@@ -58,16 +60,9 @@ export class PagosServicioComponent {
       return;
     };
 
-    console.log('fecha',this.calendarForm.value);
     const inicio = this.calendarForm.value.calendarRange[0];
     const fin = this.calendarForm.value.calendarRange[1];
-    console.log('fecha inicio',inicio);
-    console.log('fecha fin',fin);
-    console.log('get time fin',fin.getTime());
     const finDay = new Date((fin.getTime()+this.LIMITE_DAY));
-    console.log('fecha fin limit day',finDay);
-    console.log('date time inicio',inicio.getTime());
-    console.log('date time fin',finDay.getTime());
     this.obtenerDataList(inicio,finDay);
   }
 
@@ -78,11 +73,10 @@ export class PagosServicioComponent {
   obtenerDataList(fechaInicio:Date,fechaFin:Date){
     this.loading=true;
     this.reportesService.obtenerPagosServicio(fechaInicio,fechaFin).subscribe(res=>{
-      console.log('data',res);
+      
       this.loading=false;
       if(res.OK){
         this.data=res.data!;
-        this.totalGeneral=0;
         this.visibleTable=true;
       }
     })
@@ -146,7 +140,6 @@ export class PagosServicioComponent {
     }
     return totalMultas;
   }
-  totalGeneral:number=0;
   totalPagosAll(asociado:MedidorAsociado,multas:MultaServicio[]){
     let total:number=0;
     if(asociado.planillas!.length>0){
@@ -162,7 +155,6 @@ export class PagosServicioComponent {
         total = Number.parseFloat(multa.comprobante.montoPagado)+total;
       }
     }
-    this.totalGeneral=this.totalGeneral+total;
     return total;
   }
   totalPagosAsociadoToExport(asociado:MedidorAsociado){
@@ -233,10 +225,14 @@ export class PagosServicioComponent {
     const apellidos = [profile.apellidoPrimero, profile.apellidoSegundo].filter(Boolean).join(' ');
     return `${apellidos} ${nombres}`.trim().toLocaleUpperCase();
   }
+  getFechaFormat(fechaSolicitada:Date){
+    return `${fechaSolicitada.getDate()}-${fechaSolicitada.getMonth()+1}-${fechaSolicitada.getFullYear()} ${fechaSolicitada.getHours()}:${fechaSolicitada.getMinutes()}`;
+  }
   exportPDF() {
     const  fechaSolicitada = new Date();
     const asi=fechaSolicitada.toTimeString().split('GMT')[0];
     this.totalGeneralToExport=0;
+    const fechaFormat=this.getFechaFormat(fechaSolicitada);
     const selectedColumns = this.getSelectedColumns();
     // const dateTime = this.getFormattedDateTime();
     
@@ -291,28 +287,33 @@ export class PagosServicioComponent {
       });
       perfil.afiliado?.medidorAsociado?.forEach((asc,index)=>{
         if(index>0){
-          tableContent.push(row);
-          rowInsertado=true;
-          row.push( //TEXT ESPACIADOS
+          if(!rowInsertado){
+
+            tableContent.push(row);
+            rowInsertado=true;
+          }
+          const rowAux:IPdf.TableCell[]=[];
+          rowAux.push( //TEXT ESPACIADOS
             {text:'text'},
             {text:'text'},
           );
-          row.push({ //MEDIDOR ADD
+          rowAux.push({ //MEDIDOR ADD
             text:asc.medidor?.nroMedidor,
             alignment:'left',
           }) //ADD TOTAL PAGO
-          row.push({
+          rowAux.push({
             text:`${this.totalPagosAsociadoToExport(asc).toFixed(2)} ${asc.planillas![0].lecturas[0].pagar?.comprobante.moneda}.`,
             alignment:'center'
           })
-          row.push({
+          rowAux.push({
             text:`${this.totalPagosMultasAsociadoToExport(asc.multasAsociadas!).toFixed(2)} Bs.`,
             alignment:'center'
           })
-          row.push({
+          rowAux.push({
             text:`${this.totalPagosAllToExport(asc,asc.multasAsociadas!).toFixed(2)} Bs.`,
             alignment:'center'
           })
+          tableContent.push(rowAux);
         }else{
         row.push({ //MEDIDOR ADD
           text:asc.medidor?.nroMedidor,
@@ -349,19 +350,56 @@ export class PagosServicioComponent {
           alignment: 'center',
           margin: [0, 0, 0, 5]
         },
-        { 
-          text: `Filtro de fechas:`,
-          style: 'subheader',
-          alignment: 'left',
-          margin: [0, 20 , 0, 10]
-        },
-        { 
-          text: `Fecha de inicio: ${this.calendarForm.value.calendarRange[0].toLocaleDateString()}
-          Fecha fin: ${this.calendarForm.value.calendarRange[1].toLocaleDateString()}
-          Hora solicitada: ${asi}`,
-          style: 'subheader',
-          alignment: 'left',
-          margin: [0, 0, 0, 10]
+        {
+          columns:[
+            {
+              text:`Fecha solicitada: \n${fechaFormat} \n\n Usuario:\n${this.getNombreCompleto(this.layoutService.usuario!.perfil!)}`,
+              alignment:'left',
+              margin:[0,10,0,10]
+            },
+          //   {
+          //   columns:[
+          //     {
+          //       text:`Fecha solicitada: \n${fechaFormat}`,
+          //       alignment:'left',
+          //       margin: [0, 0, 0, 10]
+          //     },
+          //     {
+          //       text:`Usuario:\n${this.getNombreCompleto(this.layoutService.usuario!.perfil!)}`,
+          //       margin: [0, 10, 0, 10],
+          //       alignment:'left',
+          //     },
+          //   ]
+          // },
+          {
+            columns:[
+              {
+                
+                text: `Filtro de fechas:\n\n Fecha de inicio: ${this.calendarForm.value.calendarRange[0].toLocaleDateString()}
+                Fecha fin: ${this.calendarForm.value.calendarRange[1].toLocaleDateString()}
+                Hora solicitada: ${asi}`,
+                
+                alignment: 'left',
+                margin: [80, 10 , 0, 10]
+              },
+              // { 
+              //   text: `Filtro de fechas:`,
+              //   style: 'subheader',
+              //   alignment: 'left',
+              //   margin: [0, 20 , 0, 10]
+              // },
+              // { 
+              //   text: `Fecha de inicio: ${this.calendarForm.value.calendarRange[0].toLocaleDateString()}
+              //   Fecha fin: ${this.calendarForm.value.calendarRange[1].toLocaleDateString()}
+              //   Hora solicitada: ${asi}`,
+              //   style: 'subheader',
+              //   alignment: 'left',
+              //   margin: [0, 0, 0, 10],
+              // },
+
+            ]
+          },
+          ]
         },
         {
           table: {
@@ -455,5 +493,21 @@ export class PagosServicioComponent {
   
   ngAfterContentChecked(): void {
     this.cdr.detectChanges();
+ }
+ totalGeneral(){
+  let total:number=0;
+  for(const perfil of this.data){
+    for(const asc of perfil.afiliado!.medidorAsociado!){
+      for(const planilla of asc.planillas!){
+        for(const lectura of planilla.lecturas){
+          total=total+Number.parseFloat(lectura.pagar!.comprobante.montoPagado);
+        }
+      }
+      for(const multas of asc.multasAsociadas!){
+        total=total+Number.parseFloat(multas.comprobante.montoPagado);
+      }
+    }
+  }
+  return total;
  }
 }

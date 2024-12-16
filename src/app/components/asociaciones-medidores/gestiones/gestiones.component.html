@@ -13,14 +13,8 @@
 >
   <p-divider></p-divider>
   <div class="grid m-5 p-fluid">
-    <h5 class="col-12"> GESTIONES DE PLANILLAS PASADAS</h5>
-    <p-button
-    class="col-4 col-offset-3"
-    styleClass="p-button-primary p-button-rounded"
-    label="Gestion actual"
-    icon="pi pi-calendar"
-    (onClick)="openAdminGes()"
-    ></p-button>
+    <h5 class="col-12"> Planillas de gestiones</h5>
+    
     <div class="col-12">
       <p-divider></p-divider>
       <p-table 
@@ -49,14 +43,14 @@
             <th>funciones</th>
           </tr>
       </ng-template>
-      <ng-template pTemplate="body" let-product let-rowIndex="rowIndex">
+      <ng-template pTemplate="body" let-planilla let-rowIndex="rowIndex">
           <tr>
             <td>{{rowIndex +1}}</td>
-            <td>{{product.gestion}}</td>
-            <td><p-tag [severity]="product.isActive?'success':'danger'" [value]="product.estado"></p-tag></td>
-            <td>{{product.registrable?'SI':'NO'}}</td>
+            <td>{{planilla.gestion}}</td>
+            <td><p-tag [severity]="planilla.isActive?'success':'danger'" [value]="planilla.estado"></p-tag></td>
+            <td>{{planilla.registrable?'SI':'NO'}}</td>
             <td>
-              <button (click)="select(product)" pButton label="Mostrar" icon="pi pi-book" class="p-button-primary"></button>
+              <p-button class="p-button-rounded p-button-help" icon="pi pi-book" (click)="select(planilla)"></p-button>
             </td>
           </tr>
       </ng-template>

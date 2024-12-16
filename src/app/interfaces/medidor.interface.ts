@@ -1,6 +1,6 @@
 import { Afiliado, Ubicacion } from "./afiliado.interface";
 import { ColumnsAlways } from "./always.interface";
-import { Barrio, Estado, Medicion } from "./atributes.enum";
+import { Barrio, Estado, EstadoAsociacion, Medicion, TipoAccion } from "./atributes.enum";
 import { MultaServicio } from "./multas-servicio.interface";
 import { PaginatorFind } from "./Paginator.interface";
 import { ComprobantePorPago } from "./pagos-services.interface";
@@ -22,7 +22,7 @@ export interface MedidorAsociado{
   id?:                   number;
   lecturaInicial?:       number;
   fechaInstalacion?:     Date;
-  estadoMedidorAsociado?:string;
+  estadoMedidorAsociado?:EstadoAsociacion;
   lecturaSeguimiento?:   number;
   planillas?:             PlanillaLecturas[];
   afiliado?:             Afiliado;
@@ -35,6 +35,10 @@ export interface MedidorAsociado{
   manzano?                :string;
   numeroManzano?          :number;
   nroLote?                :number;
+  corte?                  :boolean;
+  motivoTipoConexion?     :string;
+  reconexion?            :boolean;
+  historial?                 :HistorialConexiones[];
 }
 export interface MedidorForm{
   id?:                number;
@@ -47,9 +51,9 @@ export interface MedidorForm{
 export interface MedidorAsociadoForm{
   id?:                   number;
   fechaInstalacion?:     Date;
-  estadoMedidorAsociado?:string;
   afiliado?:             Afiliado;
   medidor?:              Medidor;
+  // estadoMedidorAsociado?:string;
 
   barrio?:               Barrio;
   numeroVivienda?:       string;
@@ -72,7 +76,6 @@ export interface PlanillaMesLectura extends ColumnsAlways{
   isMulta?:            boolean;
   medicion?:           Medicion;
   pagar?:              ComprobantePorPago;
-  multa?:              MultaServicio;
   planilla?:           PlanillaLecturas;
 }
 export interface AnioSeguimientoLecturas extends ColumnsAlways{
@@ -107,4 +110,12 @@ export interface Gestion{
   anio: number|null;
   mes:  string|null;
   barrio:Barrio;
+}
+
+export interface HistorialConexiones{
+  id?:number;
+  fechaRealizada?:boolean;
+  motivo?:string;
+  tipoAccion?:TipoAccion;
+  asociacion?:MedidorAsociado;
 }

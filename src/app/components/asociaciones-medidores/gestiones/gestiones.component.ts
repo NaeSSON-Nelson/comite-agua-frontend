@@ -18,7 +18,7 @@ export class GestionesComponent {
   @Input()
   idAsociacion:number=-1;
   typeGestionAdmin:'ACTUAL'|'PASADO'='PASADO'
-  titleLecturas='Sin gestiones pasadas';
+  titleLecturas='Sin planillas de gestiones';
   data:PlanillaLecturas[]=[]
   gestionSelected:PlanillaLecturas|null=null;
   @Output()
@@ -33,7 +33,7 @@ export class GestionesComponent {
     if(this.idAsociacion>0){
       this.asociacionService.findGestiones(this.idAsociacion,this.dataPaginator).subscribe(res=>{
         this.data=res.data.data;
-        // console.log(res);
+        console.log('res data gestiones',res);
       })
     }else{
       this.messageService.add({
@@ -62,5 +62,6 @@ export class GestionesComponent {
     this.visibleAdminGestion=event;
     this.typeGestionAdmin='PASADO';
     this.gestionSelected=null;
+    this.showGestiones();
   }
 }

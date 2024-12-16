@@ -1,1 +1,84 @@
-<p>deudas works!</p>
+<div class="card">
+    <h2 class="text-center">DEUDAS PENDIENTES</h2>
+    <label for="selectMedidor"> <h4>Seleccione:</h4></label>
+    <p-dropdown [options]="selectMedidoresRelacion" class="m-5" id="selectMedidor" optionLabel="label" optionValue="value" (onChange)="obtenerMedidor($event)" placeholder="Seleccione su medidor" emptyMessage="Sin medidores"></p-dropdown>
+  
+    <div class="grid">
+        <div class="col-12 my-5" *ngIf="planillas.length>0">
+            <h4 class="mb-3">Deudas de consumo de agua por pagar</h4>
+            <p-table [value]="planillas" [tableStyle]="{ 'min-width': '50rem' }">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th>Gestión</th>
+                        <th>Mes</th>
+                        <th>Consumo</th>
+                        <th>Tarifa de pago</th>
+                        <th>Pagado</th>
+                        <th>Fecha limite </th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-planilla>
+                    <ng-container *ngIf="planilla.lecturas.length>1; else soloLectura">
+                        <tr>
+                            <td [rowSpan]="planilla.lecturas.length+1">{{ planilla.gestion }}</td>
+                        </tr>
+                        <tr *ngFor="let lectura of planilla.lecturas">
+                            <td>{{ lectura.PlanillaMesLecturar }}</td>
+                            <td>{{ lectura.consumoTotal }} {{lectura.medicion}}</td>
+                            <td>{{ lectura.pagar.monto  | currency: lectura.pagar.moneda}} </td>
+                            <td>
+                                <p-tag [severity]="lectura.pagar.pagado?'success':'danger'" [value]="lectura.pagar.pagado ? 'PAGADO':'NO PAGADO'"></p-tag>
+                            </td>
+                            <td>{{lectura.pagar.fechaLimitePago | date: 'dd/MM/yyyy' }}</td>
+
+                        </tr>
+                    </ng-container>
+                    <ng-template #soloLectura>
+                        <tr>
+                            <td>{{ planilla.gestion }}</td>
+                            <td>{{ planilla.lecturas[0].PlanillaMesLecturar }}</td>
+                            <td>{{ planilla.lecturas[0].consumoTotal }}</td>
+                            <td>{{ planilla.lecturas[0].pagar.monto | currency: planilla.lecturas[0].pagar.moneda  }}</td>
+                            <td>
+                                <p-tag [severity]="planilla.lecturas[0].pagar.pagado?'success':'danger'" [value]="planilla.lecturas[0].pagar.pagado ? 'PAGADO':'NO PAGADO'"></p-tag>
+                            </td>
+                            <td>{{ planilla.lecturas[0].pagar.fechaLimitePago | date: 'dd/MM/yyyy' }}</td>
+                        </tr>
+
+                    </ng-template>
+                    
+                </ng-template>
+            </p-table>
+        </div>
+        <div class="col-12 my-5" *ngIf="multas.length>0">
+            <h4 class="mb-3">Multas por pagar</h4>
+        <p-table [value]="multas" [tableStyle]="{ 'min-width': '50rem' }">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th>ID</th>
+                    <th>Tipo de multa</th>
+                    <th>Motivo</th>
+                    <th>Fecha creada</th>
+                    <th>Monto por pagar</th>
+                    <th>Pagado</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-multa>
+                <tr>
+                    <td>{{ multa.id }}</td>
+                    <td>{{ multa.tipoMulta }}</td>
+                    <td>{{ multa.motivo }}</td>
+                    <td>{{ multa.created_at | date :'dd/MM/yyyy' }}</td>
+                    <td>{{ multa.monto | currency: multa.moneda}}</td>
+                    <td>
+                        <p-tag [severity]="multa.pagado?'success':'danger'" [value]="multa.pagado ? 'PAGADO':'NO PAGADO'"></p-tag>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+        </div>
+        <div class="col-12">
+            <p class="font-italic">{{messageDeudas}}</p>
+        </div>
+    </div>
+</div>

@@ -25,6 +25,7 @@ export class PerfilComponent {
   mapModal=false;
   findPerfil(){
      this.perfilSuscribe=this.usuarioFuncionesService.getPerfilUser().subscribe(res=>{
+      console.log('data perfil',res);
       if(res.OK){
         this.userPerfil=res.data!;
        // console.log(res);

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { UsuarioFuncionesService } from '../usuario-funciones.service';
-import { Medidor } from 'src/app/interfaces';
+import { Medidor, MultaServicio, PaginatorFind } from 'src/app/interfaces';
 import { MedidorAsociado, PlanillaLecturas } from 'src/app/interfaces/medidor.interface';
 import { MessageService } from 'primeng/api';
 
@@ -11,19 +11,27 @@ import { MessageService } from 'primeng/api';
 })
 export class MedidoresComponent {
 
-  selectMedidoresRelacion:MedidorAsociado[]=[];
+  selectMedidoresRelacion:any[]=[];
   medidorAsc:MedidorAsociado|null =null;
   planillasSelect:any=[];
   planillaSelected:PlanillaLecturas|null=null;
-  titleLecturas='Debe seleccionar una año de gestion'
+  titleLecturas='Debe seleccionar una año de gestion';
+  titleMultas='';
   loading:boolean=false;
   showLecturas:boolean=false;
+  multas:MultaServicio[]=[];
+  visibleTablaMultas:boolean=false;
   constructor(private usuarioFunciones:UsuarioFuncionesService,
     private readonly messageService: MessageService,){}
   ngOnInit(): void {
 
     this.usuarioFunciones.multasAsociacion.subscribe(res=>{
       console.log('res multas',res);
+      this.multas=res.data;
+      this.visibleTablaMultas=true;
+      if(this.multas.length===0){
+        this.titleMultas='* El medidor asociado no tiene multas'
+      }
     })
     this.usuarioFunciones.PlanillaLecturas.subscribe(res=>{
       this.planillaSelected=res;
@@ -48,7 +56,12 @@ export class MedidoresComponent {
     this.usuarioFunciones.getSelectsMedidores().subscribe(res=>{
       console.log('medidores select user',res);
       if(res.OK){
-        this.selectMedidoresRelacion=res.data!;
+        this.selectMedidoresRelacion=res.data!.map(asc=>{
+          return{
+            label:`${asc.medidor?.nroMedidor} ${asc.isActive?'':'( Asociación cerrada)'}`,
+            value:asc.id
+          }
+        });
       }
     })
   }
@@ -68,6 +81,7 @@ export class MedidoresComponent {
       }
     })
   }
+  
   obtenerLecturas(event:any){
     this.usuarioFunciones.getLecturasMedidor(event.value).subscribe(res=>{
       if(!res.OK){
@@ -97,9 +111,21 @@ export class MedidoresComponent {
   loadingMultasSpinner:boolean=false;
   obtenerMultasAsociado(){
     this.loadingMultasSpinner=true;
-    this.usuarioFunciones.obtenerMultasMedidorAsociado(this.medidorAsc!.id!).subscribe(res=>{
-      
+    this.usuarioFunciones.obtenerMultasMedidorAsociado(this.medidorAsc!.id!,this.dataPaginator).subscribe(res=>{
+      console.log('res multas',res);
       this.loadingMultasSpinner=false;
     })
   }
+  dataPaginator: PaginatorFind = {
+      offset:0,
+      limit:10,
+    };
+    loadCustomers(filters:any){
+
+      this.dataPaginator.offset=filters.first
+      this.dataPaginator.limit=filters.rows
+      
+      this.obtenerMultasAsociado();
+    }  
+    showReportImage:boolean=false;
 }

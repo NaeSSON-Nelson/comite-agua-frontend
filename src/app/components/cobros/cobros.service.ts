@@ -11,6 +11,7 @@ import { ComprobanteDePagoDeMultas } from '../../interfaces/multas-servicio.inte
   providedIn: 'root'
 })
 export class CobrosService {
+ 
 
   URL_deudas:string = environment.apiURrl+'/pagos-de-servicio';
   URL_comprobantes:string = environment.apiURrl +'/comprobantes';
@@ -234,5 +235,21 @@ export class CobrosService {
   }
   registrarPagoMultas(form:any[]){
     return this.http.post<HttpResponseApi<MultaServicio[]>>(`${this.URL_multas}/pago`,form).pipe();
+  }
+
+
+  //RECORTES 
+  obtenerListaParaRecortes(){
+    return this.http.get<HttpResponseApi<any>>(`${this.URL_deudas}/afiliados/cortes`);
+  }
+  enviarRecortes(form:any){
+    return this.http.post<HttpResponseApi<any>>(`${this.URL_deudas}/register/cortes`,form)
+  }
+  //RECONEXIONES
+  obtenerListaParaReconexiones() {
+    return this.http.get<HttpResponseApi<any>>(`${this.URL_deudas}/afiliados/reconexiones`);
+  }
+  enviarReconexiones(form:any){
+    return this.http.post<HttpResponseApi<any>>(`${this.URL_deudas}/register/reconexiones`,form)
   }
 }

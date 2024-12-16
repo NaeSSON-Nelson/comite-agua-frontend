@@ -1,4 +1,6 @@
 import { Estado, Monedas } from "./atributes.enum";
+import { TarifaPorConsumoAgua } from "./opciones-confuguraciones.interface";
+
 
 
 export interface ComprobantePorPago{
@@ -13,6 +15,8 @@ export interface ComprobantePorPago{
     fechaPagada:Date;
     fechaLimitePago:Date;
     comprobante:ComprobantePago;
+    descuentos:DescuentosAplicadosPorPagar[];
+    tarifaConsumoCalculo:TarifaPorConsumoAgua;
     created_at:Date;
 }
 export interface ComprobantePago{
@@ -33,5 +37,12 @@ export interface PagosForm{
 export interface GestionesPorCobrar{
     gestion:    number;
     comprobantes:   any[];
-    multas:     any[];
+}
+
+export interface DescuentosAplicadosPorPagar{
+    id:number;
+    tipoDescuentoBeneficiario:string;
+    detalles:string;
+    descuento:number;
+    comprobante:ComprobantePorPago;
 }

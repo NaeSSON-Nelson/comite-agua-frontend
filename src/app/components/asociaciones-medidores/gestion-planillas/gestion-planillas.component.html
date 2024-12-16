@@ -19,7 +19,7 @@
       <p-dropdown [options]="planillas" placeholder="Seleccione un año" (onChange)="mostrarLecturas($event)"></p-dropdown>
     </div>
     <div class="col-12" *ngIf="lecturas.length>0; else sinLecturas">
-      <h5>LECTURAS REGISTRADAS DE LOS MESES PASADOS:</h5>
+      <h5>LECTURAS REGISTRADAS DE LOS MESES:</h5>
       <p-divider></p-divider>
       <p-table [value]="lecturas">
         <ng-template pTemplate="header" let-columns>
@@ -29,8 +29,7 @@
             <th>lectura Registrada ({{medidor.medidor?.medicion ||''}}).</th>
             <th>Consumo Total ({{medidor.medidor?.medicion ||''}}).</th>
             <th>Estado del medidor registrada</th>
-            <th>Estado de registro</th>
-            <th></th>
+            <th>Mas info...</th>
           </tr>
       </ng-template>
       <ng-template pTemplate="body" let-product let-index="rowIndex">
@@ -40,7 +39,6 @@
             <td>{{product.lectura}}</td>
             <td>{{product.consumoTotal}}</td>
             <td>{{product.estadoMedidor || 'SIN REGISTRO DE ESTADO'}}</td>
-            <td>{{product.estado}}</td>
             <td>
               <p-button icon="pi pi-list" (onClick)="options(product.id)" styleClass="p-button-rounded"></p-button>
             </td>

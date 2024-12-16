@@ -1,0 +1,122 @@
+<p-dialog header="{{tarifaSelected?'Formulario de modificación de datos':'Formulario de registro de datos'}}" [(visible)]="visible" [modal]="true" [style]="{ width: '50vw' }" [draggable]="false" [resizable]="false" [baseZIndex]="900" (visibleChange)="eventVisible.emit(false)">
+    <div class="card">
+        <h4 class="text-center mb-5">{{titleForm}}</h4>
+    <form [formGroup]="tarifaForm" class="grid p-fluid p-formgrid grid mt-5">
+        <div class="field col-12 md:col-6">
+            <span class="p-float-label">
+                <p-inputNumber
+                inputId="tarifaMinima"  
+                formControlName="tarifaMinima"
+                [ngClass]="inputValid('tarifaMinima')"
+                [minFractionDigits]="2"
+                [maxFractionDigits]="2"
+              ></p-inputNumber>
+              <label for="tarifaMinima">Tarifa mínima por consumo mínimo de agua(*)</label>
+            </span>
+            <small
+              id="tarifaMinima-help"
+              class="p-error block"
+              *ngIf="campoValido('tarifaMinima')"
+              >{{ getTarifaMinimaErrors("tarifaMinima") }}
+            </small>
+          </div>
+        <div class="field col-12 md:col-6">
+            <span class="p-float-label">
+              <p-inputNumber
+                inputId="lecturaMinima"  
+                formControlName="lecturaMinima"
+                [ngClass]="inputValid('lecturaMinima')"
+              ></p-inputNumber>
+              <label for="lecturaMinima">Lectura miníma de consumo de agua(*)</label>
+            </span>
+            <small
+              id="lecturaMinima-help"
+              class="p-error block"
+              *ngIf="campoValido('lecturaMinima')"
+              >{{ getLecturaMinimaErrors("lecturaMinima") }}
+            </small>
+          </div>
+        <div class="field col-12 md:col-6">
+            <span class="p-float-label">
+              <p-inputNumber
+                inputId="tarifaAdicional"  
+                formControlName="tarifaAdicional"
+                [ngClass]="inputValid('tarifaAdicional')"
+                [minFractionDigits]="2"
+                [maxFractionDigits]="2"
+              ></p-inputNumber>
+              <label for="tarifaAdicional">Tarifa de consumo adicional(*)</label>
+            </span>
+            <small
+              id="tarifaAdicional-help"
+              class="p-error block"
+              *ngIf="campoValido('tarifaAdicional')"
+              >{{ getTarifaAdicionalErrors("tarifaAdicional") }}
+            </small>
+          </div>
+        <div class="field col-12 md:col-6">
+            <span class="p-float-label">
+                <p-dropdown
+                inputId="moneda"
+                [autoDisplayFirst]="false"
+                [options]="commonServiceApp.monedas"
+                formControlName="moneda"
+                optionLabel="name"
+                optionValue="value"
+                placeholder="Selecciona la moneda"
+                [ngClass]="inputValid('moneda')"
+              ></p-dropdown>
+              <label for="moneda">Moneda de las tarifas(*)</label>
+            </span>
+            <small
+              id="moneda-help"
+              class="p-error block"
+              *ngIf="campoValido('moneda')"
+              >{{ getMonedaErrors("moneda") }}
+            </small>
+          </div>
+          <div class="field col-12 md:col-6">
+            <span class="p-float-label">
+                <p-inputNumber
+                inputId="diaLimitePago"  
+                formControlName="diaLimitePago"
+                [ngClass]="inputValid('diaLimitePago')"
+                
+              ></p-inputNumber>
+              <label for="diaLimitePago">Dia límite de pago(*)</label>
+            </span>
+            <small
+              id="diaLimitePago-help"
+              class="p-error block"
+              *ngIf="campoValido('diaLimitePago')"
+              >{{ getDiaLimitePagoErrors("diaLimitePago") }}
+            </small>
+          </div>
+        <div class="field col-12 md:col-6">
+            <span class="p-float-label">
+              <p-calendar
+              formControlName="vigencia"
+              [showIcon]="true"
+              dateFormat="dd/mm/yy"
+              [readonlyInput]="true"
+              dataType="date"
+              [ngClass]="inputValid('vigencia')"
+              
+              appendTo="body"
+            >
+            </p-calendar>
+              <label for="vigencia">Vigente desde:</label>
+            </span>
+            <small
+              id="vigencia-help"
+              class="p-error block"
+              *ngIf="campoValido('vigencia')"
+              >{{ getVigenciaErrors("vigencia") }}
+            </small>
+          </div>
+          <div class="col-12">
+            <p-button [label]="this.tarifaSelected?'Modificar tarifa':'Registrar nueva tarifa'" (onClick)="validForm()"></p-button>
+          </div>
+    </form>
+    </div>
+</p-dialog>

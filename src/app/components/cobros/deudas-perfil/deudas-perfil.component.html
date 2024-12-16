@@ -1,4 +1,4 @@
-<p-dialog header="header" [(visible)]="visible" [modal]="true" [style]="{ width: '90vw' }" [draggable]="false" [resizable]="false" (onHide)="eventVisible.emit(false)" [baseZIndex]="900" [closeOnEscape]="false">
+<p-dialog header="header" [(visible)]="visible" [maximizable]="true" [modal]="true" [style]="{ width: '98vw' }" [draggable]="false" [resizable]="false" (onHide)="eventVisible.emit(false)" [baseZIndex]="900" [closeOnEscape]="false">
     <ng-template pTemplate="header">
         <span class="text-xl font-bold text-center">COBROS DE SERVICIO DE AGUA</span>
     </ng-template>
@@ -19,12 +19,65 @@
                 </div>
             </ng-container>
         </div>
-        <h4 class="text-center">DEUDAS DE LECTURAS POR PAGAR DE LOS MEDIDORES DE AGUA</h4>
         <div class="col-12" >
             <i class="pi pi-spin pi-spinner" style="font-size: 2rem" *ngIf="loading"></i>
             <p-divider></p-divider>
+            <div class="grid">
+                <div class="col-12 m-5" *ngIf="multasPorPagar.length ===0 && medidoresDeudas.length===0"> <p class="font-italic">{{titlePagos}}</p></div>
+            
+            <div class="col-12 my-5" *ngIf="multasPorPagar.length>0">
+                <h4 class="mb-3">Multas</h4>
+                <p-table [value]="multasPorPagar" dataKey="code" 
+                [tableStyle]="{'min-width': '50rem'}" (onRowSelect)="addPagoPorMulta($event)" (onRowUnselect)="dropPagoMulta($event)">
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th>N° medidor</th>
+                            <th></th>
+                            <th>N° de Multa</th>
+                            <th>Tipo de multa</th>
+                            <th>Motivo</th>
+                            <th>Monto a pagar</th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-multa>
+                        <ng-container *ngIf="multa.multas.length>1;else unaSola">
+                            <tr>
+                                <td [rowSpan]="multa.multas.length+1">{{multa}}</td>
+                            </tr>
+                            <tr *ngFor="let mult of multa.multas">
+                                <td>
+                                    <p-tableCheckbox [value]="mult"></p-tableCheckbox>
+                                </td>
+                                <td>{{mult.id}}</td>
+                                <td>{{mult.tipoMulta}}</td>
+                                <td>{{mult.motivo}}</td>
+                                <td>{{mult.monto | currency : mult.moneda}}</td>
+                            </tr>
+                        </ng-container>
+                        <ng-template #unaSola>
+                            <tr>
+                                <td>{{multa.nroMedidor}}</td>
+                                <td>
+                                    <p-tableCheckbox [value]="multa.multas[0]"></p-tableCheckbox>
+                                </td>
+                                <td>{{multa.multas[0].id}}</td>
+                                <td>{{multa.multas[0].tipoMulta}}</td>
+                                <td>{{multa.multas[0].motivo}}</td>
+                                <td>{{multa.multas[0].monto | currency : multa.multas[0].moneda}}</td>
+                            </tr>
+                        </ng-template>
+                        
+                    </ng-template>
+                </p-table>
+            </div>
+            <div class="mt-5" *ngIf="medidoresDeudas.length>0">
+                <h4>Lecturas</h4>
             <ng-container *ngIf="perfil">
-                <p-treeTable [value]="medidoresDeudas"(onNodeSelect)="addSelect($event)" (onNodeUnselect)="dropSelected($event)" [columns]="cols" selectionMode="checkbox"  selectionMode="multiple" [(selection)]="selectedNodes" [scrollable]="true" [tableStyle]="{'min-width':'50rem'}" >
+                <p-treeTable [value]="medidoresDeudas"(onNodeSelect)="addSelect($event)" 
+                (onNodeUnselect)="dropSelected($event)" [columns]="cols" 
+                selectionMode="checkbox"  selectionMode="multiple" 
+                [(selection)]="selectedNodes" [scrollable]="true" 
+                [tableStyle]="{'min-width':'50rem'}" >
                     
                     <ng-template pTemplate="header" let-columns>
                         <tr>
@@ -34,25 +87,8 @@
                         </tr>
                     </ng-template>
                     <ng-template pTemplate="body" let-rowNode let-rowData="rowData" let-columns="columns">
-                        <ng-container *ngIf="rowData['id'];else normalNode">
-                            <tr>
-                                <ng-container *ngFor="let col of colsMulta; let i = index">
-                                    <th [colSpan]="col.colspan" class="text-center">
-                                        {{col.header}}
-                                    </th>
-                                </ng-container>
-                            </tr>
-                            <tr>
-                                <ng-container *ngFor="let col of colsMulta; let i = index">
-                                    <td [colSpan]="col.colspan" class="text-center">
-                                        <p-treeTableToggler [rowNode]="rowNode" *ngIf="i === 0" ></p-treeTableToggler>
-                                        <p-treeTableCheckbox [value]="rowNode" *ngIf="i === 0" ></p-treeTableCheckbox>
-                                        {{ col.field==='monto'? (rowData[col.field]+' '+rowData['moneda']+'.'):rowData[col.field] }}
-                                    </td>
-                                </ng-container>
-                            </tr>
-                        </ng-container>
-                        <ng-template #normalNode>
+                        
+                        <ng-container >
                             <tr>
                                 <ng-container *ngFor="let col of columns; let i = index">
                                     <td class="text-center">
@@ -62,10 +98,12 @@
                                     </td>
                                 </ng-container>
                             </tr>
-                        </ng-template>
+                        </ng-container>
                     </ng-template>
                 </p-treeTable>
             </ng-container>
+        </div>
+        </div>
         </div>
     </div>
         <!-- <div class="flex flex-wrap m-3 flex-row-reverse">
@@ -83,7 +121,7 @@
                 <p-button 
                 label="Registrar deudas seleccionadas" 
                 styleClass="p-button-success"
-                [disabled]="gestionesPorCobrar.length===0"
+                [disabled]="gestionesPorCobrar.length=== 0 && multasPorPagarSelected.length ===0"
                 (click)="registrarDeudas()"
                 ></p-button>
             </div>
@@ -97,6 +135,7 @@
  <app-form-register-deudas
  *ngIf="visiblePagar"
  [porPagar]="gestionesPorCobrar"
+ [multasPorPagarSelected]="multasPorPagarSelected"
  [visible]="visiblePagar"
  [perfil]="perfil"
  [totalPagar]="total"

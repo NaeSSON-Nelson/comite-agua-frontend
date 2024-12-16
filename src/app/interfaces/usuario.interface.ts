@@ -1,5 +1,6 @@
 import { ColumnsAlways } from './always.interface';
 import { Estado } from './atributes.enum';
+import { Perfil } from './perfil.interface';
 import { Role } from './role.interface';
 
 export interface Usuario extends ColumnsAlways{
@@ -9,7 +10,7 @@ export interface Usuario extends ColumnsAlways{
     roles?:      Role[];
     correo?:      string;
     correoVerify?:boolean;
-
+    perfil?         :Perfil;
 }
 export interface UsuarioForm{
     id?:     number;

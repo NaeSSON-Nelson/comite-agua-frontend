@@ -19,7 +19,6 @@ import {FileUploadModule} from 'primeng/fileupload';
 import { MapAfiliadoDetailsComponent } from './map-afiliado-details/map-afiliado-details.component'
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { MultiSelectModule } from 'primeng/multiselect';
-import { PagoAfiliacionComponent } from './pago-afiliacion/pago-afiliacion.component';
 @NgModule({
   declarations: [
     PerfilesComponent,
@@ -30,7 +29,6 @@ import { PagoAfiliacionComponent } from './pago-afiliacion/pago-afiliacion.compo
     UsuarioCreatedComponent,
     PerfilPdfComponent,
     MapAfiliadoDetailsComponent,
-    // PagoAfiliacionComponent,
   ],
   imports: [
     CommonModule,

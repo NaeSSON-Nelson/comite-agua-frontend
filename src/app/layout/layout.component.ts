@@ -18,7 +18,9 @@ import { NavigationEnd, Router } from '@angular/router';
     `
     .layout-main-container-left {
       margin-left: 300px;
-    }`
+    }
+       
+    `
   ]
 })
 export class LayoutComponent {
@@ -172,7 +174,7 @@ ngOnDestroy() {
     if(user)
     this.authService.getUser().subscribe(res=>{
       // console.log('suscrito get user',res);
-      
+      this.layoutService.usuario=res.data!;
       this.layoutService.userObserver.emit(res.data!)
     })
   }

@@ -1,0 +1,68 @@
+<p-dialog [header]="title" [(visible)]="visible" [modal]="true" [style]="{ width: '65vw' }" [draggable]="false" [resizable]="false" [baseZIndex]="900" (visibleChange)="eventVisible.emit(false)">
+    <div class="card" >
+        <p class="pi pi-spin pi-spinner" style="font-size: 2rem" *ngIf="data.length===0">
+            {{titleResult}}
+        </p>
+
+        <h5 *ngIf="data.length>0">LISTA DE TARIFAS DE PAGO POR CONSUMO DE AGUA POTABLE</h5>
+        <p-toolbar>
+            <div class="p-toolbar-group-start">
+                <p-button label="Nueva tarifa"  styleClass="p-button-success" icon="pi pi-money-bill" class="mr-2" (onClick)="visibleForm=true"></p-button>
+            </div>
+        </p-toolbar>
+        <p-table [value]="data" 
+        
+        [paginator]="true"
+        [rows]="10"
+        
+        (onLazyLoad)="loadCustomers($event)"
+        [totalRecords]="dataPaginator.size||0"
+        [showCurrentPageReport]="true"
+        [rowsPerPageOptions]="[10, 25, 50]"
+        currentPageReportTemplate="Mostrando {first} al {last} de {totalRecords} Registros"
+        
+        [lazy]="true" 
+        [tableStyle]="{ 'min-width': '50rem' }">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th>N°</th>
+                    <th>Lectura minima de cobro</th>
+                    <th>Tarifa minima de cobro</th>
+                    <th>Tarifa adicional de cobro</th>
+                    <th>Dia límite de pago</th>
+                    <th>Vigencia de Tarifa</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-tarifa>
+                <tr>
+                    <td class="text-center">{{ tarifa.id }}</td>
+                    <td class="text-center">{{ tarifa.lecturaMinima }}</td>
+                    <td class="text-center">{{ tarifa.tarifaMinima | currency: tarifa.moneda }}</td>
+                    <td class="text-center">{{ tarifa.tarifaAdicional | currency: tarifa.moneda}}</td>
+                    <td class="text-center">{{ tarifa.diaLimitePago}}</td>
+                    <td class="text-center">{{ tarifa.vigencia | date:'dd/MM/yyyy' }}</td>
+                    <td ><p-tag [severity]="tarifa.isActive?'success':'danger'" [value]="tarifa.estado"></p-tag></td>
+                    <td>
+                        <div class="flex p-fluid">
+                            <p-button icon="pi pi-pencil" styleClass="p-button-rounded p-button-warning  mr-2" alt="Modificar datos"(click)="modificar(tarifa)" ></p-button>
+                            
+                            <p-button icon="pi pi-lock" styleClass="p-button-rounded p-button-danger mr-2" alt="Deshabilitar registro" *ngIf="tarifa.isActive; else inhabilitado" (click)="actionData(tarifa)"></p-button>
+                            <ng-template #inhabilitado>
+                                <p-button icon="pi pi-lock-open" styleClass="p-button-rounded p-button-success mr-2" alt="habilitar registro" (click)="actionData(tarifa)" ></p-button>
+                            </ng-template>
+                        </div>
+
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</p-dialog>
+<app-registrar-tarifa
+*ngIf="visibleForm"
+[visible]="visibleForm"
+[tarifaSelected]="tarifaSelected"
+(eventVisible)="closeEventForm($event)"
+></app-registrar-tarifa>

@@ -96,25 +96,6 @@ export class RegistrarLecturasComponent {
       console.log('OPTION NOT FOUND');
     }
   }
-  // obtenerTiposManzanos(){
-  //   const tipos:string[]=[];
-  //   for(const perfil of this.data){
-  //     if(!tipos.includes(perfil.afiliado!.ubicacion!.manzano!)){
-  //       tipos.push(perfil.afiliado!.ubicacion!.manzano!);
-  //     }
-  //     for(const asc of perfil!.afiliado!.medidorAsociado!)
-  //     if(!tipos.includes(asc!.ubicacion!.manzano!)){
-  //       tipos.push(asc.ubicacion!.manzano!);
-  //     }
-  //   }
-  //   console.log('tipos',tipos);
-  //   return tipos.map(manzano=>{
-  //     return{
-  //       name:manzano.toUpperCase(),
-  //       value:manzano 
-  //     }
-  //   });
-  // }
   resetList(){
     this.sortValue=[];
     this.filterType=null;

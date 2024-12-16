@@ -85,14 +85,6 @@
             >{{ getMonedaAfiliacionErrors("monedaAfiliacion") }}
           </small>
         </div>
-        
-        <div class="col-12">
-          <p-divider>Ubicación del afiliado</p-divider>
-        </div>
-        <div class="col-12 flex justify-content-center">
-          <p-button icon="pi pi-map-marker" styleClass="p-button-rounded p-button-secondary p-button-text p-button-raised" (onClick)="showMap=true"></p-button>
-        </div>
-
         <div class="field col-12 md:col-6">
           <span class="p-float-label">
             <input
@@ -181,6 +173,36 @@
             >{{ getAfiliadoNroLoteErrors("nroLote") }}
           </small>
         </div>
+        <div class="p-fluid col-12 md:col-6">
+          <p-multiSelect 
+            [options]="beneficiariosSelect" 
+            formControlName="beneficiado"
+            optionLabel="name" 
+            placeholder="Si es beneficiario de descuentos"
+            (onChange)="onChangeBeneficiario()"
+            [filter]="false"
+            
+            class="mb-3"
+          ></p-multiSelect>
+
+          <div *ngIf="selectedBeneficiarios.length > 0" class="mt-3">
+            <h4>Beneficios seleccionados:</h4>
+            <ul class="list-none p-0">
+              <li *ngFor="let beneficiario of selectedBeneficiarios" 
+                  class="mb-2 p-2 rounded">
+                {{ beneficiario.name }}
+              </li>
+            </ul>
+          </div>
+          </div>
+          <div class="col-12 grid md:col-6 flex flex-wrap justify-content-center">
+            <label for="icon-geo" class="col-12 font-semibold text-center">Ubicacion georeferencial</label>
+            <p-button   id="icon-geo" icon="pi pi-map-marker" styleClass="p-button-rounded p-button-secondary p-button-text p-button-raised" (onClick)="showMap=true"></p-button>
+            <div class="col-1" *ngIf="this.afiliadoForm.get('latitud')?.value &&
+            this.afiliadoForm.get('longitud')?.value">
+              <p>latitud: {{this.afiliadoForm.get('latitud')?.value}} longitud: {{this.afiliadoForm.get('longitud')?.value}}</p>
+            </div>
+          </div>
         <!-- <div class="field col-12 md:col-3" *ngIf="!this.perfilActual?.afiliado">
           <span class="p-float-label">
             <p-dropdown

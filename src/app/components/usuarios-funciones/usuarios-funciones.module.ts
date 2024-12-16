@@ -14,14 +14,16 @@ import { TableModule } from 'primeng/table';
 import { DialogModule } from 'primeng/dialog';
 import { MedidorDetailsComponent } from './medidor-details/medidor-details.component';
 import { TabViewModule } from 'primeng/tabview';
-
+import { ReporteGraficosComponent } from './reporte-graficos/reporte-graficos.component';
+import { ChartModule}from 'primeng/chart';
 @NgModule({
   declarations: [
     MedidoresComponent,
     LecturaDetailsComponent,
     DeudasComponent,
     PerfilComponent,
-    MedidorDetailsComponent
+    MedidorDetailsComponent,
+    ReporteGraficosComponent
   ],
   imports: [
     CommonModule,
@@ -34,6 +36,7 @@ import { TabViewModule } from 'primeng/tabview';
     TableModule,
     DialogModule,
     TabViewModule,
+    ChartModule,
   ]
 })
 export class UsuariosFuncionesModule { }

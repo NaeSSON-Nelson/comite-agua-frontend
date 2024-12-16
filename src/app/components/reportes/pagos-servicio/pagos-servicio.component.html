@@ -39,9 +39,9 @@
             <tr>
                 <th>Nombre completo</th>
                 <th>Medidor de agua</th>
-                <th>Total lecturas </th>
-                <th>Total Multas </th>
-                <th>Total General </th>
+                <th>Total de lecturas </th>
+                <th>Total de Multas </th>
+                <th>Total</th>
             </tr>
         </ng-template>
         <ng-template pTemplate="body" let-perfil>
@@ -72,7 +72,7 @@
         <ng-template pTemplate="footer">
             <tr>
                 <td colspan="4" class="text-right">Total:</td>
-                <td class="text-center">{{totalGeneral | currency :'Bs. '}}</td>
+                <td class="text-center">{{totalGeneral() | currency :'Bs. '}}</td>
             </tr>
         </ng-template>
     </p-table></div>

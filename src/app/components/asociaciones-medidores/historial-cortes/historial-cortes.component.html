@@ -1,0 +1,46 @@
+<p-dialog header="HISTORIAL DE ACCIONES SOBRE DEL MEDIDOR DE AGUA ASOCIADO" [(visible)]="visible" [modal]="true" [style]="{ width: '68vw' }" [draggable]="false" [resizable]="false" [baseZIndex]="900" [closeOnEscape]="true" (visibleChange)="eventVisible.emit(false)">
+    <div class="grid">
+        
+        <div class="col-12 mb-5">
+            <p class="font-italic">{{titleEstado}}</p>
+        </div>
+        <div class="col-12" *ngIf="data.length>0">
+            <h2>LISTADO DE ACCIONES TOMADAS</h2>
+        </div>
+        <div class="col-12 flex flex-wrap justify-content-center">
+   
+        <p-table [value]="data" [tableStyle]="{ 'min-width': '40rem' }"
+        [paginator]="true"
+            [rows]="10"
+            [lazy]="true" 
+            (onLazyLoad)="loadCustomers($event)"
+            [totalRecords]="dataPaginator.size||0"
+            [customSort]="true"
+            [showCurrentPageReport]="true"
+            [rowsPerPageOptions]="[10, 20, 50]"
+
+            [tableStyle]="{ 'min-width': '50rem'}"
+            currentPageReportTemplate="Mostrando {first} al {last} de {totalRecords} Registros"
+            [scrollable]="true" scrollHeight="400px"
+           
+        >
+            <ng-template pTemplate="header">
+                <tr>
+                    <th>N°</th>
+                    <th>Tipo de acción</th>
+                    <th>Motivo</th>
+                    <th>Fecha de corte</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-accion>
+                <tr>
+                    <td>{{ accion.id }}</td>
+                    <td>{{ accion.tipoAccion }}</td>
+                    <td>{{ accion.motivo }}</td>
+                    <td>{{ accion.fechaRealizada | date:'dd/MM/yyyy' }}</td>
+                </tr>
+            </ng-template>
+        </p-table>     </div>
+    </div>
+</p-dialog>
+ 

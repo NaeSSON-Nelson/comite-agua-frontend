@@ -248,6 +248,8 @@ export class PerfilUsuarioFormComponent {
   }
   closeTableRoleModalForm(view: boolean) {
     this.showTableAsignRoleModalForm = view;
+    this.usuarioForm.get('roles')?.markAsDirty();
+    this.usuarioForm.markAllAsTouched();
   }
 
   limpiarCampo(campo: string) {

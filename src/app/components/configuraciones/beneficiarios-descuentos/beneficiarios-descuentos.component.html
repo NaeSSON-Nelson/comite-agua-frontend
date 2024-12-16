@@ -1,0 +1,63 @@
+<p-dialog [header]="title" [(visible)]="visible" [modal]="true" [style]="{ width: '65vw' }" [draggable]="false" [resizable]="false" [baseZIndex]="900" (visibleChange)="eventVisible.emit(false)">
+    <div class="card" >
+        <p class="pi pi-spin pi-spinner" style="font-size: 2rem" *ngIf="data.length===0">
+            {{titleResult}}
+        </p>
+
+        <h5 *ngIf="data.length>0">LISTA DE TIPOS DE BENEFICIARIOS A DESCUENTOS EN EL PAGO DE SERVICIO DE AGUA</h5>
+        <p-toolbar>
+            <div class="p-toolbar-group-start">
+                <p-button label="Nuevo tipo de beneficiario"  styleClass="p-button-success" icon="pi pi-money-bill" class="mr-2" (onClick)="visibleForm=true"></p-button>
+            </div>
+        </p-toolbar>
+        <p-table [value]="data" 
+        
+        [paginator]="true"
+        [rows]="10"
+        
+        (onLazyLoad)="loadCustomers($event)"
+        [totalRecords]="dataPaginator.size||0"
+        [showCurrentPageReport]="true"
+        [rowsPerPageOptions]="[10, 25, 50]"
+        currentPageReportTemplate="Mostrando {first} al {last} de {totalRecords} Registros"
+        
+        [lazy]="true" 
+        [tableStyle]="{ 'min-width': '50rem' }">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th>N°</th>
+                    <th>Tipo de Beneficiario</th>
+                    <th>Descuento del beneficiado (%.)</th>
+                    <th>detalles</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-beneficiario>
+                <tr>
+                    <td class="text-center">{{ beneficiario.id }}</td>
+                    <td class="text-center">{{ beneficiario.tipoBeneficiario }}</td>
+                    <td class="text-center">{{ beneficiario.descuento }}</td>
+                    <td class="text-center">{{ beneficiario.detalles}}</td>
+                    <td ><p-tag [severity]="beneficiario.isActive?'success':'danger'" [value]="beneficiario.estado"></p-tag></td>
+                    <td>
+                        <div class="flex p-fluid">
+                            <p-button icon="pi pi-pencil" styleClass="p-button-rounded p-button-warning  mr-2" alt="Modificar datos"(click)="modificar(beneficiario)" ></p-button>
+                            
+                            <p-button icon="pi pi-lock" styleClass="p-button-rounded p-button-danger mr-2" alt="Deshabilitar registro" *ngIf="beneficiario.isActive; else inhabilitado" (click)="actionData(beneficiario)"></p-button>
+                            <ng-template #inhabilitado>
+                                <p-button icon="pi pi-lock-open" styleClass="p-button-rounded p-button-success mr-2" alt="habilitar registro" (click)="actionData(beneficiario)" ></p-button>
+                            </ng-template>
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</p-dialog>
+<app-registrar-nuevo-beneficiario
+*ngIf="visibleForm"
+[visible]="visibleForm"
+[beneficiarioSelected]="beneficiarioSelected"
+(eventVisible)="closeEventForm($event)"
+></app-registrar-nuevo-beneficiario>

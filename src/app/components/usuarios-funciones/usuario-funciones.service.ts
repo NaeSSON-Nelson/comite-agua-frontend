@@ -1,7 +1,7 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Subject, catchError, map, of, tap } from 'rxjs';
-import { HttpResponseApi, HttpResponseApiArray, Medidor, MultaServicio, Perfil, ResponseResult, ResponseResultData } from 'src/app/interfaces';
+import { HttpResponseApi, HttpResponseApiArray, Medidor, MultaServicio, PaginatorFind, Perfil, ResponseResult, ResponseResultData } from 'src/app/interfaces';
 import { MedidorAsociado, PlanillaMesLectura, PlanillaLecturas } from 'src/app/interfaces/medidor.interface';
 
 import { environment } from 'src/environments/environment';
@@ -13,6 +13,7 @@ export class UsuarioFuncionesService {
 
   URL_user = environment.apiURrl +'/user';
   URL_user_medidores = this.URL_user +'/medidores'
+  URL_user_deudas = this.URL_user +'/deudas-medidor'
   private _deudasLecturasMedidor$:Subject<Medidor>;
   private _multasAsociacion$:Subject<DataResult<MultaServicio>>
   private _lecturasMedidor$:Subject<PlanillaLecturas>
@@ -61,8 +62,8 @@ export class UsuarioFuncionesService {
   getMedidorAsociadoSelected(id:number){
     return this.http.get<HttpResponseApi<MedidorAsociado>>(`${this.URL_user_medidores}/detalles/${id}`).pipe();
   }
-  getMedidor(nroMedidor:string){
-    return this.http.get<HttpResponseApi<MedidorAsociado>>(`${this.URL_user_medidores}/${nroMedidor}`).pipe(
+  getMedidor(idAsociacion:number){
+    return this.http.get<HttpResponseApi<MedidorAsociado>>(`${this.URL_user_medidores}/${idAsociacion}`).pipe(
       map((resp) => {
         // console.log('map',resp);
         const respuesta:ResponseResultData<MedidorAsociado>={OK:resp.OK,message:resp.message,statusCode:200,data:resp.data!}
@@ -126,8 +127,11 @@ export class UsuarioFuncionesService {
     )
   }
 
-  obtenerMultasMedidorAsociado(idAsociacion:number){
-    return this.http.get<HttpResponseApiArray<MultaServicio>>(`${this.URL_user_medidores}/asociacion/${idAsociacion}`).pipe(
+  obtenerMultasMedidorAsociado(idAsociacion:number,paginator:PaginatorFind){
+    const {estado,order,q,size,sort,...dataPaginator} = paginator;
+    return this.http.get<HttpResponseApiArray<MultaServicio>>(`${this.URL_user_medidores}/multas/${idAsociacion}`
+      ,{params:{...dataPaginator}}
+    ).pipe(
       tap((resp) => {
         if (resp.OK) {
           this._multasAsociacion$.next(resp.data);
@@ -150,4 +154,7 @@ export class UsuarioFuncionesService {
       })
     );
   }
+    getDeudasPendientes(idAsociacion:number){
+      return this.http.get<HttpResponseApi<{planillas:PlanillaLecturas[],multas:MultaServicio[]}>>(`${this.URL_user_deudas}/${idAsociacion}`)
+    }
 }

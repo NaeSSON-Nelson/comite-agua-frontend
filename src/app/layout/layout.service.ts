@@ -26,6 +26,7 @@ export interface AppConfig {
 export class LayoutService {
   private _user$: EventEmitter<Usuario | null> = new EventEmitter<Usuario | null>();
   private _menusRol$: EventEmitter<MenuItem[]> = new EventEmitter<MenuItem[]>();
+  usuario:Usuario|null=null;
   get user() {
     return this._user$.asObservable();
   }

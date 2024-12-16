@@ -34,6 +34,7 @@ import {HttpClient} from "@angular/common/http";
 import { LOCALE_ID } from '@angular/core';
 import { registerLocaleData } from '@angular/common';
 import localeES from '@angular/common/locales/es';
+import { ConfiguracionesModule } from './components/configuraciones/configuraciones.module';
 
 // Registrar el locale español
 registerLocaleData(localeES, 'es');
@@ -55,7 +56,7 @@ registerLocaleData(localeES, 'es');
     ToastModule,
     ConfirmDialogModule,
     ReactiveFormsModule,
-    //UNA SOLUCION AL ERROR: NOW?
+    // //UNA SOLUCION AL ERROR: NOW?
     // AuthModule,
     // RolesModule,
     // MedidoresAguaModule,
@@ -65,6 +66,7 @@ registerLocaleData(localeES, 'es');
     // CobrosModule,
     // AsociacionesMedidoresModule,
     // ReportesModule,
+    // ConfiguracionesModule,
   ],
   providers: [
     MessageService,

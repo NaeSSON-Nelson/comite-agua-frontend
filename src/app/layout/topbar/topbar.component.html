@@ -1,12 +1,12 @@
 <div class="layout-topbar">
+    <button  *ngIf="usuario"#menubutton class="p-link layout-menu-button layout-topbar-button" (click)="layoutService.onMenuToggle()">
+        <i class="pi pi-bars"></i>
+    </button>
     <a class="layout-topbar-logo md:flex md:justify-content-center md:flex-wrap" routerLink="/" >
         <img src="assets/layout/images/AAPLAT-icon.svg" alt="logo">
         <span>AAPLAT</span>
     </a>
 
-    <button  *ngIf="usuario"#menubutton class="p-link layout-menu-button layout-topbar-button" (click)="layoutService.onMenuToggle()">
-        <i class="pi pi-bars"></i>
-    </button>
     <button *ngIf="usuario" #topbarmenubutton class="p-link layout-topbar-menu-button layout-topbar-button">
         <i class="pi pi-ellipsis-v"></i>
     </button>
@@ -18,7 +18,10 @@
                 <i class="pi pi-user"></i>
                 <span>Profile</span>
             </button>
-            <p >Usuario:{{usuario.username}}</p>
+            <div>
+                <label for="">Usuario:</label>
+                <p class="font-semibold">{{usuario.perfil?.nombrePrimero | titlecase}} {{usuario.perfil?.nombreSegundo?.at(0)| titlecase}} {{usuario.perfil?.apellidoPrimero  | titlecase}} {{usuario.perfil?.apellidoSegundo ||''  | titlecase}} </p>
+            </div>
             <p-overlayPanel #op>
                 <ng-template pTemplate="content">
                     <p-panelMenu [model]="itemsUser" [style]="{'width':'250px'}"></p-panelMenu>

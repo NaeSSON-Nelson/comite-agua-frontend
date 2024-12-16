@@ -36,7 +36,7 @@ export class PerfilFormComponent {
   subscription!:Subscription;
   ngOnInit(): void {
     this.subscription=this.perfilService.perfil.subscribe((res) => {
-      const { usuario,estado,afiliado,accessAcount,created_at,updated_at,id,isActive,contacto,defaultClientImage,fechaNacimiento,tipoPerfil,profileImageUri,urlImage,...dataPerfil } = res;
+      const { usuario,estado,afiliado,isAfiliado,accessAcount,created_at,updated_at,id,isActive,contacto,defaultClientImage,fechaNacimiento,tipoPerfil,profileImageUri,urlImage,...dataPerfil } = res;
       console.log(res);
       // this.perfilForm.removeControl('estado');
       this.perfilActual=res;
@@ -124,7 +124,7 @@ export class PerfilFormComponent {
     numeroVivienda  :[,[Validators.pattern(patternText),Validators.minLength(3)]],
     longitud        :[],
     latitud         :[],
-
+    beneficiado     :[null]
   })
   usuarioForm: FormGroup = this.fb.group({
     roles           :this.fb.array([], [Validators.required]),
@@ -134,11 +134,33 @@ export class PerfilFormComponent {
   get rolesForm() {
     return this.usuarioForm.controls['roles'] as FormArray;
   }
+  beneficiariosSelect:any[]=[
+    
+  ]
+  selectedBeneficiarios: any[] = [];
+  obtenerBeneficiarios(){
+    this.perfilService.obtenerBeneficiosDescuentos().subscribe(res=>{
+      if(res.OK){
+        console.log('beneficios',res)
+        this.beneficiariosSelect=res.data?.map(bene=>{
+          return{
+            name:`${bene.tipoBeneficiario} ${bene.descuento}% descuento`,
+            value:bene.id
+          }
+        }) ||[]
+      }
+    })
+  }
+  onChangeBeneficiario(){
+    const selectedBeneficiarios = this.afiliadoForm.get('beneficiado')?.value;
+    this.selectedBeneficiarios = selectedBeneficiarios || [];
+  }
   addGroupDataAfiliado(event:any){
     // console.log(event);
     if(event.value){
       this.perfilForm.addControl('afiliadoForm',this.afiliadoForm);
       this.addAfiliado=true;
+      this.obtenerBeneficiarios();
     }else{
       this.perfilForm.removeControl('afiliadoForm');
       this.afiliadoForm.reset();
@@ -212,8 +234,13 @@ export class PerfilFormComponent {
       perfilSend.usuarioForm=usuarioSend;
     }
     
-    // console.log('formulario: ',this.perfilForm.value);
-    // console.log('el enviado: ',perfilSend);
+    console.log('formulario: ',this.perfilForm.value);
+    if(perfilSend.afiliadoForm?.beneficiado){
+      perfilSend.afiliadoForm.beneficiado= this.perfilForm.value.afiliadoForm.beneficiado.map((des:any)=>des.value);
+    }else if(perfilSend.afiliadoForm){
+      perfilSend.afiliadoForm.beneficiado=[];
+    }
+    console.log('el enviado: ',perfilSend);
     this.registrarFormulario(perfilSend);
   }
   stateOptions: any[] = [
@@ -288,7 +315,7 @@ export class PerfilFormComponent {
     this.afiliadoForm.get('longitud')?.setValue($event.lng);
   }
   get coordenadasLatLng(){
-    return new L.LatLng(this.afiliadoForm.get('latitud')?.value ||-21.4734,this.afiliadoForm.get('longitud')?.value ||-64.8026);
+    return new L.LatLng(this.afiliadoForm.get('latitud')?.value ||-21.480495646319206,this.afiliadoForm.get('longitud')?.value ||-64.77017633441564);
   }
   cerrarMapa(modal:boolean){
     this.showMap=modal;

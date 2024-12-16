@@ -57,10 +57,10 @@ export class AsociarMedidorComponent {
     //   id:this.asociacion.medidor?.id
     // })
     this.asociacionForm.setValue({
-      registrable:this.asociacion.registrable,
+      // registrable:this.asociacion.registrable,
       fechaInstalacion:new Date(this.asociacion.fechaInstalacion!),
-      estado:this.asociacion.estado,    
-      estadoMedidorAsociado:this.asociacion.estadoMedidorAsociado,
+      // estado:this.asociacion.estado,    
+      // estadoMedidorAsociado:this.asociacion.estadoMedidorAsociado,
       ubicacion:{
         barrio:this.asociacion.ubicacion?.barrio,
         latitud:this.asociacion.ubicacion?.latitud,
@@ -104,10 +104,10 @@ export class AsociarMedidorComponent {
   }
 
   asociacionForm: FormGroup = this.fb.group({
-    registrable:[,Validators.required],
     fechaInstalacion:[,Validators.required],
-    estadoMedidorAsociado:[,Validators.required],
-    estado:[],
+    // estadoMedidorAsociado:[,Validators.required],
+    // registrable:[,Validators.required],
+    // estado:[],
     ubicacion: this.fb.group({
       barrio: [,Validators.required],
       manzano:[,Validators.required],
@@ -177,9 +177,6 @@ export class AsociarMedidorComponent {
                   detail: `${res.message}`,
                   icon: 'pi pi-check',
                 });
-                // this.router.navigate([PATH_MEDIDORES, PATH_MODULE_DETAILS,this.medidorActual?.id], {
-                // });
-                // this.showFormAscEdit=false;
                 this.resetForm()
                 this.findAsociacion();
               }else{
@@ -433,20 +430,6 @@ export class AsociarMedidorComponent {
     return '';
   }
 
-  getEstadoErrors(campo: string) {
-    const errors = this.asociacionForm.get(campo)?.errors;
-    if (errors?.['required']) {
-      return 'El campo es requerido';
-    }
-    return '';
-  }
-  getEstadoMedidorAsociadoErrors(campo: string) {
-    const errors = this.asociacionForm.get(campo)?.errors;
-    if (errors?.['required']) {
-      return 'El campo es requerido';
-    }
-    return '';
-  }
   getMedicionErrors(campo: string) {
     const errors = this.asociacionForm.get(campo)?.errors;
     if(errors?.['required']) 
@@ -460,13 +443,7 @@ export class AsociarMedidorComponent {
     return '';
     
   }
-  getRegistrableErrors(campo:string){
-    const errors = this.asociacionForm.get(campo)?.errors;
-    if(errors?.['required']){
-      return `El campo es requerido`;
-    }
-    return '';
-  }
+  
   getBarrioErrors(campo:string){
     
     const errors = this.ubicacionForm.get(campo)?.errors;

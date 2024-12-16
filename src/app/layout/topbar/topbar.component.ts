@@ -243,24 +243,35 @@ export class TopbarComponent {
               :menu.linkMenu === ValidMenu.reportes?'pi pi-book'
               :'',
               visible:item.visible
-            })
+            });
           }else{
             menusAdministrativo.items!.push({
               label:item.nombre,
               routerLink: [`/${menu.linkMenu}/${item.linkMenu}`],
-              icon: menu.linkMenu ===ValidMenu.asociaciones?'pi pi-folder'
+              icon:
+              //  item.linkMenu === ValidItemMenu.cobrosRecortesDeServicio?'pi pi-book'
+              // :item.linkMenu === ValidItemMenu.cobrosReconexionesDeServicio?'pi pi-book'
+              menu.linkMenu === ValidMenu.asociaciones?'pi pi-folder'
               :menu.linkMenu === ValidMenu.cobros?'pi pi-money-bill'
               :menu.linkMenu === ValidMenu.lecturas?'pi pi-table'
               :menu.linkMenu === ValidMenu.medidores?'pi pi-mobile'
               :menu.linkMenu === ValidMenu.perfiles?'pi pi-users'
               :menu.linkMenu === ValidMenu.roles?'pi pi-shield'
               :menu.linkMenu === ValidMenu.reportes?'pi pi-book'
-              :'',
+              :'pi pi-book',
               visible:item.visible
             })
           }
           
         }
+      }
+      if(menu.linkMenu === ValidMenu.opciones){
+        menusAdministrativo.items!.push({
+          label:menu.nombre,
+          routerLink: [`/${menu.linkMenu}/${ValidItemMenu.opcionesConfguracionTabla}`],
+          icon:'pi pi-cog',
+          visible:true
+        });
       }
     }
     if(menusAfiliado.items!.length>0) menusAdds.push(menusAfiliado);

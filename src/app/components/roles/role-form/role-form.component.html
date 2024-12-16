@@ -45,28 +45,6 @@
                 >{{ getNivelErrors("nivel") }}
               </small>
             </div>
-            <div class="field col-12 md:col-4" *ngIf="noHayRole()">
-              <span class="p-float-label">
-                <p-dropdown
-                  inputId="estado"
-                  [autoDisplayFirst]="false"
-                  [options]="commonAppService.estados"
-                  formControlName="estado"
-                  optionLabel="name"
-                  optionValue="value"
-                  placeholder="Select Estado"
-                  [ngClass]="inputValid('estado')"
-                ></p-dropdown>
-    
-                <label for="estado">estado (*)</label>
-              </span>
-              <small
-                id="estado-help"
-                class="p-error block"
-                *ngIf="campoValido('estado')"
-                >{{ getEstadoErrors("estado") }}
-              </small>
-            </div>
               <!-- Sección de Menús -->
               <div class="col-12 p-field mb-3" >
                 <label class="block mb-5 text-2xl">Selección de Menús para los acceso del rol</label>

@@ -1,6 +1,7 @@
 import { ColumnsAlways } from "./always.interface";
 import { Barrio, Estado, MetodoPago, Monedas } from "./atributes.enum";
 import { Medidor, MedidorAsociado } from "./medidor.interface";
+import { BeneficiarioDescuentos } from "./opciones-confuguraciones.interface";
 import { Perfil } from "./perfil.interface";
 
 export interface Afiliado extends ColumnsAlways{
@@ -19,6 +20,7 @@ export interface Afiliado extends ColumnsAlways{
     perfil?             :Perfil;
     montoAfiliacion?    :number;
     monedaAfiliacion?   :Monedas;
+    descuentos?         :BeneficiarioDescuentos[];
 
 }
 export interface AfiliadoForm{
@@ -34,6 +36,7 @@ export interface AfiliadoForm{
     manzano?         :string;
     numeroManzano?   :number;
     nroLote?         :number;
+    beneficiado?      :number[];
 }
 
 export interface Ubicacion{
@@ -45,3 +48,4 @@ export interface Ubicacion{
     longitud?        :any;
     latitud?         :any;
 }
+

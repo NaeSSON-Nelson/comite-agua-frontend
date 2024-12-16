@@ -1,0 +1,67 @@
+<p-dialog header="{{beneficiarioSelected?'Formulario de modificación de datos':'Formulario de registro de datos'}}" [(visible)]="visible" [modal]="true" [style]="{ width: '50vw' }" [draggable]="false" [resizable]="false" [baseZIndex]="900" (visibleChange)="eventVisible.emit(false)">
+    <div class="card">
+        <h4 class="text-center mb-5">{{titleForm}}</h4>
+        <form [formGroup]="beneficiarioForm" class="grid p-fluid p-formgrid grid mt-5">
+            <div class="field col-12 md:col-6">
+                <span class="p-float-label">
+                    <input
+                    id="tipoBeneficiario"
+                    type="text"
+                    pInputText
+                    formControlName="tipoBeneficiario"
+                    [ngClass]="inputValid('tipoBeneficiario')"
+                  />
+                  <label for="tipoBeneficiario">Tipo de Beneficiario(*)</label>
+                </span>
+                <small
+                  id="tipoBeneficiario-help"
+                  class="p-error block"
+                  *ngIf="campoValido('tipoBeneficiario')"
+                  >{{ getTipoBeneficiarioErrors("tipoBeneficiario") }}
+                </small>
+              </div>
+            <div class="field col-12 md:col-6">
+                <span class="p-float-label">
+                <p-inputNumber
+                inputId="descuento"  
+                formControlName="descuento"
+                [ngClass]="inputValid('descuento')"
+                [minFractionDigits]="2"
+                [maxFractionDigits]="2"
+              ></p-inputNumber>
+              <label for="descuento">(%) de descuento(*)</label>
+            </span>
+            <small
+              id="descuento-help"
+              class="p-error block"
+              *ngIf="campoValido('descuento')"
+              >{{ getDescuentoErrors("descuento") }}
+            </small>
+          </div>
+        <div class="field col-12 md:col-6">
+            <span class="p-float-label">
+              <textarea
+              pInputTextarea
+                id="detalles"  
+                formControlName="detalles"
+                [ngClass]="inputValid('detalles')"
+                rows="5" cols="30"
+                [autoResize]="true"
+              ></textarea>
+              <label for="detalles">Descripción de tipo beneficiario(*)</label>
+            </span>
+            <small
+              id="detalles-help"
+              class="p-error block"
+              *ngIf="campoValido('detalles')"
+              >{{ getDetallesErrors("detalles") }}
+            </small>
+          </div>
+        
+        
+          <div class="col-12">
+            <p-button [label]="this.beneficiarioSelected?'Modificar Beneficiario':'Registrar Beneficiario de descuentos'" (onClick)="validForm()"></p-button>
+          </div>
+    </form>
+    </div>
+</p-dialog>

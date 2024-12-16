@@ -44,4 +44,16 @@ export enum RetrasoTipo{
     trimestral='TRIMESTRE',
     demas='DEMAS'
   }
-  
+  export enum EstadoAsociacion{
+    conectado='CONECTADO',
+    desconectado='DESCONECTADO'
+  }
+  export enum TipoMulta{
+    retrasoPago='RETRASO-PAGO',
+    reconexion='RECONEXIÓN',
+    varios='VARIOS',
+  }
+  export enum TipoAccion{
+    conexion='CONEXION',
+    desconexion='DESCONEXION'
+  }

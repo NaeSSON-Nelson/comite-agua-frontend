@@ -38,37 +38,6 @@ export class AsociacionesListarComponent {
       this.dataPaginator.size=res.size;
       this.data = res.data;
     });
-    // this.routerAct.queryParams.subscribe((res) => {
-    //   if (res) {
-    //     this.dataPaginator = { ...res };
-    //     if(res['q']) {
-    //       this.searchForm.get('termino')?.setValue(res['q']);
-    //       this.debouncer.next(res['q'])}
-    //   }
-    // });
-  //  this.debouncer.pipe(debounceTime(500)).subscribe((res) => {
-      
-  //     if (res) {
-  //       this.dataPaginator = 
-  //       { 
-  //         q: res,
-  //         offset:0,
-  //         limit:10,
-  //         sort:'id',
-  //         order:'ASC' 
-  //       };
-  //       this.router.navigate(['.'],{queryParams:{q:res},relativeTo:this.routerAct})
-  //     } else {
-  //       this.dataPaginator = {
-  //         offset:0,
-  //         limit:10,
-  //         sort:'id',
-  //         order:'ASC'
-  //       };
-  //       this.router.navigate(['.'],{queryParams:{},relativeTo:this.routerAct})
-  //     }
-      
-  //   });
   }
   searchForm:FormGroup= this.fb.group({
     termino:[,[Validators.pattern(patternSpanishInline),Validators.minLength(1)]]

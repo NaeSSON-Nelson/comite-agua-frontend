@@ -37,7 +37,6 @@ export class MedidorFormComponent {
     this.medidoresService.medidor.subscribe((res) => {
       // console.log(res);
       this.medidorActual=res;
-      this.medidorForm.removeControl('estado');
       this.medidorForm.setValue({
         nroMedidor:res.nroMedidor,
         lecturaInicial:res.lecturaInicial,
@@ -46,7 +45,7 @@ export class MedidorFormComponent {
         marca:res.marca,
       })
     });
-    if (this.routerAct.snapshot.params['id'] && this.routerAct.snapshot.routeConfig?.path?.includes(PATH_EDIT)){
+    if (this.routerAct.snapshot.params['id'] && this.routerAct.snapshot.routeConfig?.path?.includes(ValidItemMenu.medidorUpdate)){
       this.medidoresService.findOneMedidor(this.routerAct.snapshot.params['id']).
       subscribe((res) => {
         if (res.OK === false) {
@@ -96,7 +95,7 @@ export class MedidorFormComponent {
     {
       nroMedidor:        [,[Validators.required,Validators.pattern(patternCI),Validators.minLength(4),],[this.asyncValidators]],
       lecturaInicial:    [0,[Validators.required,Validators.min(0)]],
-      estado:            [Estado.ACTIVO],
+      
       medicion:          [,Validators.required],
       marca:             [,[Validators.required,Validators.pattern(patternText),Validators.minLength(1)]],
 
@@ -262,11 +261,6 @@ export class MedidorFormComponent {
     return '';
   }
 
-  getEstadoErrors(campo: string) {
-    const errors = this.medidorForm.get(campo)?.errors;
-    
-    return '';
-  }
   getMedicionErrors(campo: string) {
     const errors = this.medidorForm.get(campo)?.errors;
     if(errors?.['required']) 

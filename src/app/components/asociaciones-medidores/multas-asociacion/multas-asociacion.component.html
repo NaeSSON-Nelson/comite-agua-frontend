@@ -1,0 +1,56 @@
+<p-dialog header="MULTAS DE ASOCIADO" [(visible)]="visible" [modal]="true" [style]="{ width: '65vw' }" [draggable]="false" [resizable]="false" [baseZIndex]="900" [closeOnEscape]="true" (visibleChange)="eventVisible.emit(false)">
+    <div class="grid">
+        
+        <div class="col-12 mb-5">
+            <p class="font-italic">{{titleEstado}}</p>
+        </div>
+        <div class="col-12" *ngIf="data.length>0">
+            <h2>LISTA DE MULTAS DEL MEDIDOR ASOCIADO</h2>
+        </div>
+        <p-table [value]="data" [tableStyle]="{ 'min-width': '40rem' }"
+        [paginator]="true"
+            [rows]="10"
+            [lazy]="true" 
+            (onLazyLoad)="loadCustomers($event)"
+            [totalRecords]="dataPaginator.size||0"
+            [customSort]="true"
+            [showCurrentPageReport]="true"
+            [rowsPerPageOptions]="[10, 20, 50]"
+
+            [tableStyle]="{ 'min-width': '50rem'}"
+            currentPageReportTemplate="Mostrando {first} al {last} de {totalRecords} Registros"
+            [scrollable]="true" scrollHeight="400px"
+           
+        >
+            <ng-template pTemplate="header">
+                <tr>
+                    <th>ID</th>
+                    <th>Motivo</th>
+                    <th>Monto de pago</th>
+                    <th>Pagado</th>
+                    <th>Información</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-multa>
+                <tr>
+                    <td>{{ multa.id }}</td>
+                    <td>{{ multa.motivo }}</td>
+                    <td>{{ multa.monto | currency: multa.moneda }}</td>
+                    <td>
+                        <p-tag styleClass="text-800 line-height-3 text-left text-white" [severity]="multa.pagado?'success':'warning'" [value]="multa.pagado?'PAGADO':'NO PAGADO'"></p-tag>
+                            
+                    </td>
+                    <td>
+                        <p-button styleClass="p-button-rounded p-button-help" icon="pi pi-book" (onClick)="select(multa)"></p-button>
+                    </td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </div>
+</p-dialog>
+<app-multa-detalles
+*ngIf="visibleMulta"
+[visible]="visibleMulta"
+[idMulta]="idMulta"
+(eventVisible)="visibleMulta =$event"
+></app-multa-detalles>

@@ -47,10 +47,12 @@
                           <h4 >N° Serie: {{asc.medidor?.nroMedidor}} {{!asc.isActive?asc.estadoMedidorAsociado :'' |titlecase}}</h4>
                         </div>
                         <div class="flex justify-content-end flex-wrap">
-                          <p-button styleClass="p-button-rounded p-button-info mr-2" icon="pi pi-pencil" (onClick)="actionData('DETALLES',asc)"></p-button>
-                          <p-button styleClass="p-button-rounded p-button-info mr-2 p-button-success" icon="pi pi-calendar" (onClick)="showGestiones(asc)"></p-button>
-                          <p-button styleClass="p-button-rounded p-button-info mr-2 p-button-secondary" icon="pi pi-book" (onClick)="showPlanillas(asc)"></p-button>
-                          <p-button styleClass="p-button-rounded p-button-info mr-2 p-button-warning" icon="pi pi-chart-bar" (onClick)="showReportLecturas(asc)"></p-button>
+                          <p-button  *ngIf="asc.isActive" styleClass="p-button-rounded mr-2" icon="pi pi-pencil" (onClick)="actionData('DETALLES',asc)"></p-button>
+                          <p-button styleClass="p-button-rounded p-button-warning mr-2" icon="pi pi-mobile" (onClick)="showMultas(asc)"></p-button>
+                          <p-button styleClass="p-button-rounded mr-2 p-button-success" icon="pi pi-calendar" (onClick)="showGestiones(asc)"></p-button>
+                          <p-button styleClass="p-button-rounded mr-2 p-button-help" icon="pi pi-folder-open" (onClick)="showHistorialLectura(asc)"></p-button>
+                          <p-button styleClass="p-button-rounded mr-2 p-button-secondary" icon="pi pi-book" (onClick)="showPlanillas(asc)"></p-button>
+                          <p-button styleClass="p-button-rounded mr-2 p-button-warning" icon="pi pi-chart-bar" (onClick)="showReportLecturas(asc)"></p-button>
                         </div>
                       </div>
                       <div class="grid">
@@ -59,6 +61,40 @@
                           <div class="col-12"><strong>Estado de Registro de asociación:</strong> <p-tag [severity]="asc.isActive?'success':'danger'" [value]="asc.estado" class="ml-3"></p-tag></div>
                           <div class="col-12"><strong>Lectura de Inicio de Asociación:</strong> {{asc.lecturaInicial}} {{asc.medidor?.medicion}}.</div>
                           <div class="col-12"><strong>Última lectura de Seguimiento registrada:</strong> {{asc.lecturaSeguimiento}} {{asc.medidor?.medicion}}.</div>
+                          <ng-container *ngIf="asc.isActive">
+                            <ng-container *ngIf="asc.estadoMedidorAsociado === 'CONECTADO';else desconectado">
+                              <div class="col-12" *ngIf="!asc.corte;else cancelar"><strong>Solicitud de corte de servicio:</strong>
+                                <div class="mt-2">
+                                  <p-button label="Solicitud de corte" styleClass="p-button-rounded" (onClick)="abrirSolicitudCorte(asc)"></p-button>
+                                </div>
+                              </div>
+                              <ng-template #cancelar>
+                                <div class="col-12"><strong>Retirar solicitud de corte:</strong>
+                                  <div class="mt-2">
+                                    <p-button label="Cancelar solicitud de corte" styleClass="p-button-rounded" (onClick)="cancelarSolicitudCorte(asc)"></p-button>
+                                  </div>
+                                </div>
+                              </ng-template>
+                            </ng-container>
+                            <ng-template #desconectado>
+                              <div class="col-12" *ngIf="!asc.reconexion;else cancelarReconeccion"><strong>Solicitud de reconexión de servicio:</strong>
+                                <div class="mt-2">
+                                  <p-button label="Solicitar reconexión" styleClass="p-button-rounded" (onClick)="abrirSolicitudReconexion(asc)" ></p-button>
+                                </div>
+                              </div>
+                              <ng-template #cancelarReconeccion>
+                                <div class="col-12" ><strong>Cancelar solicitud de reconexión:</strong>
+                                  <div> class="mt-2"
+
+                                    <p-button label="Cancelar" styleClass="p-button-rounded" (onClick)="cancelarSolicitudReconexion(asc)"></p-button>
+                                  </div>
+                                </div>
+                              </ng-template>
+                              
+                            </ng-template>
+                          </ng-container>
+                          
+                          
                         </div>
                         <div class="col-12 md:col-6 grid">
                           <h5 class="md:mt-2">Ubicación del medidor de agua</h5>
@@ -91,7 +127,42 @@
         </div>
     </p-card>
 </div>
-
+<p-dialog [header]="titleSolicitud" [(visible)]="visibleFormCorte" [modal]="true" [style]="{ width: '50vw' }" [draggable]="false" [resizable]="false" [baseZIndex]="900">
+ 
+  <div class="card">
+    <form  class="grid mt-5 flex justify-content-center" [formGroup]="formCorte">
+      <div class="field col-12 md:col-6 ">
+        <span class="p-float-label p-input-icon-right">
+          <textarea
+            id="motivo"
+            rows="5"
+            cols="30"
+            pInputTextarea 
+            formControlName="motivo"
+            [ngClass]="inputValid('motivo')"
+          ></textarea>
+          <label for="motivo">Motivo de la solicitud (*)</label>
+        </span>
+        <small
+          id="motivo-help"
+          class="p-error block"
+          *ngIf="campoValido('motivo')"
+          >{{ getMotivoErrors("motivo") }}
+        </small>
+      </div>
+      <ng-container *ngIf="medidorAsociadoSelected?.estadoMedidorAsociado === 'CONECTADO';else desconectado">
+        <div class="col-12 flex justify-content-center">
+          <p-button label="Registrar solicitud de corte" styleClass="p-button-raised p-button-success" (onClick)="confirmarSolicitarCorte()"></p-button>
+        </div>
+      </ng-container>
+      <ng-template #desconectado>
+        <div class="col-12 flex justify-content-center">
+          <p-button label="Registrar solicitud de reconexión" styleClass="p-button-raised p-button-success" (onClick)="confirmarSolicitarReconexion()"></p-button>
+        </div>
+      </ng-template>
+    </form>
+  </div>
+</p-dialog>
 <app-gestion-planillas
 *ngIf="planillaVisible"
 [visible]="planillaVisible"
@@ -134,3 +205,15 @@
 [defaultCenter]="coordenadasLatLngDetails"
 (eventVisible)="visibleMapAsociacionMedidor =$event"
 ></app-map-afiliado>
+<app-historial-cortes
+*ngIf="visibleHistorialCortes"
+[visible]="visibleHistorialCortes"
+(eventVisible)="visibleHistorialCortes = $event"
+[idAsociacion]="medidorAsociadoSelected!.id!"
+></app-historial-cortes>
+<app-multas-asociacion
+*ngIf="visibleMultas"
+[visible]="visibleMultas"
+(eventVisible)="visibleMultas = $event"
+[idAsociacion]="medidorAsociadoSelected!.id!"
+></app-multas-asociacion>

@@ -9,26 +9,22 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { TreeTableModule } from 'primeng/treetable';
 import { HistorialCobrosComponent } from './historial-cobros/historial-cobros.component';
 import {TabViewModule} from 'primeng/tabview';
-import { FormMultasRegisterComponent } from './form-multas-register/form-multas-register.component';
-import { FormMultasLecturasSelectComponent } from './form-multas-lecturas-select/form-multas-lecturas-select.component'
 import {InputTextareaModule} from 'primeng/inputtextarea';
-import { DetallesMultaComponent } from './detalles-multa/detalles-multa.component';
-import { FormRegistrarPagoMultasSelectedComponent } from './form-registrar-pago-multas-selected/form-registrar-pago-multas-selected.component';
 import { DetallesLecuturaPagoComponent } from './detalles-lecutura-pago/detalles-lecutura-pago.component'
 import { TagModule } from 'primeng/tag';
-import { MultasDeRetrasoPagosComponent } from './multas-de-retraso-pagos/multas-de-retraso-pagos.component';
+import { RecortesDeServicioComponent } from './recortes-de-servicio/recortes-de-servicio.component';
+import { RecionexionesDeServicioComponent } from './recionexiones-de-servicio/recionexiones-de-servicio.component';
+import { ToolbarModule } from 'primeng/toolbar';
+
 @NgModule({
   declarations: [
     CobrosComponent,
     DeudasPerfilComponent,
     FormRegisterDeudasComponent,
     HistorialCobrosComponent,
-    FormMultasRegisterComponent,
-    FormMultasLecturasSelectComponent,
-    DetallesMultaComponent,
-    FormRegistrarPagoMultasSelectedComponent,
     DetallesLecuturaPagoComponent,
-    MultasDeRetrasoPagosComponent,
+    RecortesDeServicioComponent,
+    RecionexionesDeServicioComponent,
   ],
   imports: [
     CommonModule,
@@ -39,6 +35,7 @@ import { MultasDeRetrasoPagosComponent } from './multas-de-retraso-pagos/multas-
     TabViewModule,
     InputTextareaModule,
     TagModule,
+    ToolbarModule,
   ]
 })
 export class CobrosModule { }

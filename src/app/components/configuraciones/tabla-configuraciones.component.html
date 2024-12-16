@@ -1,0 +1,43 @@
+
+<div class="user-profile-container">
+    <p-card class="profile-card">
+    <h2 class="text-center my-3">PANEL DE CONFIGURACIONES DE LA ASOCIACIÓN DE SERVICIO</h2>
+    <div class="grid m-4">
+        <div class="card col-12 my-3 configuracion-container">
+            <h5 class="text-center font-semibold">Beneficiarios de descuentos de pagos del servicio de agua potable</h5>
+            <div class="flex flex-wrap justify-content-center mt-5 mb-3">
+                <p-button label="Mostrar" icon="pi pi-external-link" styleClass="p-button-raised p-button-success" (onClick)="visibleBeneficiarios=true"></p-button>
+            </div>
+        </div>
+        <div class="card col-12 my-3 configuracion-container">
+            
+            <h5 class="text-center font-semibold ">Tarifas de cobros por consumo de agua potable</h5>
+            <div class="flex flex-wrap justify-content-center mt-5 mb-3">
+                <p-button label="Mostrar" icon="pi pi-external-link" styleClass="p-button-raised p-button-success" (onClick)="visibleTarifaConsumo=true"></p-button>
+            </div>
+        </div>
+        <div class="card col-12 my-3 configuracion-container">
+            
+            <h5 class="text-center font-semibold">Tarifas de cobros de multas por retrasos de pagos de servicio</h5>
+            <div class="flex flex-wrap justify-content-center mt-5 mb-3">
+                <p-button label="Mostrar" icon="pi pi-external-link" styleClass="p-button-raised p-button-success" (onClick)="visibleTarifaMultaPorRetrasoPago=true"></p-button>
+            </div>
+        </div>
+    </div>
+    </p-card>
+</div>
+<app-tarifa-cobro-por-consumo
+*ngIf="visibleTarifaConsumo"
+[visible]="visibleTarifaConsumo"
+(eventVisible)="visibleTarifaConsumo = $event"
+></app-tarifa-cobro-por-consumo>
+<app-tarifa-multa-por-retraso-pago
+*ngIf="visibleTarifaMultaPorRetrasoPago"
+[visible]="visibleTarifaMultaPorRetrasoPago"
+(eventVisible)="visibleTarifaMultaPorRetrasoPago =$event"
+></app-tarifa-multa-por-retraso-pago>
+<app-beneficiarios-descuentos
+*ngIf="visibleBeneficiarios"
+[visible]="visibleBeneficiarios"
+(eventVisible)="visibleBeneficiarios =$event"
+></app-beneficiarios-descuentos>

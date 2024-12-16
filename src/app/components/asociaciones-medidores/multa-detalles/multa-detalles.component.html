@@ -1,0 +1,69 @@
+<p-dialog [header]="title" [(visible)]="visible" [modal]="true" [style]="{ width: '68vw' }" [draggable]="false" [resizable]="false" (onHide)="eventVisible.emit(false)" [baseZIndex]="900">
+    <div class="card m-3">
+        <div class="col-12 grid" *ngIf="multa">
+            <div class="col-12 md:col-6">
+                <div class="text-900 text-xl mb-2 font-medium text-right">N° de multa</div>
+                <p class="text-700 line-height-3 text-right">{{multa.id}}</p>
+            </div>
+            <div class="col-12 md:col-6">
+                <div class="text-900 text-xl mb-2 font-medium text-right">Tipo de multa</div>
+                <p class="text-700 line-height-3 text-right">{{multa.tipoMulta}}</p>
+            </div>
+            <div class="col-12 md:col-6">
+                <div class="text-900 text-xl mb-2 font-medium text-right">Monto de pago</div>
+                <p class="text-700 line-height-3 text-right">{{multa.monto | currency: multa.moneda}} </p>
+                
+            </div>
+            <div class="col-12 md:col-6">
+                <div class="text-900 text-xl mb-2 font-medium text-right">Motivo de la multa </div>
+                <p class="text-700 line-height-3 text-right">{{multa.motivo}}</p>
+            </div>
+            <div class="col-12 md:col-6">
+                <div class="text-900 text-xl mb-2 font-medium text-right">Estado del pago</div>
+                <p class="text-700 line-height-3 text-right">
+                    <p-tag [severity]="multa.pagado?'success':'warning'" [value]="multa.pagado?'PAGADO':'NO PAGADO'"></p-tag>
+                </p>
+            </div>
+            <div class="col-12 md:col-6">
+                <div class="text-900 text-xl mb-2 font-medium text-right">Fecha de multada registrada </div>
+                <p class="text-700 line-height-3 text-right">{{multa.created_at | date:'dd/MM/yyyy'}}</p>
+            </div>
+            
+        </div>
+        <div class="col-12" *ngIf="multa?.comprobante" >
+            <p-tabView>
+                <p-tabPanel header="Detalles de pago" >
+                    <div class="grid mt-2">
+                        <div class="col-12 md:col-6">
+                            <div class="text-900 text-xl mb-2 font-medium text-right">N° de recibo de pago</div>
+                            <p class="text-700 line-height-3 text-right">{{multa.comprobante.id}}</p>
+                        </div>
+                        <div class="col-12 md:col-6">
+                            <div class="text-900 text-xl mb-2 font-medium text-right">Metodo de pago realizado</div>
+                            <p class="text-700 line-height-3 text-right">{{multa.comprobante.metodoPago}}</p>
+                        </div>
+                        <div class="col-12 md:col-6">
+                            <div class="text-900 text-xl mb-2 font-medium text-right">Monto de pago</div>
+                            <p class="text-700 line-height-3 text-right">{{multa.comprobante.montoPagado | currency: multa.comprobante.moneda}}</p>
+                        </div>
+                        <div class="col-12 md:col-6">
+                            <div class="text-900 text-xl mb-2 font-medium text-right">Fecha de pago realizado</div>
+                            <p class="text-700 line-height-3 text-right">{{multa.comprobante.fechaEmitida | date: 'dd/MM/yyyy HH:MM'}}</p>
+                        </div>
+                        <ng-container *ngIf="multa.comprobante.entidadPago !=='NINGUNO'">
+                            <div class="col-12 md:col-6">
+                                <div class="text-900 text-xl mb-2 font-medium text-right">Entidad de pago</div>
+                                <p class="text-700 line-height-3 text-right">{{multa.comprobante.entidadPago}}</p>
+                            </div>
+                            <div class="col-12 md:col-6">
+                                <div class="text-900 text-xl mb-2 font-medium text-right">Nro. de recibo de la entidad</div>
+                                <p class="text-700 line-height-3 text-right">{{multa.comprobante.nroRecibo}}</p>
+                            </div>
+                        </ng-container>
+                    </div>
+                    
+                </p-tabPanel>
+            </p-tabView>
+        </div>
+    </div>
+ </p-dialog>

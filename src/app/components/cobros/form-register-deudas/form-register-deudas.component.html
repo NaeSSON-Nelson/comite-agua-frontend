@@ -7,7 +7,8 @@ header="REGISTRO DE DEUDAS POR PAGAR"
 <div class="card grid" [formGroup]="pagarForm">
     
     <div class="col-12">
-        <h5 class="my-3">DEUDAS SELECCIONADAS</h5>
+      <ng-container *ngIf="porPagar.length>0">
+        <h5 class="my-3">CONSUMO DE LECTURAS SELECCIONADAS</h5>
       <p-divider></p-divider>
       <p-table [value]="porPagar">
         <ng-template pTemplate="header" let-columns>
@@ -16,69 +17,63 @@ header="REGISTRO DE DEUDAS POR PAGAR"
             <th class="text-center">Mes de Registro</th>
             <th class="text-center">Lectura Registrada</th>
             <th class="text-center">Consumo de agua del Mes</th>
-            <th class="text-center">Tarifa a Pagar del Mes consumido</th>
+            <th class="text-center">Tarifa de pago</th>
           </tr>
       </ng-template>
       <ng-template pTemplate="body" let-gestion let-rowIndex="rowIndex">
         <ng-container *ngIf="gestion.comprobantes===1;else moreComprobantes">
-          <tr [class]="multaColor(gestion.comprobantes[0].multa)">
-            <td [rowSpan]="gestion.comprobantes.length">{{gestion.gestion}}</td>
-            <td>{{gestion.comprobantes[0].mesLectura}}</td>
-            <td>{{gestion.comprobantes[0].lectura}}</td>
-            <td>{{gestion.comprobantes[0].consumo}}</td>
-            <td>{{gestion.comprobantes[0].monto_view}}</td>
+          <tr >
+            <td class="text-center" >{{gestion.gestion}}</td>
+            <td class="text-center">{{gestion.comprobantes[0].mesLectura}}</td>
+            <td class="text-center">{{gestion.comprobantes[0].lectura}}</td>
+            <td class="text-center">{{gestion.comprobantes[0].consumo}}</td>
+            <td class="text-center">{{gestion.comprobantes[0].monto_view}}</td>
             </tr>
         </ng-container>
           <ng-template #moreComprobantes>
+            <tr>
+              <td  class="text-center"[rowSpan]="gestion.comprobantes.length+1">{{gestion.gestion}}</td>
+            </tr>
             <tr *ngFor="let comp of gestion.comprobantes; let index=index">
-              <td  class="text-center"[rowSpan]="gestion.comprobantes.length" *ngIf="index===0">{{gestion.gestion}}</td>
-                <td [class]="multaColor(comp)">{{comp.mesLectura}}</td>
-                <td [class]="multaColor(comp)">{{comp.lectura}}</td>
-                <td [class]="multaColor(comp)">{{comp.consumo}}</td>
-                <td [class]="multaColor(comp)">{{comp.monto_view}}</td>
+                <td class="text-center">{{comp.mesLectura}}</td>
+                <td class="text-center">{{comp.lectura}}</td>
+                <td class="text-center">{{comp.consumo}}</td>
+                <td class="text-center">{{comp.monto_view}}</td>
             </tr>
           </ng-template>
           
       </ng-template>
       </p-table>
-      <ng-container *ngIf="tieneMultas();">
 
-      <h5>MULTAS POR PAGAR SELECCIONADAS</h5>
-      <p-table [value]="porPagar" class="mt-3">
-        <ng-template pTemplate="header" let-columns>
-          <tr>
-            <th>GESTION</th>
-            <th>N° de Multa</th>
-            <th colspan="2">MOTIVO</th>
-            <th>MONTO DE PAGO</th>
-          </tr>
-      </ng-template>
-      <ng-template pTemplate="body" let-gestion let-rowIndex="rowIndex">
-        <ng-container *ngIf="gestion.multas.length===1;else moreMultas">
-          <tr>
-            <td [rowSpan]="gestion.multas.length">{{gestion.gestion}}</td>
-            <td [class]="gestion.multas[0].multaColor">{{gestion.multas[0].id}}</td>
-            <td [class]="gestion.multas[0].multaColor"colspan="2">{{gestion.multas[0].motivo}}</td>
-            <td [class]="gestion.multas[0].multaColor">{{gestion.multas[0].monto}} {{gestion.multas[0].moneda}}</td>
-            </tr>
-        </ng-container>
-          <ng-template #moreMultas>
-            <tr *ngFor="let multa of gestion.multas; let index=index">
-              <td [rowSpan]="gestion.multas.length" *ngIf="index===0">{{gestion.gestion}}</td>
-                <td [class]="gestion.multas[0].multaColor">{{multa.id}}</td>
-                <td [class]="gestion.multas[0].multaColor" colspan="2">{{multa.motivo}}</td>
-                <td [class]="gestion.multas[0].multaColor">{{multa.monto}} {{multa.moneda}}</td>
+      </ng-container>
+      
+      <ng-container>
+        <ng-container *ngIf="multasPorPagarSelected.length>0">
+          <h5>MULTAS POR PAGAR SELECCIONADAS</h5>
+          <p-table [value]="multasPorPagarSelected" class="mt-3">
+            <ng-template pTemplate="header" let-columns>
+              <tr>
+                <th>N° de Multa</th>
+                <th>MOTIVO</th>
+                <th>MONTO DE PAGO</th>
+              </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-multa let-rowIndex="rowIndex">
+            <tr>
+              <td class="text-center">{{multa.id}}</td>
+              <td class="text-center">{{multa.motivo}}</td>
+              <td class="text-center">{{multa.monto | currency :multa.moneda}}</td>
             </tr>
           </ng-template>
-          
-      </ng-template>
-      </p-table>
+          </p-table>
+
+        </ng-container>
     </ng-container>
     </div>
     <div class="col-12 grid">
       <div class="col-12">
           <div class="text-900 text-xl mb-2 font-medium text-right">TOTAL A PAGAR:</div>
-          <p class="text-700 line-height-3 text-right">{{totalPagar}} Bs.</p>
+          <p class="text-700 line-height-3 text-right">{{totalPagar | currency: 'Bs.'}}</p>
       </div>  
       <div class="col-12">
         <button pButton pRipple label="Registrar Pagos" class="p-button-success" (click)="validForm()"></button>
@@ -89,49 +84,51 @@ header="REGISTRO DE DEUDAS POR PAGAR"
 
 <p-dialog
  *ngIf="visibleRegisters"
-header="Registros realizados"
+header="Pagos registrados"
 class="card grid"
-[(visible)]="visibleRegisters" [modal]="true" [style]="{ width: '50vw' }" [draggable]="true" [resizable]="true"  [baseZIndex]="1500">
-<p-table [value]="logosRecibos.planillasPagadas" [tableStyle]="{ 'min-width': '50rem' }" class="col-12">
-  <ng-template pTemplate="header">
-      <tr>
-          <th>Gestion</th>
-          <th>Mes</th>
-          <th>Lectura del Mes</th>
-          <th>Consumo del mes</th>
-          <th>Tarifa pagada</th>
-      </tr>
-  </ng-template>
-  <ng-template pTemplate="body" let-gestion>
-    <ng-container *ngIf="gestion.lecturas.length<2;else MasLecturas">
-      <tr>
-          <td>{{gestion.gestion}}</td>
-          <td>{{gestion.lecturas[0].PlanillaMesLecturar}}</td>
-          <td>{{gestion.lecturas[0].lectura}}</td>
-          <td>{{gestion.lecturas[0].consumoTotal}}</td>
-          <td>{{gestion.lecturas[0].pagar.monto}} {{gestion.lecturas[0].pagar.moneda}}.</td>
-      </tr>
-    </ng-container>
-    <ng-template #MasLecturas>
-      <tr *ngFor="let lect of gestion.lecturas;let i=index">
-          <td *ngIf="i===0" [rowSpan]="gestion.lecturas.length">{{gestion.gestion}}</td>
-          <td>{{lect.PlanillaMesLecturar}}</td>
-          <td>{{lect.lectura}}</td>
-          <td>{{lect.consumoTotal}}</td>
-          <td>{{lect.pagar.monto}} {{lect.pagar.moneda}}.</td>
-      </tr>
-
+[(visible)]="visibleRegisters" [closeOnEscape]="false" [blockScroll]="true" [closable]="false" [modal]="true" [style]="{ width: '75vw' }" [draggable]="true" [resizable]="true"  [baseZIndex]="1500">
+<div class="col-12 m-5" *ngIf="logosRecibos.planillasPagadas.length>0">
+  <h4 class="text-center">Lecturas pagadas</h4>
+  <p-table [value]="logosRecibos.planillasPagadas" [tableStyle]="{ 'min-width': '50rem' }" class="col-12">
+    <ng-template pTemplate="header">
+        <tr>
+            <th>Gestion</th>
+            <th>Mes</th>
+            <th>Lectura del Mes</th>
+            <th>Consumo del mes</th>
+            <th>Tarifa pagada</th>
+        </tr>
     </ng-template>
-    
-  </ng-template>
-  <!-- <ng-template pTemplate="footer">
-    <tr>
-        <td colspan="4" class="text-right">Monto total de Pago:</td>
-        <td>{{totalPagar}} {{logosRecibos.planillasPagadas[0].lecturas[0].pagar?.moneda}}.</td>
-    </tr>
-</ng-template> -->
-</p-table>
-<ng-container *ngIf="logosRecibos.multasPagadas.length>0">
+    <ng-template pTemplate="body" let-gestion>
+      <ng-container *ngIf="gestion.lecturas.length===1;else MasLecturas">
+        <tr>
+            <td>{{gestion.gestion}}</td>
+            <td>{{gestion.lecturas[0].PlanillaMesLecturar}}</td>
+            <td>{{gestion.lecturas[0].lectura}}</td>
+            <td>{{gestion.lecturas[0].consumoTotal}}</td>
+            <td>{{gestion.lecturas[0].pagar.monto}} {{gestion.lecturas[0].pagar.moneda}}.</td>
+        </tr>
+      </ng-container>
+      <ng-template #MasLecturas>
+        <tr>
+          <td [rowSpan]="gestion.lecturas.length+1">{{gestion.gestion}}</td>
+        </tr>
+        <tr *ngFor="let lect of gestion.lecturas;let i=index">
+            <td>{{lect.PlanillaMesLecturar}}</td>
+            <td>{{lect.lectura}}</td>
+            <td>{{lect.consumoTotal}}</td>
+            <td>{{lect.pagar.monto | currency: lect.pagar.moneda}}</td>
+        </tr>
+  
+      </ng-template>
+      
+    </ng-template>
+   
+  </p-table>
+
+</div>
+<div *ngIf="logosRecibos.multasPagadas.length>0" class="col-12 m-5">
+  <h4 class="text-center">Multas pagadas</h4>
   <p-table [value]="logosRecibos.multasPagadas" [tableStyle]="{ 'min-width': '50rem' }" class="col-12">
     <ng-template pTemplate="header">
         <tr>
@@ -156,15 +153,10 @@ class="card grid"
       </ng-container>
       
     </ng-template>
-    <!-- <ng-template pTemplate="footer">
-      <tr>
-          <td colspan="4" class="text-right">Monto total de Pago:</td>
-          <td>{{totalPagar}} {{logosRecibos.planillasPagadas[0].lecturas[0].pagar?.moneda}}.</td>
-      </tr>
-  </ng-template> -->
+    
   </p-table>
 
-</ng-container>
+</div>
 
 <div class="col-12 flex flex-wrap flex-row-reverse">
 

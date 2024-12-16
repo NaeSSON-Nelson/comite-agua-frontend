@@ -56,7 +56,20 @@ export class PerfilAfiliadoFormComponent {
             nroLote:afiliado.ubicacion?.nroLote,
             montoAfiliacion:afiliado.montoAfiliacion,
             monedaAfiliacion:afiliado.monedaAfiliacion,
-          })
+            beneficiado:afiliado.descuentos?.map(bene=>{
+              return{
+                name:`${bene.tipoBeneficiario} ${bene.descuento}% descuento`,
+                value:bene.id
+              }
+            }) || [],
+          });
+          if(afiliado.descuentos)
+          this.selectedBeneficiarios=afiliado.descuentos.map(bene=>{
+            return{
+              name:`${bene.tipoBeneficiario} ${bene.descuento}% descuento`,
+              value:bene.id
+            }
+          });
         }else{
           this.messageService.add({
             severity: 'warn',
@@ -112,7 +125,8 @@ export class PerfilAfiliadoFormComponent {
               break;
           }
         }
-    })}
+    })};
+    this.obtenerBeneficiarios();
   }
   afiliadoForm:FormGroup= this.fb.group({
     // estado          :[Estado.ACTIVO,[Validators.required]],
@@ -125,6 +139,7 @@ export class PerfilAfiliadoFormComponent {
     monedaAfiliacion:[,Validators.required],
     longitud        :[],
     latitud         :[],
+    beneficiado     :[]
   })
   validForm() {
     this.afiliadoForm.markAllAsTouched();
@@ -152,6 +167,15 @@ export class PerfilAfiliadoFormComponent {
         if (value === null || value ===undefined) delete afiliadoSend[key as keyof AfiliadoForm];
       });
     }
+
+    if(afiliadoSend.beneficiado){
+      afiliadoSend.beneficiado= this.afiliadoForm.value.beneficiado.map((des:any)=>des.value);
+    }else{
+      afiliadoSend.beneficiado=[];
+    }
+
+    console.log('formulario',this.afiliadoForm.value);
+    console.log('el enviado: ',afiliadoSend);
     this.registrarFormulario(afiliadoSend);
     // console.log('form enviado',afiliadoSend);
     // const { itemsMenu: dataItems, ...dataSend } = menuSend;
@@ -359,5 +383,25 @@ export class PerfilAfiliadoFormComponent {
   }
   noHayRegistro(){
     return this.perfilActual?.afiliado === undefined
+  }
+  beneficiariosSelect:any[]=[
+    
+  ]
+  selectedBeneficiarios: any[] = [];
+  onChangeBeneficiario(){
+    const selectedBeneficiarios = this.afiliadoForm.get('beneficiado')?.value;
+    this.selectedBeneficiarios = selectedBeneficiarios || [];
+  }
+  obtenerBeneficiarios(){
+    this.perfilService.obtenerBeneficiosDescuentos().subscribe(res=>{
+      if(res.OK){
+        this.beneficiariosSelect=res.data!.map(bene=>{
+          return{
+            name:`${bene.tipoBeneficiario} ${bene.descuento}% descuento`,
+            value:bene.id
+          }
+        })
+      }
+    })
   }
 }

@@ -97,7 +97,7 @@ export class RoleDetailsComponent {
 
       case 'DESHABILITAR':
         this.confirmationService.confirm({
-          message: `¿Está seguro de Deshabilitar?`,
+          message: `¿Está seguro de Deshabilitar el rol?`,
           header: 'Confirmar Acción',
           icon: 'pi pi-info-circle',
           accept: () => {
@@ -129,7 +129,7 @@ export class RoleDetailsComponent {
 
       case 'HABILITAR':
         this.confirmationService.confirm({
-          message: `¿Está seguro de Habilitar?`,
+          message: `¿Está seguro de Habilitar el rol?`,
           header: 'Confirmar Acción',
           icon: 'pi pi-info-circle',
           accept: () => {

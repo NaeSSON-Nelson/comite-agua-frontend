@@ -1,11 +1,10 @@
 <div class="card">
     <h2 class="text-center mt-3 mb-5">CONSULTAR MEDIDORES DE AGUA</h2>
     <label for="selectMedidor"> <h4>Seleccione:</h4></label>
-    <p-dropdown [options]="selectMedidoresRelacion" class="m-5" id="selectMedidor" optionLabel="medidor.nroMedidor" optionValue="medidor.nroMedidor" (onChange)="obtenerMedidor($event)" placeholder="Seleccione su medidor" emptyMessage="Sin medidores"></p-dropdown>
-    <div class="card col-12 grid m-3" *ngIf="medidorAsc">
+    <p-dropdown [options]="selectMedidoresRelacion" class="m-5" id="selectMedidor" optionLabel="label" optionValue="value" (onChange)="obtenerMedidor($event)" placeholder="Seleccione su medidor" emptyMessage="Sin medidores"></p-dropdown>
+    <div class="col-12 grid m-3" *ngIf="medidorAsc">
         <div class="col-12">
-            <h4>Medidor asociado: {{medidorAsc.medidor?.nroMedidor}}</h4>
-            <p-divider></p-divider>
+            <h4>Medidor asociado: {{medidorAsc.medidor?.nroMedidor}} {{medidorAsc.isActive?'':'( Asociación cerrada)'}}</h4>
             
             <div class="card">
                 <p-tabView (onChange)="cambioDeLaDo()" class="col-12 mt-3" [style]="{'min-width':'250px','min-height':'200px'}" [(activeIndex)]="activeIndex" >
@@ -18,7 +17,10 @@
                         <div class="col-12"><p-dropdown [options]="planillasSelect" placeholder="Seleccione una Gestión" (onChange)="obtenerLecturas($event)"></p-dropdown></div>
                         <div class="col-12 grid" *ngIf="planillaSelected && showLecturas">
                             <div class="col-12" *ngIf="planillaSelected.lecturas.length>0; else sinLecturas">
+                              <div class="flex flex-wrap justify-content-between">
                                 <h5>REGISTROS DE LECTURA DEL MEDIDOR, GESTION {{planillaSelected.gestion}}</h5>
+                                <p-button label="Gráfico" icon="pi pi-image" (onClick)="showReportImage=true" *ngIf="planillaSelected.lecturas.length>0"></p-button>
+                              </div>
                                 <p-divider></p-divider>
                                 <p-table [value]="planillaSelected.lecturas">
                                   <ng-template pTemplate="header" let-columns>
@@ -28,8 +30,8 @@
                                       <th class="text-center">lectura Registrada. (m3)</th>
                                       <th class="text-center">Consumo Total. (m3)</th>
                                       <th class="text-center">Tarifa de pago (Bs)</th>
-                                      <th class="text-center">Tarifa pagada</th>
-                                      <th></th>
+                                      <!-- <th class="text-center">Tarifa pagada</th> -->
+                                      <th>Mas detalles</th>
                                     </tr>
                                 </ng-template>
                                 <ng-template pTemplate="body" let-product let-rowIndex="rowIndex">
@@ -39,12 +41,11 @@
                                       <td class="text-center">{{product.lectura}} {{product.medicion}}</td>
                                       <td class="text-center">{{product.consumoTotal}} {{product.medicion}}</td>
                                       <td class="text-center">{{product.pagar ? product.pagar.monto +' '+product.pagar.moneda:'LECTURA SIN TARIFA DE PAGO'}}</td>
-                                      <td class="text-center">
+                                      <!-- <td class="text-center">
                                         <p-tag [severity]="product.pagar.pagado?'success':'danger'" [value]="product.pagar.pagado ? 'PAGADO':'NO PAGADO'"></p-tag>
-                                      </td>
+                                      </td> -->
                                       <td>
                                         <p-button icon="pi pi-external-link" severity="secondary" styleClass="p-button-rounded p-button-secondary p-button-text p-button-raised" (onClick)="obtenerLectura(product.id)"></p-button>
-        
                                       </td>
                                     </tr>
                                 </ng-template>
@@ -68,6 +69,44 @@
                             <i class="pi pi-clock"></i>
                             <span>Multas</span>
                         </ng-template>
+                        <div class="grid" *ngIf="this.multas.length>0 && visibleTablaMultas; else sinMultas">
+                          <div class="col-12 text-left"> <h4>Lista de multas del medidor de agua asociado</h4></div>
+                          <p-table [value]="multas" 
+                          [paginator]="true"
+                          [rows]="10"
+                          (onLazyLoad)="loadCustomers($event)"
+                          [totalRecords]="dataPaginator.size||0"
+                          [showCurrentPageReport]="true"
+                          [rowsPerPageOptions]="[10, 25, 50]"
+                          currentPageReportTemplate="Mostrando {first} al {last} de {totalRecords} Registros"
+                          
+                          [lazy]="true" 
+                          [tableStyle]="{ 'min-width': '50rem' }">
+                              <ng-template pTemplate="header">
+                                  <tr>
+                                      <th>ID</th>
+                                      <th>Tipo de multa</th>
+                                      <th>Motivo</th>
+                                      <th>Fecha creada</th>
+                                      <th>Monto de cobro</th>
+                                      <th>Estado del pago</th>
+                                  </tr>
+                              </ng-template>
+                              <ng-template pTemplate="body" let-multa>
+                                  <tr>
+                                      <td class="text-center">{{ multa.id }}</td>
+                                      <td class="text-center">{{ multa.tipoMulta }}</td>
+                                      <td class="text-center">{{ multa.motivo }}</td>
+                                      <td class="text-center">{{ multa.created_at | date:'dd/MM/yyyy' }}</td>
+                                      <td class="text-center">{{ multa.monto | currency: multa.moneda}}</td>
+                                      <td ><p-tag [severity]="multa.pagado?'success':'danger'" [value]="multa.pagado?'PAGADO':'SIN PAGAR'"></p-tag></td>
+                                  </tr>
+                              </ng-template>
+                          </p-table>
+                        </div>
+                        <ng-template #sinMultas>
+                          <p class="font-italic">{{titleMultas}}</p>
+                        </ng-template>
                         
                     </p-tabPanel>
                 </p-tabView>
@@ -82,3 +121,9 @@
 [visible]="visible"
 (eventVisible)="visible = $event"
 ></app-lectura-details>
+<app-reporte-graficos
+*ngIf="showReportImage"
+[visible]="showReportImage"
+[planilla]="planillaSelected!"
+(closePlanilla)="showReportImage=$event"
+></app-reporte-graficos>

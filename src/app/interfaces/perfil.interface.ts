@@ -22,6 +22,7 @@ export interface Perfil extends ColumnsAlways{
     profileImageUri?:string;
     urlImage?       :string;
     defaultClientImage?:boolean;    
+    isAfiliado?      :boolean;
 }
 export interface PerfilForm{
     

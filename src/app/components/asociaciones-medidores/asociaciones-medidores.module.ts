@@ -18,6 +18,10 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { ReportLecturasComponent } from './report-lecturas/report-lecturas.component';
 import { ChartModule } from 'primeng/chart';
 import { TagModule } from 'primeng/tag';
+import { HistorialCortesComponent } from './historial-cortes/historial-cortes.component';
+import { MultasAsociacionComponent } from './multas-asociacion/multas-asociacion.component';
+import { MultaDetallesComponent } from './multa-detalles/multa-detalles.component';
+import { InputTextareaModule } from 'primeng/inputtextarea';
 @NgModule({
   declarations: [
     AsociacionesListarComponent,
@@ -30,6 +34,9 @@ import { TagModule } from 'primeng/tag';
     GestionesComponent,
     AdminGestionComponent,
     ReportLecturasComponent,
+    HistorialCortesComponent,
+    MultasAsociacionComponent,
+    MultaDetallesComponent,
   ],
   imports: [
     CommonModule,
@@ -42,6 +49,7 @@ import { TagModule } from 'primeng/tag';
     ProgressSpinnerModule,
     ChartModule,
     TagModule,
+    InputTextareaModule
   ]
 })
 export class AsociacionesMedidoresModule { }

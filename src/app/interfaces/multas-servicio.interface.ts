@@ -1,13 +1,14 @@
-import { Monedas } from "./atributes.enum";
+import { Monedas, TipoMulta } from "./atributes.enum";
 import { MedidorAsociado, PlanillaMesLectura } from "./medidor.interface";
 
 export interface MultaServicio{
     id:number;
     motivo:string;
-    monto:string;
+    monto:number;
     moneda:Monedas;
     pagado:boolean;
-    lecturasMultadas: PlanillaMesLectura[];
+    // lecturasMultadas: PlanillaMesLectura[];
+    tipoMulta:TipoMulta;
     medidorAsociado:MedidorAsociado;
     comprobante:ComprobanteDePagoDeMultas;
     multaColor?:string;
