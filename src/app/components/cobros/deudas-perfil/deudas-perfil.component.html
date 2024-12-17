@@ -42,7 +42,7 @@
                     <ng-template pTemplate="body" let-multa>
                         <ng-container *ngIf="multa.multas.length>1;else unaSola">
                             <tr>
-                                <td [rowSpan]="multa.multas.length+1">{{multa}}</td>
+                                <td [rowSpan]="multa.multas.length+1">{{multa.nroMedidor}}</td>
                             </tr>
                             <tr *ngFor="let mult of multa.multas">
                                 <td>
